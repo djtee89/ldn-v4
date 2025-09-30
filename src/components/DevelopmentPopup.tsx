@@ -261,9 +261,18 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                   <Calendar className="h-4 w-4" />
                   Book Viewing
                 </Button>
-                <Button variant="outline" onClick={onRequestInfo} className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    const message = encodeURIComponent(
+                      `Hi, I'd like more information about ${development.name} in ${development.location}.`
+                    );
+                    window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
+                  }} 
+                  className="flex items-center gap-2"
+                >
                   <MessageSquare className="h-4 w-4" />
-                  Request More Info
+                  WhatsApp Us
                 </Button>
               </div>
             </div>

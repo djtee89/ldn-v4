@@ -9,11 +9,12 @@ import PropertyOfTheWeek from '@/components/PropertyOfTheWeek';
 import LiveChat from '@/components/LiveChat';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
+import Contact from './Contact';
 import { developments, propertyOfTheWeek } from '@/data/newDevelopments';
 import { Development } from '@/data/newDevelopments';
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide'>('main');
+  const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide' | 'contact'>('main');
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [highlightedDeveloper, setHighlightedDeveloper] = useState<string | null>(null);
@@ -68,6 +69,10 @@ const Index = () => {
     return <PropertyGuide onBack={() => setCurrentView('main')} />;
   }
 
+  if (currentView === 'contact') {
+    return <Contact onBack={() => setCurrentView('main')} />;
+  }
+
   const handleDeveloperClick = (developer: string) => {
     setHighlightedDeveloper(highlightedDeveloper === developer ? null : developer);
   };
@@ -80,7 +85,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header 
         onAboutClick={() => setCurrentView('about')}
-        onBookViewingClick={() => setIsBookingModalOpen(true)}
+        onBookViewingClick={() => setCurrentView('contact')}
         onGuideClick={() => setCurrentView('guide')}
       />
       <DeveloperBanner 

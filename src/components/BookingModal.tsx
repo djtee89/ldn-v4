@@ -57,24 +57,19 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
     });
   };
 
-  const handleCalendarSubmit = (e: React.FormEvent) => {
+  const handleCalendarSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Create email with form data
-    const subject = encodeURIComponent(`Viewing Request: ${developmentName}`);
-    const body = encodeURIComponent(`Name: ${calendarForm.name}
-Email: ${calendarForm.email}
-Phone: ${calendarForm.phone}
-Development: ${developmentName}
-Preferred Date: ${calendarForm.preferredDate}
-Preferred Time: ${calendarForm.preferredTime}
-Message: ${calendarForm.message}`);
+    // Send via WhatsApp
+    const message = encodeURIComponent(
+      `Viewing Request: ${developmentName}\n\nName: ${calendarForm.name}\nEmail: ${calendarForm.email}\nPhone: ${calendarForm.phone}\nPreferred Date: ${calendarForm.preferredDate}\nPreferred Time: ${calendarForm.preferredTime || 'Flexible'}\n\nMessage: ${calendarForm.message || 'None'}`
+    );
     
-    window.location.href = `mailto:dan.taylor@fulhouse.co.uk?subject=${subject}&body=${body}`;
+    window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
     
     toast({
-      title: "Opening email client",
-      description: "Please send the email to complete your booking request."
+      title: "Request sent!",
+      description: "Opening WhatsApp to complete your viewing request."
     });
     onClose();
   };

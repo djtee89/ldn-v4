@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Building2, MapPin } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import logo from '@/assets/logo.png';
 
 interface HeaderProps {
@@ -10,6 +11,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onAboutClick, onBookViewingClick, onGuideClick }) => {
+  const [language, setLanguage] = useState('en');
+
   return (
     <header className="bg-background border-b border-border sticky top-0 z-40 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-4">
@@ -34,24 +37,34 @@ const Header: React.FC<HeaderProps> = ({ onAboutClick, onBookViewingClick, onGui
             <Button 
               variant="ghost" 
               onClick={onAboutClick}
-              className="font-medium"
+              className="font-medium hidden md:flex"
             >
-              About Us
+              {language === 'en' ? 'About Us' : '关于我们'}
             </Button>
             <Button 
               variant="outline" 
               onClick={onGuideClick}
               className="hidden sm:flex"
             >
-              Property Guide
+              {language === 'en' ? 'Property Guide' : '购房指南'}
             </Button>
             <Button 
               variant="premium" 
               size="sm"
               onClick={onBookViewingClick}
             >
-              Book Viewing
+              {language === 'en' ? 'Speak to an Expert' : '联系专家'}
             </Button>
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-[100px] hidden lg:flex">
+                <Globe className="h-4 w-4 mr-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">EN</SelectItem>
+                <SelectItem value="zh">中文</SelectItem>
+              </SelectContent>
+            </Select>
           </nav>
         </div>
       </div>
