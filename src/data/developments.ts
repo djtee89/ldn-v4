@@ -82,8 +82,14 @@ export const developments: Development[] = [
     chineseSupermarket: "15 mins",
     areaOverview: "Zone 1 location with excellent transport links and green spaces nearby.",
     images: [
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop"
+      "/src/assets/oval-village-1.png",
+      "/src/assets/oval-village-2.png",
+      "/src/assets/oval-village-3.png",
+      "/src/assets/oval-village-4.png",
+      "/src/assets/oval-village-5.png",
+      "/src/assets/oval-village-6.png",
+      "/src/assets/oval-village-7.png",
+      "/src/assets/oval-village-8.png"
     ]
   },
   {
