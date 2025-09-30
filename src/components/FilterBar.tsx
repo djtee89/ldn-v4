@@ -485,7 +485,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
               </Select>
             </div>
               <div>
-                <Label className="text-xs font-medium mb-1 block">Completion Year</Label>
+                <Label className="text-xs font-medium mb-1 block">Amenities</Label>
                 <Select value={filters.completionYear} onValueChange={value => updateFilter('completionYear', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Any" />
