@@ -73,6 +73,16 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Mobile Menu Toggle */}
           <div className="flex md:hidden items-center gap-2">
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-[70px] h-9">
+                <Globe className="h-4 w-4 mr-1" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">EN</SelectItem>
+                <SelectItem value="zh">中文</SelectItem>
+              </SelectContent>
+            </Select>
             <Button variant="ghost" size="icon" onClick={e => {
             e.stopPropagation();
             setMobileMenuOpen(!mobileMenuOpen);
@@ -94,18 +104,6 @@ const Header: React.FC<HeaderProps> = ({
             <Button variant="ghost" onClick={() => handleNavClick(onBookViewingClick)} className="w-full justify-start">
               {language === 'en' ? 'Speak to an Expert' : '联系专家'}
             </Button>
-            <div className="px-3">
-              <Select value={language} onValueChange={setLanguage}>
-                <SelectTrigger className="w-full">
-                  <Globe className="h-4 w-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">EN</SelectItem>
-                  <SelectItem value="zh">中文</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </nav>
         )}
       </div>
