@@ -553,7 +553,16 @@ export const developments: Development[] = [
     greenSpaces: "On-site gardens, near Kennington Park",
     amenities: ["Pool", "Spa", "Gym", "Cinema", "Residents' lounge", "24hr concierge"],
     areaOverview: "A new community at a classic London crossroads, famed for its cricket ground and connectivity.",
-    images: []
+    images: [
+      "/oval-village-1.png",
+      "/oval-village-2.png",
+      "/oval-village-3.png",
+      "/oval-village-4.png",
+      "/oval-village-5.png",
+      "/oval-village-6.png",
+      "/oval-village-7.png",
+      "/oval-village-8.png"
+    ]
   },
   {
     id: "bermondsey-place-berkeley",
