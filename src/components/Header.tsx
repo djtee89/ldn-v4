@@ -91,6 +91,9 @@ const Header: React.FC<HeaderProps> = ({
             <Button variant="ghost" onClick={() => handleNavClick(onGuideClick)} className="w-full justify-start">
               {language === 'en' ? 'Property Guide' : '购房指南'}
             </Button>
+            <Button variant="ghost" onClick={() => handleNavClick(onBookViewingClick)} className="w-full justify-start">
+              {language === 'en' ? 'Speak to an Expert' : '联系专家'}
+            </Button>
             <div className="px-3">
               <Select value={language} onValueChange={setLanguage}>
                 <SelectTrigger className="w-full">
