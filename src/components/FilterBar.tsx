@@ -468,10 +468,22 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
             {/* Completion */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center space-x-2">
-                
-                
-              </div>
+            <div>
+              <Label className="text-xs font-medium mb-1 block">Zone</Label>
+              <Select value={filters.zones[0] || undefined} onValueChange={value => updateFilter('zones', value ? [value] : [])}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Zone 1</SelectItem>
+                  <SelectItem value="2">Zone 2</SelectItem>
+                  <SelectItem value="3">Zone 3</SelectItem>
+                  <SelectItem value="4">Zone 4</SelectItem>
+                  <SelectItem value="5">Zone 5</SelectItem>
+                  <SelectItem value="6">Zone 6</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
               <div>
                 <Label className="text-xs font-medium mb-1 block">Completion Year</Label>
                 <Select value={filters.completionYear} onValueChange={value => updateFilter('completionYear', value)}>
@@ -491,21 +503,19 @@ const FilterBar: React.FC<FilterBarProps> = ({
           </div>
 
           {/* Zones */}
-          <div>
-            
-            <div className="flex gap-2 flex-wrap max-h-16 overflow-y-auto">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(zone => <div key={zone} className="flex items-center space-x-1.5">
-                  
-                  
-                </div>)}
-            </div>
-          </div>
 
           {/* Amenities */}
           <div>
-            
+            <Label className="text-xs font-medium mb-1 block">Amenities</Label>
             <div className="grid grid-cols-5 gap-2 max-h-20 overflow-y-auto pr-2">
-              {amenitiesList.map(amenity => {})}
+              {amenitiesList.map(amenity => (
+                <div key={amenity} className="flex items-center space-x-1.5">
+                  <Checkbox id={`amenity-desktop-${amenity}`} checked={filters.amenities.includes(amenity)} onCheckedChange={() => toggleAmenity(amenity)} />
+                  <Label htmlFor={`amenity-desktop-${amenity}`} className="text-xs cursor-pointer">
+                    {amenity}
+                  </Label>
+                </div>
+              ))}
             </div>
           </div>
 
