@@ -156,11 +156,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   };
 
   const FilterControls = () => (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Price Range */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <Label className="text-xs font-medium mb-2 block">Price From</Label>
+          <Label className="text-xs font-medium mb-1 block">Price From</Label>
           <Select value={filters.priceFrom || undefined} onValueChange={(value) => updateFilter('priceFrom', value)}>
             <SelectTrigger>
               <SelectValue placeholder="No min" />
@@ -173,7 +173,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           </Select>
         </div>
         <div>
-          <Label className="text-xs font-medium mb-2 block">Price To</Label>
+          <Label className="text-xs font-medium mb-1 block">Price To</Label>
           <Select value={filters.priceTo || undefined} onValueChange={(value) => updateFilter('priceTo', value)}>
             <SelectTrigger>
               <SelectValue placeholder="No max" />
@@ -189,7 +189,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
       {/* Tenure */}
       <div>
-        <Label className="text-xs font-medium mb-2 block">Tenure</Label>
+        <Label className="text-xs font-medium mb-1 block">Tenure</Label>
         <Select value={filters.tenure} onValueChange={(value) => updateFilter('tenure', value)}>
           <SelectTrigger>
             <SelectValue placeholder="Any" />
@@ -203,9 +203,9 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       </div>
 
       {/* Bedrooms */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <div>
-          <Label className="text-xs font-medium mb-2 block">Min Bedrooms</Label>
+          <Label className="text-xs font-medium mb-1 block">Min Bedrooms</Label>
           <Select value={filters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
             <SelectTrigger>
               <SelectValue placeholder="No min" />
@@ -218,7 +218,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           </Select>
         </div>
         <div>
-          <Label className="text-xs font-medium mb-2 block">Max Bedrooms</Label>
+          <Label className="text-xs font-medium mb-1 block">Max Bedrooms</Label>
           <Select value={filters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
             <SelectTrigger>
               <SelectValue placeholder="No max" />
@@ -234,16 +234,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
       {/* Zones */}
       <div>
-        <Label className="text-xs font-medium mb-2 block">London TfL Zones</Label>
-        <div className="grid grid-cols-3 gap-3">
+        <Label className="text-xs font-medium mb-1 block">London TfL Zones</Label>
+        <div className="grid grid-cols-3 gap-2 max-h-24 overflow-y-auto pr-2">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(zone => (
-            <div key={zone} className="flex items-center space-x-2">
+            <div key={zone} className="flex items-center space-x-1.5">
               <Checkbox
                 id={`zone-${zone}`}
                 checked={filters.zones.includes(zone.toString())}
                 onCheckedChange={() => toggleZone(zone.toString())}
               />
-              <Label htmlFor={`zone-${zone}`} className="text-sm cursor-pointer">
+              <Label htmlFor={`zone-${zone}`} className="text-xs cursor-pointer">
                 Zone {zone}
               </Label>
             </div>
@@ -253,7 +253,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
       {/* Walk to Station */}
       <div>
-        <Label className="text-xs font-medium mb-2 block">Walk to Station</Label>
+        <Label className="text-xs font-medium mb-1 block">Walk to Station</Label>
         <Select value={filters.walkToStation} onValueChange={(value) => updateFilter('walkToStation', value)}>
           <SelectTrigger>
             <SelectValue placeholder="Any" />
@@ -270,16 +270,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
       {/* Amenities */}
       <div>
-        <Label className="text-xs font-medium mb-2 block">Amenities</Label>
-        <div className="grid grid-cols-2 gap-3 max-h-60 overflow-y-auto">
+        <Label className="text-xs font-medium mb-1 block">Amenities</Label>
+        <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto pr-2">
           {amenitiesList.map(amenity => (
-            <div key={amenity} className="flex items-center space-x-2">
+            <div key={amenity} className="flex items-center space-x-1.5">
               <Checkbox
                 id={`amenity-${amenity}`}
                 checked={filters.amenities.includes(amenity)}
                 onCheckedChange={() => toggleAmenity(amenity)}
               />
-              <Label htmlFor={`amenity-${amenity}`} className="text-sm cursor-pointer">
+              <Label htmlFor={`amenity-${amenity}`} className="text-xs cursor-pointer">
                 {amenity}
               </Label>
             </div>
@@ -288,9 +288,9 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       </div>
 
       {/* Completion */}
-      <div className="space-y-4">
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="completed-now" className="text-sm">Completed (ready now)</Label>
+          <Label htmlFor="completed-now" className="text-xs">Completed (ready now)</Label>
           <Switch
             id="completed-now"
             checked={filters.completedNow}
@@ -298,7 +298,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           />
         </div>
         <div>
-          <Label className="text-xs font-medium mb-2 block">Completion Year</Label>
+          <Label className="text-xs font-medium mb-1 block">Completion Year</Label>
           <Select value={filters.completionYear} onValueChange={(value) => updateFilter('completionYear', value)}>
             <SelectTrigger>
               <SelectValue placeholder="Any" />
@@ -358,12 +358,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   // Desktop view
   return (
     <div className="bg-background border-b border-border">
-      <div className="container mx-auto px-4 py-6">
-        <div className="space-y-4">
-          <div className="grid grid-cols-4 gap-4">
+      <div className="container mx-auto px-4 py-3">
+        <div className="space-y-3">
+          <div className="grid grid-cols-4 gap-3">
             {/* Price From/To */}
             <div>
-              <Label className="text-xs font-medium mb-2 block">Price From</Label>
+              <Label className="text-xs font-medium mb-1 block">Price From</Label>
               <Select value={filters.priceFrom || undefined} onValueChange={(value) => updateFilter('priceFrom', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="No min" />
@@ -376,7 +376,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               </Select>
             </div>
             <div>
-              <Label className="text-xs font-medium mb-2 block">Price To</Label>
+              <Label className="text-xs font-medium mb-1 block">Price To</Label>
               <Select value={filters.priceTo || undefined} onValueChange={(value) => updateFilter('priceTo', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="No max" />
@@ -391,7 +391,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
             {/* Tenure */}
             <div>
-              <Label className="text-xs font-medium mb-2 block">Tenure</Label>
+              <Label className="text-xs font-medium mb-1 block">Tenure</Label>
               <Select value={filters.tenure} onValueChange={(value) => updateFilter('tenure', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Any" />
@@ -406,7 +406,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
             {/* Walk to Station */}
             <div>
-              <Label className="text-xs font-medium mb-2 block">Walk to Station</Label>
+              <Label className="text-xs font-medium mb-1 block">Walk to Station</Label>
               <Select value={filters.walkToStation} onValueChange={(value) => updateFilter('walkToStation', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Any" />
@@ -422,11 +422,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {/* Bedrooms */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs font-medium mb-2 block">Min Bedrooms</Label>
+                <Label className="text-xs font-medium mb-1 block">Min Bedrooms</Label>
                 <Select value={filters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="No min" />
@@ -439,7 +439,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 </Select>
               </div>
               <div>
-                <Label className="text-xs font-medium mb-2 block">Max Bedrooms</Label>
+                <Label className="text-xs font-medium mb-1 block">Max Bedrooms</Label>
                 <Select value={filters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="No max" />
@@ -454,19 +454,19 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             </div>
 
             {/* Completion */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div className="flex items-center space-x-2">
                 <Switch
                   id="completed-desktop"
                   checked={filters.completedNow}
                   onCheckedChange={(checked) => updateFilter('completedNow', checked)}
                 />
-                <Label htmlFor="completed-desktop" className="text-sm cursor-pointer">
+                <Label htmlFor="completed-desktop" className="text-xs cursor-pointer">
                   Completed (ready now)
                 </Label>
               </div>
               <div>
-                <Label className="text-xs font-medium mb-2 block">Completion Year</Label>
+                <Label className="text-xs font-medium mb-1 block">Completion Year</Label>
                 <Select value={filters.completionYear} onValueChange={(value) => updateFilter('completionYear', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Any" />
@@ -485,16 +485,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
           {/* Zones */}
           <div>
-            <Label className="text-xs font-medium mb-2 block">London TfL Zones</Label>
-            <div className="flex gap-3 flex-wrap">
+            <Label className="text-xs font-medium mb-1 block">London TfL Zones</Label>
+            <div className="flex gap-2 flex-wrap max-h-16 overflow-y-auto">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(zone => (
-                <div key={zone} className="flex items-center space-x-2">
+                <div key={zone} className="flex items-center space-x-1.5">
                   <Checkbox
                     id={`zone-desktop-${zone}`}
                     checked={filters.zones.includes(zone.toString())}
                     onCheckedChange={() => toggleZone(zone.toString())}
                   />
-                  <Label htmlFor={`zone-desktop-${zone}`} className="text-sm cursor-pointer">
+                  <Label htmlFor={`zone-desktop-${zone}`} className="text-xs cursor-pointer">
                     Zone {zone}
                   </Label>
                 </div>
@@ -504,16 +504,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
           {/* Amenities */}
           <div>
-            <Label className="text-xs font-medium mb-2 block">Amenities</Label>
-            <div className="grid grid-cols-5 gap-3">
+            <Label className="text-xs font-medium mb-1 block">Amenities</Label>
+            <div className="grid grid-cols-5 gap-2 max-h-20 overflow-y-auto pr-2">
               {amenitiesList.map(amenity => (
-                <div key={amenity} className="flex items-center space-x-2">
+                <div key={amenity} className="flex items-center space-x-1.5">
                   <Checkbox
                     id={`amenity-desktop-${amenity}`}
                     checked={filters.amenities.includes(amenity)}
                     onCheckedChange={() => toggleAmenity(amenity)}
                   />
-                  <Label htmlFor={`amenity-desktop-${amenity}`} className="text-sm cursor-pointer">
+                  <Label htmlFor={`amenity-desktop-${amenity}`} className="text-xs cursor-pointer">
                     {amenity}
                   </Label>
                 </div>
@@ -522,7 +522,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex items-center justify-between pt-2">
             <div className="text-sm text-muted-foreground">
               {resultsCount} properties found
             </div>
