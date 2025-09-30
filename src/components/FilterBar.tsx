@@ -505,19 +505,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           {/* Zones */}
 
           {/* Amenities */}
-          <div>
-            <Label className="text-xs font-medium mb-1 block">Amenities</Label>
-            <div className="grid grid-cols-5 gap-2 max-h-20 overflow-y-auto pr-2">
-              {amenitiesList.map(amenity => (
-                <div key={amenity} className="flex items-center space-x-1.5">
-                  <Checkbox id={`amenity-desktop-${amenity}`} checked={filters.amenities.includes(amenity)} onCheckedChange={() => toggleAmenity(amenity)} />
-                  <Label htmlFor={`amenity-desktop-${amenity}`} className="text-xs cursor-pointer">
-                    {amenity}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
+          
 
           {/* Actions */}
           <div className="flex items-center justify-between pt-2">
