@@ -15,9 +15,11 @@ export interface Development {
     lng: number;
   };
   prices: {
+    studio?: string;
     oneBed?: string;
     twoBed?: string;
     threeBed?: string;
+    fourBed?: string;
     range?: string;
   };
   tenure: string;
@@ -511,24 +513,39 @@ export const developments: Development[] = [
     developer: "Berkeley Homes",
     zone: 2,
     location: "Fulham",
-    postcode: "SW6 2FP",
+    postcode: "SW6 2FR",
     nearestTube: {
-      station: "Fulham Broadway / Imperial Wharf",
+      station: "Fulham Broadway",
       line: "District",
-      walkTime: 12
+      walkTime: 5
     },
-    coordinates: postcodeToCoords("SW6 2FP"),
+    coordinates: postcodeToCoords("SW6 2FR"),
     prices: {
-      range: "£793k - £4.9M"
+      studio: "From £790,000",
+      oneBed: "From £790,000",
+      twoBed: "From £1,175,000",
+      threeBed: "From £1,955,000",
+      fourBed: "From £4,920,000",
+      range: "£790k - £4.9M"
     },
-    tenure: "Leasehold",
-    schools: ["Lady Margaret School (Outstanding)"],
-    hospital: "Chelsea and Westminster",
-    transportScore: "Good",
-    greenSpaces: "A new 6-acre park is the centrepiece",
-    amenities: ["25m pool", "Vitality pool", "Spa", "Gym", "Two cinemas", "Virtual golf", "Residents' lounge"],
-    areaOverview: "A new sustainable neighbourhood just off the iconic King's Road, blending heritage with modern luxury.",
-    images: []
+    tenure: "999-year leasehold",
+    schools: ["Lady Margaret School (Outstanding)", "The London Oratory School (Outstanding)", "Thomas's Fulham (Outstanding)"],
+    hospital: "Chelsea and Westminster Hospital",
+    transportScore: "Excellent - close to two stations on different lines (District, Overground), multiple bus routes, easy access to central London",
+    greenSpaces: "6 acres of new public parkland and landscaped gardens within the development, including a formal lawn, courtyard gardens, and a new public square. Close to Eel Brook Common and Parsons Green.",
+    amenities: ["24-hour concierge", "25m swimming pool with vitality pool", "Sauna & steam room", "Gym & two fitness studios", "Two cinema rooms", "Games room", "Golf simulator & virtual games room", "Residents' lounge with atrium", "Private dining room", "Meeting rooms"],
+    areaOverview: "Perfectly positioned where Chelsea's iconic chic meets Fulham's village charm. Your new home is a launchpad for London living at its best. Spend weekend mornings browsing the designer boutiques on the King's Road, then grab lunch at an artisan café on Fulham Road. Enjoy a picnic or a game of tennis at nearby Eel Brook Common, or explore the independent delis and famous pubs of Parsons Green. For sports fans, Stamford Bridge is just a stone's throw away. It's a lifestyle of effortless style, convenience, and classic London character.",
+    images: [
+      "/kings-road-park-1.jpeg",
+      "/kings-road-park-2.jpeg",
+      "/kings-road-park-3.webp",
+      "/kings-road-park-4.webp",
+      "/kings-road-park-5.webp",
+      "/kings-road-park-6.webp",
+      "/kings-road-park-7.jpeg",
+      "/kings-road-park-8.webp",
+      "/kings-road-park-9.webp"
+    ]
   },
   {
     id: "oval-village-berkeley",
