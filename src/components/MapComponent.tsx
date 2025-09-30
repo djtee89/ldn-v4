@@ -63,7 +63,12 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
   // Update markers when map is loaded and developments or highlighting changes
   useEffect(() => {
-    if (!map.current || !isMapLoaded) return;
+    if (!map.current || !isMapLoaded) {
+      console.log('Map not ready:', { mapExists: !!map.current, isMapLoaded });
+      return;
+    }
+
+    console.log('Adding markers for', developments.length, 'developments');
 
     // Clear existing markers
     markersRef.current.forEach(marker => marker.remove());
@@ -71,6 +76,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     // Add development markers
     developments.forEach((development) => {
+      console.log('Creating marker for:', development.name, development.coordinates);
       const isHighlighted = highlightedDeveloper && development.developer === highlightedDeveloper;
       
       const markerEl = document.createElement('div');
@@ -105,11 +111,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
       markersRef.current.push(marker);
     });
 
+    console.log('Total markers created:', markersRef.current.length);
+
     return () => {
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
     };
-  }, [developments, onDevelopmentClick, highlightedDeveloper]);
+  }, [developments, onDevelopmentClick, highlightedDeveloper, isMapLoaded]);
 
   return (
     <div className={`relative ${className}`}>
