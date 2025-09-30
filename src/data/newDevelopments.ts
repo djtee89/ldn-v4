@@ -1068,7 +1068,7 @@ export const developments: Development[] = [
       line: "Overground, Southern",
       walkTime: 2
     },
-    coordinates: postcodeToCoords("SW6 2FS"),
+    coordinates: { lat: 51.4700, lng: -0.1905 },
     prices: {
       range: "POA (Resale)"
     },
