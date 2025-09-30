@@ -6,16 +6,19 @@ interface DeveloperBannerProps {
 }
 
 const developers = [
-  'Berkeley',
-  'Barratt',
-  'Ballymore', 
+  'Ballymore',
+  'Barratt London',
+  'Bellway',
+  'Berkeley Homes',
   'Canary Wharf Group',
-  'St George',
-  'Persimmon',
-  'Taylor Wimpey',
-  'Crest Nicholson',
-  'Galliard Homes',
-  'Mount Anvil'
+  'Countryside Homes',
+  'Hill Group',
+  'L&Q',
+  'Lendlease',
+  'London Square',
+  'Mount Anvil',
+  'Regal',
+  'Taylor Wimpey'
 ];
 
 const DeveloperBanner: React.FC<DeveloperBannerProps> = ({ onDeveloperClick, highlightedDeveloper }) => {

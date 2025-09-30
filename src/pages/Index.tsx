@@ -8,8 +8,8 @@ import BookingModal from '@/components/BookingModal';
 import PropertyOfTheWeek from '@/components/PropertyOfTheWeek';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
-import { developments, propertyOfTheWeek } from '@/data/developments';
-import { Development } from '@/data/developments';
+import { developments, propertyOfTheWeek } from '@/data/newDevelopments';
+import { Development } from '@/data/newDevelopments';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide'>('main');
@@ -38,13 +38,18 @@ const Index = () => {
         return false;
       }
 
-      // Keyword search
+      // Keyword search (including amenities)
       if (filters.keyword) {
         const keyword = filters.keyword.toLowerCase();
-        const searchText = `${dev.name} ${dev.developer} ${dev.location}`.toLowerCase();
+        const searchText = `${dev.name} ${dev.developer} ${dev.location} ${dev.amenities.join(' ')}`.toLowerCase();
         if (!searchText.includes(keyword)) {
           return false;
         }
+      }
+
+      // Developer filter
+      if (highlightedDeveloper && dev.developer !== highlightedDeveloper) {
+        return false;
       }
 
       // Price filters (simplified - would need proper price parsing in real app)

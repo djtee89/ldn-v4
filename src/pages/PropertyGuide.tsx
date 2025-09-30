@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Calculator, FileText, Users, Building, CheckCircle } from 'lucide-react';
+import StampDutyCalculator from '@/components/StampDutyCalculator';
 
 interface PropertyGuideProps {
   onBack: () => void;
@@ -77,6 +78,9 @@ const PropertyGuide: React.FC<PropertyGuideProps> = ({ onBack }) => {
       </div>
 
       <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* Stamp Duty Calculator */}
+        <StampDutyCalculator />
+
         {/* Mortgage Calculator */}
         <Card>
           <CardHeader>
@@ -175,7 +179,7 @@ const PropertyGuide: React.FC<PropertyGuideProps> = ({ onBack }) => {
                 <li>• Transfer of funds and completion</li>
               </ul>
               <p className="text-sm text-muted-foreground">
-                <strong>Cost:</strong> £800-£1,500 for a standard purchase
+                <strong>Cost:</strong> £1,000-£2,000 for a standard purchase
               </p>
             </CardContent>
           </Card>

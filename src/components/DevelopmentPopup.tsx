@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Development } from '@/data/developments';
+import { Development } from '@/data/newDevelopments';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -63,13 +63,11 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <GraduationCap className="h-4 w-4 text-primary" />
-                    <span className="font-medium">Universities</span>
+                    <span className="font-medium">Schools</span>
                   </div>
                   <div className="space-y-1">
-                    {development.universities.slice(0, 2).map((uni, index) => (
-                      <p key={index} className="text-sm">
-                        {uni.name} - {uni.distance}
-                      </p>
+                    {development.schools.slice(0, 2).map((school, index) => (
+                      <p key={index} className="text-sm">{school}</p>
                     ))}
                   </div>
                 </CardContent>
@@ -81,14 +79,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
       case 'investment':
         return (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <p className="text-2xl font-bold text-primary">{development.investment.yield}</p>
-                  <p className="text-xs text-muted-foreground">Rental Yield</p>
-                </CardContent>
-              </Card>
-              
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <Card>
                 <CardContent className="p-4 text-center">
                   <p className="text-2xl font-bold text-primary">Zone {development.zone}</p>
@@ -98,19 +89,15 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               
               <Card>
                 <CardContent className="p-4 text-center">
-                  <p className="text-lg font-bold text-primary">{development.investment.serviceCharge}</p>
-                  <p className="text-xs text-muted-foreground">Service Charge</p>
+                  <p className="text-lg font-bold text-primary">{development.transportScore}</p>
+                  <p className="text-xs text-muted-foreground">Transport Score</p>
                 </CardContent>
               </Card>
               
               <Card>
                 <CardContent className="p-4 text-center">
-                  <div className="flex justify-center">
-                    {[...Array(development.greenSpaceScore)].map((_, i) => (
-                      <Star key={i} className="h-3 w-3 fill-accent text-accent" />
-                    ))}
-                  </div>
-                  <p className="text-xs text-muted-foreground">Green Space</p>
+                  <p className="text-lg font-bold text-primary">{development.tenure}</p>
+                  <p className="text-xs text-muted-foreground">Tenure</p>
                 </CardContent>
               </Card>
             </div>
@@ -118,20 +105,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             <Card>
               <CardContent className="p-4">
                 <h4 className="font-medium mb-2">Price Range</h4>
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">1 bed:</span>
-                    <p className="font-semibold">{development.prices.oneBed}</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">2 bed:</span>
-                    <p className="font-semibold">{development.prices.twoBed}</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">3 bed:</span>
-                    <p className="font-semibold">{development.prices.threeBed}</p>
-                  </div>
-                </div>
+                <p className="text-lg font-semibold">{development.prices.range || development.prices.oneBed || 'POA'}</p>
               </CardContent>
             </Card>
           </div>
@@ -161,8 +135,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               
               <Card>
                 <CardContent className="p-4">
-                  <h4 className="font-medium mb-2">Chinese Supermarket</h4>
-                  <p className="text-sm">{development.chineseSupermarket}</p>
+                  <h4 className="font-medium mb-2">Green Spaces</h4>
+                  <p className="text-sm">{development.greenSpaces}</p>
                 </CardContent>
               </Card>
             </div>
@@ -174,25 +148,11 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           <div className="space-y-4">
             <Card>
               <CardContent className="p-4">
-                <h4 className="font-medium mb-3">Outstanding State Schools</h4>
+                <h4 className="font-medium mb-3">Notable Schools</h4>
                 <div className="space-y-2">
-                  {development.schools.outstanding.map((school, index) => (
+                  {development.schools.map((school, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <Badge variant="default">Outstanding</Badge>
-                      <span className="text-sm">{school}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-4">
-                <h4 className="font-medium mb-3">Private Schools</h4>
-                <div className="space-y-2">
-                  {development.schools.private.map((school, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Badge variant="secondary">Private</Badge>
+                      <Badge variant="default">School</Badge>
                       <span className="text-sm">{school}</span>
                     </div>
                   ))}
@@ -215,7 +175,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             <div className="grid grid-cols-2 gap-4">
               <Card>
                 <CardContent className="p-4 text-center">
-                  <p className="text-xl font-bold text-primary">{development.prices.oneBed}</p>
+                  <p className="text-xl font-bold text-primary">{development.prices.range || development.prices.oneBed || 'POA'}</p>
                   <p className="text-xs text-muted-foreground">Starting From</p>
                 </CardContent>
               </Card>

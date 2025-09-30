@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Development } from '@/data/developments';
+import { Development } from '@/data/newDevelopments';
 import { Button } from '@/components/ui/button';
 
 interface MapComponentProps {
@@ -47,14 +47,23 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     // Add development markers
     developments.forEach((development) => {
+      // Determine if this development's developer is highlighted
+      const isHighlighted = highlightedDeveloper && development.developer === highlightedDeveloper;
+      
       // Create custom marker element
       const markerEl = document.createElement('div');
       markerEl.className = 'cursor-pointer transition-all duration-300 hover:scale-110 hover:z-10';
       
-      // Create price pin HTML
+      // Get price to display
+      const displayPrice = development.prices.oneBed || development.prices.range || 'POA';
+      
+      // Create price pin HTML with conditional styling
       markerEl.innerHTML = `
-        <div class="bg-price-pin text-price-pin-foreground px-3 py-1 rounded-full font-bold text-sm shadow-medium hover:shadow-strong transition-smooth whitespace-nowrap">
-          ${development.prices.oneBed}
+        <div class="${isHighlighted 
+          ? 'bg-gradient-to-r from-primary to-accent text-white shadow-premium scale-110' 
+          : 'bg-price-pin text-price-pin-foreground shadow-medium'} 
+          px-3 py-1 rounded-full font-bold text-sm hover:shadow-strong transition-smooth whitespace-nowrap">
+          ${displayPrice}
         </div>
       `;
 
@@ -77,7 +86,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       markersRef.current.forEach(marker => marker.remove());
       map.current?.remove();
     };
-  }, [developments, onDevelopmentClick, mapboxToken]);
+  }, [developments, onDevelopmentClick, mapboxToken, highlightedDeveloper]);
 
   return (
     <div className={`relative ${className}`}>

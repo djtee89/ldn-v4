@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { X, Calendar, MessageCircle, Phone, Copy, Check } from 'lucide-react';
@@ -113,8 +113,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
               </TabsTrigger>
               <TabsTrigger value="agent" className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <span className="hidden sm:inline">Request Agent</span>
-                <span className="sm:hidden">Agent</span>
+                <span className="hidden sm:inline">WhatsApp Booking</span>
+                <span className="sm:hidden">WhatsApp</span>
               </TabsTrigger>
             </TabsList>
 
@@ -279,63 +279,37 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
             <TabsContent value="agent" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Request Expert Agent</CardTitle>
+                  <CardTitle className="text-lg">WhatsApp Booking</CardTitle>
+                  <CardDescription>
+                    Connect with us instantly via WhatsApp for property viewings and inquiries
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleAgentSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="ag-name">Full Name *</Label>
-                        <Input
-                          id="ag-name"
-                          value={agentForm.name}
-                          onChange={(e) => setAgentForm({...agentForm, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="ag-email">Email *</Label>
-                        <Input
-                          id="ag-email"
-                          type="email"
-                          value={agentForm.email}
-                          onChange={(e) => setAgentForm({...agentForm, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="ag-phone">Phone Number *</Label>
-                        <Input
-                          id="ag-phone"
-                          type="tel"
-                          value={agentForm.phone}
-                          onChange={(e) => setAgentForm({...agentForm, phone: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="ag-time">Preferred Call Time</Label>
-                        <Input
-                          id="ag-time"
-                          placeholder="e.g., Weekdays 9-5pm"
-                          value={agentForm.preferredTime}
-                          onChange={(e) => setAgentForm({...agentForm, preferredTime: e.target.value})}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="ag-message">How can we help?</Label>
-                      <Textarea
-                        id="ag-message"
-                        placeholder="Tell us about your requirements and preferences..."
-                        value={agentForm.message}
-                        onChange={(e) => setAgentForm({...agentForm, message: e.target.value})}
-                      />
-                    </div>
-                    <Button type="submit" variant="premium" className="w-full">
-                      Request Callback
+                <CardContent className="space-y-4">
+                  <div className="bg-muted rounded-lg p-6 text-center">
+                    <MessageCircle className="w-16 h-16 text-primary mx-auto mb-4" />
+                    <h3 className="font-semibold text-lg mb-2">Chat with us on WhatsApp</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Get instant responses to your questions and book viewings directly through WhatsApp
+                    </p>
+                    <Button
+                      variant="premium"
+                      size="lg"
+                      className="w-full"
+                      onClick={() => {
+                        const message = encodeURIComponent(
+                          `Hi, I'm interested in viewing ${developmentName || 'a property'}. Can you help me book a viewing?`
+                        );
+                        window.open(`https://wa.me/447000000000?text=${message}`, '_blank');
+                      }}
+                    >
+                      <MessageCircle className="w-5 h-5 mr-2" />
+                      Open WhatsApp
                     </Button>
-                  </form>
+                  </div>
+                  <div className="text-xs text-center text-muted-foreground">
+                    <p>Available Monday - Saturday, 9:00 AM - 7:00 PM</p>
+                    <p className="mt-1">Response time: Usually within 5 minutes</p>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

@@ -64,7 +64,8 @@ const About: React.FC<AboutProps> = ({ onBack }) => {
               London Development Network
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Bringing together all new build developments across London in one place.
+              We are a network of premium developers offering exclusive access to London's finest new build properties. 
+              Book direct with developers to access special offers and incentives.
             </p>
           </div>
 
@@ -125,15 +126,17 @@ const About: React.FC<AboutProps> = ({ onBack }) => {
               <h2 className="text-2xl font-bold text-foreground mb-6">How It Works</h2>
               <div className="prose prose-lg max-w-none text-muted-foreground">
                 <p className="mb-4">
-                  The London Developer Network brings together all new build developments across London in one place. 
-                  No more relying on scattered agent listings or missing out on information.
+                  The London Developer Network is a curated network of premium developers across London. 
+                  We connect you directly with developers, giving you access to exclusive offers and incentives 
+                  that are only available when booking direct.
                 </p>
                 <p className="mb-4">
                   Browse transparently and see everything yourself: prices, floorplans, schools, transport, lifestyle, investment data.
+                  Our platform brings together all the information you need in one place.
                 </p>
                 <p className="mb-6">
-                  Then either book directly with the developer or request our expert team who can guide you, 
-                  answer questions, and even accompany you to viewings.
+                  Book directly with developers to access special launch offers, early-bird discounts, and exclusive 
+                  incentives. Our expert team is also available to guide you, answer questions, and accompany you to viewings.
                 </p>
                 
                 <div className="bg-accent-muted rounded-lg p-6 not-prose">
