@@ -17,13 +17,14 @@ import {
   Navigation
 } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import DestinationSelector from '@/components/DestinationSelector';
 
 interface DevelopmentPopupProps {
   development: Development;
   onClose: () => void;
   onBookViewing: () => void;
   onRequestInfo: () => void;
-  onGetDirections?: () => void;
+  onGetDirections?: (stationCoords: { lat: number; lng: number; name: string; line: string }) => void;
 }
 
 const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
@@ -34,6 +35,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   onGetDirections
 }) => {
   const [activeSection, setActiveSection] = useState<string>('overview');
+  const [showDestinationSelector, setShowDestinationSelector] = useState(false);
 
   // Body scroll lock
   useEffect(() => {
@@ -296,7 +298,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             {onGetDirections && (
               <Button 
                 variant="secondary" 
-                onClick={onGetDirections}
+                onClick={() => setShowDestinationSelector(true)}
                 className="flex items-center gap-2"
               >
                 <Navigation className="h-4 w-4" />
@@ -305,6 +307,22 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             )}
           </div>
         </div>
+
+        {/* Destination Selector */}
+        <DestinationSelector
+          isOpen={showDestinationSelector}
+          onClose={() => setShowDestinationSelector(false)}
+          nearestStation={development.nearestTube}
+          developmentLocation={development.location}
+          onSelectDestination={(station) => {
+            onGetDirections?.({
+              lat: station.coordinates.lat,
+              lng: station.coordinates.lng,
+              name: station.name,
+              line: station.line
+            });
+          }}
+        />
       </div>
     </div>
   );

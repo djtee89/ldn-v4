@@ -10,7 +10,15 @@ interface MapComponentProps {
   onDevelopmentClick: (development: Development) => void;
   highlightedDeveloper: string | null;
   className?: string;
-  activeDirections?: { developmentId: string } | null;
+  activeDirections?: { 
+    developmentId: string;
+    destination: {
+      lat: number;
+      lng: number;
+      name: string;
+      line: string;
+    };
+  } | null;
   onDirectionsClose?: () => void;
 }
 const MapComponent: React.FC<MapComponentProps> = ({
@@ -203,14 +211,10 @@ const MapComponent: React.FC<MapComponentProps> = ({
     setCurrentDevelopment(development);
     setIsLoadingDirections(true);
 
-    // Estimate station coordinates based on walk time
-    const stationCoords = estimateStationCoordinates(
-      development.coordinates,
-      development.nearestTube.walkTime
-    );
+    const destinationCoords = activeDirections.destination;
 
-    // Fetch directions
-    getDirections(development.coordinates, stationCoords, 'walking')
+    // Fetch directions to selected destination
+    getDirections(development.coordinates, destinationCoords, 'walking')
       .then((directions) => {
         if (directions && map.current) {
           setDirectionsData(directions);
@@ -274,7 +278,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         <DirectionsPanel
           directions={directionsData}
           fromName={currentDevelopment.name}
-          toName={currentDevelopment.nearestTube.station}
+          toName={activeDirections.destination.name}
           onClose={onDirectionsClose}
           isLoading={isLoadingDirections}
         />

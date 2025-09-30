@@ -19,7 +19,15 @@ const Index = () => {
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [highlightedDeveloper, setHighlightedDeveloper] = useState<string | null>(null);
-  const [activeDirections, setActiveDirections] = useState<{ developmentId: string } | null>(null);
+  const [activeDirections, setActiveDirections] = useState<{ 
+    developmentId: string;
+    destination: {
+      lat: number;
+      lng: number;
+      name: string;
+      line: string;
+    };
+  } | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     priceFrom: '',
     priceTo: '',
@@ -181,8 +189,11 @@ const Index = () => {
             // Handle request info - could open a separate modal
             console.log('Request info for:', selectedDevelopment.name);
           }}
-          onGetDirections={() => {
-            setActiveDirections({ developmentId: selectedDevelopment.id });
+          onGetDirections={(destination) => {
+            setActiveDirections({ 
+              developmentId: selectedDevelopment.id,
+              destination
+            });
             setSelectedDevelopment(null);
           }}
         />
