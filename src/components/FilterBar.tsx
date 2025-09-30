@@ -486,18 +486,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
             </div>
               <div>
                 <Label className="text-xs font-medium mb-1 block">Amenities</Label>
-                <Select value={filters.completionYear} onValueChange={value => updateFilter('completionYear', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any">Any</SelectItem>
-                    <SelectItem value="2025">2025</SelectItem>
-                    <SelectItem value="2026">2026</SelectItem>
-                    <SelectItem value="2027">2027</SelectItem>
-                    <SelectItem value="2028">2028+</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="grid grid-cols-2 gap-1.5 max-h-20 overflow-y-auto pr-1 border border-border rounded-md p-2">
+                  {['Gym', 'Pool', 'Concierge', '24/7 Security', 'Parking', 'Balcony', 'Lift/Elevator', 'Pet-friendly'].map(amenity => <div key={amenity} className="flex items-center space-x-1">
+                      <Checkbox id={`desktop-amenity-${amenity}`} checked={filters.amenities.includes(amenity)} onCheckedChange={() => toggleAmenity(amenity)} />
+                      <Label htmlFor={`desktop-amenity-${amenity}`} className="text-xs cursor-pointer">
+                        {amenity}
+                      </Label>
+                    </div>)}
+                </div>
               </div>
             </div>
           </div>
