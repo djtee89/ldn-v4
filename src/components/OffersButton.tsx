@@ -9,7 +9,7 @@ const OffersButton: React.FC = () => {
   return (
     <Button
       onClick={() => navigate('/offers')}
-      className="absolute bottom-4 right-[185px] bg-primary hover:bg-primary/90 transition-smooth shadow-medium z-10 h-9 px-3 text-sm"
+      className="absolute bottom-4 left-4 bg-primary hover:bg-primary/90 transition-smooth shadow-medium z-10 h-9 px-3 text-sm"
       size="sm"
     >
       <Tag className="w-3.5 h-3.5 mr-1.5" />
