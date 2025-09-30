@@ -5,6 +5,7 @@ import { Development } from '@/data/newDevelopments';
 import { Button } from '@/components/ui/button';
 import DirectionsPanel from './DirectionsPanel';
 import { getDirections, DirectionsData, estimateStationCoordinates } from '@/lib/directions';
+import { AmenityType, getNearbyAmenities, amenityColors } from '@/data/amenities';
 interface MapComponentProps {
   developments: Development[];
   onDevelopmentClick: (development: Development) => void;
@@ -20,6 +21,7 @@ interface MapComponentProps {
     };
   } | null;
   onDirectionsClose?: () => void;
+  lifestyleFilters?: AmenityType[];
 }
 const MapComponent: React.FC<MapComponentProps> = ({
   developments,
@@ -27,7 +29,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
   highlightedDeveloper,
   className = "",
   activeDirections = null,
-  onDirectionsClose = () => {}
+  onDirectionsClose = () => {},
+  lifestyleFilters = []
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -58,6 +61,15 @@ const MapComponent: React.FC<MapComponentProps> = ({
     map.current.on('load', () => {
       // Add source for development pins
       map.current!.addSource('developments', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: []
+        }
+      });
+
+      // Add source for amenity pins
+      map.current!.addSource('amenities', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
@@ -111,6 +123,38 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
+      // Add amenity pins layer
+      map.current!.addLayer({
+        id: 'amenity-pins',
+        type: 'circle',
+        source: 'amenities',
+        paint: {
+          'circle-radius': 5,
+          'circle-color': ['get', 'color'],
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff',
+          'circle-opacity': 0.8
+        }
+      });
+
+      // Add amenity labels
+      map.current!.addLayer({
+        id: 'amenity-labels',
+        type: 'symbol',
+        source: 'amenities',
+        layout: {
+          'text-field': ['get', 'name'],
+          'text-size': 10,
+          'text-offset': [0, -1.2],
+          'text-anchor': 'top'
+        },
+        paint: {
+          'text-color': '#1a1a1a',
+          'text-halo-color': '#ffffff',
+          'text-halo-width': 1.5
+        }
+      });
+
       // Handle clicks
       map.current!.on('click', 'development-pins', e => {
         if (e.features && e.features[0]) {
@@ -138,6 +182,39 @@ const MapComponent: React.FC<MapComponentProps> = ({
       map.current!.on('mouseleave', 'development-pins-highlighted', () => {
         map.current!.getCanvas().style.cursor = '';
       });
+
+      // Amenity hover handlers
+      map.current!.on('mouseenter', 'amenity-pins', () => {
+        map.current!.getCanvas().style.cursor = 'pointer';
+      });
+      map.current!.on('mouseleave', 'amenity-pins', () => {
+        map.current!.getCanvas().style.cursor = '';
+      });
+
+      // Show popup on amenity hover
+      const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: 15
+      });
+
+      map.current!.on('mouseenter', 'amenity-pins', (e) => {
+        if (e.features && e.features[0]) {
+          const feature = e.features[0];
+          const coordinates = (feature.geometry as any).coordinates.slice();
+          const name = feature.properties?.name;
+          const walkTime = feature.properties?.walkTime;
+          
+          popup.setLngLat(coordinates)
+            .setHTML(`<div style="padding: 4px; font-size: 12px;"><strong>${name}</strong><br/>${walkTime} min walk</div>`)
+            .addTo(map.current!);
+        }
+      });
+
+      map.current!.on('mouseleave', 'amenity-pins', () => {
+        popup.remove();
+      });
+
       setIsMapLoaded(true);
     });
 
@@ -180,6 +257,53 @@ const MapComponent: React.FC<MapComponentProps> = ({
       features
     });
   }, [developments, highlightedDeveloper, isMapLoaded]);
+
+  // Update amenity layers when lifestyle filters change
+  useEffect(() => {
+    if (!map.current || !isMapLoaded) return;
+    const source = map.current.getSource('amenities') as mapboxgl.GeoJSONSource;
+    if (!source) return;
+
+    if (lifestyleFilters.length === 0) {
+      // Clear amenities
+      source.setData({
+        type: 'FeatureCollection',
+        features: []
+      });
+      return;
+    }
+
+    // Get all amenities near all developments
+    const allAmenities = developments.flatMap(dev => 
+      getNearbyAmenities(dev.coordinates.lat, dev.coordinates.lng, lifestyleFilters, 15)
+    );
+
+    // Remove duplicates by ID
+    const uniqueAmenities = Array.from(
+      new Map(allAmenities.map(a => [a.id, a])).values()
+    );
+
+    // Create GeoJSON features
+    const features = uniqueAmenities.map(amenity => ({
+      type: 'Feature' as const,
+      geometry: {
+        type: 'Point' as const,
+        coordinates: [amenity.coordinates.lng, amenity.coordinates.lat]
+      },
+      properties: {
+        id: amenity.id,
+        name: amenity.name,
+        type: amenity.type,
+        walkTime: amenity.walkTime,
+        color: amenityColors[amenity.type]
+      }
+    }));
+
+    source.setData({
+      type: 'FeatureCollection',
+      features
+    });
+  }, [lifestyleFilters, developments, isMapLoaded]);
 
   // Handle click events from map
   useEffect(() => {

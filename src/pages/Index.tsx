@@ -8,11 +8,13 @@ import BookingModal from '@/components/BookingModal';
 import PropertyOfTheWeek from '@/components/PropertyOfTheWeek';
 import OffersButton from '@/components/OffersButton';
 import LiveChat from '@/components/LiveChat';
+import LifestyleFilterBar from '@/components/LifestyleFilterBar';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
 import Contact from './Contact';
 import { developments, propertyOfTheWeek } from '@/data/newDevelopments';
 import { Development } from '@/data/newDevelopments';
+import { AmenityType } from '@/data/amenities';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide' | 'contact'>('main');
@@ -28,6 +30,7 @@ const Index = () => {
       line: string;
     };
   } | null>(null);
+  const [lifestyleFilters, setLifestyleFilters] = useState<AmenityType[]>([]);
   const [filters, setFilters] = useState<FilterState>({
     priceFrom: '',
     priceTo: '',
@@ -163,6 +166,11 @@ const Index = () => {
       />
       
       <main className="container mx-auto px-4 py-6">
+        <LifestyleFilterBar 
+          selectedTypes={lifestyleFilters}
+          onTypesChange={setLifestyleFilters}
+        />
+        
         <div className="h-[calc(100vh-400px)] h-[calc(100dvh-400px)] min-h-[500px] relative">
           <MapComponent 
             developments={filteredDevelopments}
@@ -171,6 +179,7 @@ const Index = () => {
             className="w-full h-full"
             activeDirections={activeDirections}
             onDirectionsClose={() => setActiveDirections(null)}
+            lifestyleFilters={lifestyleFilters}
           />
           <PropertyOfTheWeek onViewClick={handlePropertyOfTheWeekClick} />
           <OffersButton />
