@@ -179,10 +179,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     }} />
       
       {/* London context overlay */}
-      <div className="absolute top-4 left-4 bg-glass backdrop-blur-sm rounded-lg p-3 shadow-medium">
-        <h3 className="font-semibold text-sm text-foreground">London New Builds</h3>
-        <p className="text-xs text-muted-foreground">Click pins to view details</p>
-      </div>
+      
 
       {/* Legend */}
       
