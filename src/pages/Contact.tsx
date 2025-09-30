@@ -104,9 +104,7 @@ const Contact: React.FC<ContactProps> = ({
             <h1 className="text-4xl font-bold text-foreground mb-4">
               Contact Our Experts
             </h1>
-            <p className="text-lg text-muted-foreground">
-              Choose your preferred contact method
-            </p>
+            <p className="text-lg text-muted-foreground">If you need advice, help narrowing down your search, or guidance at any stage, speak to our experts — we’ll help you find the right home and connect you directly with the developers to secure the best deal.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
