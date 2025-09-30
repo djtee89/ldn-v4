@@ -71,11 +71,8 @@ const Header: React.FC<HeaderProps> = ({
             </Select>
           </nav>
 
-          {/* Mobile Menu Toggle & Primary CTA */}
+          {/* Mobile Menu Toggle */}
           <div className="flex md:hidden items-center gap-2">
-            <Button variant="premium" size="sm" onClick={onBookViewingClick}>
-              {language === 'en' ? 'Expert' : '专家'}
-            </Button>
             <Button variant="ghost" size="icon" onClick={e => {
             e.stopPropagation();
             setMobileMenuOpen(!mobileMenuOpen);
