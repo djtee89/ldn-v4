@@ -20,6 +20,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
   // Initialize map once
@@ -39,15 +40,30 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
+    // Wait for map to fully load before allowing markers
+    map.current.on('load', () => {
+      setIsMapLoaded(true);
+    });
+
+    // Handle map resize
+    const handleResize = () => {
+      map.current?.resize();
+    };
+    window.addEventListener('resize', handleResize);
+
     return () => {
+      window.removeEventListener('resize', handleResize);
+      markersRef.current.forEach(marker => marker.remove());
+      markersRef.current = [];
       map.current?.remove();
       map.current = null;
+      setIsMapLoaded(false);
     };
   }, [mapboxToken]);
 
-  // Update markers when developments or highlighting changes
+  // Update markers when map is loaded and developments or highlighting changes
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current || !isMapLoaded) return;
 
     // Clear existing markers
     markersRef.current.forEach(marker => marker.remove());
