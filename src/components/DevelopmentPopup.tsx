@@ -92,72 +92,72 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
       case 'investment':
         return (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <p className="text-2xl font-bold text-primary">Zone {development.zone}</p>
-                  <p className="text-xs text-muted-foreground">London Zone</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <p className="text-lg font-bold text-primary">{development.transportScore}</p>
-                  <p className="text-xs text-muted-foreground">Transport Score</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <p className="text-lg font-bold text-primary">{development.tenure}</p>
-                  <p className="text-xs text-muted-foreground">Tenure</p>
-                </CardContent>
-              </Card>
-            </div>
-            
             <Card>
               <CardContent className="p-4">
-                <h4 className="font-medium mb-3">Prices by Bedroom Type</h4>
-                <div className="space-y-2">
+                <h4 className="font-medium mb-3">Pricing</h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2">
                   {development.prices.studio && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Studio</span>
-                      <span className="font-semibold">{development.prices.studio}</span>
+                      <span className="text-xs text-muted-foreground">Studio</span>
+                      <span className="text-sm font-semibold text-primary">{development.prices.studio}</span>
                     </div>
                   )}
                   {development.prices.oneBed && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">1 Bedroom</span>
-                      <span className="font-semibold">{development.prices.oneBed}</span>
+                      <span className="text-xs text-muted-foreground">1 Bed</span>
+                      <span className="text-sm font-semibold text-primary">{development.prices.oneBed}</span>
                     </div>
                   )}
                   {development.prices.twoBed && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">2 Bedroom</span>
-                      <span className="font-semibold">{development.prices.twoBed}</span>
+                      <span className="text-xs text-muted-foreground">2 Bed</span>
+                      <span className="text-sm font-semibold text-primary">{development.prices.twoBed}</span>
                     </div>
                   )}
                   {development.prices.threeBed && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">3 Bedroom</span>
-                      <span className="font-semibold">{development.prices.threeBed}</span>
+                      <span className="text-xs text-muted-foreground">3 Bed</span>
+                      <span className="text-sm font-semibold text-primary">{development.prices.threeBed}</span>
                     </div>
                   )}
                   {development.prices.fourBed && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">4 Bedroom</span>
-                      <span className="font-semibold">{development.prices.fourBed}</span>
+                      <span className="text-xs text-muted-foreground">4 Bed</span>
+                      <span className="text-sm font-semibold text-primary">{development.prices.fourBed}</span>
                     </div>
                   )}
                   {!development.prices.studio && !development.prices.oneBed && !development.prices.twoBed && !development.prices.threeBed && !development.prices.fourBed && development.prices.range && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Price Range</span>
-                      <span className="font-semibold">{development.prices.range}</span>
+                    <div className="flex justify-between items-center col-span-2">
+                      <span className="text-xs text-muted-foreground">Price Range</span>
+                      <span className="text-sm font-semibold text-primary">{development.prices.range}</span>
                     </div>
                   )}
                 </div>
               </CardContent>
             </Card>
+            
+            <div className="grid grid-cols-3 gap-3">
+              <Card>
+                <CardContent className="p-3 text-center">
+                  <p className="text-lg font-bold text-primary">Zone {development.zone}</p>
+                  <p className="text-[10px] text-muted-foreground">London Zone</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-3 text-center">
+                  <p className="text-sm font-bold text-primary">{development.transportScore}</p>
+                  <p className="text-[10px] text-muted-foreground">Transport</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-3 text-center">
+                  <p className="text-sm font-bold text-primary">{development.tenure}</p>
+                  <p className="text-[10px] text-muted-foreground">Tenure</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         );
       
