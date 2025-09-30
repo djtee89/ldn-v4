@@ -347,7 +347,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           <div className="flex items-center justify-between">
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button variant="outline" className="flex items-center gap-2 h-[36px]">
                   <SlidersHorizontal className="h-4 w-4" />
                   Filters
                 </Button>
@@ -360,10 +360,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
                   <FilterControls />
                 </div>
                 <DrawerFooter className="flex flex-row gap-2">
-                  <Button variant="outline" onClick={resetFilters} className="flex-1">
+                  <Button variant="outline" onClick={resetFilters} className="flex-1 h-[36px]">
                     Reset
                   </Button>
-                  <Button variant="premium" onClick={() => setIsDrawerOpen(false)} className="flex-1">
+                  <Button variant="premium" onClick={() => setIsDrawerOpen(false)} className="flex-1 h-[36px]">
                     Apply ({resultsCount})
                   </Button>
                 </DrawerFooter>
@@ -509,7 +509,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
               {resultsCount} properties found
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={resetFilters}>
+              <Button variant="outline" onClick={resetFilters} className="h-[36px]">
                 Reset All
               </Button>
             </div>
