@@ -45,6 +45,9 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
     message: ''
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID'; // Replace with your Formspree form ID
+
   if (!isOpen) return null;
 
   const handleCopyWeChat = () => {
@@ -59,19 +62,55 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
 
   const handleCalendarSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Send via WhatsApp
-    const message = encodeURIComponent(
-      `Viewing Request: ${developmentName}\n\nName: ${calendarForm.name}\nEmail: ${calendarForm.email}\nPhone: ${calendarForm.phone}\nPreferred Date: ${calendarForm.preferredDate}\nPreferred Time: ${calendarForm.preferredTime || 'Flexible'}\n\nMessage: ${calendarForm.message || 'None'}`
-    );
-    
-    window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
-    
-    toast({
-      title: "Request sent!",
-      description: "Opening WhatsApp to complete your viewing request."
-    });
-    onClose();
+    try {
+      const response = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          development: developmentName,
+          name: calendarForm.name.trim(),
+          email: calendarForm.email.trim(),
+          phone: calendarForm.phone.trim(),
+          preferredDate: calendarForm.preferredDate,
+          preferredTime: calendarForm.preferredTime || 'Flexible',
+          message: calendarForm.message.trim() || 'None',
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Request sent!",
+          description: "We've received your viewing request and will contact you soon."
+        });
+        
+        // Reset form
+        setCalendarForm({
+          name: '',
+          email: '',
+          phone: '',
+          preferredDate: '',
+          preferredTime: '',
+          message: ''
+        });
+        
+        onClose();
+      } else {
+        throw new Error('Failed to submit form');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      toast({
+        title: "Submission failed",
+        description: "Please try again or contact us via WhatsApp.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleWeChatSubmit = (e: React.FormEvent) => {
@@ -193,8 +232,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                         onChange={(e) => setCalendarForm({...calendarForm, message: e.target.value})}
                       />
                     </div>
-                    <Button type="submit" variant="premium" className="w-full">
-                      Submit Viewing Request
+                    <Button type="submit" variant="premium" className="w-full" disabled={isSubmitting}>
+                      {isSubmitting ? 'Submitting...' : 'Submit Viewing Request'}
                     </Button>
                   </form>
                 </CardContent>
