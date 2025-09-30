@@ -104,8 +104,45 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             
             <Card>
               <CardContent className="p-4">
-                <h4 className="font-medium mb-2">Price Range</h4>
-                <p className="text-lg font-semibold">{development.prices.range || development.prices.oneBed || 'POA'}</p>
+                <h4 className="font-medium mb-3">Prices by Bedroom Type</h4>
+                <div className="space-y-2">
+                  {development.prices.studio && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Studio</span>
+                      <span className="font-semibold">{development.prices.studio}</span>
+                    </div>
+                  )}
+                  {development.prices.oneBed && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">1 Bedroom</span>
+                      <span className="font-semibold">{development.prices.oneBed}</span>
+                    </div>
+                  )}
+                  {development.prices.twoBed && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">2 Bedroom</span>
+                      <span className="font-semibold">{development.prices.twoBed}</span>
+                    </div>
+                  )}
+                  {development.prices.threeBed && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">3 Bedroom</span>
+                      <span className="font-semibold">{development.prices.threeBed}</span>
+                    </div>
+                  )}
+                  {development.prices.fourBed && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">4 Bedroom</span>
+                      <span className="font-semibold">{development.prices.fourBed}</span>
+                    </div>
+                  )}
+                  {!development.prices.studio && !development.prices.oneBed && !development.prices.twoBed && !development.prices.threeBed && !development.prices.fourBed && development.prices.range && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Price Range</span>
+                      <span className="font-semibold">{development.prices.range}</span>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -172,21 +209,56 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               </CardContent>
             </Card>
             
-            <div className="grid grid-cols-2 gap-4">
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <p className="text-xl font-bold text-primary">{development.prices.range || development.prices.oneBed || 'POA'}</p>
-                  <p className="text-xs text-muted-foreground">Starting From</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <p className="text-xl font-bold text-primary">Zone {development.zone}</p>
-                  <p className="text-xs text-muted-foreground">London Zone</p>
-                </CardContent>
-              </Card>
-            </div>
+            <Card>
+              <CardContent className="p-4">
+                <h4 className="font-medium mb-3">Pricing</h4>
+                <div className="space-y-2">
+                  {development.prices.studio && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Studio</span>
+                      <span className="font-semibold text-primary">{development.prices.studio}</span>
+                    </div>
+                  )}
+                  {development.prices.oneBed && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">1 Bedroom</span>
+                      <span className="font-semibold text-primary">{development.prices.oneBed}</span>
+                    </div>
+                  )}
+                  {development.prices.twoBed && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">2 Bedroom</span>
+                      <span className="font-semibold text-primary">{development.prices.twoBed}</span>
+                    </div>
+                  )}
+                  {development.prices.threeBed && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">3 Bedroom</span>
+                      <span className="font-semibold text-primary">{development.prices.threeBed}</span>
+                    </div>
+                  )}
+                  {development.prices.fourBed && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">4 Bedroom</span>
+                      <span className="font-semibold text-primary">{development.prices.fourBed}</span>
+                    </div>
+                  )}
+                  {!development.prices.studio && !development.prices.oneBed && !development.prices.twoBed && !development.prices.threeBed && !development.prices.fourBed && development.prices.range && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Price Range</span>
+                      <span className="font-semibold text-primary">{development.prices.range}</span>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-4 text-center">
+                <p className="text-xl font-bold text-primary">Zone {development.zone}</p>
+                <p className="text-xs text-muted-foreground">London Zone</p>
+              </CardContent>
+            </Card>
           </div>
         );
     }
