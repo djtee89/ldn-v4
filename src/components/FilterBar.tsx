@@ -321,7 +321,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       {/* Amenities */}
       <div>
         <Label className="text-xs font-medium mb-1 block">Amenities</Label>
-        <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto pr-2 border border-border rounded-md p-2">
+        <div className="grid grid-cols-2 gap-2 h-12 overflow-y-auto pr-2 border border-border rounded-md p-2">
           {amenitiesList.map(amenity => (
             <div key={amenity} className="flex items-center space-x-1.5">
               <Checkbox
@@ -516,7 +516,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               </div>
               <div>
                 <Label className="text-xs font-medium mb-1 block">Amenities</Label>
-                <div className="grid grid-cols-2 gap-1.5 h-9 overflow-y-auto pr-1 border border-border rounded-md p-2">
+                <div className="grid grid-cols-2 gap-1.5 h-12 overflow-y-auto pr-1 border border-border rounded-md p-2">
                   {amenitiesList.map(amenity => (
                     <div key={amenity} className="flex items-center space-x-1">
                       <Checkbox
