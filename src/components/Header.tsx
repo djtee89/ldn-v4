@@ -86,7 +86,28 @@ const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Mobile Navigation Dropdown */}
-        
+        {mobileMenuOpen && (
+          <nav className="nav-links show md:hidden">
+            <Button variant="ghost" onClick={() => handleNavClick(onAboutClick)} className="w-full justify-start">
+              {language === 'en' ? 'About Us' : '关于我们'}
+            </Button>
+            <Button variant="ghost" onClick={() => handleNavClick(onGuideClick)} className="w-full justify-start">
+              {language === 'en' ? 'Property Guide' : '购房指南'}
+            </Button>
+            <div className="px-3">
+              <Select value={language} onValueChange={setLanguage}>
+                <SelectTrigger className="w-full">
+                  <Globe className="h-4 w-4 mr-2" />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">EN</SelectItem>
+                  <SelectItem value="zh">中文</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </nav>
+        )}
       </div>
     </header>;
 };
