@@ -224,78 +224,72 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           </div>
         </div>
 
-        <div className="modal-two-column">
-          {/* Left Column - Image Carousel */}
-          <div className="modal-column-left">
-            <div className="p-4">
-              <Carousel className="w-full">
-                <CarouselContent>
-                  {development.images.map((image, index) => (
-                    <CarouselItem key={index}>
-                      <img
-                        src={image}
-                        alt={`${development.name} - Image ${index + 1}`}
-                        className="w-full h-64 lg:h-80 object-cover rounded-lg"
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
-            </div>
+        {/* Section Navigation */}
+        <div className="border-b border-border p-4">
+          <div className="flex flex-wrap gap-2">
+            {sections.map((section) => {
+              const Icon = section.icon;
+              return (
+                <Button
+                  key={section.id}
+                  variant={activeSection === section.id ? "premium" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveSection(section.id)}
+                  className="flex items-center gap-1"
+                >
+                  <Icon className="h-3 w-3" />
+                  <span className="hidden sm:inline">{section.label}</span>
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Scrollable Content - Carousel + Section Details */}
+        <div className="modal-body">
+          {/* Image Carousel - Scrolls with content */}
+          <div className="mb-4">
+            <Carousel className="w-full">
+              <CarouselContent>
+                {development.images.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <img
+                      src={image}
+                      alt={`${development.name} - Image ${index + 1}`}
+                      className="w-full h-64 lg:h-80 object-cover rounded-lg"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           </div>
 
-          {/* Right Column - Content */}
-          <div className="modal-column-right">
-            {/* Section Navigation */}
-            <div className="border-b border-border p-4">
-              <div className="flex flex-wrap gap-2">
-                {sections.map((section) => {
-                  const Icon = section.icon;
-                  return (
-                    <Button
-                      key={section.id}
-                      variant={activeSection === section.id ? "premium" : "ghost"}
-                      size="sm"
-                      onClick={() => setActiveSection(section.id)}
-                      className="flex items-center gap-1"
-                    >
-                      <Icon className="h-3 w-3" />
-                      <span className="hidden sm:inline">{section.label}</span>
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
+          {/* Section Content */}
+          {renderSection()}
+        </div>
 
-            {/* Scrollable Section Content */}
-            <div className="modal-body">
-              {renderSection()}
-            </div>
-
-            {/* Sticky Footer Actions */}
-            <div className="modal-footer">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <Button variant="premium" onClick={onBookViewing} className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Book Viewing
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    const message = encodeURIComponent(
-                      `Hi, I'd like more information about ${development.name} in ${development.location}.`
-                    );
-                    window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
-                  }} 
-                  className="flex items-center gap-2"
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  WhatsApp Us
-                </Button>
-              </div>
-            </div>
+        {/* Sticky Footer Actions */}
+        <div className="modal-footer">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Button variant="premium" onClick={onBookViewing} className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Book Viewing
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                const message = encodeURIComponent(
+                  `Hi, I'd like more information about ${development.name} in ${development.location}.`
+                );
+                window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
+              }} 
+              className="flex items-center gap-2"
+            >
+              <MessageSquare className="h-4 w-4" />
+              WhatsApp Us
+            </Button>
           </div>
         </div>
       </div>
