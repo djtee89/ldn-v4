@@ -31,7 +31,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v11',
+      style: 'mapbox://styles/mapbox/streets-v12',
       center: [-0.1276, 51.5074],
       zoom: 10,
       pitch: 0,
