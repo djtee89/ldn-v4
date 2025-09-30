@@ -8,13 +8,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import wechatQR from '@/assets/qr_wechat.png';
-
 interface ContactProps {
   onBack: () => void;
 }
-
-const Contact: React.FC<ContactProps> = ({ onBack }) => {
-  const { toast } = useToast();
+const Contact: React.FC<ContactProps> = ({
+  onBack
+}) => {
+  const {
+    toast
+  } = useToast();
   const [copied, setCopied] = useState(false);
   const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,9 +26,7 @@ const Contact: React.FC<ContactProps> = ({ onBack }) => {
     phone: '',
     message: ''
   });
-
   const FORMSPREE_URL = 'https://formspree.io/f/mnngdrog';
-
   const handleCopyWeChat = () => {
     navigator.clipboard.writeText('LDN_Properties_2024');
     setCopied(true);
@@ -36,20 +36,17 @@ const Contact: React.FC<ContactProps> = ({ onBack }) => {
       description: "WeChat ID has been copied to your clipboard"
     });
   };
-
   const handleEmailClick = () => {
     setIsEmailDialogOpen(true);
   };
-
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
     try {
       const response = await fetch(FORMSPREE_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           name: emailForm.name.trim(),
@@ -57,22 +54,19 @@ const Contact: React.FC<ContactProps> = ({ onBack }) => {
           phone: emailForm.phone.trim(),
           message: emailForm.message.trim(),
           subject: 'Property Inquiry - Contact Form'
-        }),
+        })
       });
-
       if (response.ok) {
         toast({
           title: "Message sent!",
           description: "We've received your inquiry and will respond within 24 hours."
         });
-        
         setEmailForm({
           name: '',
           email: '',
           phone: '',
           message: ''
         });
-        
         setIsEmailDialogOpen(false);
       } else {
         throw new Error('Failed to submit form');
@@ -88,24 +82,15 @@ const Contact: React.FC<ContactProps> = ({ onBack }) => {
       setIsSubmitting(false);
     }
   };
-
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent(
-      "Hi, I would like to speak with an expert about London properties."
-    );
+    const message = encodeURIComponent("Hi, I would like to speak with an expert about London properties.");
     window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
   };
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border">
         <div className="container mx-auto px-4 py-4">
-          <Button
-            variant="ghost"
-            onClick={onBack}
-            className="flex items-center gap-2"
-          >
+          <Button variant="ghost" onClick={onBack} className="flex items-center gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back to Map
           </Button>
@@ -137,17 +122,11 @@ const Contact: React.FC<ContactProps> = ({ onBack }) => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <Button
-                  variant="premium"
-                  className="w-full"
-                  onClick={handleEmailClick}
-                >
+                <Button variant="premium" className="w-full" onClick={handleEmailClick}>
                   <Mail className="w-4 h-4 mr-2" />
                   Send Email
                 </Button>
-                <p className="text-sm text-muted-foreground mt-3">
-                  dan.taylor@fulhouse.co.uk
-                </p>
+                
               </CardContent>
             </Card>
 
@@ -176,12 +155,7 @@ const Contact: React.FC<ContactProps> = ({ onBack }) => {
                   <p className="text-xs font-medium mb-1">WeChat ID</p>
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-mono">LDN_Properties_2024</p>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleCopyWeChat}
-                      className="h-8"
-                    >
+                    <Button variant="ghost" size="sm" onClick={handleCopyWeChat} className="h-8">
                       {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                     </Button>
                   </div>
@@ -201,20 +175,12 @@ const Contact: React.FC<ContactProps> = ({ onBack }) => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <Button
-                  variant="premium"
-                  className="w-full"
-                  onClick={handleWhatsAppClick}
-                >
+                <Button variant="premium" className="w-full" onClick={handleWhatsAppClick}>
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Open WhatsApp
                 </Button>
-                <p className="text-sm text-muted-foreground mt-3">
-                  Available Mon-Sat, 9AM-7PM
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Response time: ~5 minutes
-                </p>
+                
+                
               </CardContent>
             </Card>
           </div>
@@ -255,57 +221,38 @@ const Contact: React.FC<ContactProps> = ({ onBack }) => {
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div>
               <Label htmlFor="email-name">Full Name *</Label>
-              <Input
-                id="email-name"
-                value={emailForm.name}
-                onChange={(e) => setEmailForm({...emailForm, name: e.target.value})}
-                required
-              />
+              <Input id="email-name" value={emailForm.name} onChange={e => setEmailForm({
+              ...emailForm,
+              name: e.target.value
+            })} required />
             </div>
             <div>
               <Label htmlFor="email-email">Email Address *</Label>
-              <Input
-                id="email-email"
-                type="email"
-                value={emailForm.email}
-                onChange={(e) => setEmailForm({...emailForm, email: e.target.value})}
-                required
-              />
+              <Input id="email-email" type="email" value={emailForm.email} onChange={e => setEmailForm({
+              ...emailForm,
+              email: e.target.value
+            })} required />
             </div>
             <div>
               <Label htmlFor="email-phone">Phone Number *</Label>
-              <Input
-                id="email-phone"
-                type="tel"
-                value={emailForm.phone}
-                onChange={(e) => setEmailForm({...emailForm, phone: e.target.value})}
-                required
-              />
+              <Input id="email-phone" type="tel" value={emailForm.phone} onChange={e => setEmailForm({
+              ...emailForm,
+              phone: e.target.value
+            })} required />
             </div>
             <div>
               <Label htmlFor="email-message">Message *</Label>
-              <Textarea
-                id="email-message"
-                placeholder="Tell us about your property requirements..."
-                value={emailForm.message}
-                onChange={(e) => setEmailForm({...emailForm, message: e.target.value})}
-                required
-                rows={4}
-              />
+              <Textarea id="email-message" placeholder="Tell us about your property requirements..." value={emailForm.message} onChange={e => setEmailForm({
+              ...emailForm,
+              message: e.target.value
+            })} required rows={4} />
             </div>
-            <Button 
-              type="submit" 
-              variant="premium" 
-              className="w-full"
-              disabled={isSubmitting}
-            >
+            <Button type="submit" variant="premium" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? 'Sending...' : 'Send Message'}
             </Button>
           </form>
         </DialogContent>
       </Dialog>
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
