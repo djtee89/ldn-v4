@@ -486,7 +486,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             </div>
               <div>
                 <Label className="text-xs font-medium mb-1 block">Amenities</Label>
-                <div className="grid grid-cols-2 gap-1.5 h-[46px] overflow-y-auto pr-1 border border-border rounded-md p-2">
+                <div className="grid grid-cols-2 gap-1.5 h-[48px] overflow-y-auto pr-1 border border-border rounded-md p-2">
                   {['Gym', 'Pool', 'Concierge', '24/7 Security', 'Parking', 'Balcony'].map(amenity => <div key={amenity} className="flex items-center space-x-1">
                       <Checkbox id={`desktop-amenity-${amenity}`} checked={filters.amenities.includes(amenity)} onCheckedChange={() => toggleAmenity(amenity)} className="h-2 w-2 min-h-0 min-w-0" />
                       <Label htmlFor={`desktop-amenity-${amenity}`} className="text-xs cursor-pointer">
