@@ -21,41 +21,95 @@ const Index = () => {
   const [filters, setFilters] = useState<FilterState>({
     priceFrom: '',
     priceTo: '',
-    bedrooms: 'any',
-    zone: 'any',
+    tenure: 'any',
+    bedroomsMin: '',
+    bedroomsMax: '',
+    zones: [],
     walkToStation: 'any',
+    amenities: [],
+    completedNow: false,
+    completionYear: 'any',
     keyword: ''
   });
 
   // Filter developments based on current filters
   const filteredDevelopments = useMemo(() => {
     return developments.filter(dev => {
+      // Price filters - parse from price range
+      const priceRange = dev.prices.range || '';
+      const priceNumbers = priceRange.match(/\d+/g);
+      if (priceNumbers && priceNumbers.length > 0) {
+        const minDevPrice = parseInt(priceNumbers[0]) * (priceRange.includes('M') ? 1000000 : 1000);
+        const maxDevPrice = priceNumbers.length > 1 
+          ? parseInt(priceNumbers[1]) * (priceRange.includes('M') ? 1000000 : 1000)
+          : minDevPrice;
+
+        if (filters.priceFrom) {
+          const minPrice = parseInt(filters.priceFrom);
+          if (maxDevPrice < minPrice) return false;
+        }
+        if (filters.priceTo) {
+          const maxPrice = parseInt(filters.priceTo);
+          if (minDevPrice > maxPrice) return false;
+        }
+      }
+
+      // Tenure filter
+      if (filters.tenure !== 'any') {
+        const devTenure = dev.tenure?.toLowerCase() || '';
+        if (devTenure !== filters.tenure) return false;
+      }
+
+      // Bedrooms filter - infer from prices object
+      const availableBedrooms: number[] = [];
+      if (dev.prices.studio) availableBedrooms.push(0);
+      if (dev.prices.oneBed) availableBedrooms.push(1);
+      if (dev.prices.twoBed) availableBedrooms.push(2);
+      if (dev.prices.threeBed) availableBedrooms.push(3);
+      if (dev.prices.fourBed) availableBedrooms.push(4);
+      
+      if (filters.bedroomsMin && availableBedrooms.length > 0) {
+        const minBed = parseInt(filters.bedroomsMin);
+        if (Math.max(...availableBedrooms) < minBed) return false;
+      }
+      if (filters.bedroomsMax && availableBedrooms.length > 0) {
+        const maxBed = parseInt(filters.bedroomsMax);
+        if (Math.min(...availableBedrooms) > maxBed) return false;
+      }
+
       // Zone filter
-      if (filters.zone && filters.zone !== 'any' && dev.zone.toString() !== filters.zone) {
-        return false;
+      if (filters.zones.length > 0) {
+        if (!filters.zones.includes(dev.zone.toString())) return false;
       }
 
-      // Walk to station filter (simplified)
-      if (filters.walkToStation && filters.walkToStation !== 'any' && dev.nearestTube.walkTime > parseInt(filters.walkToStation)) {
-        return false;
+      // Walk to station filter
+      if (filters.walkToStation !== 'any') {
+        const maxWalk = parseInt(filters.walkToStation);
+        if (dev.nearestTube.walkTime > maxWalk) return false;
       }
 
-      // Keyword search (including amenities)
+      // Amenities filter
+      if (filters.amenities.length > 0) {
+        const devAmenities = dev.amenities.map(a => a.toLowerCase());
+        const hasAllAmenities = filters.amenities.every(amenity =>
+          devAmenities.some(devAmenity => devAmenity.includes(amenity.toLowerCase()))
+        );
+        if (!hasAllAmenities) return false;
+      }
+
+      // Note: Completion filters skipped as completionDate is not in data structure
+
+      // Keyword search
       if (filters.keyword) {
         const keyword = filters.keyword.toLowerCase();
         const searchText = `${dev.name} ${dev.developer} ${dev.location} ${dev.amenities.join(' ')}`.toLowerCase();
-        if (!searchText.includes(keyword)) {
-          return false;
-        }
+        if (!searchText.includes(keyword)) return false;
       }
 
       // Developer filter
       if (highlightedDeveloper && dev.developer !== highlightedDeveloper) {
         return false;
       }
-
-      // Price filters (simplified - would need proper price parsing in real app)
-      // For now, we'll just show all that match other criteria
 
       return true;
     });
