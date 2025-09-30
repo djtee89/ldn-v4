@@ -14,10 +14,10 @@ const PropertyOfTheWeek: React.FC<PropertyOfTheWeekProps> = ({ onViewClick }) =>
   return (
     <Button
       onClick={onViewClick}
-      className="absolute bottom-4 left-4 bg-premium-gradient hover:shadow-premium transition-smooth shadow-medium z-10"
+      className="absolute bottom-4 right-4 bg-premium-gradient hover:shadow-premium transition-smooth shadow-medium z-10 h-9 px-3 text-sm"
       size="sm"
     >
-      <Star className="w-4 h-4 mr-2 fill-white" />
+      <Star className="w-3.5 h-3.5 mr-1.5 fill-white" />
       Property of the Week
     </Button>
   );

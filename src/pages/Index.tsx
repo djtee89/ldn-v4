@@ -6,6 +6,7 @@ import MapComponent from '@/components/MapComponent';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
 import PropertyOfTheWeek from '@/components/PropertyOfTheWeek';
+import OffersButton from '@/components/OffersButton';
 import LiveChat from '@/components/LiveChat';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
@@ -161,6 +162,7 @@ const Index = () => {
             className="w-full h-full"
           />
           <PropertyOfTheWeek onViewClick={handlePropertyOfTheWeekClick} />
+          <OffersButton />
         </div>
       </main>
 
