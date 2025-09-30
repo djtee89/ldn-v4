@@ -258,7 +258,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             </div>
 
             {/* Section Content */}
-            <div className="flex-1 p-4 overflow-y-auto max-h-[40vh]">
+            <div className="flex-1 p-4 overflow-y-auto">
               {renderSection()}
             </div>
 
