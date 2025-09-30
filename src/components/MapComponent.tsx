@@ -3,22 +3,31 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Development } from '@/data/newDevelopments';
 import { Button } from '@/components/ui/button';
+import DirectionsPanel from './DirectionsPanel';
+import { getDirections, DirectionsData, estimateStationCoordinates } from '@/lib/directions';
 interface MapComponentProps {
   developments: Development[];
   onDevelopmentClick: (development: Development) => void;
   highlightedDeveloper: string | null;
   className?: string;
+  activeDirections?: { developmentId: string } | null;
+  onDirectionsClose?: () => void;
 }
 const MapComponent: React.FC<MapComponentProps> = ({
   developments,
   onDevelopmentClick,
   highlightedDeveloper,
-  className = ""
+  className = "",
+  activeDirections = null,
+  onDirectionsClose = () => {}
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [directionsData, setDirectionsData] = useState<DirectionsData | null>(null);
+  const [isLoadingDirections, setIsLoadingDirections] = useState(false);
+  const [currentDevelopment, setCurrentDevelopment] = useState<Development | null>(null);
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
   // Initialize map once
@@ -173,16 +182,103 @@ const MapComponent: React.FC<MapComponentProps> = ({
       setSelectedId(null);
     }
   }, [selectedId, developments, onDevelopmentClick]);
+
+  // Handle directions request
+  useEffect(() => {
+    if (!activeDirections || !map.current || !isMapLoaded) {
+      // Clear directions if none active
+      if (map.current && map.current.getSource('directions-route')) {
+        const routeLayer = map.current.getLayer('directions-route');
+        if (routeLayer) map.current.removeLayer('directions-route');
+        map.current.removeSource('directions-route');
+      }
+      setDirectionsData(null);
+      setCurrentDevelopment(null);
+      return;
+    }
+
+    const development = developments.find(d => d.id === activeDirections.developmentId);
+    if (!development) return;
+
+    setCurrentDevelopment(development);
+    setIsLoadingDirections(true);
+
+    // Estimate station coordinates based on walk time
+    const stationCoords = estimateStationCoordinates(
+      development.coordinates,
+      development.nearestTube.walkTime
+    );
+
+    // Fetch directions
+    getDirections(development.coordinates, stationCoords, 'walking')
+      .then((directions) => {
+        if (directions && map.current) {
+          setDirectionsData(directions);
+
+          // Add route to map
+          if (map.current.getSource('directions-route')) {
+            const routeLayer = map.current.getLayer('directions-route');
+            if (routeLayer) map.current.removeLayer('directions-route');
+            map.current.removeSource('directions-route');
+          }
+
+          map.current.addSource('directions-route', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: directions.geometry
+            }
+          });
+
+          map.current.addLayer({
+            id: 'directions-route',
+            type: 'line',
+            source: 'directions-route',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#3b82f6',
+              'line-width': 4,
+              'line-opacity': 0.8
+            }
+          });
+
+          // Fit bounds to show entire route
+          const coordinates = directions.geometry.coordinates;
+          const bounds = coordinates.reduce(
+            (bounds: mapboxgl.LngLatBounds, coord: [number, number]) => {
+              return bounds.extend(coord as [number, number]);
+            },
+            new mapboxgl.LngLatBounds(coordinates[0], coordinates[0])
+          );
+          map.current.fitBounds(bounds, { padding: 50 });
+        }
+        setIsLoadingDirections(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching directions:', error);
+        setIsLoadingDirections(false);
+      });
+  }, [activeDirections, developments, isMapLoaded]);
+
   return <div className={`relative ${className}`}>
       <div ref={mapContainer} className="w-full h-full rounded-lg" style={{
       minHeight: '400px'
     }} />
       
-      {/* London context overlay */}
-      
-
-      {/* Legend */}
-      
+      {/* Directions Panel */}
+      {activeDirections && currentDevelopment && (
+        <DirectionsPanel
+          directions={directionsData}
+          fromName={currentDevelopment.name}
+          toName={currentDevelopment.nearestTube.station}
+          onClose={onDirectionsClose}
+          isLoading={isLoadingDirections}
+        />
+      )}
     </div>;
 };
 export default MapComponent;

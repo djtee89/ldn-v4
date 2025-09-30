@@ -13,7 +13,8 @@ import {
   Building,
   Star,
   Calendar,
-  MessageSquare
+  MessageSquare,
+  Navigation
 } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
@@ -22,13 +23,15 @@ interface DevelopmentPopupProps {
   onClose: () => void;
   onBookViewing: () => void;
   onRequestInfo: () => void;
+  onGetDirections?: () => void;
 }
 
 const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   development,
   onClose,
   onBookViewing,
-  onRequestInfo
+  onRequestInfo,
+  onGetDirections
 }) => {
   const [activeSection, setActiveSection] = useState<string>('overview');
 
@@ -272,7 +275,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
         {/* Sticky Footer Actions */}
         <div className="modal-footer">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Button variant="premium" onClick={onBookViewing} className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Book Viewing
@@ -290,6 +293,16 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <MessageSquare className="h-4 w-4" />
               WhatsApp Us
             </Button>
+            {onGetDirections && (
+              <Button 
+                variant="secondary" 
+                onClick={onGetDirections}
+                className="flex items-center gap-2"
+              >
+                <Navigation className="h-4 w-4" />
+                Directions
+              </Button>
+            )}
           </div>
         </div>
       </div>

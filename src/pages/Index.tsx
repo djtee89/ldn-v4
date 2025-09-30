@@ -19,6 +19,7 @@ const Index = () => {
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [highlightedDeveloper, setHighlightedDeveloper] = useState<string | null>(null);
+  const [activeDirections, setActiveDirections] = useState<{ developmentId: string } | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     priceFrom: '',
     priceTo: '',
@@ -160,6 +161,8 @@ const Index = () => {
             onDevelopmentClick={setSelectedDevelopment}
             highlightedDeveloper={highlightedDeveloper}
             className="w-full h-full"
+            activeDirections={activeDirections}
+            onDirectionsClose={() => setActiveDirections(null)}
           />
           <PropertyOfTheWeek onViewClick={handlePropertyOfTheWeekClick} />
           <OffersButton />
@@ -177,6 +180,10 @@ const Index = () => {
           onRequestInfo={() => {
             // Handle request info - could open a separate modal
             console.log('Request info for:', selectedDevelopment.name);
+          }}
+          onGetDirections={() => {
+            setActiveDirections({ developmentId: selectedDevelopment.id });
+            setSelectedDevelopment(null);
           }}
         />
       )}
