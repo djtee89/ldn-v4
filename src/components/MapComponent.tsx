@@ -19,8 +19,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
   // Initialize map once
@@ -40,8 +40,92 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    // Wait for map to fully load before allowing markers
+    // Wait for map to fully load
     map.current.on('load', () => {
+      // Add source for development pins
+      map.current!.addSource('developments', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: []
+        }
+      });
+
+      // Add layer for normal pins
+      map.current!.addLayer({
+        id: 'development-pins',
+        type: 'circle',
+        source: 'developments',
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#FF6B6B',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff'
+        }
+      });
+
+      // Add layer for highlighted pins
+      map.current!.addLayer({
+        id: 'development-pins-highlighted',
+        type: 'circle',
+        source: 'developments',
+        filter: ['==', ['get', 'highlighted'], true],
+        paint: {
+          'circle-radius': 8,
+          'circle-color': '#FF6B6B',
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#FFD700',
+          'circle-opacity': 0.9
+        }
+      });
+
+      // Add price labels
+      map.current!.addLayer({
+        id: 'development-labels',
+        type: 'symbol',
+        source: 'developments',
+        layout: {
+          'text-field': ['get', 'price'],
+          'text-size': 11,
+          'text-offset': [0, -1.5],
+          'text-anchor': 'top'
+        },
+        paint: {
+          'text-color': '#1a1a1a',
+          'text-halo-color': '#ffffff',
+          'text-halo-width': 1.5
+        }
+      });
+
+      // Handle clicks
+      map.current!.on('click', 'development-pins', (e) => {
+        if (e.features && e.features[0]) {
+          const id = e.features[0].properties?.id;
+          setSelectedId(id);
+        }
+      });
+
+      map.current!.on('click', 'development-pins-highlighted', (e) => {
+        if (e.features && e.features[0]) {
+          const id = e.features[0].properties?.id;
+          setSelectedId(id);
+        }
+      });
+
+      // Change cursor on hover
+      map.current!.on('mouseenter', 'development-pins', () => {
+        map.current!.getCanvas().style.cursor = 'pointer';
+      });
+      map.current!.on('mouseleave', 'development-pins', () => {
+        map.current!.getCanvas().style.cursor = '';
+      });
+      map.current!.on('mouseenter', 'development-pins-highlighted', () => {
+        map.current!.getCanvas().style.cursor = 'pointer';
+      });
+      map.current!.on('mouseleave', 'development-pins-highlighted', () => {
+        map.current!.getCanvas().style.cursor = '';
+      });
+
       setIsMapLoaded(true);
     });
 
@@ -53,78 +137,51 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      markersRef.current.forEach(marker => marker.remove());
-      markersRef.current = [];
       map.current?.remove();
       map.current = null;
       setIsMapLoaded(false);
     };
   }, [mapboxToken]);
 
-  // Create markers once when map loads and developments are available
+  // Update map data when developments or highlighting changes
   useEffect(() => {
     if (!map.current || !isMapLoaded) return;
 
-    // Clear existing markers
-    markersRef.current.forEach(marker => marker.remove());
-    markersRef.current = [];
+    const source = map.current.getSource('developments') as mapboxgl.GeoJSONSource;
+    if (!source) return;
 
-    // Add development markers
-    developments.forEach((development) => {
-      const markerEl = document.createElement('div');
-      markerEl.className = 'cursor-pointer transition-all duration-300 hover:scale-110 hover:z-10';
-      markerEl.setAttribute('data-developer', development.developer);
-      
-      const displayPrice = development.prices.oneBed || development.prices.range || 'POA';
-      
-      markerEl.innerHTML = `
-        <div class="relative group">
-          <div class="marker-dot bg-primary shadow-medium hover:scale-110 w-3 h-3 rounded-full transition-smooth cursor-pointer">
-          </div>
-          <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-            <div class="bg-background text-foreground px-2 py-1 rounded shadow-strong text-xs font-semibold border border-border">
-              ${displayPrice}
-            </div>
-          </div>
-        </div>
-      `;
-
-      markerEl.addEventListener('click', (e) => {
-        e.stopPropagation();
-        onDevelopmentClick(development);
-      });
-
-      const marker = new mapboxgl.Marker(markerEl)
-        .setLngLat([development.coordinates.lng, development.coordinates.lat])
-        .addTo(map.current!);
-
-      markersRef.current.push(marker);
-    });
-
-    return () => {
-      markersRef.current.forEach(marker => marker.remove());
-      markersRef.current = [];
-    };
-  }, [developments, onDevelopmentClick, isMapLoaded]);
-
-  // Update marker styling when highlighting changes
-  useEffect(() => {
-    markersRef.current.forEach(marker => {
-      const markerEl = marker.getElement();
-      const developer = markerEl.getAttribute('data-developer');
-      const dotEl = markerEl.querySelector('.marker-dot');
-      
-      if (dotEl) {
-        const isHighlighted = highlightedDeveloper && developer === highlightedDeveloper;
-        
-        if (isHighlighted) {
-          dotEl.className = 'marker-dot bg-gradient-to-r from-primary to-accent shadow-premium scale-125 ring-4 ring-primary/30 w-3 h-3 rounded-full transition-smooth cursor-pointer';
-        } else {
-          dotEl.className = 'marker-dot bg-primary shadow-medium hover:scale-110 w-3 h-3 rounded-full transition-smooth cursor-pointer';
-        }
+    // Create GeoJSON features from developments
+    const features = developments.map((dev) => ({
+      type: 'Feature' as const,
+      geometry: {
+        type: 'Point' as const,
+        coordinates: [dev.coordinates.lng, dev.coordinates.lat]
+      },
+      properties: {
+        id: dev.id,
+        name: dev.name,
+        developer: dev.developer,
+        price: dev.prices.oneBed || dev.prices.range || 'POA',
+        highlighted: highlightedDeveloper ? dev.developer === highlightedDeveloper : false
       }
+    }));
+
+    source.setData({
+      type: 'FeatureCollection',
+      features
     });
-  }, [highlightedDeveloper]);
+  }, [developments, highlightedDeveloper, isMapLoaded]);
+
+  // Handle click events from map
+  useEffect(() => {
+    if (!selectedId) return;
+    
+    const development = developments.find(d => d.id === selectedId);
+    if (development) {
+      onDevelopmentClick(development);
+      setSelectedId(null);
+    }
+  }, [selectedId, developments, onDevelopmentClick]);
 
   return (
     <div className={`relative ${className}`}>
