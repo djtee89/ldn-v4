@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -47,6 +47,18 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const FORMSPREE_URL = 'https://formspree.io/f/mnngdrog';
+
+  // Body scroll lock
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -132,21 +144,23 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-background rounded-lg shadow-premium max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div className="modal-backdrop">
+      <div className="modal-panel modal-panel-wide">
         {/* Header */}
-        <div className="border-b border-border p-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-foreground">Book a Viewing</h2>
-            <p className="text-sm text-muted-foreground">{developmentName}</p>
+        <div className="modal-header">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Book a Viewing</h2>
+              <p className="text-sm text-muted-foreground">{developmentName}</p>
+            </div>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </Button>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="modal-body">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-6">
               <TabsTrigger value="calendar" className="flex items-center gap-2">
@@ -172,7 +186,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                   <CardTitle className="text-lg">Schedule Your Viewing</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleCalendarSubmit} className="space-y-4">
+                  <form onSubmit={handleCalendarSubmit} id="calendar-form" className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="cal-name">Full Name *</Label>
@@ -232,9 +246,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                         onChange={(e) => setCalendarForm({...calendarForm, message: e.target.value})}
                       />
                     </div>
-                    <Button type="submit" variant="premium" className="w-full" disabled={isSubmitting}>
-                      {isSubmitting ? 'Submitting...' : 'Submit Viewing Request'}
-                    </Button>
                   </form>
                 </CardContent>
               </Card>
@@ -274,7 +285,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                   </div>
 
                   {/* Contact Form */}
-                  <form onSubmit={handleWeChatSubmit} className="space-y-4">
+                  <form onSubmit={handleWeChatSubmit} id="wechat-form" className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="wc-name">Full Name *</Label>
@@ -314,9 +325,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                         />
                       </div>
                     </div>
-                    <Button type="submit" variant="premium" className="w-full">
-                      Submit WeChat Request
-                    </Button>
                   </form>
                 </CardContent>
               </Card>
@@ -337,20 +345,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                     <p className="text-sm text-muted-foreground mb-4">
                       Get instant responses to your questions and book viewings directly through WhatsApp
                     </p>
-                    <Button
-                      variant="premium"
-                      size="lg"
-                      className="w-full"
-                      onClick={() => {
-                        const message = encodeURIComponent(
-                          `Hi, I'm interested in viewing ${developmentName || 'a property'}. Can you help me book a viewing?`
-                        );
-                        window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
-                      }}
-                    >
-                      <MessageCircle className="w-5 h-5 mr-2" />
-                      Open WhatsApp
-                    </Button>
                   </div>
                   <div className="text-xs text-center text-muted-foreground">
                     <p>Available Monday - Saturday, 9:00 AM - 7:00 PM</p>
@@ -360,6 +354,46 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
               </Card>
             </TabsContent>
           </Tabs>
+        </div>
+
+        {/* Sticky Footer */}
+        <div className="modal-footer">
+          {activeTab === 'calendar' && (
+            <Button 
+              type="submit" 
+              form="calendar-form" 
+              variant="premium" 
+              className="w-full" 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Viewing Request'}
+            </Button>
+          )}
+          {activeTab === 'wechat' && (
+            <Button 
+              type="submit" 
+              form="wechat-form" 
+              variant="premium" 
+              className="w-full"
+            >
+              Submit WeChat Request
+            </Button>
+          )}
+          {activeTab === 'agent' && (
+            <Button
+              variant="premium"
+              className="w-full"
+              onClick={() => {
+                const message = encodeURIComponent(
+                  `Hi, I'm interested in viewing ${developmentName || 'a property'}. Can you help me book a viewing?`
+                );
+                window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
+              }}
+            >
+              <MessageCircle className="w-5 h-5 mr-2" />
+              Open WhatsApp
+            </Button>
+          )}
         </div>
       </div>
     </div>

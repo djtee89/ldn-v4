@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Development } from '@/data/newDevelopments';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -31,6 +31,14 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   onRequestInfo
 }) => {
   const [activeSection, setActiveSection] = useState<string>('overview');
+
+  // Body scroll lock
+  useEffect(() => {
+    document.body.classList.add('modal-open');
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, []);
 
   const sections = [
     { id: 'overview', label: 'Overview', icon: Building },
@@ -201,43 +209,47 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-background rounded-lg shadow-premium max-w-4xl w-full max-h-[90vh] flex flex-col">
+    <div className="modal-backdrop">
+      <div className="modal-panel modal-panel-wide">
         {/* Header */}
-        <div className="border-b border-border p-4 flex items-center justify-between shrink-0">
-          <div>
-            <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
-            <p className="text-sm text-muted-foreground">{development.developer}</p>
+        <div className="modal-header">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
+              <p className="text-sm text-muted-foreground">{development.developer}</p>
+            </div>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </Button>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
         </div>
 
-        <div className="flex flex-col lg:flex-row flex-1 min-h-0">
-          {/* Image Carousel */}
-          <div className="lg:w-1/2 p-4 shrink-0 overflow-y-auto">
-            <Carousel className="w-full">
-              <CarouselContent>
-                {development.images.map((image, index) => (
-                  <CarouselItem key={index}>
-                    <img
-                      src={image}
-                      alt={`${development.name} - Image ${index + 1}`}
-                      className="w-full h-64 lg:h-80 object-cover rounded-lg"
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
+        <div className="modal-two-column">
+          {/* Left Column - Image Carousel */}
+          <div className="modal-column-left">
+            <div className="p-4">
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {development.images.map((image, index) => (
+                    <CarouselItem key={index}>
+                      <img
+                        src={image}
+                        alt={`${development.name} - Image ${index + 1}`}
+                        className="w-full h-64 lg:h-80 object-cover rounded-lg"
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            </div>
           </div>
 
-          {/* Content */}
-          <div className="lg:w-1/2 flex flex-col min-h-0">
+          {/* Right Column - Content */}
+          <div className="modal-column-right">
             {/* Section Navigation */}
-            <div className="border-b border-border p-4 shrink-0">
+            <div className="border-b border-border p-4">
               <div className="flex flex-wrap gap-2">
                 {sections.map((section) => {
                   const Icon = section.icon;
@@ -257,13 +269,13 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               </div>
             </div>
 
-            {/* Section Content */}
-            <div className="flex-1 p-4 overflow-y-auto">
+            {/* Scrollable Section Content */}
+            <div className="modal-body">
               {renderSection()}
             </div>
 
-            {/* Footer Actions */}
-            <div className="border-t border-border p-4 shrink-0">
+            {/* Sticky Footer Actions */}
+            <div className="modal-footer">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Button variant="premium" onClick={onBookViewing} className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
