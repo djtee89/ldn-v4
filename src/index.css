@@ -6,6 +6,13 @@
 
 @layer base {
   :root {
+    /* Fluid Spacing & Typography */
+    --space: clamp(12px, 2.5vw, 24px);
+    --fs: clamp(15px, 1.6vw, 18px);
+    --h1: clamp(24px, 6vw, 40px);
+    --h2: clamp(20px, 5vw, 32px);
+    --h3: clamp(18px, 4.2vw, 24px);
+    
     /* Core Brand Colors */
     --background: 0 0% 100%;
     --foreground: 220 26% 14%;
@@ -126,13 +133,35 @@
     @apply border-border;
   }
 
+  html {
+    font-size: var(--fs);
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-size: var(--fs);
+  }
+  
+  h1 {
+    font-size: var(--h1);
+  }
+  
+  h2 {
+    font-size: var(--h2);
+  }
+  
+  h3 {
+    font-size: var(--h3);
   }
   
   /* Body scroll lock for modals */
   body.modal-open {
     overflow: hidden;
+  }
+  
+  /* Prevent iOS zoom on input focus */
+  input, select, textarea {
+    font-size: 16px;
   }
 }
 
@@ -228,5 +257,133 @@
     .modal-column-right {
       width: 50%;
     }
+  }
+
+  /* Mobile-First Responsive Grid */
+  .responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space);
+  }
+
+  @media (min-width: 768px) {
+    .responsive-grid {
+      grid-template-columns: repeat(12, 1fr);
+    }
+  }
+
+  .col-full {
+    grid-column: 1 / -1;
+  }
+
+  .col-6 {
+    grid-column: span 6;
+  }
+
+  @media (min-width: 768px) {
+    .col-6 {
+      grid-column: span 6;
+    }
+  }
+
+  /* Mobile Navigation */
+  .mobile-nav-toggle {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-nav-toggle {
+      display: flex;
+    }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      flex-direction: column;
+      background: hsl(var(--background));
+      border-top: 1px solid hsl(var(--border));
+      padding: 12px;
+      box-shadow: 0 4px 12px hsl(var(--foreground) / 0.1);
+    }
+
+    .nav-links.show {
+      display: flex;
+    }
+
+    .nav-links > * {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+
+  /* Touch-Friendly Buttons & Inputs */
+  button,
+  .btn,
+  a.btn {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7em 0.9em;
+    border-radius: 12px;
+  }
+
+  /* Property Gallery Mobile Optimization */
+  .property-hero,
+  .property-gallery,
+  .property-gallery .swiper {
+    position: static !important;
+    height: auto !important;
+    max-height: none;
+  }
+
+  @media (max-height: 900px) {
+    .property-hero,
+    .property-gallery {
+      max-height: 40vh;
+      overflow: hidden;
+    }
+  }
+
+  .property-gallery img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Mobile Sticky CTA */
+  @media (max-width: 768px) {
+    .sticky-mobile-cta {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: hsl(var(--background));
+      border-top: 1px solid hsl(var(--border));
+      padding: 8px var(--space);
+      padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+      z-index: 40;
+      box-shadow: 0 -2px 12px hsl(var(--foreground) / 0.1);
+    }
+  }
+
+  /* Responsive Viewport Heights */
+  .vh-full {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .min-vh-full {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }

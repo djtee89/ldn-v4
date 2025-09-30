@@ -99,7 +99,7 @@ const Index = () => {
       />
       
       <main className="container mx-auto px-4 py-6">
-        <div className="h-[calc(100vh-400px)] min-h-[500px] relative">
+        <div className="h-[calc(100vh-400px)] h-[calc(100dvh-400px)] min-h-[500px] relative">
           <MapComponent 
             developments={filteredDevelopments}
             onDevelopmentClick={setSelectedDevelopment}
