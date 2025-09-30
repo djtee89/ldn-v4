@@ -22,24 +22,32 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
+  // Initialize map once
   useEffect(() => {
-    if (!mapContainer.current || !mapboxToken) return;
+    if (!mapContainer.current || map.current) return;
 
-    // Set Mapbox access token
     mapboxgl.accessToken = mapboxToken;
 
-    // Initialize map
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v11', // Clean, low-detail style
-      center: [-0.1276, 51.5074], // London center
+      style: 'mapbox://styles/mapbox/light-v11',
+      center: [-0.1276, 51.5074],
       zoom: 10,
       pitch: 0,
       bearing: 0
     });
 
-    // Add navigation controls
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    return () => {
+      map.current?.remove();
+      map.current = null;
+    };
+  }, [mapboxToken]);
+
+  // Update markers when developments or highlighting changes
+  useEffect(() => {
+    if (!map.current) return;
 
     // Clear existing markers
     markersRef.current.forEach(marker => marker.remove());
@@ -47,17 +55,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     // Add development markers
     developments.forEach((development) => {
-      // Determine if this development's developer is highlighted
       const isHighlighted = highlightedDeveloper && development.developer === highlightedDeveloper;
       
-      // Create custom marker element
       const markerEl = document.createElement('div');
       markerEl.className = 'cursor-pointer transition-all duration-300 hover:scale-110 hover:z-10';
       
-      // Get price to display
       const displayPrice = development.prices.oneBed || development.prices.range || 'POA';
       
-      // Create small circle pin HTML with conditional styling
       markerEl.innerHTML = `
         <div class="relative group">
           <div class="${isHighlighted 
@@ -73,13 +77,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
         </div>
       `;
 
-      // Add click event
       markerEl.addEventListener('click', (e) => {
         e.stopPropagation();
         onDevelopmentClick(development);
       });
 
-      // Create and add marker
       const marker = new mapboxgl.Marker(markerEl)
         .setLngLat([development.coordinates.lng, development.coordinates.lat])
         .addTo(map.current!);
@@ -87,12 +89,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
       markersRef.current.push(marker);
     });
 
-    // Cleanup function
     return () => {
       markersRef.current.forEach(marker => marker.remove());
-      map.current?.remove();
+      markersRef.current = [];
     };
-  }, [developments, onDevelopmentClick, mapboxToken, highlightedDeveloper]);
+  }, [developments, onDevelopmentClick, highlightedDeveloper]);
 
   return (
     <div className={`relative ${className}`}>
