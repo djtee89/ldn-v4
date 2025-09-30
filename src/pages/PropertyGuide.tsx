@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,6 +12,7 @@ interface PropertyGuideProps {
 }
 
 const PropertyGuide: React.FC<PropertyGuideProps> = ({ onBack }) => {
+  const navigate = useNavigate();
   const [loanAmount, setLoanAmount] = useState('500000');
   const [interestRate, setInterestRate] = useState('4.5');
   const [loanTerm, setLoanTerm] = useState('25');
@@ -268,7 +270,11 @@ const PropertyGuide: React.FC<PropertyGuideProps> = ({ onBack }) => {
             <p className="mb-4 opacity-90">
               Our property experts can guide you through every step of the purchase process
             </p>
-            <Button variant="outline" className="bg-white text-primary hover:bg-white/90">
+            <Button 
+              variant="outline" 
+              className="bg-white text-primary hover:bg-white/90"
+              onClick={() => navigate('/contact-options')}
+            >
               Speak to an Expert
             </Button>
           </CardContent>
