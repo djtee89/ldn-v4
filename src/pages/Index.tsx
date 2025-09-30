@@ -6,6 +6,7 @@ import MapComponent from '@/components/MapComponent';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
 import PropertyOfTheWeek from '@/components/PropertyOfTheWeek';
+import LiveChat from '@/components/LiveChat';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
 import { developments, propertyOfTheWeek } from '@/data/newDevelopments';
@@ -125,6 +126,9 @@ const Index = () => {
         onClose={() => setIsBookingModalOpen(false)}
         developmentName={selectedDevelopment?.name || ''}
       />
+      
+      {/* Live Chat */}
+      <LiveChat />
     </div>
   );
 };

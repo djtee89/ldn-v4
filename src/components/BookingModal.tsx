@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { X, Calendar, MessageCircle, Phone, Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import wechatQR from '@/assets/qr_wechat.png';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -58,9 +59,22 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
 
   const handleCalendarSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Create email with form data
+    const subject = encodeURIComponent(`Viewing Request: ${developmentName}`);
+    const body = encodeURIComponent(`Name: ${calendarForm.name}
+Email: ${calendarForm.email}
+Phone: ${calendarForm.phone}
+Development: ${developmentName}
+Preferred Date: ${calendarForm.preferredDate}
+Preferred Time: ${calendarForm.preferredTime}
+Message: ${calendarForm.message}`);
+    
+    window.location.href = `mailto:dan.taylor@fulhouse.co.uk?subject=${subject}&body=${body}`;
+    
     toast({
-      title: "Viewing request submitted",
-      description: "We'll contact you shortly to confirm your viewing appointment."
+      title: "Opening email client",
+      description: "Please send the email to complete your booking request."
     });
     onClose();
   };
@@ -198,12 +212,10 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                   <CardTitle className="text-lg">Connect via WeChat</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* WeChat QR Code Placeholder */}
+                  {/* WeChat QR Code */}
                   <div className="flex justify-center">
                     <div className="bg-muted rounded-lg p-8 text-center">
-                      <div className="w-32 h-32 bg-card border-2 border-dashed border-border rounded-lg flex items-center justify-center mb-4 mx-auto">
-                        <MessageCircle className="h-12 w-12 text-muted-foreground" />
-                      </div>
+                      <img src={wechatQR} alt="WeChat QR Code" className="w-48 h-48 mx-auto mb-4" />
                       <p className="text-sm text-muted-foreground">Scan QR Code to connect</p>
                     </div>
                   </div>
@@ -299,7 +311,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                         const message = encodeURIComponent(
                           `Hi, I'm interested in viewing ${developmentName || 'a property'}. Can you help me book a viewing?`
                         );
-                        window.open(`https://wa.me/447000000000?text=${message}`, '_blank');
+                        window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
                       }}
                     >
                       <MessageCircle className="w-5 h-5 mr-2" />

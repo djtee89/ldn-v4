@@ -7,6 +7,7 @@ import { Calculator } from 'lucide-react';
 const StampDutyCalculator = () => {
   const [propertyPrice, setPropertyPrice] = useState('500000');
   const [isFirstTimeBuyer, setIsFirstTimeBuyer] = useState(false);
+  const [isInternationalBuyer, setIsInternationalBuyer] = useState(false);
 
   const calculateStampDuty = () => {
     const price = parseFloat(propertyPrice);
@@ -14,8 +15,8 @@ const StampDutyCalculator = () => {
 
     let duty = 0;
 
-    if (isFirstTimeBuyer && price <= 625000) {
-      // First-time buyer relief
+    if (isFirstTimeBuyer && price <= 625000 && !isInternationalBuyer) {
+      // First-time buyer relief (not available for international buyers)
       if (price <= 425000) {
         return 0;
       } else {
@@ -23,7 +24,7 @@ const StampDutyCalculator = () => {
         duty = (price - 425000) * 0.05;
       }
     } else {
-      // Standard rates
+      // Standard rates (2024/25)
       if (price <= 250000) {
         duty = 0;
       } else if (price <= 925000) {
@@ -33,6 +34,11 @@ const StampDutyCalculator = () => {
       } else {
         duty = 91250 + (price - 1500000) * 0.12;
       }
+    }
+
+    // Add 2% international buyer surcharge on entire amount
+    if (isInternationalBuyer) {
+      duty += price * 0.02;
     }
 
     return duty;
@@ -62,17 +68,32 @@ const StampDutyCalculator = () => {
           />
         </div>
         
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="first-time-buyer"
-            checked={isFirstTimeBuyer}
-            onChange={(e) => setIsFirstTimeBuyer(e.target.checked)}
-            className="w-4 h-4 rounded border-border"
-          />
-          <Label htmlFor="first-time-buyer" className="cursor-pointer">
-            I am a first-time buyer
-          </Label>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="first-time-buyer"
+              checked={isFirstTimeBuyer}
+              onChange={(e) => setIsFirstTimeBuyer(e.target.checked)}
+              className="w-4 h-4 rounded border-border"
+            />
+            <Label htmlFor="first-time-buyer" className="cursor-pointer">
+              I am a first-time buyer
+            </Label>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="international-buyer"
+              checked={isInternationalBuyer}
+              onChange={(e) => setIsInternationalBuyer(e.target.checked)}
+              className="w-4 h-4 rounded border-border"
+            />
+            <Label htmlFor="international-buyer" className="cursor-pointer">
+              I am an international buyer (non-UK resident)
+            </Label>
+          </div>
         </div>
 
         <div className="bg-muted p-4 rounded-lg">
@@ -85,7 +106,7 @@ const StampDutyCalculator = () => {
         </div>
 
         <div className="text-xs text-muted-foreground space-y-1">
-          <p><strong>Standard rates:</strong></p>
+          <p><strong>Standard rates (2024/25):</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>0% on first £250,000</li>
             <li>5% on £250,001 - £925,000</li>
@@ -96,6 +117,11 @@ const StampDutyCalculator = () => {
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>0% on properties up to £425,000</li>
             <li>5% on £425,001 - £625,000</li>
+          </ul>
+          <p className="mt-2"><strong>International buyer surcharge:</strong></p>
+          <ul className="list-disc list-inside space-y-1 ml-2">
+            <li>Additional 2% on the entire purchase price</li>
+            <li>Applies to non-UK residents</li>
           </ul>
         </div>
       </CardContent>

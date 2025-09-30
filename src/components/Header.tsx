@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Building2, MapPin } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 interface HeaderProps {
   onAboutClick: () => void;
@@ -16,9 +17,7 @@ const Header: React.FC<HeaderProps> = ({ onAboutClick, onBookViewingClick, onGui
           {/* Logo and Tagline */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <div className="bg-premium-gradient p-2 rounded-lg shadow-medium">
-                <Building2 className="h-6 w-6 text-white" />
-              </div>
+              <img src={logo} alt="LDN Logo" className="h-10 w-10" />
               <div>
                 <h1 className="text-xl font-bold text-foreground">LDN</h1>
                 <p className="text-xs text-muted-foreground hidden sm:block">London Development Network</p>

@@ -57,13 +57,19 @@ const MapComponent: React.FC<MapComponentProps> = ({
       // Get price to display
       const displayPrice = development.prices.oneBed || development.prices.range || 'POA';
       
-      // Create price pin HTML with conditional styling
+      // Create small circle pin HTML with conditional styling
       markerEl.innerHTML = `
-        <div class="${isHighlighted 
-          ? 'bg-gradient-to-r from-primary to-accent text-white shadow-premium scale-110' 
-          : 'bg-price-pin text-price-pin-foreground shadow-medium'} 
-          px-3 py-1 rounded-full font-bold text-sm hover:shadow-strong transition-smooth whitespace-nowrap">
-          ${displayPrice}
+        <div class="relative group">
+          <div class="${isHighlighted 
+            ? 'bg-gradient-to-r from-primary to-accent shadow-premium scale-125 ring-4 ring-primary/30' 
+            : 'bg-primary shadow-medium hover:scale-110'} 
+            w-3 h-3 rounded-full transition-smooth cursor-pointer">
+          </div>
+          <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+            <div class="bg-background text-foreground px-2 py-1 rounded shadow-strong text-xs font-semibold border border-border">
+              ${displayPrice}
+            </div>
+          </div>
         </div>
       `;
 
@@ -101,10 +107,12 @@ const MapComponent: React.FC<MapComponentProps> = ({
       {/* Legend */}
       <div className="absolute bottom-4 right-4 bg-glass backdrop-blur-sm rounded-lg p-3 shadow-medium">
         <div className="flex items-center gap-2">
-          <div className="bg-price-pin text-price-pin-foreground px-2 py-1 rounded-full font-bold text-xs">
-            £XXXk
-          </div>
-          <span className="text-xs text-muted-foreground">Starting price</span>
+          <div className="w-3 h-3 bg-primary rounded-full"></div>
+          <span className="text-xs text-muted-foreground">Development</span>
+        </div>
+        <div className="flex items-center gap-2 mt-2">
+          <div className="w-3 h-3 bg-gradient-to-r from-primary to-accent rounded-full ring-2 ring-primary/30"></div>
+          <span className="text-xs text-muted-foreground">Selected developer</span>
         </div>
       </div>
     </div>
