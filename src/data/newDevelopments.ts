@@ -1068,7 +1068,7 @@ export const developments: Development[] = [
       line: "Overground, Southern",
       walkTime: 2
     },
-    coordinates: { lat: 51.4757, lng: -0.1807 },
+    coordinates: { lat: 51.4757, lng: -0.1835 },
     prices: {
       range: "POA (Resale)"
     },
