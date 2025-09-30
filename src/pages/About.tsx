@@ -65,7 +65,7 @@ const About: React.FC<AboutProps> = ({ onBack }) => {
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               We are a network of premium developers offering exclusive access to London's finest new build properties. 
-              Book direct with developers to access special offers and incentives.
+              Book direct with developers to access the best deals with LDN!
             </p>
           </div>
 
