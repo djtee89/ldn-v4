@@ -202,9 +202,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-background rounded-lg shadow-premium max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col">
+      <div className="bg-background rounded-lg shadow-premium max-w-4xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="border-b border-border p-4 flex items-center justify-between">
+        <div className="border-b border-border p-4 flex items-center justify-between shrink-0">
           <div>
             <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
             <p className="text-sm text-muted-foreground">{development.developer}</p>
@@ -214,9 +214,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           </Button>
         </div>
 
-        <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+        <div className="flex flex-col lg:flex-row flex-1 min-h-0">
           {/* Image Carousel */}
-          <div className="lg:w-1/2 p-4">
+          <div className="lg:w-1/2 p-4 shrink-0 overflow-y-auto">
             <Carousel className="w-full">
               <CarouselContent>
                 {development.images.map((image, index) => (
@@ -235,9 +235,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           </div>
 
           {/* Content */}
-          <div className="lg:w-1/2 flex flex-col">
+          <div className="lg:w-1/2 flex flex-col min-h-0">
             {/* Section Navigation */}
-            <div className="border-b border-border p-4">
+            <div className="border-b border-border p-4 shrink-0">
               <div className="flex flex-wrap gap-2">
                 {sections.map((section) => {
                   const Icon = section.icon;
@@ -263,7 +263,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             </div>
 
             {/* Footer Actions */}
-            <div className="border-t border-border p-4">
+            <div className="border-t border-border p-4 shrink-0">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Button variant="premium" onClick={onBookViewing} className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
