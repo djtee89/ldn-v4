@@ -59,7 +59,7 @@ const Index = () => {
 
       return true;
     });
-  }, [filters]);
+  }, [filters, highlightedDeveloper, developments]);
 
   if (currentView === 'about') {
     return <About onBack={() => setCurrentView('main')} />;
