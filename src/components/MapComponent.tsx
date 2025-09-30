@@ -3,19 +3,17 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Development } from '@/data/newDevelopments';
 import { Button } from '@/components/ui/button';
-
 interface MapComponentProps {
   developments: Development[];
   onDevelopmentClick: (development: Development) => void;
   highlightedDeveloper: string | null;
   className?: string;
 }
-
-const MapComponent: React.FC<MapComponentProps> = ({ 
-  developments, 
-  onDevelopmentClick, 
+const MapComponent: React.FC<MapComponentProps> = ({
+  developments,
+  onDevelopmentClick,
   highlightedDeveloper,
-  className = "" 
+  className = ""
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -26,9 +24,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   // Initialize map once
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
-
     mapboxgl.accessToken = mapboxToken;
-
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v12',
@@ -37,7 +33,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
       pitch: 0,
       bearing: 0
     });
-
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
     // Wait for map to fully load
@@ -98,14 +93,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
       });
 
       // Handle clicks
-      map.current!.on('click', 'development-pins', (e) => {
+      map.current!.on('click', 'development-pins', e => {
         if (e.features && e.features[0]) {
           const id = e.features[0].properties?.id;
           setSelectedId(id);
         }
       });
-
-      map.current!.on('click', 'development-pins-highlighted', (e) => {
+      map.current!.on('click', 'development-pins-highlighted', e => {
         if (e.features && e.features[0]) {
           const id = e.features[0].properties?.id;
           setSelectedId(id);
@@ -125,7 +119,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
       map.current!.on('mouseleave', 'development-pins-highlighted', () => {
         map.current!.getCanvas().style.cursor = '';
       });
-
       setIsMapLoaded(true);
     });
 
@@ -134,7 +127,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
       map.current?.resize();
     };
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
       map.current?.remove();
@@ -146,12 +138,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
   // Update map data when developments or highlighting changes
   useEffect(() => {
     if (!map.current || !isMapLoaded) return;
-
     const source = map.current.getSource('developments') as mapboxgl.GeoJSONSource;
     if (!source) return;
 
     // Create GeoJSON features from developments
-    const features = developments.map((dev) => ({
+    const features = developments.map(dev => ({
       type: 'Feature' as const,
       geometry: {
         type: 'Point' as const,
@@ -165,7 +156,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
         highlighted: highlightedDeveloper ? dev.developer === highlightedDeveloper : false
       }
     }));
-
     source.setData({
       type: 'FeatureCollection',
       features
@@ -175,17 +165,16 @@ const MapComponent: React.FC<MapComponentProps> = ({
   // Handle click events from map
   useEffect(() => {
     if (!selectedId) return;
-    
     const development = developments.find(d => d.id === selectedId);
     if (development) {
       onDevelopmentClick(development);
       setSelectedId(null);
     }
   }, [selectedId, developments, onDevelopmentClick]);
-
-  return (
-    <div className={`relative ${className}`}>
-      <div ref={mapContainer} className="w-full h-full rounded-lg" style={{ minHeight: '400px' }} />
+  return <div className={`relative ${className}`}>
+      <div ref={mapContainer} className="w-full h-full rounded-lg" style={{
+      minHeight: '400px'
+    }} />
       
       {/* London context overlay */}
       <div className="absolute top-4 left-4 bg-glass backdrop-blur-sm rounded-lg p-3 shadow-medium">
@@ -194,18 +183,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-4 right-4 bg-glass backdrop-blur-sm rounded-lg p-3 shadow-medium">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-primary rounded-full"></div>
-          <span className="text-xs text-muted-foreground">Development</span>
-        </div>
-        <div className="flex items-center gap-2 mt-2">
-          <div className="w-3 h-3 bg-gradient-to-r from-primary to-accent rounded-full ring-2 ring-primary/30"></div>
-          <span className="text-xs text-muted-foreground">Selected developer</span>
-        </div>
-      </div>
-    </div>
-  );
+      
+    </div>;
 };
-
 export default MapComponent;
