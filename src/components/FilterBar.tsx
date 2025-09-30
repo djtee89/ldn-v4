@@ -161,12 +161,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label className="text-xs font-medium mb-2 block">Price From</Label>
-          <Select value={filters.priceFrom} onValueChange={(value) => updateFilter('priceFrom', value)}>
+          <Select value={filters.priceFrom || undefined} onValueChange={(value) => updateFilter('priceFrom', value)}>
             <SelectTrigger>
               <SelectValue placeholder="No min" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No min</SelectItem>
               {priceSteps.map(step => (
                 <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
               ))}
@@ -175,12 +174,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         </div>
         <div>
           <Label className="text-xs font-medium mb-2 block">Price To</Label>
-          <Select value={filters.priceTo} onValueChange={(value) => updateFilter('priceTo', value)}>
+          <Select value={filters.priceTo || undefined} onValueChange={(value) => updateFilter('priceTo', value)}>
             <SelectTrigger>
               <SelectValue placeholder="No max" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No max</SelectItem>
               {priceSteps.map(step => (
                 <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
               ))}
@@ -208,12 +206,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label className="text-xs font-medium mb-2 block">Min Bedrooms</Label>
-          <Select value={filters.bedroomsMin} onValueChange={handleBedroomsMinChange}>
+          <Select value={filters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
             <SelectTrigger>
               <SelectValue placeholder="No min" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No min</SelectItem>
               {bedroomOptions.map(opt => (
                 <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
               ))}
@@ -222,12 +219,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         </div>
         <div>
           <Label className="text-xs font-medium mb-2 block">Max Bedrooms</Label>
-          <Select value={filters.bedroomsMax} onValueChange={handleBedroomsMaxChange}>
+          <Select value={filters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
             <SelectTrigger>
               <SelectValue placeholder="No max" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No max</SelectItem>
               {bedroomOptions.map(opt => (
                 <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
               ))}
@@ -368,12 +364,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             {/* Price From/To */}
             <div>
               <Label className="text-xs font-medium mb-2 block">Price From</Label>
-              <Select value={filters.priceFrom} onValueChange={(value) => updateFilter('priceFrom', value)}>
+              <Select value={filters.priceFrom || undefined} onValueChange={(value) => updateFilter('priceFrom', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="No min" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No min</SelectItem>
                   {priceSteps.map(step => (
                     <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
                   ))}
@@ -382,12 +377,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             </div>
             <div>
               <Label className="text-xs font-medium mb-2 block">Price To</Label>
-              <Select value={filters.priceTo} onValueChange={(value) => updateFilter('priceTo', value)}>
+              <Select value={filters.priceTo || undefined} onValueChange={(value) => updateFilter('priceTo', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="No max" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No max</SelectItem>
                   {priceSteps.map(step => (
                     <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
                   ))}
@@ -433,12 +427,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="text-xs font-medium mb-2 block">Min Bedrooms</Label>
-                <Select value={filters.bedroomsMin} onValueChange={handleBedroomsMinChange}>
+                <Select value={filters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="No min" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No min</SelectItem>
                     {bedroomOptions.map(opt => (
                       <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                     ))}
@@ -447,12 +440,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               </div>
               <div>
                 <Label className="text-xs font-medium mb-2 block">Max Bedrooms</Label>
-                <Select value={filters.bedroomsMax} onValueChange={handleBedroomsMaxChange}>
+                <Select value={filters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="No max" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No max</SelectItem>
                     {bedroomOptions.map(opt => (
                       <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                     ))}
