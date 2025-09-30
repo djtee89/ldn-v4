@@ -61,14 +61,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
     };
   }, [mapboxToken]);
 
-  // Update markers when map is loaded and developments or highlighting changes
+  // Create markers once when map loads and developments are available
   useEffect(() => {
-    if (!map.current || !isMapLoaded) {
-      console.log('Map not ready:', { mapExists: !!map.current, isMapLoaded });
-      return;
-    }
-
-    console.log('Adding markers for', developments.length, 'developments');
+    if (!map.current || !isMapLoaded) return;
 
     // Clear existing markers
     markersRef.current.forEach(marker => marker.remove());
@@ -76,20 +71,15 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     // Add development markers
     developments.forEach((development) => {
-      console.log('Creating marker for:', development.name, development.coordinates);
-      const isHighlighted = highlightedDeveloper && development.developer === highlightedDeveloper;
-      
       const markerEl = document.createElement('div');
       markerEl.className = 'cursor-pointer transition-all duration-300 hover:scale-110 hover:z-10';
+      markerEl.setAttribute('data-developer', development.developer);
       
       const displayPrice = development.prices.oneBed || development.prices.range || 'POA';
       
       markerEl.innerHTML = `
         <div class="relative group">
-          <div class="${isHighlighted 
-            ? 'bg-gradient-to-r from-primary to-accent shadow-premium scale-125 ring-4 ring-primary/30' 
-            : 'bg-primary shadow-medium hover:scale-110'} 
-            w-3 h-3 rounded-full transition-smooth cursor-pointer">
+          <div class="marker-dot bg-primary shadow-medium hover:scale-110 w-3 h-3 rounded-full transition-smooth cursor-pointer">
           </div>
           <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
             <div class="bg-background text-foreground px-2 py-1 rounded shadow-strong text-xs font-semibold border border-border">
@@ -111,13 +101,30 @@ const MapComponent: React.FC<MapComponentProps> = ({
       markersRef.current.push(marker);
     });
 
-    console.log('Total markers created:', markersRef.current.length);
-
     return () => {
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
     };
-  }, [developments, onDevelopmentClick, highlightedDeveloper, isMapLoaded]);
+  }, [developments, onDevelopmentClick, isMapLoaded]);
+
+  // Update marker styling when highlighting changes
+  useEffect(() => {
+    markersRef.current.forEach(marker => {
+      const markerEl = marker.getElement();
+      const developer = markerEl.getAttribute('data-developer');
+      const dotEl = markerEl.querySelector('.marker-dot');
+      
+      if (dotEl) {
+        const isHighlighted = highlightedDeveloper && developer === highlightedDeveloper;
+        
+        if (isHighlighted) {
+          dotEl.className = 'marker-dot bg-gradient-to-r from-primary to-accent shadow-premium scale-125 ring-4 ring-primary/30 w-3 h-3 rounded-full transition-smooth cursor-pointer';
+        } else {
+          dotEl.className = 'marker-dot bg-primary shadow-medium hover:scale-110 w-3 h-3 rounded-full transition-smooth cursor-pointer';
+        }
+      }
+    });
+  }, [highlightedDeveloper]);
 
   return (
     <div className={`relative ${className}`}>
