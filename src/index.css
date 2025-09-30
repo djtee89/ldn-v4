@@ -32,6 +32,10 @@
     --card-foreground: 220 26% 14%;
     --card-hover: 220 14% 96%;
 
+    /* Popovers & Dropdowns */
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 26% 14%;
+
     /* Interactive Elements */
     --secondary: 220 14% 96%;
     --secondary-foreground: 220 26% 14%;
