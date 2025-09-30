@@ -58,34 +58,28 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
       case 'location':
         return (
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Train className="h-4 w-4 text-primary" />
-                    <span className="font-medium">Nearest Station</span>
-                  </div>
-                  <p className="text-sm">{development.nearestTube.station}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {development.nearestTube.line} • {development.nearestTube.walkTime} mins walk
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <GraduationCap className="h-4 w-4 text-primary" />
-                    <span className="font-medium">Schools</span>
-                  </div>
-                  <div className="space-y-1">
-                    {development.schools.slice(0, 2).map((school, index) => (
-                      <p key={index} className="text-sm">{school}</p>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Train className="h-4 w-4 text-primary" />
+                  <span className="font-medium">Nearest Station</span>
+                </div>
+                <p className="text-sm">{development.nearestTube.station}</p>
+                <p className="text-xs text-muted-foreground">
+                  {development.nearestTube.line} • {development.nearestTube.walkTime} mins walk
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span className="font-medium">Transport Score</span>
+                </div>
+                <p className="text-sm text-muted-foreground">{development.transportScore}</p>
+              </CardContent>
+            </Card>
           </div>
         );
       
