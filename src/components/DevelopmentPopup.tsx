@@ -34,14 +34,27 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
   const sections = [
     { id: 'overview', label: 'Overview', icon: Building },
-    { id: 'location', label: 'Location & Transport', icon: MapPin },
-    { id: 'investment', label: 'Investment Profile', icon: TrendingUp },
-    { id: 'lifestyle', label: 'Lifestyle & Amenities', icon: TreePine },
+    { id: 'area', label: 'Area', icon: MapPin },
+    { id: 'location', label: 'Transport', icon: Train },
+    { id: 'investment', label: 'Investment', icon: TrendingUp },
+    { id: 'lifestyle', label: 'Lifestyle', icon: TreePine },
     { id: 'schools', label: 'Schools', icon: GraduationCap },
   ];
 
   const renderSection = () => {
     switch (activeSection) {
+      case 'area':
+        return (
+          <div className="space-y-4">
+            <Card>
+              <CardContent className="p-4">
+                <h4 className="font-medium mb-2">Area Overview</h4>
+                <p className="text-sm text-muted-foreground">{development.areaOverview}</p>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      
       case 'location':
         return (
           <div className="space-y-4">
@@ -204,13 +217,6 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           <div className="space-y-4">
             <Card>
               <CardContent className="p-4">
-                <h4 className="font-medium mb-2">Area Overview</h4>
-                <p className="text-sm text-muted-foreground">{development.areaOverview}</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-4">
                 <h4 className="font-medium mb-3">Pricing</h4>
                 <div className="space-y-2">
                   {development.prices.studio && (
@@ -266,7 +272,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-background rounded-lg shadow-premium max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-background rounded-lg shadow-premium max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="border-b border-border p-4 flex items-center justify-between">
           <div>
@@ -278,7 +284,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           </Button>
         </div>
 
-        <div className="flex flex-col lg:flex-row h-full">
+        <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
           {/* Image Carousel */}
           <div className="lg:w-1/2 p-4">
             <Carousel className="w-full">
@@ -322,7 +328,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             </div>
 
             {/* Section Content */}
-            <div className="flex-1 p-4 overflow-y-auto">
+            <div className="flex-1 p-4 overflow-y-auto max-h-[40vh]">
               {renderSection()}
             </div>
 
