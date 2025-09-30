@@ -519,7 +519,7 @@ export const developments: Development[] = [
       line: "District",
       walkTime: 5
     },
-    coordinates: postcodeToCoords("SW6 2FR"),
+    coordinates: { lat: 51.4760, lng: -0.1900 },
     prices: {
       studio: "From £790,000",
       oneBed: "From £790,000",
