@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import SecondHero from '@/components/SecondHero';
 import DeveloperBanner from '@/components/DeveloperBanner';
-import FilterBar, { FilterState } from '@/components/FilterBar';
+import { FilterState } from '@/components/FilterBar';
 import MapComponent from '@/components/MapComponent';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
@@ -10,7 +11,6 @@ import PropertyOfTheWeek from '@/components/PropertyOfTheWeek';
 import PropertyCard from '@/components/PropertyCard';
 import OffersButton from '@/components/OffersButton';
 import LiveChat from '@/components/LiveChat';
-import LifestyleFilterBar from '@/components/LifestyleFilterBar';
 import ShortlistDrawer from '@/components/ShortlistDrawer';
 import { Button } from '@/components/ui/button';
 import { MapPin } from 'lucide-react';
@@ -199,19 +199,14 @@ const Index = () => {
         highlightedDeveloper={highlightedDeveloper}
       />
       
-      <div className="my-6 px-4 container mx-auto">
-        <FilterBar 
+      <div className="px-4 container mx-auto">
+        <SecondHero
           filters={filters}
           onFiltersChange={setFilters}
           resultsCount={filteredDevelopments.length}
           onSearch={() => setShowMobileMap(true)}
-        />
-      </div>
-      
-      <div className="px-4 container mx-auto mb-6">
-        <LifestyleFilterBar
-          selectedTypes={lifestyleFilters}
-          onTypesChange={setLifestyleFilters}
+          lifestyleFilters={lifestyleFilters}
+          onLifestyleFiltersChange={setLifestyleFilters}
         />
       </div>
       

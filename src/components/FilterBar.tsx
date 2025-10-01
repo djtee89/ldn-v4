@@ -351,7 +351,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   if (isMobile) {
     return (
       <div className="w-full">
-        <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg border border-border/50 p-3">
+        <div className="bg-white rounded-2xl shadow-lg border border-border p-3">
           <div className="flex items-center gap-2">
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
@@ -427,7 +427,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
   return (
     <div className="w-full">
-      <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg border border-border/50 p-4">
+      <div className="bg-white rounded-2xl shadow-lg border border-border p-4">
         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
           <input
             type="text"
