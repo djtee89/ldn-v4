@@ -687,7 +687,13 @@ export const developments: Development[] = [
     greenSpaces: "Superb. The development is located directly opposite the 200-acre Battersea Park, offering a boating lake, sports facilities, and beautiful gardens as your extended front yard. The development itself has 2.5 acres of landscaped gardens.",
     amenities: ["24-hour concierge", "17m swimming pool and spa", "Rooftop terrace with panoramic views", "Residents' lounge"],
     areaOverview: "This is the ultimate blend of parkside tranquility and city sophistication. Prince of Wales Drive offers a lifestyle where your morning run is through one of London's most beautiful parks, and your evenings are spent exploring the world-class restaurants and shops at the regenerated Battersea Power Station. It's an elegant, established, and incredibly well-connected neighbourhood that gives you the best of both worlds: a green escape and a prime central London address.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/prince-of-wales-drive/gallery/lifestyle/prince-of-wales-drive_lifestyle-1_10082022.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/prince-of-wales-drive/gallery/lifestyle/prince-of-wales-drive_lifestyle-2_10082022.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/prince-of-wales-drive/gallery/lifestyle/prince-of-wales-drive_lifestyle-3_10082022.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/prince-of-wales-drive/gallery/exterior/prince-of-wales-drive_exterior-1_29-11-2024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/prince-of-wales-drive/gallery/lifestyle/prince-of-wales-drive_lifestyle-5_10082022.ashx"
+    ]
   },
   {
     id: "west-end-gate-berkeley",
@@ -1094,7 +1100,13 @@ export const developments: Development[] = [
     greenSpaces: "1.9 acres of Wi-Fi enabled gardens",
     amenities: ["Pool", "Spa", "Gym", "Residents' lounge", "Cinema room"],
     areaOverview: "Landmark towers at the heart of London's 'Tech City' hub, between Angel and Shoreditch.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/250-city-road/gallery/exteriors/250-city-road_exterior.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/250-city-road/gallery/exteriors/250-city-road-exterior-18012022-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/250-city-road/gallery/exteriors/250-city-road-exterior-18012022-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/250-city-road/gallery/exteriors/250-city-road-exterior-18012022-3.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/250-city-road/gallery/exteriors/250-city-road-exterior-18012022-4.ashx"
+    ]
   },
   {
     id: "parkside-collection-berkeley",
@@ -1144,7 +1156,13 @@ export const developments: Development[] = [
     greenSpaces: "Riverside promenade and landscaped gardens",
     amenities: ["The Tamesis Club: pool, spa, gym, virtual golf, cinema, wine cellar"],
     areaOverview: "Award-winning riverside development with an exclusive private members' club feel.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/fulham-reach/palmer-house/gallery/fulham-reach_palmer-house_exterior1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/fulham-reach/palmer-house/gallery/fulham-reach_palmer-house_exterior2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/fulham-reach/palmer-house/gallery/fulham-reach_palmer-house_exterior3.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/fulham-reach/palmer-house/gallery/exteriors/fulham-reach_exterior_image-2_26102023.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/fulham-reach/palmer-house/gallery/exteriors/fulham-reach_palmer-house_exterior2.ashx"
+    ]
   },
   {
     id: "chelsea-creek-berkeley",
@@ -1169,7 +1187,13 @@ export const developments: Development[] = [
     greenSpaces: "European-style canals and gardens",
     amenities: ["Spa", "Swimming pool", "Gym", "24-hour concierge"],
     areaOverview: "A prestigious and tranquil waterside enclave, blending the best of Chelsea and Fulham.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/chelsea-creek/gallery/the-doulton-collection-showhome/chelsea-creek_the-doulton-collection-showhome-img1_03072025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/chelsea-creek/gallery/the-doulton-collection-showhome/chelsea-creek_the-doulton-collection-showhome-img2_03072025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/chelsea-creek/gallery/the-doulton-collection-showhome/chelsea-creek_the-doulton-collection-showhome-img3_03072025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/chelsea-creek/gallery/the-doulton-collection-showhome/chelsea-creek_the-doulton-collection-showhome-img4_03072025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/chelsea-creek/gallery/the-doulton-collection-showhome/chelsea-creek_the-doulton-collection-showhome-img9_03072025.ashx"
+    ]
   },
   {
     id: "sutton-berkeley",
