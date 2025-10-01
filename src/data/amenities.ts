@@ -1,5 +1,5 @@
 // Best of London amenities data
-export type AmenityType = 'private_schools' | 'prep_schools' | 'state_schools' | 'grammar_schools' | 'michelin_restaurants' | 'culture_landmarks' | 'shopping_lifestyle' | 'hospitals_clinics' | 'transport_hubs';
+export type AmenityType = 'private_schools' | 'prep_schools' | 'state_schools' | 'grammar_schools' | 'universities' | 'michelin_restaurants' | 'culture_landmarks' | 'shopping_lifestyle' | 'hospitals_clinics' | 'transport_hubs';
 
 export interface Amenity {
   id: string;
@@ -18,6 +18,7 @@ export const amenityColors: Record<AmenityType, string> = {
   prep_schools: '#EC4899', // pink
   state_schools: '#3B82F6', // blue
   grammar_schools: '#10B981', // green
+  universities: '#06B6D4', // cyan
   michelin_restaurants: '#F59E0B', // amber
   culture_landmarks: '#EF4444', // red
   shopping_lifestyle: '#D946EF', // fuchsia
@@ -30,6 +31,7 @@ export const amenityLabels: Record<AmenityType, string> = {
   prep_schools: 'Prep Schools 🏫',
   state_schools: 'State Schools 🏫',
   grammar_schools: 'Grammar Schools 🎓',
+  universities: 'Universities 🎓',
   michelin_restaurants: 'Michelin Star Restaurants 🍴',
   culture_landmarks: 'Culture & Landmarks 🎭',
   shopping_lifestyle: 'Shopping & Lifestyle 🛍️',
@@ -126,6 +128,28 @@ export const amenities: Amenity[] = [
   { id: 'grammar-8', name: 'Wilson\'s School', type: 'grammar_schools', coordinates: { lat: 51.3925, lng: -0.2885 }, walkTime: 28 },
   { id: 'grammar-9', name: 'Wallington High School for Girls', type: 'grammar_schools', coordinates: { lat: 51.3645, lng: -0.1425 }, walkTime: 32 },
   { id: 'grammar-10', name: 'Sutton Grammar School', type: 'grammar_schools', coordinates: { lat: 51.3615, lng: -0.1925 }, walkTime: 33 },
+
+  // Universities
+  { id: 'uni-1', name: 'Imperial College London', type: 'universities', coordinates: { lat: 51.4988, lng: -0.1749 }, walkTime: 11 },
+  { id: 'uni-2', name: 'University College London (UCL)', type: 'universities', coordinates: { lat: 51.5246, lng: -0.1340 }, walkTime: 8 },
+  { id: 'uni-3', name: 'King\'s College London (Strand)', type: 'universities', coordinates: { lat: 51.5115, lng: -0.1160 }, walkTime: 6 },
+  { id: 'uni-4', name: 'London School of Economics (LSE)', type: 'universities', coordinates: { lat: 51.5145, lng: -0.1167 }, walkTime: 7 },
+  { id: 'uni-5', name: 'Queen Mary University', type: 'universities', coordinates: { lat: 51.5242, lng: -0.0402 }, walkTime: 16 },
+  { id: 'uni-6', name: 'City, University of London', type: 'universities', coordinates: { lat: 51.5277, lng: -0.1026 }, walkTime: 8 },
+  { id: 'uni-7', name: 'Royal Holloway', type: 'universities', coordinates: { lat: 51.4256, lng: -0.5641 }, walkTime: 45 },
+  { id: 'uni-8', name: 'Brunel University London', type: 'universities', coordinates: { lat: 51.5328, lng: -0.4735 }, walkTime: 40 },
+  { id: 'uni-9', name: 'University of Westminster', type: 'universities', coordinates: { lat: 51.5185, lng: -0.1400 }, walkTime: 8 },
+  { id: 'uni-10', name: 'SOAS University of London', type: 'universities', coordinates: { lat: 51.5226, lng: -0.1297 }, walkTime: 7 },
+  { id: 'uni-11', name: 'Goldsmiths, University of London', type: 'universities', coordinates: { lat: 51.4743, lng: -0.0351 }, walkTime: 20 },
+  { id: 'uni-12', name: 'Birkbeck, University of London', type: 'universities', coordinates: { lat: 51.5218, lng: -0.1308 }, walkTime: 7 },
+  { id: 'uni-13', name: 'Royal Academy of Music', type: 'universities', coordinates: { lat: 51.5238, lng: -0.1570 }, walkTime: 10 },
+  { id: 'uni-14', name: 'Royal College of Art', type: 'universities', coordinates: { lat: 51.5017, lng: -0.1776 }, walkTime: 11 },
+  { id: 'uni-15', name: 'Royal College of Music', type: 'universities', coordinates: { lat: 51.4993, lng: -0.1774 }, walkTime: 11 },
+  { id: 'uni-16', name: 'London Business School', type: 'universities', coordinates: { lat: 51.5229, lng: -0.1581 }, walkTime: 10 },
+  { id: 'uni-17', name: 'University of the Arts London', type: 'universities', coordinates: { lat: 51.5167, lng: -0.1167 }, walkTime: 7 },
+  { id: 'uni-18', name: 'Regent\'s University London', type: 'universities', coordinates: { lat: 51.5261, lng: -0.1588 }, walkTime: 10 },
+  { id: 'uni-19', name: 'University of Greenwich', type: 'universities', coordinates: { lat: 51.4826, lng: 0.0077 }, walkTime: 22 },
+  { id: 'uni-20', name: 'Kingston University', type: 'universities', coordinates: { lat: 51.4105, lng: -0.3004 }, walkTime: 25 },
 
   // Michelin Star Restaurants
   { id: 'michelin-1', name: 'Restaurant Gordon Ramsay', type: 'michelin_restaurants', coordinates: { lat: 51.4875, lng: -0.1695 }, walkTime: 10 },

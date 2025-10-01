@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, ChevronDown, ChevronUp, School, Utensils, Landmark, ShoppingBag, Cross, Train } from 'lucide-react';
+import { GraduationCap, ChevronDown, ChevronUp, School, Utensils, Landmark, ShoppingBag, Cross, Train, Building2 } from 'lucide-react';
 import { AmenityType, amenityLabels } from '@/data/amenities';
 
 interface LifestyleFilterBarProps {
@@ -13,6 +13,7 @@ const amenityIcons: Record<AmenityType, React.ReactNode> = {
   prep_schools: <School className="w-4 h-4" />,
   state_schools: <School className="w-4 h-4" />,
   grammar_schools: <GraduationCap className="w-4 h-4" />,
+  universities: <Building2 className="w-4 h-4" />,
   michelin_restaurants: <Utensils className="w-4 h-4" />,
   culture_landmarks: <Landmark className="w-4 h-4" />,
   shopping_lifestyle: <ShoppingBag className="w-4 h-4" />,
@@ -34,7 +35,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
     }
   };
 
-  const amenityTypesList: AmenityType[] = ['private_schools', 'prep_schools', 'state_schools', 'grammar_schools', 'michelin_restaurants', 'culture_landmarks', 'shopping_lifestyle', 'hospitals_clinics', 'transport_hubs'];
+  const amenityTypesList: AmenityType[] = ['private_schools', 'prep_schools', 'state_schools', 'grammar_schools', 'universities', 'michelin_restaurants', 'culture_landmarks', 'shopping_lifestyle', 'hospitals_clinics', 'transport_hubs'];
 
   return (
     <div className="bg-card border border-border rounded-lg shadow-sm mb-4">
@@ -73,7 +74,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
                 className="h-9 text-xs gap-1.5 whitespace-nowrap shrink-0"
               >
                 {amenityIcons[type]}
-                <span className="hidden sm:inline">{amenityLabels[type]}</span>
+                <span>{amenityLabels[type]}</span>
               </Button>
             );
           })}
