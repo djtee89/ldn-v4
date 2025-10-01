@@ -205,16 +205,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   };
 
   const FilterControls = () => (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* Price Range */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         <div>
           <Label className="text-xs font-medium mb-1 block">Price From</Label>
           <Select value={localFilters.priceFrom || undefined} onValueChange={value => updateLocalFilter('priceFrom', value)}>
-            <SelectTrigger className="h-9">
+            <SelectTrigger className="h-8">
               <SelectValue placeholder="No min" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-h-[200px]">
               {priceSteps.map(step => (
                 <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
               ))}
@@ -224,10 +224,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         <div>
           <Label className="text-xs font-medium mb-1 block">Price To</Label>
           <Select value={localFilters.priceTo || undefined} onValueChange={value => updateLocalFilter('priceTo', value)}>
-            <SelectTrigger className="h-9">
+            <SelectTrigger className="h-8">
               <SelectValue placeholder="No max" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-h-[200px]">
               {priceSteps.map(step => (
                 <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
               ))}
@@ -240,7 +240,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       <div>
         <Label className="text-xs font-medium mb-1 block">Tenure</Label>
         <Select value={localFilters.tenure} onValueChange={value => updateLocalFilter('tenure', value)}>
-          <SelectTrigger className="h-9">
+          <SelectTrigger className="h-8">
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent>
@@ -252,11 +252,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       </div>
 
       {/* Bedrooms */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2">
         <div>
           <Label className="text-xs font-medium mb-1 block">Min Bedrooms</Label>
           <Select value={localFilters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
-            <SelectTrigger className="h-9">
+            <SelectTrigger className="h-8">
               <SelectValue placeholder="No min" />
             </SelectTrigger>
             <SelectContent>
@@ -269,7 +269,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         <div>
           <Label className="text-xs font-medium mb-1 block">Max Bedrooms</Label>
           <Select value={localFilters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
-            <SelectTrigger className="h-9">
+            <SelectTrigger className="h-8">
               <SelectValue placeholder="No max" />
             </SelectTrigger>
             <SelectContent>
@@ -288,7 +288,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           value={localFilters.zones.length > 0 ? localFilters.zones[0] : undefined} 
           onValueChange={value => updateLocalFilter('zones', value ? [value] : [])}
         >
-          <SelectTrigger className="h-9">
+          <SelectTrigger className="h-8">
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent>
@@ -306,7 +306,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       <div>
         <Label className="text-xs font-medium mb-1 block">Walk to Station</Label>
         <Select value={localFilters.walkToStation} onValueChange={value => updateLocalFilter('walkToStation', value)}>
-          <SelectTrigger className="h-9">
+          <SelectTrigger className="h-8">
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent>
@@ -322,16 +322,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       {/* Amenities */}
       <div>
         <Label className="text-xs font-medium mb-1 block">Amenities</Label>
-        <div className="grid grid-cols-2 gap-2 h-[50px] overflow-y-auto pr-2 border border-border rounded-md p-2">
+        <div className="grid grid-cols-2 gap-1.5 max-h-[80px] overflow-y-auto border border-border rounded-md p-2">
           {amenitiesList.map(amenity => (
             <div key={amenity} className="flex items-center space-x-1.5">
               <Checkbox
                 id={`amenity-${amenity}`}
                 checked={localFilters.amenities.includes(amenity)}
                 onCheckedChange={() => toggleAmenity(amenity)}
-                className="h-2 w-2 min-h-0 min-w-0"
+                className="h-3 w-3"
               />
-              <Label htmlFor={`amenity-${amenity}`} className="text-xs cursor-pointer">
+              <Label htmlFor={`amenity-${amenity}`} className="text-xs cursor-pointer leading-none">
                 {amenity}
               </Label>
             </div>
@@ -386,10 +386,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 <DrawerHeader className="flex items-center justify-between shrink-0">
                   <DrawerTitle>Filters</DrawerTitle>
                 </DrawerHeader>
-                <div className="px-4 pb-6 overflow-y-auto flex-1 min-h-0">
+                <div className="px-4 pb-4 overflow-y-auto flex-1 min-h-0">
                   <FilterControls />
                 </div>
-                <DrawerFooter className="flex flex-row gap-2 shrink-0">
+                <DrawerFooter className="flex flex-row gap-2 shrink-0 pt-2 pb-4">
                   <Button
                     variant="outline"
                     onClick={handleReset}
@@ -450,10 +450,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               <DrawerHeader className="shrink-0">
                 <DrawerTitle>Filters</DrawerTitle>
               </DrawerHeader>
-              <div className="px-4 pb-6 overflow-y-auto flex-1 min-h-0">
+              <div className="px-4 pb-4 overflow-y-auto flex-1 min-h-0">
                 <FilterControls />
               </div>
-              <DrawerFooter className="flex flex-row gap-2 shrink-0">
+              <DrawerFooter className="flex flex-row gap-2 shrink-0 pt-2 pb-4">
                 <Button
                   variant="outline"
                   onClick={handleReset}
