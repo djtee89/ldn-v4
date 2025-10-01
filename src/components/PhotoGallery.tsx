@@ -35,9 +35,9 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
 
   return (
     <>
-      <div className="w-full space-y-3">
+      <div className="w-full space-y-2">
         {/* Main Image */}
-        <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
+        <div className="relative aspect-[21/9] w-full overflow-hidden rounded-lg bg-muted">
           <img
             src={images[currentIndex]}
             alt={`${name} - Image ${currentIndex + 1}`}
@@ -71,14 +71,14 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
         </div>
 
         {/* Thumbnail Strip */}
-        <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-2">
+        <div className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory pb-1">
           {images.slice(startThumb, startThumb + visibleThumbs).map((img, idx) => {
             const actualIndex = startThumb + idx;
             return (
               <button
                 key={actualIndex}
                 onClick={() => setCurrentIndex(actualIndex)}
-                className={`flex-shrink-0 w-20 h-12 rounded overflow-hidden snap-start transition-all ${
+                className={`flex-shrink-0 w-16 h-10 rounded overflow-hidden snap-start transition-all ${
                   actualIndex === currentIndex
                     ? 'ring-2 ring-primary opacity-100'
                     : 'opacity-60 hover:opacity-100'

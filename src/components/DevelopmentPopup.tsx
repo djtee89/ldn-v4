@@ -132,7 +132,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
         </div>
 
         {/* Photo Gallery */}
-        <div className="px-4 sm:px-6 pt-4">
+        <div className="px-4 sm:px-6 pt-3 pb-2">
           <PhotoGallery images={development.images} name={development.name} />
         </div>
 
