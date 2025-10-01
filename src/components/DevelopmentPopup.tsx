@@ -13,11 +13,13 @@ import {
   Building,
   Star,
   Calendar,
-  MessageSquare
+  MessageSquare,
+  Heart
 } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Amenity, AmenityType, amenityLabels } from '@/data/amenities';
+import { translations } from '@/i18n/translations';
 
 interface DevelopmentPopupProps {
   development: Development;
@@ -25,6 +27,9 @@ interface DevelopmentPopupProps {
   onBookViewing: () => void;
   onRequestInfo: () => void;
   nearbyAmenities?: Record<AmenityType, Amenity[]>;
+  isInShortlist: boolean;
+  onToggleShortlist: () => void;
+  language: string;
 }
 
 const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
@@ -32,7 +37,10 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   onClose,
   onBookViewing,
   onRequestInfo,
-  nearbyAmenities = {}
+  nearbyAmenities = {},
+  isInShortlist,
+  onToggleShortlist,
+  language,
 }) => {
   const [activeSection, setActiveSection] = useState<string>('overview');
 
@@ -249,9 +257,30 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
               <p className="text-sm text-muted-foreground">{development.developer}</p>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={onToggleShortlist}
+                      className="hover:bg-background"
+                    >
+                      <Heart 
+                        className={`h-5 w-5 ${isInShortlist ? 'fill-red-500 text-red-500' : ''}`}
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{translations[language as 'en' | 'zh'].shortlist.tooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 

@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Globe, Menu, X } from 'lucide-react';
+import { Globe, Menu, X, Heart } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import logo from '@/assets/logo.png';
+import { translations } from '@/i18n/translations';
+
 interface HeaderProps {
   onAboutClick: () => void;
   onBookViewingClick: () => void;
   onGuideClick: () => void;
+  onShortlistClick: () => void;
+  shortlistCount: number;
 }
 const Header: React.FC<HeaderProps> = ({
   onAboutClick,
   onBookViewingClick,
-  onGuideClick
+  onGuideClick,
+  onShortlistClick,
+  shortlistCount,
 }) => {
   const [language, setLanguage] = useState('en');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,6 +56,14 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              onClick={onShortlistClick}
+              className="relative"
+            >
+              <Heart className="h-4 w-4 mr-2" />
+              {translations[language as 'en' | 'zh'].shortlist.button} ({shortlistCount})
+            </Button>
             <Button variant="outline" onClick={onAboutClick} className="font-medium">
               {language === 'en' ? 'About Us' : '关于我们'}
             </Button>
@@ -95,6 +109,10 @@ const Header: React.FC<HeaderProps> = ({
         {/* Mobile Navigation Dropdown */}
         {mobileMenuOpen && (
           <nav className="nav-links show md:hidden">
+            <Button variant="ghost" onClick={() => handleNavClick(onShortlistClick)} className="w-full justify-start">
+              <Heart className="h-4 w-4 mr-2" />
+              {translations[language as 'en' | 'zh'].shortlist.button} ({shortlistCount})
+            </Button>
             <Button variant="ghost" onClick={() => handleNavClick(onAboutClick)} className="w-full justify-start">
               {language === 'en' ? 'About Us' : '关于我们'}
             </Button>

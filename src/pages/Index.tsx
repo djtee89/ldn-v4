@@ -9,18 +9,27 @@ import PropertyOfTheWeek from '@/components/PropertyOfTheWeek';
 import OffersButton from '@/components/OffersButton';
 import LiveChat from '@/components/LiveChat';
 import LifestyleFilterBar from '@/components/LifestyleFilterBar';
+import ShortlistDrawer from '@/components/ShortlistDrawer';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
 import Contact from './Contact';
 import { developments, propertyOfTheWeek } from '@/data/newDevelopments';
 import { Development } from '@/data/newDevelopments';
 import { AmenityType } from '@/data/amenities';
+import { useShortlist } from '@/hooks/use-shortlist';
+import { useToast } from '@/hooks/use-toast';
+import { translations } from '@/i18n/translations';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide' | 'contact'>('main');
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [highlightedDeveloper, setHighlightedDeveloper] = useState<string | null>(null);
+  const [isShortlistOpen, setIsShortlistOpen] = useState(false);
+  const [language, setLanguage] = useState('en');
+  
+  const { shortlist, toggleShortlist, isInShortlist, removeFromShortlist } = useShortlist();
+  const { toast } = useToast();
   const [activeDirections, setActiveDirections] = useState<{ 
     developmentId: string;
     destination: {
@@ -152,12 +161,23 @@ const Index = () => {
     setSelectedDevelopment({ ...development, nearbyAmenities } as any);
   };
 
+  const handleToggleShortlist = (development: Development) => {
+    const added = toggleShortlist(development);
+    const t = translations[language as 'en' | 'zh'];
+    toast({
+      description: added ? t.shortlist.addedToast : t.shortlist.removedToast,
+      duration: 2000,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header 
         onAboutClick={() => setCurrentView('about')}
         onBookViewingClick={() => setCurrentView('contact')}
         onGuideClick={() => setCurrentView('guide')}
+        onShortlistClick={() => setIsShortlistOpen(true)}
+        shortlistCount={shortlist.length}
       />
       <DeveloperBanner 
         onDeveloperClick={handleDeveloperClick}
@@ -203,6 +223,9 @@ const Index = () => {
             console.log('Request info for:', selectedDevelopment.name);
           }}
           nearbyAmenities={(selectedDevelopment as any).nearbyAmenities}
+          isInShortlist={isInShortlist(selectedDevelopment.name)}
+          onToggleShortlist={() => handleToggleShortlist(selectedDevelopment)}
+          language={language}
         />
       )}
 
@@ -211,6 +234,24 @@ const Index = () => {
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         developmentName={selectedDevelopment?.name || ''}
+      />
+
+      {/* Shortlist Drawer */}
+      <ShortlistDrawer
+        open={isShortlistOpen}
+        onClose={() => setIsShortlistOpen(false)}
+        shortlist={shortlist}
+        onRemove={removeFromShortlist}
+        onViewDetails={(dev) => {
+          setSelectedDevelopment(dev);
+          setIsShortlistOpen(false);
+        }}
+        onBookViewing={(dev) => {
+          setSelectedDevelopment(dev);
+          setIsBookingModalOpen(true);
+          setIsShortlistOpen(false);
+        }}
+        language={language}
       />
       
       {/* Live Chat */}

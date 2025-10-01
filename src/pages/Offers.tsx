@@ -8,9 +8,11 @@ import ClaimTokenDialog from '@/components/ClaimTokenDialog';
 import Header from '@/components/Header';
 import { ArrowLeft, Calendar, Building2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useShortlist } from '@/hooks/use-shortlist';
 
 const Offers: React.FC = () => {
   const navigate = useNavigate();
+  const { shortlist } = useShortlist();
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [claimedOffers, setClaimedOffers] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<string>('all');
@@ -64,6 +66,8 @@ const Offers: React.FC = () => {
         onAboutClick={() => navigate('/')}
         onBookViewingClick={() => navigate('/contact-options')}
         onGuideClick={() => navigate('/')}
+        onShortlistClick={() => navigate('/')}
+        shortlistCount={shortlist.length}
       />
       
       <div className="min-h-screen bg-background pt-20 pb-12">

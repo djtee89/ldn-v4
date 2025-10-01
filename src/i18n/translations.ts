@@ -5,6 +5,12 @@ export const translations = {
       guide: "Property Guide",
       speak: "Speak to an Expert"
     },
+    shortlist: {
+      button: "My Shortlist",
+      tooltip: "Save to shortlist",
+      addedToast: "Added to your shortlist.",
+      removedToast: "Removed from your shortlist.",
+    },
     map: {
       title: "London New Builds",
       subtitle: "Click pins to view details",
@@ -39,6 +45,12 @@ export const translations = {
       about: "关于我们",
       guide: "购房指南",
       speak: "联系专家"
+    },
+    shortlist: {
+      button: "我的心愿单",
+      tooltip: "收藏到心愿单",
+      addedToast: "已添加到心愿单。",
+      removedToast: "已从心愿单移除。",
     },
     map: {
       title: "伦敦新建项目",
