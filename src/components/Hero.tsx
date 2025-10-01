@@ -18,7 +18,7 @@ const Hero: React.FC<HeroProps> = ({
 
       {/* Content overlay */}
       <div className="pointer-events-none absolute inset-0 flex flex-col justify-center">
-        <div className="pointer-events-auto mx-auto w-full max-w-6xl px-4">
+        <div className="pointer-events-auto w-full px-4 max-w-6xl mx-auto">
           {/* Heading */}
           <div className="max-w-3xl">
             <h1 className="text-white text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight">
@@ -28,11 +28,11 @@ const Hero: React.FC<HeroProps> = ({
               Off-plan and ready-to-move homes from leading developers.
             </p>
           </div>
+        </div>
 
-          {/* Developer Banner - Transparent Overlay */}
-          <div className="mt-6">
-            <DeveloperBanner onDeveloperClick={onDeveloperClick} highlightedDeveloper={highlightedDeveloper} />
-          </div>
+        {/* Developer Banner - Full Width Transparent Overlay */}
+        <div className="absolute bottom-6 left-0 right-0 pointer-events-auto">
+          <DeveloperBanner onDeveloperClick={onDeveloperClick} highlightedDeveloper={highlightedDeveloper} />
         </div>
       </div>
     </section>;
