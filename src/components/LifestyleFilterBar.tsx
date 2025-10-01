@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dumbbell, ShoppingCart, Trees, GraduationCap, ChevronDown, ChevronUp, Activity, Cross, CupSoda, Utensils, School } from 'lucide-react';
+import { GraduationCap, ChevronDown, ChevronUp, School, Utensils, Landmark, ShoppingBag, Cross, Train } from 'lucide-react';
 import { AmenityType, amenityLabels } from '@/data/amenities';
 
 interface LifestyleFilterBarProps {
@@ -9,15 +9,15 @@ interface LifestyleFilterBarProps {
 }
 
 const amenityIcons: Record<AmenityType, React.ReactNode> = {
-  tennis: <Activity className="w-4 h-4" />,
+  private_schools: <GraduationCap className="w-4 h-4" />,
+  prep_schools: <School className="w-4 h-4" />,
+  state_schools: <School className="w-4 h-4" />,
   grammar_schools: <GraduationCap className="w-4 h-4" />,
-  chinese_restaurants: <Utensils className="w-4 h-4" />,
-  supermarkets: <ShoppingCart className="w-4 h-4" />,
-  parks: <Trees className="w-4 h-4" />,
-  gyms: <Dumbbell className="w-4 h-4" />,
-  hospitals: <Cross className="w-4 h-4" />,
-  cafes: <CupSoda className="w-4 h-4" />,
-  private_schools: <School className="w-4 h-4" />,
+  michelin_restaurants: <Utensils className="w-4 h-4" />,
+  culture_landmarks: <Landmark className="w-4 h-4" />,
+  shopping_lifestyle: <ShoppingBag className="w-4 h-4" />,
+  hospitals_clinics: <Cross className="w-4 h-4" />,
+  transport_hubs: <Train className="w-4 h-4" />,
 };
 
 const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
@@ -34,7 +34,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
     }
   };
 
-  const amenityTypesList: AmenityType[] = ['private_schools', 'grammar_schools', 'tennis', 'chinese_restaurants', 'supermarkets', 'parks', 'gyms', 'hospitals', 'cafes'];
+  const amenityTypesList: AmenityType[] = ['private_schools', 'prep_schools', 'state_schools', 'grammar_schools', 'michelin_restaurants', 'culture_landmarks', 'shopping_lifestyle', 'hospitals_clinics', 'transport_hubs'];
 
   return (
     <div className="bg-card border border-border rounded-lg shadow-sm mb-4">
