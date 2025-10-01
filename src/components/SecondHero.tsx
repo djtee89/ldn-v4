@@ -21,13 +21,13 @@ const SecondHero: React.FC<SecondHeroProps> = ({
   onLifestyleFiltersChange,
 }) => {
   return (
-    <section className="relative isolate mb-6">
+    <section className="relative isolate mb-6 w-full">
       {/* Background image */}
-      <div className="relative overflow-hidden rounded-[24px]">
+      <div className="relative overflow-hidden">
         <img 
           src="/oval-village-1.png" 
           alt="London luxury property interior" 
-          className="h-[clamp(320px,45vh,550px)] md:h-[clamp(400px,50vh,600px)] w-full object-cover" 
+          className="h-[240px] md:h-[280px] w-full object-cover" 
           loading="lazy"
         />
         {/* Gradient overlay for content legibility */}
