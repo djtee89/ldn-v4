@@ -39,7 +39,7 @@ const Hero: React.FC<HeroProps> = ({ onDeveloperClick, highlightedDeveloper }) =
           </div>
 
           {/* Developer Banner */}
-          <div className="mt-6">
+          <div className="mt-4">
             <DeveloperBanner 
               onDeveloperClick={onDeveloperClick}
               highlightedDeveloper={highlightedDeveloper}
