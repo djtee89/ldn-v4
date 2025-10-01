@@ -148,6 +148,10 @@ const Index = () => {
     setSelectedDevelopment(propertyOfTheWeek.development);
   };
 
+  const handleDevelopmentClick = (development: Development, nearbyAmenities?: any) => {
+    setSelectedDevelopment({ ...development, nearbyAmenities } as any);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header 
@@ -174,7 +178,7 @@ const Index = () => {
         <div className="h-[calc(100vh-400px)] h-[calc(100dvh-400px)] min-h-[500px] relative">
           <MapComponent 
             developments={filteredDevelopments}
-            onDevelopmentClick={setSelectedDevelopment}
+            onDevelopmentClick={handleDevelopmentClick}
             highlightedDeveloper={highlightedDeveloper}
             className="w-full h-full"
             activeDirections={activeDirections}
@@ -205,6 +209,7 @@ const Index = () => {
             });
             setSelectedDevelopment(null);
           }}
+          nearbyAmenities={(selectedDevelopment as any).nearbyAmenities}
         />
       )}
 

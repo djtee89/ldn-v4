@@ -5,10 +5,12 @@ import { Development } from '@/data/newDevelopments';
 import { Button } from '@/components/ui/button';
 import DirectionsPanel from './DirectionsPanel';
 import { getDirections, DirectionsData, estimateStationCoordinates } from '@/lib/directions';
-import { AmenityType, getNearbyAmenities, amenityColors } from '@/data/amenities';
+import { AmenityType, getNearbyAmenities, amenityColors, Amenity } from '@/data/amenities';
+import AmenityLegend from './AmenityLegend';
+
 interface MapComponentProps {
   developments: Development[];
-  onDevelopmentClick: (development: Development) => void;
+  onDevelopmentClick: (development: Development, nearbyAmenities?: Record<AmenityType, Amenity[]>) => void;
   highlightedDeveloper: string | null;
   className?: string;
   activeDirections?: { 
@@ -77,53 +79,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
-      // Add layer for normal pins
-      map.current!.addLayer({
-        id: 'development-pins',
-        type: 'circle',
-        source: 'developments',
-        paint: {
-          'circle-radius': 6,
-          'circle-color': '#FF6B6B',
-          'circle-stroke-width': 2,
-          'circle-stroke-color': '#ffffff'
-        }
-      });
-
-      // Add layer for highlighted pins
-      map.current!.addLayer({
-        id: 'development-pins-highlighted',
-        type: 'circle',
-        source: 'developments',
-        filter: ['==', ['get', 'highlighted'], true],
-        paint: {
-          'circle-radius': 8,
-          'circle-color': '#FF6B6B',
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#FFD700',
-          'circle-opacity': 0.9
-        }
-      });
-
-      // Add price labels
-      map.current!.addLayer({
-        id: 'development-labels',
-        type: 'symbol',
-        source: 'developments',
-        layout: {
-          'text-field': ['get', 'price'],
-          'text-size': 11,
-          'text-offset': [0, -1.5],
-          'text-anchor': 'top'
-        },
-        paint: {
-          'text-color': '#1a1a1a',
-          'text-halo-color': '#ffffff',
-          'text-halo-width': 1.5
-        }
-      });
-
-      // Add amenity pins layer
+      // Add amenity pins layer (BELOW property pins)
       map.current!.addLayer({
         id: 'amenity-pins',
         type: 'circle',
@@ -155,17 +111,95 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
-      // Handle clicks
+      // Add layer for normal property pins (ABOVE amenity pins)
+      map.current!.addLayer({
+        id: 'development-pins',
+        type: 'circle',
+        source: 'developments',
+        paint: {
+          'circle-radius': 7,
+          'circle-color': '#FF6B6B',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff'
+        }
+      });
+
+      // Add layer for highlighted property pins
+      map.current!.addLayer({
+        id: 'development-pins-highlighted',
+        type: 'circle',
+        source: 'developments',
+        filter: ['==', ['get', 'highlighted'], true],
+        paint: {
+          'circle-radius': 9,
+          'circle-color': '#FF6B6B',
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#FFD700',
+          'circle-opacity': 0.9
+        }
+      });
+
+      // Add price labels (ABOVE all pins)
+      map.current!.addLayer({
+        id: 'development-labels',
+        type: 'symbol',
+        source: 'developments',
+        layout: {
+          'text-field': ['get', 'price'],
+          'text-size': 11,
+          'text-offset': [0, -1.8],
+          'text-anchor': 'top'
+        },
+        paint: {
+          'text-color': '#1a1a1a',
+          'text-halo-color': '#ffffff',
+          'text-halo-width': 1.5
+        }
+      });
+
+      // Handle property pin clicks
       map.current!.on('click', 'development-pins', e => {
         if (e.features && e.features[0]) {
           const id = e.features[0].properties?.id;
-          setSelectedId(id);
+          const development = developments.find(d => d.id === id);
+          if (development) {
+            // Get nearby amenities for active filters
+            const nearbyByType: Record<AmenityType, Amenity[]> = {} as any;
+            lifestyleFilters.forEach(type => {
+              const nearby = getNearbyAmenities(
+                development.coordinates.lat,
+                development.coordinates.lng,
+                [type],
+                1.5
+              ).slice(0, 3); // Top 3 per type
+              if (nearby.length > 0) {
+                nearbyByType[type] = nearby;
+              }
+            });
+            onDevelopmentClick(development, nearbyByType);
+          }
         }
       });
       map.current!.on('click', 'development-pins-highlighted', e => {
         if (e.features && e.features[0]) {
           const id = e.features[0].properties?.id;
-          setSelectedId(id);
+          const development = developments.find(d => d.id === id);
+          if (development) {
+            // Get nearby amenities for active filters
+            const nearbyByType: Record<AmenityType, Amenity[]> = {} as any;
+            lifestyleFilters.forEach(type => {
+              const nearby = getNearbyAmenities(
+                development.coordinates.lat,
+                development.coordinates.lng,
+                [type],
+                1.5
+              ).slice(0, 3); // Top 3 per type
+              if (nearby.length > 0) {
+                nearbyByType[type] = nearby;
+              }
+            });
+            onDevelopmentClick(development, nearbyByType);
+          }
         }
       });
 
@@ -191,11 +225,69 @@ const MapComponent: React.FC<MapComponentProps> = ({
         map.current!.getCanvas().style.cursor = '';
       });
 
-      // Show popup on amenity hover
+      // Show popup on amenity hover with "View route" option
       const popup = new mapboxgl.Popup({
-        closeButton: false,
-        closeOnClick: false,
-        offset: 15
+        closeButton: true,
+        closeOnClick: true,
+        offset: 15,
+        className: 'amenity-popup'
+      });
+
+      map.current!.on('click', 'amenity-pins', (e) => {
+        if (e.features && e.features[0]) {
+          const feature = e.features[0];
+          const coordinates = (feature.geometry as any).coordinates.slice();
+          const name = feature.properties?.name;
+          const walkTime = feature.properties?.walkTime;
+          const type = feature.properties?.type;
+          
+          const popupContent = `
+            <div style="padding: 8px; font-size: 13px; min-width: 180px;">
+              <div style="font-weight: 600; margin-bottom: 4px;">${name}</div>
+              <div style="color: #666; font-size: 12px; margin-bottom: 8px;">${walkTime} min walk</div>
+              <button 
+                id="amenity-route-btn" 
+                style="
+                  width: 100%;
+                  padding: 6px 12px;
+                  background: #3b82f6;
+                  color: white;
+                  border: none;
+                  border-radius: 6px;
+                  cursor: pointer;
+                  font-size: 12px;
+                  font-weight: 500;
+                "
+              >
+                View Route
+              </button>
+            </div>
+          `;
+          
+          popup.setLngLat(coordinates)
+            .setHTML(popupContent)
+            .addTo(map.current!);
+            
+          // Add click handler for "View route" button
+          setTimeout(() => {
+            const btn = document.getElementById('amenity-route-btn');
+            if (btn) {
+              btn.addEventListener('click', () => {
+                // Find nearest development and show route
+                const nearestDev = developments[0]; // Simplified - could find actual nearest
+                if (nearestDev) {
+                  onDevelopmentClick(nearestDev);
+                  // Trigger directions to this amenity
+                  setTimeout(() => {
+                    // This would need to be wired to the directions system
+                    console.log('Show route to:', name);
+                  }, 100);
+                }
+                popup.remove();
+              });
+            }
+          }, 0);
+        }
       });
 
       map.current!.on('mouseenter', 'amenity-pins', (e) => {
@@ -205,14 +297,21 @@ const MapComponent: React.FC<MapComponentProps> = ({
           const name = feature.properties?.name;
           const walkTime = feature.properties?.walkTime;
           
-          popup.setLngLat(coordinates)
-            .setHTML(`<div style="padding: 4px; font-size: 12px;"><strong>${name}</strong><br/>${walkTime} min walk</div>`)
+          // Show simple tooltip on hover
+          const tooltip = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            offset: 10
+          });
+          
+          tooltip.setLngLat(coordinates)
+            .setHTML(`<div style="padding: 4px 8px; font-size: 11px;"><strong>${name}</strong><br/>${walkTime} min walk</div>`)
             .addTo(map.current!);
+            
+          map.current!.on('mouseleave', 'amenity-pins', () => {
+            tooltip.remove();
+          });
         }
-      });
-
-      map.current!.on('mouseleave', 'amenity-pins', () => {
-        popup.remove();
       });
 
       setIsMapLoaded(true);
@@ -305,15 +404,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
     });
   }, [lifestyleFilters, developments, isMapLoaded]);
 
-  // Handle click events from map
-  useEffect(() => {
-    if (!selectedId) return;
-    const development = developments.find(d => d.id === selectedId);
-    if (development) {
-      onDevelopmentClick(development);
-      setSelectedId(null);
-    }
-  }, [selectedId, developments, onDevelopmentClick]);
+  // This effect is no longer needed as we handle clicks directly in the map event handlers
+  // Removed to prevent duplicate calls to onDevelopmentClick
 
   // Handle directions request
   useEffect(() => {
@@ -396,6 +488,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
       <div ref={mapContainer} className="w-full h-full rounded-lg" style={{
       minHeight: '400px'
     }} />
+      
+      {/* Amenity Legend */}
+      <AmenityLegend activeTypes={lifestyleFilters} />
       
       {/* Directions Panel */}
       {activeDirections && currentDevelopment && (

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import DestinationSelector from '@/components/DestinationSelector';
+import { Amenity, AmenityType, amenityLabels } from '@/data/amenities';
 
 interface DevelopmentPopupProps {
   development: Development;
@@ -25,6 +26,7 @@ interface DevelopmentPopupProps {
   onBookViewing: () => void;
   onRequestInfo: () => void;
   onGetDirections?: (stationCoords: { lat: number; lng: number; name: string; line: string }) => void;
+  nearbyAmenities?: Record<AmenityType, Amenity[]>;
 }
 
 const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
@@ -32,7 +34,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   onClose,
   onBookViewing,
   onRequestInfo,
-  onGetDirections
+  onGetDirections,
+  nearbyAmenities = {}
 }) => {
   const [activeSection, setActiveSection] = useState<string>('overview');
   const [showDestinationSelector, setShowDestinationSelector] = useState(false);
@@ -213,6 +216,33 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
     }
   };
 
+  // Render nearby amenities if any active
+  const renderNearbyAmenities = () => {
+    const hasAmenities = Object.keys(nearbyAmenities).length > 0;
+    if (!hasAmenities) return null;
+
+    return (
+      <div className="mt-6 pt-6 border-t border-border">
+        <h3 className="text-lg font-semibold mb-4">Nearby Amenities</h3>
+        <div className="space-y-4">
+          {(Object.entries(nearbyAmenities) as [AmenityType, Amenity[]][]).map(([type, amenities]) => (
+            <div key={type} className="space-y-2">
+              <h4 className="text-sm font-medium text-muted-foreground">{amenityLabels[type]}</h4>
+              <div className="space-y-1.5">
+                {amenities.map((amenity) => (
+                  <div key={amenity.id} className="flex items-center justify-between text-sm py-1.5 px-2 rounded hover:bg-muted/50">
+                    <span className="text-foreground">{amenity.name}</span>
+                    <span className="text-muted-foreground text-xs">{amenity.walkTime} min walk</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="modal-backdrop">
       <div className="modal-panel modal-panel-wide">
@@ -273,6 +303,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
           {/* Section Content */}
           {renderSection()}
+          
+          {/* Nearby Amenities (shown on Area tab) */}
+          {activeSection === 'area' && renderNearbyAmenities()}
         </div>
 
         {/* Sticky Footer Actions */}
