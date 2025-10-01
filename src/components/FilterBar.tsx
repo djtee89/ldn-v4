@@ -5,7 +5,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerFooter } from '@/components/ui/drawer';
-import { SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { SlidersHorizontal, ChevronDown, X, MapPin, Home, Coins } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export interface FilterState {
@@ -206,29 +207,29 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   };
 
   const FilterControls = () => (
-    <div className="space-y-2">
+    <div className="space-y-4">
       {/* Price Range */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <div>
-          <Label className="text-xs font-medium mb-1 block">Price From</Label>
+      <div>
+        <Label className="text-sm font-semibold mb-2 block flex items-center gap-2">
+          <Coins className="h-4 w-4" />
+          Price Range
+        </Label>
+        <div className="grid grid-cols-2 gap-3">
           <Select value={localFilters.priceFrom || undefined} onValueChange={value => updateLocalFilter('priceFrom', value)}>
-            <SelectTrigger className="h-8">
+            <SelectTrigger className="h-10">
               <SelectValue placeholder="No min" />
             </SelectTrigger>
-            <SelectContent className="max-h-[200px]">
+            <SelectContent className="max-h-[240px]">
               {priceSteps.map(step => (
                 <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
-        </div>
-        <div>
-          <Label className="text-xs font-medium mb-1 block">Price To</Label>
           <Select value={localFilters.priceTo || undefined} onValueChange={value => updateLocalFilter('priceTo', value)}>
-            <SelectTrigger className="h-8">
+            <SelectTrigger className="h-10">
               <SelectValue placeholder="No max" />
             </SelectTrigger>
-            <SelectContent className="max-h-[200px]">
+            <SelectContent className="max-h-[240px]">
               {priceSteps.map(step => (
                 <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
               ))}
@@ -237,11 +238,79 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         </div>
       </div>
 
+      {/* Bedrooms */}
+      <div>
+        <Label className="text-sm font-semibold mb-2 block flex items-center gap-2">
+          <Home className="h-4 w-4" />
+          Bedrooms
+        </Label>
+        <div className="grid grid-cols-2 gap-3">
+          <Select value={localFilters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
+            <SelectTrigger className="h-10">
+              <SelectValue placeholder="No min" />
+            </SelectTrigger>
+            <SelectContent>
+              {bedroomOptions.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={localFilters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
+            <SelectTrigger className="h-10">
+              <SelectValue placeholder="No max" />
+            </SelectTrigger>
+            <SelectContent>
+              {bedroomOptions.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Zone & Distance */}
+      <div>
+        <Label className="text-sm font-semibold mb-2 block flex items-center gap-2">
+          <MapPin className="h-4 w-4" />
+          Location
+        </Label>
+        <div className="grid grid-cols-2 gap-3">
+          <Select 
+            value={localFilters.zones.length > 0 ? localFilters.zones[0] : undefined} 
+            onValueChange={value => updateLocalFilter('zones', value ? [value] : [])}
+          >
+            <SelectTrigger className="h-10">
+              <SelectValue placeholder="Any zone" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">Zone 1</SelectItem>
+              <SelectItem value="2">Zone 2</SelectItem>
+              <SelectItem value="3">Zone 3</SelectItem>
+              <SelectItem value="4">Zone 4</SelectItem>
+              <SelectItem value="5">Zone 5</SelectItem>
+              <SelectItem value="6">Zone 6</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={localFilters.walkToStation} onValueChange={value => updateLocalFilter('walkToStation', value)}>
+            <SelectTrigger className="h-10">
+              <SelectValue placeholder="Walk time" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="any">Any</SelectItem>
+              <SelectItem value="5">≤ 5 min</SelectItem>
+              <SelectItem value="10">≤ 10 min</SelectItem>
+              <SelectItem value="15">≤ 15 min</SelectItem>
+              <SelectItem value="20">≤ 20 min</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       {/* Tenure */}
       <div>
-        <Label className="text-xs font-medium mb-1 block">Tenure</Label>
+        <Label className="text-sm font-semibold mb-2 block">Tenure</Label>
         <Select value={localFilters.tenure} onValueChange={value => updateLocalFilter('tenure', value)}>
-          <SelectTrigger className="h-8">
+          <SelectTrigger className="h-10">
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent>
@@ -252,87 +321,18 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         </Select>
       </div>
 
-      {/* Bedrooms */}
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <Label className="text-xs font-medium mb-1 block">Min Bedrooms</Label>
-          <Select value={localFilters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
-            <SelectTrigger className="h-8">
-              <SelectValue placeholder="No min" />
-            </SelectTrigger>
-            <SelectContent>
-              {bedroomOptions.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label className="text-xs font-medium mb-1 block">Max Bedrooms</Label>
-          <Select value={localFilters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
-            <SelectTrigger className="h-8">
-              <SelectValue placeholder="No max" />
-            </SelectTrigger>
-            <SelectContent>
-              {bedroomOptions.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {/* Zone */}
-      <div>
-        <Label className="text-xs font-medium mb-1 block">London TfL Zone</Label>
-        <Select 
-          value={localFilters.zones.length > 0 ? localFilters.zones[0] : undefined} 
-          onValueChange={value => updateLocalFilter('zones', value ? [value] : [])}
-        >
-          <SelectTrigger className="h-8">
-            <SelectValue placeholder="Any" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1">Zone 1</SelectItem>
-            <SelectItem value="2">Zone 2</SelectItem>
-            <SelectItem value="3">Zone 3</SelectItem>
-            <SelectItem value="4">Zone 4</SelectItem>
-            <SelectItem value="5">Zone 5</SelectItem>
-            <SelectItem value="6">Zone 6</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Walk to Station */}
-      <div>
-        <Label className="text-xs font-medium mb-1 block">Walk to Station</Label>
-        <Select value={localFilters.walkToStation} onValueChange={value => updateLocalFilter('walkToStation', value)}>
-          <SelectTrigger className="h-8">
-            <SelectValue placeholder="Any" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="any">Any</SelectItem>
-            <SelectItem value="5">≤ 5 min</SelectItem>
-            <SelectItem value="10">≤ 10 min</SelectItem>
-            <SelectItem value="15">≤ 15 min</SelectItem>
-            <SelectItem value="20">≤ 20 min</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       {/* Amenities */}
       <div>
-        <Label className="text-xs font-medium mb-1 block">Amenities</Label>
-        <div className="grid grid-cols-2 gap-1.5 max-h-[80px] overflow-y-auto border border-border rounded-md p-2">
+        <Label className="text-sm font-semibold mb-2 block">Amenities</Label>
+        <div className="grid grid-cols-2 gap-2">
           {amenitiesList.map(amenity => (
-            <div key={amenity} className="flex items-center space-x-1.5">
+            <div key={amenity} className="flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors">
               <Checkbox
                 id={`amenity-${amenity}`}
                 checked={localFilters.amenities.includes(amenity)}
                 onCheckedChange={() => toggleAmenity(amenity)}
-                className="h-3 w-3"
               />
-              <Label htmlFor={`amenity-${amenity}`} className="text-xs cursor-pointer leading-none">
+              <Label htmlFor={`amenity-${amenity}`} className="text-sm cursor-pointer flex-1">
                 {amenity}
               </Label>
             </div>
@@ -366,62 +366,67 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   // Mobile view with drawer
   if (isMobile) {
     return (
-      <div className="bg-card border-b border-border">
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
                 <Button
                   ref={drawerTriggerRef}
                   variant="outline"
                   size="sm"
-                  className="rounded-full"
+                  className="rounded-full shadow-sm"
                   aria-expanded={isDrawerOpen}
                   aria-label="Open filters"
                 >
-                  <SlidersHorizontal className="h-4 w-4" />
+                  <SlidersHorizontal className="h-4 w-4 mr-1.5" />
                   Filters
+                  {hasActiveFilters && (
+                    <span className="ml-1.5 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                      {getActiveFilterSummary().length}
+                    </span>
+                  )}
                 </Button>
               </DrawerTrigger>
               <DrawerContent className="max-h-[90vh] flex flex-col">
-                <DrawerHeader className="flex items-center justify-between shrink-0">
-                  <DrawerTitle>Filters</DrawerTitle>
+                <DrawerHeader className="border-b">
+                  <DrawerTitle className="text-lg font-bold">Filter Properties</DrawerTitle>
                 </DrawerHeader>
-                <div className="px-4 pb-4 overflow-y-auto flex-1 min-h-0">
+                <div className="px-4 py-6 overflow-y-auto flex-1">
                   <FilterControls />
                 </div>
-                <DrawerFooter className="flex flex-row gap-2 shrink-0 pt-2 pb-4">
+                <DrawerFooter className="flex flex-row gap-3 border-t p-4">
                   <Button
                     variant="outline"
                     onClick={handleReset}
-                    className="flex-1 h-9"
-                    aria-label="Reset all filters"
+                    className="flex-1"
+                    disabled={!hasActiveFilters}
                   >
                     Reset
                   </Button>
                   <Button
-                    variant="default"
                     onClick={handleApply}
-                    className="flex-1 h-9"
-                    aria-label={`Apply filters, showing ${resultsCount} properties`}
+                    className="flex-1"
                   >
-                    Apply ({resultsCount})
+                    Show {resultsCount} {resultsCount === 1 ? 'property' : 'properties'}
                   </Button>
                 </DrawerFooter>
               </DrawerContent>
             </Drawer>
             
-            <div className="flex-1 overflow-x-auto">
-              <div className="flex items-center gap-2">
-                {getActiveFilterSummary().map((summary, idx) => (
-                  <div key={idx} className="flex items-center gap-1 px-2.5 py-1 bg-secondary text-xs rounded-full whitespace-nowrap">
-                    {summary}
-                  </div>
-                ))}
+            {hasActiveFilters && (
+              <div className="flex-1 overflow-x-auto scrollbar-hide">
+                <div className="flex items-center gap-2">
+                  {getActiveFilterSummary().map((summary, idx) => (
+                    <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-xs font-medium rounded-full whitespace-nowrap">
+                      {summary}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="text-sm text-muted-foreground whitespace-nowrap" aria-live="polite">
+            <div className="text-sm font-medium text-muted-foreground whitespace-nowrap ml-auto">
               {resultsCount}
             </div>
           </div>
@@ -430,99 +435,263 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
     );
   }
 
-  // Desktop view - compact pills with overlay
+  // Desktop view - sleek pills with popovers
   return (
-    <div className="bg-card border-b border-border rounded-2xl mx-4">
-      <div className="container mx-auto px-4 py-3 relative">
-        <div className="flex items-center gap-3">
-          {/* Filter pills */}
-          <button
-            onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-input hover:bg-card-hover transition-smooth"
-          >
-            Area: <strong className="ml-1">{localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Any'}</strong>
-          </button>
+    <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {/* Price Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="rounded-full h-10 px-4 gap-2 hover:bg-muted transition-colors"
+                >
+                  <Coins className="h-4 w-4 text-primary" />
+                  <span className="text-sm">
+                    {(localFilters.priceFrom || localFilters.priceTo) 
+                      ? `${priceSteps.find(s => s.value === localFilters.priceFrom)?.label || 'Any'} - ${priceSteps.find(s => s.value === localFilters.priceTo)?.label || 'Any'}`
+                      : 'Price'}
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-4" align="start">
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-semibold mb-3 block">Price Range</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Select value={localFilters.priceFrom || undefined} onValueChange={value => updateLocalFilter('priceFrom', value)}>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="No min" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[240px]">
+                          {priceSteps.map(step => (
+                            <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Select value={localFilters.priceTo || undefined} onValueChange={value => updateLocalFilter('priceTo', value)}>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="No max" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[240px]">
+                          {priceSteps.map(step => (
+                            <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <Button variant="outline" size="sm" onClick={handleReset} className="flex-1">
+                      Reset
+                    </Button>
+                    <Button size="sm" onClick={handleApply} className="flex-1">
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
 
-          <button
-            onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-input hover:bg-card-hover transition-smooth"
-          >
-            Price: <strong>{(localFilters.priceFrom || localFilters.priceTo) 
-              ? `${priceSteps.find(s => s.value === localFilters.priceFrom)?.label || 'Any'} - ${priceSteps.find(s => s.value === localFilters.priceTo)?.label || 'Any'}`
-              : 'Any'}</strong>
-          </button>
+            {/* Bedrooms Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="rounded-full h-10 px-4 gap-2 hover:bg-muted transition-colors"
+                >
+                  <Home className="h-4 w-4 text-primary" />
+                  <span className="text-sm">
+                    {(localFilters.bedroomsMin || localFilters.bedroomsMax)
+                      ? `${bedroomOptions.find(b => b.value === localFilters.bedroomsMin)?.label || 'Any'} - ${bedroomOptions.find(b => b.value === localFilters.bedroomsMax)?.label || 'Any'} beds`
+                      : 'Bedrooms'}
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-4" align="start">
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-semibold mb-3 block">Bedrooms</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Select value={localFilters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="No min" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {bedroomOptions.map(opt => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Select value={localFilters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="No max" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {bedroomOptions.map(opt => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <Button variant="outline" size="sm" onClick={handleReset} className="flex-1">
+                      Reset
+                    </Button>
+                    <Button size="sm" onClick={handleApply} className="flex-1">
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
 
-          <button
-            onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-input hover:bg-card-hover transition-smooth"
-          >
-            Beds: <strong>{(localFilters.bedroomsMin || localFilters.bedroomsMax)
-              ? `${bedroomOptions.find(b => b.value === localFilters.bedroomsMin)?.label || 'Any'} - ${bedroomOptions.find(b => b.value === localFilters.bedroomsMax)?.label || 'Any'}`
-              : 'Any'}</strong>
-          </button>
+            {/* Location Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="rounded-full h-10 px-4 gap-2 hover:bg-muted transition-colors"
+                >
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span className="text-sm">
+                    {localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Location'}
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-4" align="start">
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-semibold mb-3 block">Location</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Select 
+                        value={localFilters.zones.length > 0 ? localFilters.zones[0] : undefined} 
+                        onValueChange={value => updateLocalFilter('zones', value ? [value] : [])}
+                      >
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="Any zone" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">Zone 1</SelectItem>
+                          <SelectItem value="2">Zone 2</SelectItem>
+                          <SelectItem value="3">Zone 3</SelectItem>
+                          <SelectItem value="4">Zone 4</SelectItem>
+                          <SelectItem value="5">Zone 5</SelectItem>
+                          <SelectItem value="6">Zone 6</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Select value={localFilters.walkToStation} onValueChange={value => updateLocalFilter('walkToStation', value)}>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="Walk time" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="any">Any</SelectItem>
+                          <SelectItem value="5">≤ 5 min</SelectItem>
+                          <SelectItem value="10">≤ 10 min</SelectItem>
+                          <SelectItem value="15">≤ 15 min</SelectItem>
+                          <SelectItem value="20">≤ 20 min</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <Button variant="outline" size="sm" onClick={handleReset} className="flex-1">
+                      Reset
+                    </Button>
+                    <Button size="sm" onClick={handleApply} className="flex-1">
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
 
-          <button
-            onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-input hover:bg-card-hover transition-smooth"
-          >
-            <SlidersHorizontal className="h-3.5 w-3.5" />
-            More
-          </button>
+            {/* More Filters */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="rounded-full h-10 px-4 gap-2 hover:bg-muted transition-colors"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  <span className="text-sm">More</span>
+                  {(localFilters.tenure !== 'any' || localFilters.amenities.length > 0) && (
+                    <span className="h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                      {(localFilters.tenure !== 'any' ? 1 : 0) + localFilters.amenities.length}
+                    </span>
+                  )}
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-96 p-4" align="start">
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-semibold mb-2 block">Tenure</Label>
+                    <Select value={localFilters.tenure} onValueChange={value => updateLocalFilter('tenure', value)}>
+                      <SelectTrigger className="h-10">
+                        <SelectValue placeholder="Any" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="any">Any</SelectItem>
+                        <SelectItem value="freehold">Freehold</SelectItem>
+                        <SelectItem value="leasehold">Leasehold</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-semibold mb-2 block">Amenities</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {amenitiesList.map(amenity => (
+                        <div key={amenity} className="flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors">
+                          <Checkbox
+                            id={`amenity-desktop-${amenity}`}
+                            checked={localFilters.amenities.includes(amenity)}
+                            onCheckedChange={() => toggleAmenity(amenity)}
+                          />
+                          <Label htmlFor={`amenity-desktop-${amenity}`} className="text-sm cursor-pointer flex-1">
+                            {amenity}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <Button variant="outline" size="sm" onClick={handleReset} className="flex-1">
+                      Reset All
+                    </Button>
+                    <Button size="sm" onClick={handleApply} className="flex-1">
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
 
-          <div className="flex-1" />
+            {/* Clear all filters button */}
+            {hasActiveFilters && (
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={handleReset}
+                className="rounded-full h-10 px-3 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4 mr-1" />
+                Clear all
+              </Button>
+            )}
+          </div>
 
-          {hasActiveFilters && (
-            <button
-              onClick={handleReset}
-              className="px-3 py-1.5 text-sm rounded-full border border-dashed border-input hover:bg-card-hover transition-smooth text-muted-foreground"
-            >
-              Clear all
-            </button>
-          )}
-
-          <div className="text-sm font-medium text-muted-foreground" aria-live="polite">
-            {resultsCount} results
+          {/* Results count */}
+          <div className="text-sm font-medium text-foreground">
+            <span className="text-muted-foreground">Showing</span> {resultsCount} {resultsCount === 1 ? 'property' : 'properties'}
           </div>
         </div>
-
-        {/* Overlay filter panel - using portal to render at root level */}
-        {isDesktopExpanded && createPortal(
-          <>
-            {/* Backdrop */}
-            <div 
-              className="fixed inset-0 bg-black/50 z-[9998] animate-fade-in"
-              onClick={() => setIsDesktopExpanded(false)}
-            />
-            
-            {/* Filter dropdown */}
-            <div className="fixed top-32 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-4xl px-4 animate-scale-in">
-              <div className="bg-card border border-border rounded-2xl shadow-lg p-6">
-                <FilterControls />
-                
-                <div className="flex items-center justify-end gap-2 mt-4">
-                  <Button
-                    variant="outline"
-                    onClick={handleReset}
-                    size="sm"
-                  >
-                    Reset All
-                  </Button>
-                  <Button
-                    variant="default"
-                    onClick={() => {
-                      handleApply();
-                      setIsDesktopExpanded(false);
-                    }}
-                    size="sm"
-                  >
-                    Apply Filters
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </>,
-          document.body
-        )}
       </div>
     </div>
   );
