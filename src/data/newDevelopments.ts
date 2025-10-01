@@ -397,11 +397,12 @@ export const developments: Development[] = [
     amenities: ["56th-floor bar & terrace", "Pool", "Spa", "Gym", "Cinema", "24hr concierge"],
     areaOverview: "The pinnacle of modern city living in London's financial capital, with unmatched amenities and connectivity.",
     images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/south-quay-plaza/gallery/exterior/south-quay-plaza_exterior-image-1_06-03-2024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/south-quay-plaza/gallery/exterior/south-quay-plaza_exterior-image-5_06-03-2024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/south-quay-plaza/gallery/2-bedroom-apartment/south-quay-plaza_2-bed-showhome_living-dining-1_29-05-2024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/south-quay-plaza/gallery/2-bedroom-apartment/south-quay-plaza_2-bed-showhome_kitchen-1_29-05-2024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/south-quay-plaza/gallery/infinity-suite-showhome/south-quay-plaza---infinity-suite-img1_13062025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/south-quay-plaza/gallery/the-quay-club/south-quay-plaza_the-quay-club_bar-lounge_24072025.ashx"
     ]
   },
   {
