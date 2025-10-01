@@ -39,7 +39,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
 
   return (
     <div className="w-full">
-      <div className="bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-6">
+      <div className="rounded-3xl bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-6">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex items-center justify-between w-full hover:opacity-70 transition-smooth"
