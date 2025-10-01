@@ -464,7 +464,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   }, [activeDirections, developments, isMapLoaded]);
 
   return <div className={`relative ${className}`}>
-      <div ref={mapContainer} className="w-full h-full rounded-lg" style={{
+      <div ref={mapContainer} className="w-full h-full rounded-lg ring-1 ring-black/5" style={{
       minHeight: '400px'
     }} />
       
