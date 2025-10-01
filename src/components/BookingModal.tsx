@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { X, Calendar, MessageCircle, Phone, Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import wechatQR from '@/assets/qr_wechat.png';
+import { supabase } from '@/integrations/supabase/client';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -77,7 +78,34 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
     setIsSubmitting(true);
     
     try {
-      const response = await fetch(FORMSPREE_URL, {
+      // Get current user session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Save to database (with user_id if authenticated)
+      const bookingData = {
+        development_name: developmentName,
+        name: calendarForm.name.trim(),
+        email: calendarForm.email.trim(),
+        phone: calendarForm.phone.trim(),
+        preferred_date: calendarForm.preferredDate,
+        preferred_time: calendarForm.preferredTime || 'Flexible',
+        message: calendarForm.message.trim() || 'None',
+        source: 'calendar_booking',
+        status: 'pending',
+        user_id: session?.user?.id || null // Set user_id if authenticated, null if anonymous
+      };
+
+      const { error: dbError } = await supabase
+        .from('bookings')
+        .insert([bookingData]);
+
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw new Error('Failed to save booking');
+      }
+
+      // Also send via email (Formspree)
+      await fetch(FORMSPREE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,26 +121,24 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
         }),
       });
 
-      if (response.ok) {
-        toast({
-          title: "Request sent!",
-          description: "We've received your viewing request and will contact you soon."
-        });
-        
-        // Reset form
-        setCalendarForm({
-          name: '',
-          email: '',
-          phone: '',
-          preferredDate: '',
-          preferredTime: '',
-          message: ''
-        });
-        
-        onClose();
-      } else {
-        throw new Error('Failed to submit form');
-      }
+      toast({
+        title: "Request sent!",
+        description: session?.user 
+          ? "Your viewing request has been saved and you can view it in your bookings."
+          : "We've received your viewing request and will contact you soon."
+      });
+      
+      // Reset form
+      setCalendarForm({
+        name: '',
+        email: '',
+        phone: '',
+        preferredDate: '',
+        preferredTime: '',
+        message: ''
+      });
+      
+      onClose();
     } catch (error) {
       console.error('Form submission error:', error);
       toast({
