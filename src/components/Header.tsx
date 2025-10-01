@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({
     callback();
     setMobileMenuOpen(false);
   };
-  return <header className="bg-background border-b border-border sticky top-0 z-40 backdrop-blur-sm">
+  return <header className="bg-white border-b border-border sticky top-0 z-40 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-3 relative">
         <div className="flex items-center justify-between">
           {/* Logo and Tagline */}
