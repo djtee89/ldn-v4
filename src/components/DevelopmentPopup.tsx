@@ -260,8 +260,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
         </div>
 
         {/* Section Navigation */}
-        <div className="border-b border-border p-4">
-          <div className="flex flex-wrap gap-2">
+        <div className="border-b border-border p-2 sm:p-4">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {sections.map((section) => {
               const Icon = section.icon;
               return (
@@ -270,7 +270,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                   variant={activeSection === section.id ? "premium" : "ghost"}
                   size="sm"
                   onClick={() => setActiveSection(section.id)}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 text-xs sm:text-sm px-2 sm:px-3"
                 >
                   <Icon className="h-3 w-3" />
                   <span className="hidden sm:inline">{section.label}</span>
@@ -283,7 +283,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
         {/* Scrollable Content - Carousel + Section Details */}
         <div className="modal-body">
           {/* Image Carousel - Scrolls with content */}
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <Carousel className="w-full">
               <CarouselContent>
                 {development.images.map((image, index) => (
@@ -291,13 +291,13 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                     <img
                       src={image}
                       alt={`${development.name} - Image ${index + 1}`}
-                      className="w-full h-64 lg:h-80 object-cover rounded-lg"
+                      className="w-full h-48 sm:h-64 lg:h-80 object-cover rounded-lg"
                     />
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
+              <CarouselPrevious className="left-1 sm:left-2" />
+              <CarouselNext className="right-1 sm:right-2" />
             </Carousel>
           </div>
 
@@ -310,10 +310,10 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
         {/* Sticky Footer Actions */}
         <div className="modal-footer">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <Button variant="premium" onClick={onBookViewing} className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Book Viewing
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+            <Button variant="premium" onClick={onBookViewing} className="flex items-center justify-center gap-2 text-sm sm:text-base">
+              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="truncate">Book Viewing</span>
             </Button>
             <Button 
               variant="outline" 
@@ -323,19 +323,19 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 );
                 window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
               }} 
-              className="flex items-center gap-2"
+              className="flex items-center justify-center gap-2 text-sm sm:text-base"
             >
-              <MessageSquare className="h-4 w-4" />
-              WhatsApp Us
+              <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="truncate">WhatsApp</span>
             </Button>
             {onGetDirections && (
               <Button 
                 variant="secondary" 
                 onClick={() => setShowDestinationSelector(true)}
-                className="flex items-center gap-2"
+                className="flex items-center justify-center gap-2 text-sm sm:text-base"
               >
-                <Navigation className="h-4 w-4" />
-                Directions
+                <Navigation className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="truncate">Directions</span>
               </Button>
             )}
           </div>
