@@ -86,7 +86,7 @@ const Contact: React.FC<ContactProps> = ({
     const message = encodeURIComponent("Hi, I would like to speak with an expert about London properties.");
     window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
   };
-  return <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background overflow-y-auto pb-8">
       {/* Header */}
       <div className="border-b border-border">
         <div className="container mx-auto px-4 py-4">

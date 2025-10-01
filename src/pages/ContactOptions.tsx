@@ -95,7 +95,7 @@ const ContactOptions: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-y-auto pb-8">
       {/* Header */}
       <div className="border-b border-border">
         <div className="container mx-auto px-4 py-4">

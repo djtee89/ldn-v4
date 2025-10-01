@@ -36,7 +36,7 @@ const About: React.FC<AboutProps> = ({ onBack }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-y-auto">
       {/* Header */}
       <header className="bg-background border-b border-border sticky top-0 z-40 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
