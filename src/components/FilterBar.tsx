@@ -382,14 +382,14 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                   Filters
                 </Button>
               </DrawerTrigger>
-              <DrawerContent className="max-h-[90vh]">
-                <DrawerHeader className="flex items-center justify-between">
+              <DrawerContent className="max-h-[90vh] flex flex-col">
+                <DrawerHeader className="flex items-center justify-between shrink-0">
                   <DrawerTitle>Filters</DrawerTitle>
                 </DrawerHeader>
-                <div className="px-4 pb-6 overflow-y-auto">
+                <div className="px-4 pb-6 overflow-y-auto flex-1 min-h-0">
                   <FilterControls />
                 </div>
-                <DrawerFooter className="flex flex-row gap-2">
+                <DrawerFooter className="flex flex-row gap-2 shrink-0">
                   <Button
                     variant="outline"
                     onClick={handleReset}
@@ -446,14 +446,14 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 Area: <strong className="ml-1">{localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Any'}</strong>
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="max-h-[90vh]">
-              <DrawerHeader>
+            <DrawerContent className="max-h-[90vh] flex flex-col">
+              <DrawerHeader className="shrink-0">
                 <DrawerTitle>Filters</DrawerTitle>
               </DrawerHeader>
-              <div className="px-4 pb-6 overflow-y-auto">
+              <div className="px-4 pb-6 overflow-y-auto flex-1 min-h-0">
                 <FilterControls />
               </div>
-              <DrawerFooter className="flex flex-row gap-2">
+              <DrawerFooter className="flex flex-row gap-2 shrink-0">
                 <Button
                   variant="outline"
                   onClick={handleReset}
