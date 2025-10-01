@@ -19,13 +19,13 @@ const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   };
 
   return (
-    <section className="relative isolate mb-8">
+    <section className="relative isolate">
       {/* Banner image */}
       <div className="relative overflow-hidden rounded-[24px]">
         <img
           src="/kings-road-park-1.jpeg"
           alt=""
-          className="h-[clamp(320px,50vh,520px)] w-full object-cover"
+          className="h-[clamp(280px,35vh,400px)] w-full object-cover"
           loading="eager"
         />
         {/* Gradient overlay for text legibility */}
