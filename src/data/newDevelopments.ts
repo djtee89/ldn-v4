@@ -479,7 +479,13 @@ export const developments: Development[] = [
     greenSpaces: "Features 8 acres of landscaping, including a central water garden and connections to the adjacent 10-acre Hammersmith Park, which has Japanese gardens, a playground, and tennis courts.",
     amenities: ["24-hour concierge", "Extensive spa and pool facilities", "State-of-the-art gym", "Cinemas", "Business lounge", "Club lounge", "Adjacent to Westfield London"],
     areaOverview: "Live at the vibrant epicentre of West London's creative new hub. White City Living places you in the middle of everything. Your neighbours are the world-class shops and restaurants of Westfield, the groundbreaking ideas of Imperial College, and the creative energy of Television Centre. The lifestyle is pure convenience and luxury – from a morning workout in the residents' spa to an evening exploring the best retail on your doorstep. This is for those who want to be plugged into the dynamic, energetic pulse of modern London.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/white-city-living/gallery/exterior/white-city-living---exterior-img1_11082025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/white-city-living/gallery/exterior/white-city-living---exterior-img2_11082025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/white-city-living/gallery/exterior/white-city-living---exterior-img3_11082025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/white-city-living/gallery/exterior/white-city-living---exterior-img4_11082025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/white-city-living/gallery/exterior/white-city-living-exterior-gallery-image-landscaping2-29032023.ashx"
+    ]
   },
   {
     id: "london-dock-berkeley",
@@ -541,7 +547,13 @@ export const developments: Development[] = [
     greenSpaces: "The development will create new rooftop gardens, courtyards, and public squares. It's perfectly located between the iconic green spaces of Regent's Park and Primrose Hill, both just a short walk away.",
     amenities: ["24-hour concierge", "'The Goods Yard' residents' club featuring a swimming pool", "Spa", "State-of-the-art gym", "Cinema", "Large new Morrisons supermarket", "Cafés and retail spaces"],
     areaOverview: "Imagine living where London's creative energy meets village-like charm. Camden Goods Yard places you at the crossroads of cool. Spend your mornings strolling up Primrose Hill for panoramic city views, your afternoons browsing the eclectic Camden Market, and your evenings catching a gig at The Roundhouse. This is a lifestyle of endless variety, with the tranquility of Regent's Park and the buzz of Camden Town on your doorstep. It's for those who want a sophisticated home in the heart of London's most vibrant cultural quarter.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/camden-goods-yard/gallery/interiors/camden-goods-yard-interior-gallery-living-1_27082025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/camden-goods-yard/gallery/interiors/camden-goods-yard-interior-gallery-living-2_27082025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/camden-goods-yard/gallery/interiors/camden-goods-yard-interior-gallery-lounge-1_27082025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/camden-goods-yard/gallery/interiors/camden-goods-yard-interior-gallery-kitchen-details_27082025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/camden-goods-yard/gallery/interiors/camden-goods-yard-interior-gallery-kitchen-1_27082025.ashx"
+    ]
   },
   {
     id: "kings-road-park-berkeley",
