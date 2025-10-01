@@ -192,13 +192,8 @@ const Index = () => {
         onDeveloperClick={handleDeveloperClick}
         highlightedDeveloper={highlightedDeveloper}
       />
-      <FilterBar 
-        filters={filters} 
-        onFiltersChange={setFilters}
-        resultsCount={filteredDevelopments.length}
-      />
       
-      <LifestyleFilterBar 
+      <LifestyleFilterBar
         selectedTypes={lifestyleFilters}
         onTypesChange={setLifestyleFilters}
       />
