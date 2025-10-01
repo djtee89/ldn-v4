@@ -56,6 +56,90 @@ export type Database = {
         }
         Relationships: []
       }
+      rag_chunks: {
+        Row: {
+          content: string
+          created_at: string | null
+          dev_id: string
+          embedding: string
+          id: number
+          source: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          dev_id: string
+          embedding: string
+          id?: number
+          source: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          dev_id?: string
+          embedding?: string
+          id?: number
+          source?: string
+        }
+        Relationships: []
+      }
+      units: {
+        Row: {
+          aspect: string | null
+          beds: number
+          building: string | null
+          completion_date: string | null
+          created_at: string | null
+          dev_id: string
+          floor: number | null
+          has_balcony: boolean | null
+          id: string
+          price: number
+          size_sqft: number
+          status: string
+          unit_number: string
+          updated_at: string | null
+          view_park: boolean | null
+          view_river: boolean | null
+        }
+        Insert: {
+          aspect?: string | null
+          beds: number
+          building?: string | null
+          completion_date?: string | null
+          created_at?: string | null
+          dev_id: string
+          floor?: number | null
+          has_balcony?: boolean | null
+          id?: string
+          price: number
+          size_sqft: number
+          status?: string
+          unit_number: string
+          updated_at?: string | null
+          view_park?: boolean | null
+          view_river?: boolean | null
+        }
+        Update: {
+          aspect?: string | null
+          beds?: number
+          building?: string | null
+          completion_date?: string | null
+          created_at?: string | null
+          dev_id?: string
+          floor?: number | null
+          has_balcony?: boolean | null
+          id?: string
+          price?: number
+          size_sqft?: number
+          status?: string
+          unit_number?: string
+          updated_at?: string | null
+          view_park?: boolean | null
+          view_river?: boolean | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -82,12 +166,104 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      binary_quantize: {
+        Args: { "": string } | { "": unknown }
+        Returns: unknown
+      }
+      halfvec_avg: {
+        Args: { "": number[] }
+        Returns: unknown
+      }
+      halfvec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      halfvec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      halfvec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      hnsw_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_sparsevec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnswhandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflat_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflat_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflathandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      l2_norm: {
+        Args: { "": unknown } | { "": unknown }
+        Returns: number
+      }
+      l2_normalize: {
+        Args: { "": string } | { "": unknown } | { "": unknown }
+        Returns: string
+      }
+      sparsevec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      sparsevec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      sparsevec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
+      vector_avg: {
+        Args: { "": number[] }
+        Returns: string
+      }
+      vector_dims: {
+        Args: { "": string } | { "": unknown }
+        Returns: number
+      }
+      vector_norm: {
+        Args: { "": string }
+        Returns: number
+      }
+      vector_out: {
+        Args: { "": string }
+        Returns: unknown
+      }
+      vector_send: {
+        Args: { "": string }
+        Returns: string
+      }
+      vector_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
       }
     }
     Enums: {
