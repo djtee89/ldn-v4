@@ -6,19 +6,15 @@ interface DeveloperBannerProps {
 }
 
 const developers = [
-  'Ballymore',
-  'Barratt London',
-  'Bellway',
-  'Berkeley Homes',
-  'Canary Wharf Group',
-  'Countryside Homes',
-  'Hill Group',
-  'L&Q',
-  'Lendlease',
-  'London Square',
-  'Mount Anvil',
-  'Regal',
-  'Taylor Wimpey'
+  { name: 'Berkeley Homes', logo: '/logos/berkeley.jpg' },
+  { name: 'Canary Wharf Group', logo: '/logos/canary-wharf.jpg' },
+  { name: 'Countryside Homes', logo: '/logos/countryside.jpg' },
+  { name: 'Hill Group', logo: '/logos/hill.jpg' },
+  { name: 'Lendlease', logo: '/logos/lendlease.jpg' },
+  { name: 'London Square', logo: '/logos/london-square.png' },
+  { name: 'Mount Anvil', logo: '/logos/mount-anvil.jpg' },
+  { name: 'Regal', logo: '/logos/regal.png' },
+  { name: 'Taylor Wimpey', logo: '/logos/taylor-wimpey.jpg' }
 ];
 
 const DeveloperBanner: React.FC<DeveloperBannerProps> = ({ onDeveloperClick, highlightedDeveloper }) => {
@@ -28,17 +24,19 @@ const DeveloperBanner: React.FC<DeveloperBannerProps> = ({ onDeveloperClick, hig
         <div className="inline-flex items-center gap-8">
           {[...developers, ...developers].map((developer, index) => (
             <div 
-              key={`${developer}-${index}`}
-              onClick={() => onDeveloperClick(developer)}
-              className={`px-4 py-2 rounded-lg shadow-soft border transition-smooth cursor-pointer ${
-                highlightedDeveloper === developer
-                  ? 'bg-premium-gradient text-white border-primary shadow-premium'
-                  : 'bg-card hover:bg-card-hover border-border'
+              key={`${developer.name}-${index}`}
+              onClick={() => onDeveloperClick(developer.name)}
+              className={`px-6 py-3 rounded-lg shadow-soft border transition-smooth cursor-pointer bg-white ${
+                highlightedDeveloper === developer.name
+                  ? 'border-primary shadow-premium ring-2 ring-primary'
+                  : 'border-border hover:shadow-lg'
               }`}
             >
-              <span className="text-sm font-medium">
-                {developer}
-              </span>
+              <img 
+                src={developer.logo} 
+                alt={`${developer.name} logo`}
+                className="h-8 w-auto object-contain"
+              />
             </div>
           ))}
         </div>
