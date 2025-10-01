@@ -167,7 +167,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             </TabsList>
           </div>
 
-          <div className="modal-body overflow-y-auto max-h-[calc(100vh-400px)]">
+          <div className="modal-body overflow-y-auto max-h-[calc(100vh-300px)]">
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-6 mt-0">
               {/* Quick Facts Bar */}
