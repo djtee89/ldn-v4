@@ -174,14 +174,6 @@ const Index = () => {
     });
   };
 
-  const handleHeroSearch = (query: string, mode: 'sale' | 'rent') => {
-    setFilters(prev => ({
-      ...prev,
-      keyword: query,
-      tenure: mode === 'rent' ? 'leasehold' : prev.tenure
-    }));
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Header 
@@ -191,7 +183,11 @@ const Index = () => {
         onShortlistClick={() => setIsShortlistOpen(true)}
         shortlistCount={shortlist.length}
       />
-      <Hero onSearch={handleHeroSearch} />
+      <Hero 
+        filters={filters}
+        onFiltersChange={setFilters}
+        resultsCount={filteredDevelopments.length}
+      />
       <DeveloperBanner 
         onDeveloperClick={handleDeveloperClick}
         highlightedDeveloper={highlightedDeveloper}
