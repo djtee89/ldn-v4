@@ -37,22 +37,29 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
 
   return (
     <div className="bg-card border border-border rounded-lg shadow-sm mb-4">
-      <div className="flex items-center justify-between p-3">
-        <div>
-          <h3 className="text-sm font-semibold text-foreground">Amenity Overlays</h3>
-          <p className="text-xs text-muted-foreground mt-0.5">Toggle amenities to see what's nearby. Click a property to compare walk times.</p>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex items-center justify-between p-3 w-full hover:bg-muted/50 transition-colors"
+        aria-expanded={isExpanded}
+        aria-label={isExpanded ? "Collapse amenity filters" : "Expand amenity filters"}
+      >
+        <div className="text-left">
+          <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+            Amenity Overlays
+            {selectedTypes.length > 0 && (
+              <span className="text-xs font-normal text-muted-foreground">
+                ({selectedTypes.length} active)
+              </span>
+            )}
+          </h3>
+          <p className="text-xs text-muted-foreground mt-0.5">Toggle amenities to see what's nearby</p>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="lg:hidden h-8 w-8 p-0 shrink-0"
-        >
+        <div className="shrink-0">
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </Button>
-      </div>
+        </div>
+      </button>
       
-      <div className={`${isExpanded ? 'block' : 'hidden'} lg:block px-3 pb-3`}>
+      <div className={`${isExpanded ? 'block animate-accordion-down' : 'hidden animate-accordion-up'} px-3 pb-3`}>
         <div className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto pb-2 scrollbar-thin">
           {amenityTypesList.map((type) => {
             const isSelected = selectedTypes.includes(type);

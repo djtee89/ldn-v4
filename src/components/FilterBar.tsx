@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerFooter } from '@/components/ui/drawer';
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export interface FilterState {
@@ -79,6 +79,7 @@ const amenitiesList = ['Gym', 'Pool', 'Concierge', '24/7 Security', 'Parking', '
 
 const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, resultsCount }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDesktopExpanded, setIsDesktopExpanded] = useState(false);
   const [localFilters, setLocalFilters] = useState<FilterState>(filters);
   const isMobile = useIsMobile();
   const drawerTriggerRef = useRef<HTMLButtonElement>(null);
@@ -399,7 +400,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   return (
     <div className="bg-background border-b border-border">
       <div className="container mx-auto px-4 py-3">
-        <div className="space-y-2">
+        <div className="flex items-center justify-between mb-2">
+          <button
+            onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
+            className="flex items-center gap-2 hover:text-primary transition-colors"
+            aria-expanded={isDesktopExpanded}
+            aria-label={isDesktopExpanded ? "Collapse filters" : "Expand filters"}
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            <span className="text-sm font-medium">Filters</span>
+            {isDesktopExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
+          <div className="text-sm text-muted-foreground">
+            {resultsCount} {resultsCount === 1 ? 'property' : 'properties'}
+          </div>
+        </div>
+
+        <div className={`${isDesktopExpanded ? 'block animate-accordion-down' : 'hidden'} space-y-2`}>
           <div className="grid grid-cols-4 gap-3">
             {/* Price From/To */}
             <div>
@@ -536,28 +553,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between pt-1">
-            <div className="text-sm text-muted-foreground" aria-live="polite">
-              {resultsCount} {resultsCount === 1 ? 'property' : 'properties'} found
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={handleReset}
-                className="h-9"
-                aria-label="Reset all filters"
-              >
-                Reset All
-              </Button>
-              <Button
-                variant="premium"
-                onClick={handleApply}
-                className="h-9"
-                aria-label="Apply filters"
-              >
-                Apply
-              </Button>
-            </div>
+          <div className="flex items-center justify-end gap-2 pt-1">
+            <Button
+              variant="outline"
+              onClick={handleReset}
+              className="h-9"
+              aria-label="Reset all filters"
+            >
+              Reset All
+            </Button>
+            <Button
+              variant="premium"
+              onClick={handleApply}
+              className="h-9"
+              aria-label="Apply filters"
+            >
+              Apply
+            </Button>
           </div>
         </div>
       </div>
