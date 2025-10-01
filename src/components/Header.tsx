@@ -86,10 +86,10 @@ const Header: React.FC<HeaderProps> = ({
           </nav>
 
           {/* Mobile Menu Toggle */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className="flex md:hidden items-center gap-1">
             <Select value={language} onValueChange={setLanguage}>
-              <SelectTrigger className="w-[70px] h-9">
-                <Globe className="h-4 w-4 mr-1" />
+              <SelectTrigger className="w-[60px] h-9 text-xs">
+                <Globe className="h-3 w-3 mr-0.5" />
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -100,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({
             <Button variant="ghost" size="icon" onClick={e => {
             e.stopPropagation();
             setMobileMenuOpen(!mobileMenuOpen);
-          }} className="mobile-nav-toggle">
+          }} className="mobile-nav-toggle touch-target">
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>

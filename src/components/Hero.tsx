@@ -28,13 +28,13 @@ const Hero: React.FC<HeroProps> = ({ filters, onFiltersChange, resultsCount }) =
         <div className="pointer-events-auto mx-auto w-full max-w-6xl px-4">
           {/* Heading */}
           <div className="max-w-3xl">
-            <p className="text-white/85 text-sm font-semibold tracking-wide">
+            <p className="text-white/85 text-xs sm:text-sm font-semibold tracking-wide">
               London Developer Network
             </p>
-            <h1 className="mt-2 text-white text-4xl font-bold leading-tight sm:text-5xl">
+            <h1 className="mt-2 text-white text-2xl sm:text-4xl md:text-5xl font-bold leading-tight">
               Search new-build property across London
             </h1>
-            <p className="mt-3 text-white/90 text-lg">
+            <p className="mt-2 sm:mt-3 text-white/90 text-base sm:text-lg">
               Off-plan and ready-to-move homes from leading developers.
             </p>
           </div>

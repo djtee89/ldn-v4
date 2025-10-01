@@ -450,4 +450,40 @@
     min-height: 100vh;
     min-height: 100dvh;
   }
+
+  /* Touch-friendly targets (minimum 44x44px) */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobile-optimized text sizing (prevent iOS zoom on focus) */
+  input, select, textarea, button {
+    font-size: 16px !important;
+  }
+  
+  /* Better mobile spacing */
+  .modal-panel {
+    margin: 0.5rem;
+    max-height: calc(100vh - 1rem);
+    max-height: calc(100dvh - 1rem);
+  }
+  
+  /* Mobile-friendly cards */
+  .property-card {
+    padding: 1rem;
+  }
+  
+  /* Sticky header adjustment */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    backdrop-filter: blur(8px);
+  }
+  
+  /* Better overflow handling on mobile */
+  .overscroll-contain {
+    overscroll-behavior: contain;
+  }
 }

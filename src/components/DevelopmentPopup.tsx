@@ -91,24 +91,24 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
     });
   };
   return <div className="modal-backdrop">
-      <div className="modal-panel modal-panel-wide">
+      <div className="modal-panel modal-panel-wide overflow-hidden flex flex-col max-h-[95vh] md:max-h-[90vh]">
         {/* Header */}
-        <div className="modal-header">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div>
-                <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
-                <Badge variant="secondary" className="mt-1">{development.developer}</Badge>
+        <div className="modal-header flex-shrink-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg md:text-xl font-bold text-foreground truncate">{development.name}</h2>
+                <Badge variant="secondary" className="mt-1 text-xs">{development.developer}</Badge>
               </div>
-              {development.developer === 'Berkeley Homes' && <img src="/logos/berkeley.jpg" alt="Berkeley Homes" className="h-16 w-auto object-contain rounded-lg shadow-sm" />}
-              {development.developer === 'Barratt Homes' && <img src="/logos/barratt.jpg" alt="Barratt Homes" className="h-16 w-auto object-contain rounded-lg shadow-sm" />}
+              {development.developer === 'Berkeley Homes' && <img src="/logos/berkeley.jpg" alt="Berkeley Homes" className="h-12 md:h-16 w-auto object-contain rounded-lg shadow-sm hidden sm:block" />}
+              {development.developer === 'Barratt Homes' && <img src="/logos/barratt.jpg" alt="Barratt Homes" className="h-12 md:h-16 w-auto object-contain rounded-lg shadow-sm hidden sm:block" />}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 flex-shrink-0">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" onClick={onToggleShortlist}>
-                      <Heart className={`h-5 w-5 ${isInShortlist ? 'fill-red-500 text-red-500' : ''}`} />
+                    <Button variant="ghost" size="icon" onClick={onToggleShortlist} className="touch-target">
+                      <Heart className={`h-4 w-4 md:h-5 md:w-5 ${isInShortlist ? 'fill-red-500 text-red-500' : ''}`} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -119,8 +119,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" onClick={handleShare}>
-                      <Share2 className="h-5 w-5" />
+                    <Button variant="ghost" size="icon" onClick={handleShare} className="touch-target hidden sm:flex">
+                      <Share2 className="h-4 w-4 md:h-5 md:w-5" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -128,7 +128,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <Button variant="ghost" size="icon" onClick={onClose}>
+              <Button variant="ghost" size="icon" onClick={onClose} className="touch-target">
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -136,14 +136,14 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
         </div>
 
         {/* Photo Gallery */}
-        <div className="px-4 sm:px-6 pt-3 pb-2">
+        <div className="px-3 sm:px-6 pt-2 pb-2 flex-shrink-0">
           <PhotoGallery images={development.images} name={development.name} />
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="overview" className="flex flex-col flex-1 min-h-0">
-          <div className="sticky top-0 z-10 bg-background border-b px-4 sm:px-6 py-2 flex-shrink-0">
-            <TabsList className="w-full justify-start overflow-x-auto flex-nowrap">
+        <Tabs defaultValue="overview" className="flex flex-col flex-1 min-h-0 overflow-hidden">
+          <div className="sticky top-0 z-10 bg-background border-b px-3 sm:px-6 py-2 flex-shrink-0 overflow-x-auto">
+            <TabsList className="w-full justify-start overflow-x-auto flex-nowrap min-w-max">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="availability">Availability</TabsTrigger>
@@ -155,7 +155,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             </TabsList>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
+          <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 overscroll-contain">
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-6 mt-0">
               {/* Quick Facts Bar */}

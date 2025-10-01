@@ -13,6 +13,7 @@ import LiveChat from '@/components/LiveChat';
 import LifestyleFilterBar from '@/components/LifestyleFilterBar';
 import ShortlistDrawer from '@/components/ShortlistDrawer';
 import { Button } from '@/components/ui/button';
+import { MapPin } from 'lucide-react';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
 import Contact from './Contact';
@@ -45,7 +46,7 @@ const Index = () => {
     };
   } | null>(null);
   const [lifestyleFilters, setLifestyleFilters] = useState<AmenityType[]>([]);
-  const [showMobileMap, setShowMobileMap] = useState(false);
+  const [showMobileMap, setShowMobileMap] = useState(true);
   const [filters, setFilters] = useState<FilterState>({
     priceFrom: '',
     priceTo: '',
@@ -208,8 +209,31 @@ const Index = () => {
         onTypesChange={setLifestyleFilters}
       />
       
-      {/* Full-screen map */}
-      <main className="relative h-[calc(100vh-300px)]">
+      {/* Mobile View Toggle */}
+      <div className="md:hidden sticky top-[60px] z-30 bg-background border-b px-4 py-2">
+        <div className="flex gap-2">
+          <Button
+            variant={showMobileMap ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShowMobileMap(true)}
+            className="flex-1 touch-target"
+          >
+            <MapPin className="h-4 w-4 mr-2" />
+            Map View
+          </Button>
+          <Button
+            variant={!showMobileMap ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShowMobileMap(false)}
+            className="flex-1 touch-target"
+          >
+            List View ({filteredDevelopments.length})
+          </Button>
+        </div>
+      </div>
+      
+      {/* Map View */}
+      <main className={`relative ${showMobileMap ? 'block' : 'hidden md:block'} h-[60vh] md:h-[calc(100vh-300px)]`}>
         <MapComponent 
           developments={filteredDevelopments}
           onDevelopmentClick={handleDevelopmentClick}
@@ -221,6 +245,29 @@ const Index = () => {
         />
         <OffersButton />
       </main>
+
+      {/* List View (Mobile Only) */}
+      <div className={`md:hidden ${!showMobileMap ? 'block' : 'hidden'} px-4 py-6 space-y-4`}>
+        <h2 className="text-lg font-semibold mb-4">
+          {filteredDevelopments.length} Properties Found
+        </h2>
+        {filteredDevelopments.map((dev) => (
+          <PropertyCard
+            key={dev.id}
+            development={dev}
+            onView={() => {
+              const nearbyByType: Record<AmenityType, any[]> = {} as any;
+              handleDevelopmentClick(dev, nearbyByType);
+            }}
+            onBookViewing={() => {
+              setSelectedDevelopment(dev);
+              setIsBookingModalOpen(true);
+            }}
+            onToggleShortlist={() => handleToggleShortlist(dev)}
+            isInShortlist={isInShortlist(dev.name)}
+          />
+        ))}
+      </div>
 
       {/* Development Popup */}
       {selectedDevelopment && (
