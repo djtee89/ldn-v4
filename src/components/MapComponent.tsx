@@ -61,6 +61,30 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     // Wait for map to fully load
     map.current.on('load', () => {
+      // Load house icon
+      const houseIconSvg = `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="#FF6B6B" stroke="#FFFFFF" stroke-width="2"/>
+          <path d="M9 22V12h6v10" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1"/>
+        </svg>
+      `;
+      
+      const img = new Image(24, 24);
+      img.onload = () => map.current!.addImage('house-icon', img);
+      img.src = 'data:image/svg+xml;base64,' + btoa(houseIconSvg);
+      
+      // Load highlighted house icon
+      const houseIconHighlightedSvg = `
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="#FF6B6B" stroke="#FFD700" stroke-width="3"/>
+          <path d="M9 22V12h6v10" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1"/>
+        </svg>
+      `;
+      
+      const imgHighlighted = new Image(28, 28);
+      imgHighlighted.onload = () => map.current!.addImage('house-icon-highlighted', imgHighlighted);
+      imgHighlighted.src = 'data:image/svg+xml;base64,' + btoa(houseIconHighlightedSvg);
+      
       // Add source for development pins
       map.current!.addSource('developments', {
         type: 'geojson',
@@ -111,31 +135,31 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
-      // Add layer for normal property pins (ABOVE amenity pins)
+      // Add layer for normal property pins (ABOVE amenity pins) - using house icons
       map.current!.addLayer({
         id: 'development-pins',
-        type: 'circle',
+        type: 'symbol',
         source: 'developments',
-        paint: {
-          'circle-radius': 7,
-          'circle-color': '#FF6B6B',
-          'circle-stroke-width': 2,
-          'circle-stroke-color': '#ffffff'
+        filter: ['!=', ['get', 'highlighted'], true],
+        layout: {
+          'icon-image': 'house-icon',
+          'icon-size': 1,
+          'icon-allow-overlap': true,
+          'icon-anchor': 'bottom'
         }
       });
 
-      // Add layer for highlighted property pins
+      // Add layer for highlighted property pins - larger house icons
       map.current!.addLayer({
         id: 'development-pins-highlighted',
-        type: 'circle',
+        type: 'symbol',
         source: 'developments',
         filter: ['==', ['get', 'highlighted'], true],
-        paint: {
-          'circle-radius': 9,
-          'circle-color': '#FF6B6B',
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#FFD700',
-          'circle-opacity': 0.9
+        layout: {
+          'icon-image': 'house-icon-highlighted',
+          'icon-size': 1.2,
+          'icon-allow-overlap': true,
+          'icon-anchor': 'bottom'
         }
       });
 
