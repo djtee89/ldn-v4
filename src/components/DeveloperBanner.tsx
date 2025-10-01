@@ -45,8 +45,8 @@ const DeveloperBanner: React.FC<DeveloperBannerProps> = ({
   highlightedDeveloper
 }) => {
   return <div className="w-full">
-      <div className="bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-3 rounded-lg">
-        <div className="flex items-center justify-between mb-2">
+      <div className="bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-2 rounded-lg">
+        <div className="flex items-center justify-between mb-1">
           <h3 className="text-sm font-semibold text-neutral-900">Featured Developers</h3>
         </div>
         
