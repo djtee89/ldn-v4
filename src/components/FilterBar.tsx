@@ -489,12 +489,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           <>
             {/* Backdrop */}
             <div 
-              className="fixed inset-0 bg-black/50 z-40 animate-fade-in"
+              className="fixed inset-0 bg-black/50 z-[100] animate-fade-in"
               onClick={() => setIsDesktopExpanded(false)}
             />
             
             {/* Filter dropdown */}
-            <div className="absolute top-full left-0 right-0 mt-2 z-50 animate-scale-in">
+            <div className="absolute top-full left-0 right-0 mt-2 z-[101] animate-scale-in">
               <div className="bg-card border border-border rounded-2xl shadow-lg p-6 max-w-4xl mx-auto">
                 <FilterControls />
                 
