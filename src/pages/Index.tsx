@@ -199,14 +199,16 @@ const Index = () => {
         highlightedDeveloper={highlightedDeveloper}
       />
       
-      <SecondHero
-        filters={filters}
-        onFiltersChange={setFilters}
-        resultsCount={filteredDevelopments.length}
-        onSearch={() => setShowMobileMap(true)}
-        lifestyleFilters={lifestyleFilters}
-        onLifestyleFiltersChange={setLifestyleFilters}
-      />
+      <div className="px-4 container mx-auto">
+        <SecondHero
+          filters={filters}
+          onFiltersChange={setFilters}
+          resultsCount={filteredDevelopments.length}
+          onSearch={() => setShowMobileMap(true)}
+          lifestyleFilters={lifestyleFilters}
+          onLifestyleFiltersChange={setLifestyleFilters}
+        />
+      </div>
       
       {/* Mobile View Toggle */}
       <div className="md:hidden sticky top-[60px] z-30 bg-background border-b px-4 py-2">
