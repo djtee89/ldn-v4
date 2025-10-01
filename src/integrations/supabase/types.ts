@@ -56,6 +56,75 @@ export type Database = {
         }
         Relationships: []
       }
+      developments: {
+        Row: {
+          amenities: string[] | null
+          area_overview: string | null
+          bedrooms: string[] | null
+          completion_date: string | null
+          created_at: string | null
+          developer: string | null
+          distance_to_tube: string | null
+          featured: boolean | null
+          id: string
+          images: string[] | null
+          lat: number | null
+          lng: number | null
+          location: string | null
+          name: string
+          nearest_tube: string | null
+          prices: Json | null
+          status: string | null
+          tenure: string | null
+          updated_at: string | null
+          zone: string | null
+        }
+        Insert: {
+          amenities?: string[] | null
+          area_overview?: string | null
+          bedrooms?: string[] | null
+          completion_date?: string | null
+          created_at?: string | null
+          developer?: string | null
+          distance_to_tube?: string | null
+          featured?: boolean | null
+          id: string
+          images?: string[] | null
+          lat?: number | null
+          lng?: number | null
+          location?: string | null
+          name: string
+          nearest_tube?: string | null
+          prices?: Json | null
+          status?: string | null
+          tenure?: string | null
+          updated_at?: string | null
+          zone?: string | null
+        }
+        Update: {
+          amenities?: string[] | null
+          area_overview?: string | null
+          bedrooms?: string[] | null
+          completion_date?: string | null
+          created_at?: string | null
+          developer?: string | null
+          distance_to_tube?: string | null
+          featured?: boolean | null
+          id?: string
+          images?: string[] | null
+          lat?: number | null
+          lng?: number | null
+          location?: string | null
+          name?: string
+          nearest_tube?: string | null
+          prices?: Json | null
+          status?: string | null
+          tenure?: string | null
+          updated_at?: string | null
+          zone?: string | null
+        }
+        Relationships: []
+      }
       rag_chunks: {
         Row: {
           content: string
