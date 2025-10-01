@@ -183,6 +183,61 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
+      // Development hover popup
+      const devPopup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: 25,
+        className: 'development-hover-popup'
+      });
+
+      const showDevelopmentPopup = (e: any, layerId: string) => {
+        if (e.features && e.features[0]) {
+          const id = e.features[0].properties?.id;
+          const development = developments.find(d => d.id === id);
+          if (!development) return;
+
+          const coordinates = [development.coordinates.lng, development.coordinates.lat];
+          
+          // Build prices string
+          let pricesHtml = '<div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">';
+          if (development.prices['1']) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>1-bed:</strong> ${development.prices['1']}</div>`;
+          }
+          if (development.prices['2']) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>2-bed:</strong> ${development.prices['2']}</div>`;
+          }
+          if (development.prices['3']) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>3-bed:</strong> ${development.prices['3']}</div>`;
+          }
+          pricesHtml += '</div>';
+
+          const popupContent = `
+            <div style="padding: 12px; min-width: 220px;">
+              <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${development.name}</div>
+              <div style="color: #666; font-size: 12px; margin-bottom: 2px;">${development.developer}</div>
+              <div style="color: #666; font-size: 11px; margin-bottom: 8px;">${development.location}</div>
+              ${pricesHtml}
+              <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
+                <div style="font-size: 11px; color: #666; margin-bottom: 4px;">
+                  <strong>Zone ${development.zone}</strong> • ${development.tenure}
+                </div>
+                <div style="font-size: 11px; color: #666;">
+                  🚇 ${development.nearestTube?.station || 'N/A'} (${development.nearestTube?.walkTime || 'N/A'} min)
+                </div>
+              </div>
+              <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; text-align: center;">
+                <div style="font-size: 10px; color: #999;">Click for full details</div>
+              </div>
+            </div>
+          `;
+          
+          devPopup.setLngLat(coordinates as [number, number])
+            .setHTML(popupContent)
+            .addTo(map.current!);
+        }
+      };
+
       // Handle property pin clicks
       map.current!.on('click', 'development-pins', e => {
         if (e.features && e.features[0]) {
@@ -229,18 +284,22 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
-      // Change cursor on hover
-      map.current!.on('mouseenter', 'development-pins', () => {
+      // Change cursor and show popup on hover
+      map.current!.on('mouseenter', 'development-pins', (e) => {
         map.current!.getCanvas().style.cursor = 'pointer';
+        showDevelopmentPopup(e, 'development-pins');
       });
       map.current!.on('mouseleave', 'development-pins', () => {
         map.current!.getCanvas().style.cursor = '';
+        devPopup.remove();
       });
-      map.current!.on('mouseenter', 'development-pins-highlighted', () => {
+      map.current!.on('mouseenter', 'development-pins-highlighted', (e) => {
         map.current!.getCanvas().style.cursor = 'pointer';
+        showDevelopmentPopup(e, 'development-pins-highlighted');
       });
       map.current!.on('mouseleave', 'development-pins-highlighted', () => {
         map.current!.getCanvas().style.cursor = '';
+        devPopup.remove();
       });
 
       // Amenity hover handlers
