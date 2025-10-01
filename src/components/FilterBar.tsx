@@ -431,7 +431,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
   // Desktop view - compact pills with overlay
   return (
-    <div className="bg-card border-b border-border rounded-2xl mx-4 relative z-[200]">
+    <div className="bg-card border-b border-border rounded-2xl mx-4">
       <div className="container mx-auto px-4 py-3 relative">
         <div className="flex items-center gap-3">
           {/* Filter pills */}
@@ -489,13 +489,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           <>
             {/* Backdrop */}
             <div 
-              className="fixed inset-0 bg-black/50 z-[200] animate-fade-in"
+              className="fixed inset-0 bg-black/50 z-[9998] animate-fade-in"
               onClick={() => setIsDesktopExpanded(false)}
             />
             
-            {/* Filter dropdown */}
-            <div className="absolute top-full left-0 right-0 mt-2 z-[201] animate-scale-in">
-              <div className="bg-card border border-border rounded-2xl shadow-lg p-6 max-w-4xl mx-auto">
+            {/* Filter dropdown - fixed to break out of stacking context */}
+            <div className="fixed top-32 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-4xl px-4 animate-scale-in">
+              <div className="bg-card border border-border rounded-2xl shadow-lg p-6">
                 <FilterControls />
                 
                 <div className="flex items-center justify-end gap-2 mt-4">
