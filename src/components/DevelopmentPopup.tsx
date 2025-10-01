@@ -157,7 +157,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
           <div className="modal-body overflow-y-auto max-h-[calc(100vh-300px)]">
             {/* Overview Tab */}
-            <TabsContent value="overview" className="space-y-6 mt-0">
+            <TabsContent value="overview" className="space-y-6 mt-0 overflow-y-auto max-h-[60vh]">
               {/* Quick Facts Bar */}
               <div className="flex flex-wrap gap-3">
                 {development.prices.oneBed && <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
