@@ -429,48 +429,18 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
     );
   }
 
-  // Desktop view - compact pills
+  // Desktop view - compact pills with overlay
   return (
     <div className="bg-card border-b border-border rounded-2xl mx-4">
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-3 relative">
         <div className="flex items-center gap-3">
           {/* Filter pills */}
-          <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-            <DrawerTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-full"
-                aria-label="Area filter"
-              >
-                Area: <strong className="ml-1">{localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Any'}</strong>
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent className="max-h-[90vh] flex flex-col">
-              <DrawerHeader className="shrink-0">
-                <DrawerTitle>Filters</DrawerTitle>
-              </DrawerHeader>
-              <div className="px-4 pb-4 overflow-y-auto flex-1 min-h-0">
-                <FilterControls />
-              </div>
-              <DrawerFooter className="flex flex-row gap-2 shrink-0 pt-2 pb-4">
-                <Button
-                  variant="outline"
-                  onClick={handleReset}
-                  className="flex-1"
-                >
-                  Reset All
-                </Button>
-                <Button
-                  variant="default"
-                  onClick={handleApply}
-                  className="flex-1"
-                >
-                  Apply
-                </Button>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+          <button
+            onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-input hover:bg-card-hover transition-smooth"
+          >
+            Area: <strong className="ml-1">{localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Any'}</strong>
+          </button>
 
           <button
             onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
@@ -514,27 +484,43 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           </div>
         </div>
 
-        {/* Expanded filter panel */}
-        <div className={`${isDesktopExpanded ? 'block animate-accordion-down' : 'hidden'} mt-4 p-4 bg-secondary/30 rounded-lg`}>
-          <FilterControls />
-          
-          <div className="flex items-center justify-end gap-2 mt-4">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              size="sm"
-            >
-              Reset All
-            </Button>
-            <Button
-              variant="default"
-              onClick={handleApply}
-              size="sm"
-            >
-              Apply Filters
-            </Button>
-          </div>
-        </div>
+        {/* Overlay filter panel */}
+        {isDesktopExpanded && (
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 animate-fade-in"
+              onClick={() => setIsDesktopExpanded(false)}
+            />
+            
+            {/* Filter dropdown */}
+            <div className="absolute top-full left-0 right-0 mt-2 z-50 animate-scale-in">
+              <div className="bg-card border border-border rounded-2xl shadow-lg p-6 max-w-4xl mx-auto">
+                <FilterControls />
+                
+                <div className="flex items-center justify-end gap-2 mt-4">
+                  <Button
+                    variant="outline"
+                    onClick={handleReset}
+                    size="sm"
+                  >
+                    Reset All
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={() => {
+                      handleApply();
+                      setIsDesktopExpanded(false);
+                    }}
+                    size="sm"
+                  >
+                    Apply Filters
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
