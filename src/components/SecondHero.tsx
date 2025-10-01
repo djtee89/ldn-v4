@@ -23,7 +23,7 @@ const SecondHero: React.FC<SecondHeroProps> = ({
   return (
     <section className="relative isolate mb-6 w-full">
       {/* Background image */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden rounded-[24px]">
         <img 
           src="/oval-village-1.png" 
           alt="London luxury property interior" 
