@@ -399,7 +399,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   // Desktop view
   return (
     <div className="bg-background border-b border-border">
-      <div className="container mx-auto px-4 py-3">
+      <div className={`container mx-auto px-4 transition-all ${isDesktopExpanded ? 'py-3' : 'py-2'}`}>
         <div className="flex items-center justify-between mb-2">
           <button
             onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
