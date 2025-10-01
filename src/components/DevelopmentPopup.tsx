@@ -4,17 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  X, 
-  MapPin, 
-  Train, 
-  GraduationCap, 
-  Download,
-  Heart,
-  Share2,
-  Car,
-  Calendar
-} from 'lucide-react';
+import { X, MapPin, Train, GraduationCap, Download, Heart, Share2, Car, Calendar } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { translations } from '@/i18n/translations';
 import { PhotoGallery } from '@/components/PhotoGallery';
@@ -23,15 +13,7 @@ import { YieldCalculator } from '@/components/YieldCalculator';
 import { KrpAskBox } from '@/components/KrpAskBox';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 interface Unit {
   id: string;
   unit_number: string;
@@ -44,7 +26,6 @@ interface Unit {
   aspect?: string;
   floor?: number;
 }
-
 interface DevelopmentPopupProps {
   development: Development;
   onClose: () => void;
@@ -53,18 +34,19 @@ interface DevelopmentPopupProps {
   onToggleShortlist: () => void;
   language: string;
 }
-
 const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   development,
   onClose,
   onBookViewing,
   isInShortlist,
   onToggleShortlist,
-  language,
+  language
 }) => {
   const [units, setUnits] = useState<Unit[]>([]);
   const [loadingUnits, setLoadingUnits] = useState(false);
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const isKRP = development.id === 'kings-road-park-berkeley';
 
   // Body scroll lock
@@ -81,17 +63,17 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
       loadUnits();
     }
   }, [isKRP]);
-
   const loadUnits = async () => {
     setLoadingUnits(true);
     try {
-      const { data, error } = await supabase
-        .from('units')
-        .select('*')
-        .eq('dev_id', 'krp')
-        .order('beds', { ascending: true })
-        .order('price', { ascending: true });
-
+      const {
+        data,
+        error
+      } = await supabase.from('units').select('*').eq('dev_id', 'krp').order('beds', {
+        ascending: true
+      }).order('price', {
+        ascending: true
+      });
       if (error) throw error;
       setUnits(data || []);
     } catch (error) {
@@ -100,19 +82,15 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
       setLoadingUnits(false);
     }
   };
-
   const handleShare = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
     toast({
       title: 'Link copied',
-      description: 'Property link copied to clipboard',
+      description: 'Property link copied to clipboard'
     });
   };
-
-
-  return (
-    <div className="modal-backdrop">
+  return <div className="modal-backdrop">
       <div className="modal-panel modal-panel-wide">
         {/* Header */}
         <div className="modal-header">
@@ -125,14 +103,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      onClick={onToggleShortlist}
-                    >
-                      <Heart 
-                        className={`h-5 w-5 ${isInShortlist ? 'fill-red-500 text-red-500' : ''}`}
-                      />
+                    <Button variant="ghost" size="icon" onClick={onToggleShortlist}>
+                      <Heart className={`h-5 w-5 ${isInShortlist ? 'fill-red-500 text-red-500' : ''}`} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -173,7 +145,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <TabsTrigger value="amenities">Amenities</TabsTrigger>
               <TabsTrigger value="transport">Transport</TabsTrigger>
               <TabsTrigger value="schools">Schools</TabsTrigger>
-              <TabsTrigger value="map">Map</TabsTrigger>
+              
               <TabsTrigger value="calculators">Calculators</TabsTrigger>
               <TabsTrigger value="faq">FAQ</TabsTrigger>
             </TabsList>
@@ -184,33 +156,25 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             <TabsContent value="overview" className="space-y-6 mt-0">
               {/* Quick Facts Bar */}
               <div className="flex flex-wrap gap-3">
-                {development.prices.oneBed && (
-                  <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
+                {development.prices.oneBed && <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
                     <span className="text-sm font-medium">1-bed {development.prices.oneBed}</span>
-                  </div>
-                )}
-                {development.prices.twoBed && (
-                  <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
+                  </div>}
+                {development.prices.twoBed && <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
                     <span className="text-sm font-medium">2-bed {development.prices.twoBed}</span>
-                  </div>
-                )}
-                {development.prices.threeBed && (
-                  <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
+                  </div>}
+                {development.prices.threeBed && <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
                     <span className="text-sm font-medium">3-bed {development.prices.threeBed}</span>
-                  </div>
-                )}
+                  </div>}
               </div>
 
               {/* Zone & Tenure */}
               <div className="flex flex-wrap gap-3">
                 <Badge className="px-4 py-2 text-base">Zone {development.zone}</Badge>
                 <Badge variant="secondary" className="px-4 py-2 text-base">{development.tenure}</Badge>
-                {isKRP && (
-                  <Badge variant="secondary" className="px-4 py-2 text-base flex items-center gap-1">
+                {isKRP && <Badge variant="secondary" className="px-4 py-2 text-base flex items-center gap-1">
                     <Car className="h-4 w-4" />
                     Underground (2-bed+) • EV points
-                  </Badge>
-                )}
+                  </Badge>}
               </div>
 
               {/* CTA Row */}
@@ -245,11 +209,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                   <Badge variant="secondary" className="text-sm">
                     {development.nearestTube.station} — {development.nearestTube.line} — {development.nearestTube.walkTime} min
                   </Badge>
-                  {isKRP && (
-                    <Badge variant="secondary" className="text-sm">
+                  {isKRP && <Badge variant="secondary" className="text-sm">
                       Imperial Wharf — Overground / Nat Rail — 10 min
-                    </Badge>
-                  )}
+                    </Badge>}
                 </div>
               </div>
 
@@ -259,41 +221,31 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {development.areaOverview}
                 </p>
-                {isKRP && (
-                  <>
+                {isKRP && <>
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       <strong>Landmark & views:</strong> Public park encircles a restored Grade II listed gasholder; upper floors may see the City and the Thames.
                     </p>
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       <strong>Green space:</strong> 6 acres of parkland and landscaped gardens; near Eel Brook Common and Parsons Green.
                     </p>
-                  </>
-                )}
+                  </>}
               </div>
 
               {/* Status */}
-              {isKRP && (
-                <p className="text-xs text-muted-foreground">
+              {isKRP && <p className="text-xs text-muted-foreground">
                   Phased completion; first residents 2022. Key buildings: The Beaumont, The Windsor, The Wren. Construction ongoing.
-                </p>
-              )}
+                </p>}
 
               {/* KRP Ask Box */}
-              {isKRP && (
-                <div className="pt-4">
+              {isKRP && <div className="pt-4">
                   <KrpAskBox />
-                </div>
-              )}
+                </div>}
             </TabsContent>
 
             {/* Availability Tab */}
             <TabsContent value="availability" className="mt-0">
-              {isKRP ? (
-                <div className="space-y-4">
-                  {loadingUnits ? (
-                    <p className="text-center text-muted-foreground py-8">Loading units...</p>
-                  ) : units.length > 0 ? (
-                    <>
+              {isKRP ? <div className="space-y-4">
+                  {loadingUnits ? <p className="text-center text-muted-foreground py-8">Loading units...</p> : units.length > 0 ? <>
                       <Table>
                         <TableHeader>
                           <TableRow>
@@ -308,8 +260,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {units.map((unit) => (
-                            <TableRow key={unit.id}>
+                          {units.map(unit => <TableRow key={unit.id}>
                               <TableCell className="font-medium">{unit.unit_number}</TableCell>
                               <TableCell>{unit.beds}</TableCell>
                               <TableCell>{unit.size_sqft.toLocaleString()}</TableCell>
@@ -330,20 +281,14 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                                   Book
                                 </Button>
                               </TableCell>
-                            </TableRow>
-                          ))}
+                            </TableRow>)}
                         </TableBody>
                       </Table>
                       <p className="text-xs text-muted-foreground text-center">
                         Live availability and pricing subject to change.
                       </p>
-                    </>
-                  ) : (
-                    <p className="text-center text-muted-foreground py-8">No units currently available.</p>
-                  )}
-                </div>
-              ) : (
-                <Card>
+                    </> : <p className="text-center text-muted-foreground py-8">No units currently available.</p>}
+                </div> : <Card>
                   <CardContent className="p-6">
                     <p className="text-muted-foreground text-center">
                       Contact us for availability information for this development.
@@ -352,18 +297,15 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                       <Button onClick={onBookViewing}>Request Information</Button>
                     </div>
                   </CardContent>
-                </Card>
-              )}
+                </Card>}
             </TabsContent>
 
             {/* Amenities Tab */}
             <TabsContent value="amenities" className="mt-0">
               <div className="flex flex-wrap gap-2">
-                {development.amenities.map((amenity, index) => (
-                  <Badge key={index} variant="secondary" className="text-sm px-3 py-1.5">
+                {development.amenities.map((amenity, index) => <Badge key={index} variant="secondary" className="text-sm px-3 py-1.5">
                     {amenity}
-                  </Badge>
-                ))}
+                  </Badge>)}
               </div>
             </TabsContent>
 
@@ -384,20 +326,17 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                         </div>
                         <Badge variant="secondary">{development.nearestTube.walkTime} min walk</Badge>
                       </div>
-                      {isKRP && (
-                        <div className="flex justify-between items-center">
+                      {isKRP && <div className="flex justify-between items-center">
                           <div>
                             <p className="font-medium">Imperial Wharf</p>
                             <p className="text-sm text-muted-foreground">Overground / National Rail</p>
                           </div>
                           <Badge variant="secondary">10 min walk</Badge>
-                        </div>
-                      )}
+                        </div>}
                     </div>
                   </div>
 
-                  {isKRP && (
-                    <div>
+                  {isKRP && <div>
                       <h4 className="font-semibold mb-3">Typical Journeys</h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
@@ -417,8 +356,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                           <span className="font-medium">~45 mins</span>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    </div>}
 
                   <p className="text-xs text-muted-foreground pt-4 border-t">
                     {development.transportScore}
@@ -432,19 +370,15 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
             {/* Schools Tab */}
             <TabsContent value="schools" className="space-y-4 mt-0">
-              {development.schools.map((school, index) => (
-                <Card key={index}>
+              {development.schools.map((school, index) => <Card key={index}>
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <GraduationCap className="h-5 w-5 text-primary" />
                       <span className="font-medium">{school}</span>
                     </div>
-                    {school.toLowerCase().includes('outstanding') && (
-                      <Badge className="bg-green-600">Outstanding</Badge>
-                    )}
+                    {school.toLowerCase().includes('outstanding') && <Badge className="bg-green-600">Outstanding</Badge>}
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
               <Card>
                 <CardContent className="p-4">
                   <p className="text-sm">
@@ -458,14 +392,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             <TabsContent value="map" className="mt-0">
               <Card>
                 <CardContent className="p-0">
-                  <iframe
-                    width="100%"
-                    height="400"
-                    frameBorder="0"
-                    style={{ border: 0 }}
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${development.coordinates.lat},${development.coordinates.lng}&zoom=15`}
-                    allowFullScreen
-                  />
+                  <iframe width="100%" height="400" frameBorder="0" style={{
+                  border: 0
+                }} src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${development.coordinates.lat},${development.coordinates.lng}&zoom=15`} allowFullScreen />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -512,8 +441,6 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default DevelopmentPopup;
