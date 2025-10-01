@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import Header from '@/components/Header';
+import Hero from '@/components/Hero';
 import DeveloperBanner from '@/components/DeveloperBanner';
 import FilterBar, { FilterState } from '@/components/FilterBar';
 import MapComponent from '@/components/MapComponent';
@@ -173,6 +174,14 @@ const Index = () => {
     });
   };
 
+  const handleHeroSearch = (query: string, mode: 'sale' | 'rent') => {
+    setFilters(prev => ({
+      ...prev,
+      keyword: query,
+      tenure: mode === 'rent' ? 'leasehold' : prev.tenure
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header 
@@ -182,6 +191,7 @@ const Index = () => {
         onShortlistClick={() => setIsShortlistOpen(true)}
         shortlistCount={shortlist.length}
       />
+      <Hero onSearch={handleHeroSearch} />
       <DeveloperBanner 
         onDeveloperClick={handleDeveloperClick}
         highlightedDeveloper={highlightedDeveloper}
