@@ -351,7 +351,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   if (isMobile) {
     return (
       <div className="w-full">
-        <div className="bg-white rounded-2xl shadow-md border border-border p-3">
+        <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg border border-border/50 p-3">
           <div className="flex items-center gap-2">
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
@@ -359,7 +359,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                   ref={drawerTriggerRef}
                   variant="outline"
                   size="sm"
-                  className="rounded-full shadow-sm h-9 text-xs text-foreground border-border"
+                  className="rounded-full shadow-sm h-9 text-xs"
                 >
                   <SlidersHorizontal className="h-3.5 w-3.5 mr-1.5" />
                   Filters
@@ -404,7 +404,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             <Button 
               size="sm" 
               onClick={handleApply}
-              className="h-9 px-4 rounded-full font-medium text-xs bg-primary text-primary-foreground hover:bg-primary-hover"
+              className="h-9 px-4 rounded-full font-medium text-xs"
             >
               <Search className="h-3.5 w-3.5 md:mr-1.5" />
               <span className="hidden md:inline">Search</span>
@@ -427,7 +427,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
   return (
     <div className="w-full">
-      <div className="bg-white rounded-2xl shadow-md border border-border p-4">
+      <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg border border-border/50 p-4">
         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
           <input
             type="text"
@@ -494,7 +494,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-muted transition-all text-xs font-medium text-foreground border-border"
+                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium"
                 >
                   <Home className="h-3.5 w-3.5 text-primary" />
                   <span>
@@ -541,7 +541,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-muted transition-all text-xs font-medium text-foreground border-border"
+                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium"
                 >
                   <MapPin className="h-3.5 w-3.5 text-primary" />
                   <span>
@@ -594,7 +594,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-muted transition-all text-xs font-medium text-foreground border-border"
+                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium"
                 >
                   <SlidersHorizontal className="h-3.5 w-3.5" />
                   <span>More</span>
@@ -657,7 +657,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             <Button 
               size="sm" 
               onClick={handleApply}
-              className="h-9 px-5 rounded-full font-semibold text-xs shadow-md hover:shadow-lg transition-all bg-primary text-primary-foreground hover:bg-primary-hover"
+              className="h-9 px-5 rounded-full font-semibold text-xs shadow-md hover:shadow-lg transition-all"
             >
               <Search className="h-3.5 w-3.5 mr-1.5" />
               Search

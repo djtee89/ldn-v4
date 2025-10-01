@@ -39,7 +39,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
 
   return (
     <div className="w-full">
-      <div className="rounded-2xl bg-white shadow-md border border-border p-4">
+      <div className="rounded-2xl bg-white/90 backdrop-blur-lg shadow-lg border border-border/50 p-4">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex items-center justify-between w-full hover:opacity-80 transition-all group"
@@ -48,8 +48,8 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
         >
           <div className="text-left">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Explore</p>
-            <h2 className="text-sm font-bold text-foreground tracking-tight">Best of London</h2>
-            <p className="text-xs text-foreground font-light">
+            <h2 className="text-lg font-bold text-foreground tracking-tight">Best of London</h2>
+            <p className="text-xs text-muted-foreground font-light">
               Explore the best of London around your new home.
               {selectedTypes.length > 0 && (
                 <span className="ml-2 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
@@ -73,11 +73,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
                   variant={isSelected ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleType(type)}
-                  className={`h-8 text-xs gap-1.5 whitespace-nowrap rounded-full font-medium transition-all ${
-                    isSelected 
-                      ? 'bg-primary text-primary-foreground hover:bg-primary-hover' 
-                      : 'text-foreground border-border hover:bg-muted'
-                  }`}
+                  className="h-8 text-xs gap-1.5 whitespace-nowrap rounded-full font-medium hover:shadow-md transition-all"
                 >
                   {amenityIcons[type]}
                   <span>{amenityLabels[type]}</span>

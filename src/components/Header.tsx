@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({
     callback();
     setMobileMenuOpen(false);
   };
-  return <header className="bg-white border-b border-border sticky top-0 z-40">
+  return <header className="bg-white/95 backdrop-blur-lg border-b border-border/50 sticky top-0 z-40">
       <div className="container mx-auto px-4 py-1.5 relative">
         <div className="flex items-center justify-between">
           {/* Logo and Tagline */}
@@ -44,12 +44,12 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-1.5">
               <img src={logo} alt="LDN Logo" className="h-7 w-7" />
               <div>
-                <h1 className="text-sm font-semibold text-foreground tracking-tight">LDN</h1>
+                <h1 className="text-base font-semibold text-foreground tracking-tight">LDN</h1>
                 <p className="text-[9px] text-muted-foreground hidden sm:block leading-tight">London Development Network</p>
               </div>
             </div>
             <div className="hidden md:block h-4 w-px bg-border/60 mx-1" />
-            <p className="hidden md:block text-xs text-foreground tracking-tight">
+            <p className="hidden md:block text-[11px] text-muted-foreground tracking-tight">
               London's New Builds All Under One Roof
             </p>
           </div>
@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({
               variant="outline" 
               size="sm"
               onClick={onShortlistClick}
-              className="relative text-xs h-7 px-2.5 rounded-full font-medium tracking-tight text-foreground border-border hover:bg-muted transition-all"
+              className="relative text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
             >
               <Heart className="h-3 w-3 mr-1" />
               {translations[language as 'en' | 'zh'].shortlist.button} ({shortlistCount})
@@ -69,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({
               variant="outline" 
               size="sm" 
               onClick={onAboutClick} 
-              className="text-xs h-7 px-2.5 rounded-full font-medium tracking-tight text-foreground border-border hover:bg-muted transition-all"
+              className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
             >
               {language === 'en' ? 'About Us' : '关于我们'}
             </Button>
@@ -77,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({
               variant="outline" 
               size="sm" 
               onClick={onGuideClick} 
-              className="text-xs h-7 px-2.5 rounded-full font-medium tracking-tight text-foreground border-border hover:bg-muted transition-all"
+              className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
             >
               {language === 'en' ? 'Property Guide' : '购房指南'}
             </Button>
@@ -85,12 +85,12 @@ const Header: React.FC<HeaderProps> = ({
               variant="outline" 
               size="sm" 
               onClick={onBookViewingClick} 
-              className="text-xs h-7 px-2.5 rounded-full font-medium tracking-tight text-foreground border-border hover:bg-muted transition-all"
+              className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
             >
               {language === 'en' ? 'Speak to an Expert' : '联系专家'}
             </Button>
             <Select value={language} onValueChange={setLanguage}>
-              <SelectTrigger className="w-[75px] h-7 text-xs rounded-full font-medium text-foreground border-border">
+              <SelectTrigger className="w-[75px] h-7 text-[11px] rounded-full font-medium">
                 <Globe className="h-3 w-3 mr-0.5" />
                 <SelectValue />
               </SelectTrigger>
@@ -129,12 +129,12 @@ const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile Navigation Dropdown */}
         {mobileMenuOpen && (
-          <nav className="absolute top-full left-0 right-0 bg-white border-b border-border shadow-lg py-2 px-4 space-y-1 animate-fade-in md:hidden">
+          <nav className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-border/50 shadow-lg py-2 px-4 space-y-1 animate-fade-in md:hidden">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={() => handleNavClick(onShortlistClick)} 
-              className="w-full justify-start text-xs h-8 rounded-full text-foreground hover:bg-muted"
+              className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent"
             >
               <Heart className="h-3 w-3 mr-2" />
               {translations[language as 'en' | 'zh'].shortlist.button} ({shortlistCount})
@@ -143,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({
               variant="ghost" 
               size="sm" 
               onClick={() => handleNavClick(onAboutClick)} 
-              className="w-full justify-start text-xs h-8 rounded-full text-foreground hover:bg-muted"
+              className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent"
             >
               {language === 'en' ? 'About Us' : '关于我们'}
             </Button>
@@ -151,7 +151,7 @@ const Header: React.FC<HeaderProps> = ({
               variant="ghost" 
               size="sm" 
               onClick={() => handleNavClick(onGuideClick)} 
-              className="w-full justify-start text-xs h-8 rounded-full text-foreground hover:bg-muted"
+              className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent"
             >
               {language === 'en' ? 'Property Guide' : '购房指南'}
             </Button>
@@ -159,7 +159,7 @@ const Header: React.FC<HeaderProps> = ({
               variant="ghost" 
               size="sm" 
               onClick={() => handleNavClick(onBookViewingClick)} 
-              className="w-full justify-start text-xs h-8 rounded-full text-foreground hover:bg-muted"
+              className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent"
             >
               {language === 'en' ? 'Speak to an Expert' : '联系专家'}
             </Button>
