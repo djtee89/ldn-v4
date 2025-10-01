@@ -60,7 +60,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
     // Wait for map to fully load
-    map.current.on('load', () => {
+    map.current.on('load', async () => {
       // Load house icon
       const houseIconSvg = `
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,8 +70,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
       `;
       
       const img = new Image(24, 24);
-      img.onload = () => map.current!.addImage('house-icon', img);
       img.src = 'data:image/svg+xml;base64,' + btoa(houseIconSvg);
+      await new Promise((resolve) => { img.onload = resolve; });
+      map.current!.addImage('house-icon', img);
       
       // Load highlighted house icon
       const houseIconHighlightedSvg = `
@@ -82,8 +83,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
       `;
       
       const imgHighlighted = new Image(28, 28);
-      imgHighlighted.onload = () => map.current!.addImage('house-icon-highlighted', imgHighlighted);
       imgHighlighted.src = 'data:image/svg+xml;base64,' + btoa(houseIconHighlightedSvg);
+      await new Promise((resolve) => { imgHighlighted.onload = resolve; });
+      map.current!.addImage('house-icon-highlighted', imgHighlighted);
       
       // Add source for development pins
       map.current!.addSource('developments', {
