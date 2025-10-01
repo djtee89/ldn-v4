@@ -39,7 +39,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
 
   return (
     <div className="w-full">
-      <div className="rounded-3xl bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-6">
+      <div className="rounded-3xl bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-4">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex items-center justify-between w-full hover:opacity-70 transition-smooth"
@@ -48,8 +48,8 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
         >
           <div className="text-left">
             <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Curated</p>
-            <h2 className="text-2xl font-bold text-neutral-900">Best of London</h2>
-            <p className="mt-1 text-sm text-neutral-600">
+            <h2 className="text-xl font-bold text-neutral-900">Best of London</h2>
+            <p className="text-sm text-neutral-600">
               Schools, transport, dining, lifestyle—your London, simplified
               {selectedTypes.length > 0 && (
                 <span className="ml-2 inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
