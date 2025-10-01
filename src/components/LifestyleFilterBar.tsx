@@ -45,14 +45,14 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
       >
         <div className="text-left">
           <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-            Amenity Overlays
+            Best of London
             {selectedTypes.length > 0 && (
               <span className="text-xs font-normal text-muted-foreground">
                 ({selectedTypes.length} active)
               </span>
             )}
           </h3>
-          <p className="text-xs text-muted-foreground mt-0.5">Toggle amenities to see what's nearby</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Discover London's finest amenities</p>
         </div>
         <div className="shrink-0">
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
