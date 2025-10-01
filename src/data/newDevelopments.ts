@@ -30,6 +30,7 @@ export interface Development {
   amenities: string[];
   areaOverview: string;
   images: string[];
+  videoUrl?: string;
 }
 
 // Helper function to parse postcodes to coordinates (approximate London coordinates)
