@@ -141,8 +141,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="overview" className="w-full">
-          <div className="sticky top-0 z-10 bg-background border-b px-4 sm:px-6 py-2">
+        <Tabs defaultValue="overview" className="flex flex-col flex-1 min-h-0">
+          <div className="sticky top-0 z-10 bg-background border-b px-4 sm:px-6 py-2 flex-shrink-0">
             <TabsList className="w-full justify-start overflow-x-auto flex-nowrap">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="about">About</TabsTrigger>
@@ -155,9 +155,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             </TabsList>
           </div>
 
-          <div className="modal-body overflow-y-auto max-h-[calc(100vh-300px)]">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
             {/* Overview Tab */}
-            <TabsContent value="overview" className="space-y-6 mt-0 overflow-y-auto max-h-[60vh]">
+            <TabsContent value="overview" className="space-y-6 mt-0">
               {/* Quick Facts Bar */}
               <div className="flex flex-wrap gap-3">
                 {development.prices.oneBed && <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
