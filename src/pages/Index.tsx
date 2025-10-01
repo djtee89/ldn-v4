@@ -197,113 +197,18 @@ const Index = () => {
         onTypesChange={setLifestyleFilters}
       />
       
-      {/* Desktop: Split view | Mobile: Stack view */}
-      <main className="relative">
-        <div className="lg:grid lg:grid-cols-12 lg:h-[calc(100vh-300px)]">
-          {/* Property list - 55% on desktop */}
-          <div className="lg:col-span-7 overflow-y-auto p-4 space-y-4 lg:h-full">
-            {/* Mobile map toggle button */}
-            <div className="lg:hidden sticky top-0 z-10 mb-4">
-              <Button
-                onClick={() => setShowMobileMap(true)}
-                variant="default"
-                className="w-full shadow-medium"
-              >
-                Show Map ({filteredDevelopments.length} properties)
-              </Button>
-            </div>
-
-            <PropertyOfTheWeek onViewClick={handlePropertyOfTheWeekClick} />
-            
-            {filteredDevelopments.length === 0 ? (
-              <div className="text-center py-12 px-4">
-                <p className="text-lg font-semibold text-foreground mb-2">No properties found</p>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Try adjusting your filters to see more results
-                </p>
-                <Button variant="outline" onClick={() => setFilters({
-                  priceFrom: '',
-                  priceTo: '',
-                  tenure: 'any',
-                  bedroomsMin: '',
-                  bedroomsMax: '',
-                  zones: [],
-                  walkToStation: 'any',
-                  amenities: [],
-                  completedNow: false,
-                  completionYear: 'any',
-                  keyword: ''
-                })}>
-                  Clear all filters
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {filteredDevelopments.map(dev => (
-                  <PropertyCard
-                    key={dev.id}
-                    development={dev}
-                    onView={() => handleDevelopmentClick(dev)}
-                    onBookViewing={() => {
-                      setSelectedDevelopment(dev);
-                      setIsBookingModalOpen(true);
-                    }}
-                    isInShortlist={isInShortlist(dev.name)}
-                    onToggleShortlist={() => handleToggleShortlist(dev)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Map - 45% on desktop, sticky */}
-          <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-0 lg:h-[calc(100vh-300px)]">
-            <div className="relative h-full">
-              <MapComponent 
-                developments={filteredDevelopments}
-                onDevelopmentClick={handleDevelopmentClick}
-                highlightedDeveloper={highlightedDeveloper}
-                className="w-full h-full"
-                activeDirections={activeDirections}
-                onDirectionsClose={() => setActiveDirections(null)}
-                lifestyleFilters={lifestyleFilters}
-              />
-              <OffersButton />
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile map overlay */}
-        {showMobileMap && (
-          <div className="fixed inset-0 z-50 bg-background lg:hidden">
-            <div className="h-full flex flex-col">
-              <div className="p-4 border-b bg-card">
-                <Button
-                  onClick={() => setShowMobileMap(false)}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Back to List
-                </Button>
-              </div>
-              <div className="flex-1 relative">
-                <MapComponent 
-                  developments={filteredDevelopments}
-                  onDevelopmentClick={(dev) => {
-                    handleDevelopmentClick(dev);
-                    setShowMobileMap(false);
-                  }}
-                  highlightedDeveloper={highlightedDeveloper}
-                  className="w-full h-full"
-                  activeDirections={activeDirections}
-                  onDirectionsClose={() => setActiveDirections(null)}
-                  lifestyleFilters={lifestyleFilters}
-                />
-                <OffersButton />
-              </div>
-            </div>
-          </div>
-        )}
+      {/* Full-screen map */}
+      <main className="relative h-[calc(100vh-300px)]">
+        <MapComponent 
+          developments={filteredDevelopments}
+          onDevelopmentClick={handleDevelopmentClick}
+          highlightedDeveloper={highlightedDeveloper}
+          className="w-full h-full"
+          activeDirections={activeDirections}
+          onDirectionsClose={() => setActiveDirections(null)}
+          lifestyleFilters={lifestyleFilters}
+        />
+        <OffersButton />
       </main>
 
       {/* Development Popup */}
