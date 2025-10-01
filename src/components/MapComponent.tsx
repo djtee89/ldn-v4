@@ -241,52 +241,38 @@ const MapComponent: React.FC<MapComponentProps> = ({
           const walkTime = feature.properties?.walkTime;
           const type = feature.properties?.type;
           
+          // Create a URL-safe slug from the name
+          const schoolSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          
           const popupContent = `
             <div style="padding: 8px; font-size: 13px; min-width: 180px;">
               <div style="font-weight: 600; margin-bottom: 4px;">${name}</div>
               <div style="color: #666; font-size: 12px; margin-bottom: 8px;">${walkTime} min walk</div>
-              <button 
-                id="amenity-route-btn" 
+              <a 
+                href="https://www.google.com/search?q=${encodeURIComponent(name + ' London')}"
+                target="_blank"
+                rel="noopener noreferrer"
                 style="
+                  display: block;
                   width: 100%;
                   padding: 6px 12px;
                   background: #3b82f6;
                   color: white;
-                  border: none;
+                  text-decoration: none;
+                  text-align: center;
                   border-radius: 6px;
-                  cursor: pointer;
                   font-size: 12px;
                   font-weight: 500;
                 "
               >
-                View Route
-              </button>
+                Learn More
+              </a>
             </div>
           `;
           
           popup.setLngLat(coordinates)
             .setHTML(popupContent)
             .addTo(map.current!);
-            
-          // Add click handler for "View route" button
-          setTimeout(() => {
-            const btn = document.getElementById('amenity-route-btn');
-            if (btn) {
-              btn.addEventListener('click', () => {
-                // Find nearest development and show route
-                const nearestDev = developments[0]; // Simplified - could find actual nearest
-                if (nearestDev) {
-                  onDevelopmentClick(nearestDev);
-                  // Trigger directions to this amenity
-                  setTimeout(() => {
-                    // This would need to be wired to the directions system
-                    console.log('Show route to:', name);
-                  }, 100);
-                }
-                popup.remove();
-              });
-            }
-          }, 0);
         }
       });
 
