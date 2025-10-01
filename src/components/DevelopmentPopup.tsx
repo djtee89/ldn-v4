@@ -335,25 +335,10 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
         {/* Sticky Footer Actions */}
         <div className="modal-footer">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-            <Button variant="premium" onClick={onBookViewing} className="flex items-center justify-center gap-2 text-sm sm:text-base">
-              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="truncate">Book Viewing</span>
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                const message = encodeURIComponent(
-                  `Hi, I'd like more information about ${development.name} in ${development.location}.`
-                );
-                window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
-              }} 
-              className="flex items-center justify-center gap-2 text-sm sm:text-base"
-            >
-              <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="truncate">WhatsApp</span>
-            </Button>
-          </div>
+          <Button variant="premium" onClick={onBookViewing} className="w-full flex items-center justify-center gap-2 text-sm sm:text-base">
+            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="truncate">Book Viewing</span>
+          </Button>
         </div>
       </div>
     </div>
