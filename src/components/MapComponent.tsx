@@ -199,6 +199,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
           const coordinates = [development.coordinates.lng, development.coordinates.lat];
           
+          // Get first image
+          const imageHtml = development.images && development.images.length > 0 
+            ? `<img src="${development.images[0]}" alt="${development.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;" />`
+            : '';
+          
           // Build prices string
           let pricesHtml = '<div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">';
           if (development.prices['1']) {
@@ -213,7 +218,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
           pricesHtml += '</div>';
 
           const popupContent = `
-            <div style="padding: 12px; min-width: 220px;">
+            <div style="padding: 12px; min-width: 260px; max-width: 280px;">
+              ${imageHtml}
               <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${development.name}</div>
               <div style="color: #666; font-size: 12px; margin-bottom: 2px;">${development.developer}</div>
               <div style="color: #666; font-size: 11px; margin-bottom: 8px;">${development.location}</div>
