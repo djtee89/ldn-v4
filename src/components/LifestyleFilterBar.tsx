@@ -38,61 +38,63 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
   const amenityTypesList: AmenityType[] = ['private_schools', 'prep_schools', 'state_schools', 'grammar_schools', 'universities', 'michelin_restaurants', 'culture_landmarks', 'shopping_lifestyle', 'hospitals_clinics', 'transport_hubs'];
 
   return (
-    <div className="bg-card border border-border rounded-lg shadow-sm mb-4">
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center justify-between p-3 w-full hover:bg-muted/50 transition-colors"
-        aria-expanded={isExpanded}
-        aria-label={isExpanded ? "Collapse amenity filters" : "Expand amenity filters"}
-      >
-        <div className="text-left">
-          <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-            Best of London
-            {selectedTypes.length > 0 && (
-              <span className="text-xs font-normal text-muted-foreground">
-                ({selectedTypes.length} active)
-              </span>
-            )}
-          </h3>
-          <p className="text-xs text-muted-foreground mt-0.5">Schools, transport, dining, lifestyle—your London, simplified</p>
-        </div>
-        <div className="shrink-0">
-          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </div>
-      </button>
-      
-      <div className={`${isExpanded ? 'block animate-accordion-down' : 'hidden animate-accordion-up'} px-3 pb-3`}>
-        <div className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto pb-2 scrollbar-thin">
-          {amenityTypesList.map((type) => {
-            const isSelected = selectedTypes.includes(type);
-            return (
-              <Button
-                key={type}
-                variant={isSelected ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => toggleType(type)}
-                className="h-9 text-xs gap-1.5 whitespace-nowrap shrink-0"
-              >
-                {amenityIcons[type]}
-                <span>{amenityLabels[type]}</span>
-              </Button>
-            );
-          })}
-        </div>
-        
-        {selectedTypes.length > 0 && (
-          <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-            <span>{selectedTypes.length} layer{selectedTypes.length > 1 ? 's' : ''} active</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onTypesChange([])}
-              className="h-7 text-xs hover:bg-destructive/10 hover:text-destructive"
-            >
-              Clear overlays
-            </Button>
+    <div className="bg-card border-b border-border">
+      <div className="container mx-auto px-4 py-3">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center justify-between w-full hover:opacity-70 transition-opacity"
+          aria-expanded={isExpanded}
+          aria-label={isExpanded ? "Collapse amenity filters" : "Expand amenity filters"}
+        >
+          <div className="text-left">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              Best of London
+              {selectedTypes.length > 0 && (
+                <span className="text-xs font-normal text-muted-foreground">
+                  ({selectedTypes.length} active)
+                </span>
+              )}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-0.5">Schools, transport, dining, lifestyle—your London, simplified</p>
           </div>
-        )}
+          <div className="shrink-0">
+            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </div>
+        </button>
+      
+        <div className={`${isExpanded ? 'block animate-accordion-down' : 'hidden animate-accordion-up'} mt-3`}>
+          <div className="flex flex-wrap gap-2 pb-2">
+            {amenityTypesList.map((type) => {
+              const isSelected = selectedTypes.includes(type);
+              return (
+                <Button
+                  key={type}
+                  variant={isSelected ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => toggleType(type)}
+                  className="h-8 text-xs gap-1.5 whitespace-nowrap rounded-full"
+                >
+                  {amenityIcons[type]}
+                  <span>{amenityLabels[type]}</span>
+                </Button>
+              );
+            })}
+          </div>
+          
+          {selectedTypes.length > 0 && (
+            <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+              <span>{selectedTypes.length} layer{selectedTypes.length > 1 ? 's' : ''} active</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onTypesChange([])}
+                className="h-7 text-xs hover:bg-destructive/10 hover:text-destructive rounded-full"
+              >
+                Clear overlays
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

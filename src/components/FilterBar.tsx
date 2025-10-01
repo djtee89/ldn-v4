@@ -341,18 +341,40 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
     </div>
   );
 
+  // Get active filter summary
+  const getActiveFilterSummary = () => {
+    const active = [];
+    if (localFilters.zones.length > 0) {
+      active.push(`Zone ${localFilters.zones[0]}`);
+    }
+    if (localFilters.priceFrom || localFilters.priceTo) {
+      const from = localFilters.priceFrom ? priceSteps.find(s => s.value === localFilters.priceFrom)?.label : 'Any';
+      const to = localFilters.priceTo ? priceSteps.find(s => s.value === localFilters.priceTo)?.label : 'Any';
+      active.push(`${from} - ${to}`);
+    }
+    if (localFilters.bedroomsMin || localFilters.bedroomsMax) {
+      const min = localFilters.bedroomsMin ? bedroomOptions.find(b => b.value === localFilters.bedroomsMin)?.label : 'Any';
+      const max = localFilters.bedroomsMax ? bedroomOptions.find(b => b.value === localFilters.bedroomsMax)?.label : 'Any';
+      active.push(`${min}${min !== max ? ` - ${max}` : ''} bed`);
+    }
+    return active;
+  };
+
+  const hasActiveFilters = getActiveFilterSummary().length > 0;
+
   // Mobile view with drawer
   if (isMobile) {
     return (
-      <div className="bg-background border-b border-border">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+      <div className="bg-card border-b border-border">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center gap-2">
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
                 <Button
                   ref={drawerTriggerRef}
                   variant="outline"
-                  className="flex items-center gap-2 h-9"
+                  size="sm"
+                  className="rounded-full"
                   aria-expanded={isDrawerOpen}
                   aria-label="Open filters"
                 >
@@ -377,7 +399,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                     Reset
                   </Button>
                   <Button
-                    variant="premium"
+                    variant="default"
                     onClick={handleApply}
                     className="flex-1 h-9"
                     aria-label={`Apply filters, showing ${resultsCount} properties`}
@@ -387,8 +409,19 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 </DrawerFooter>
               </DrawerContent>
             </Drawer>
-            <div className="text-sm text-muted-foreground" aria-live="polite">
-              {resultsCount} {resultsCount === 1 ? 'property' : 'properties'}
+            
+            <div className="flex-1 overflow-x-auto">
+              <div className="flex items-center gap-2">
+                {getActiveFilterSummary().map((summary, idx) => (
+                  <div key={idx} className="flex items-center gap-1 px-2.5 py-1 bg-secondary text-xs rounded-full whitespace-nowrap">
+                    {summary}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="text-sm text-muted-foreground whitespace-nowrap" aria-live="polite">
+              {resultsCount}
             </div>
           </div>
         </div>
@@ -396,179 +429,109 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
     );
   }
 
-  // Desktop view
+  // Desktop view - compact pills
   return (
-    <div className="bg-background border-b border-border">
-      <div className={`container mx-auto px-4 transition-all ${isDesktopExpanded ? 'py-3' : 'py-0'}`}>
-        <div className="flex items-center justify-between mb-2">
+    <div className="bg-card border-b border-border">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center gap-3">
+          {/* Filter pills */}
+          <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+            <DrawerTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+                aria-label="Area filter"
+              >
+                Area: <strong className="ml-1">{localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Any'}</strong>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="max-h-[90vh]">
+              <DrawerHeader>
+                <DrawerTitle>Filters</DrawerTitle>
+              </DrawerHeader>
+              <div className="px-4 pb-6 overflow-y-auto">
+                <FilterControls />
+              </div>
+              <DrawerFooter className="flex flex-row gap-2">
+                <Button
+                  variant="outline"
+                  onClick={handleReset}
+                  className="flex-1"
+                >
+                  Reset All
+                </Button>
+                <Button
+                  variant="default"
+                  onClick={handleApply}
+                  className="flex-1"
+                >
+                  Apply
+                </Button>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+
           <button
             onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
-            className="flex items-center gap-2 hover:text-primary transition-colors"
-            aria-expanded={isDesktopExpanded}
-            aria-label={isDesktopExpanded ? "Collapse filters" : "Expand filters"}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-input hover:bg-card-hover transition-smooth"
           >
-            <SlidersHorizontal className="h-4 w-4" />
-            <span className="text-sm font-medium">Property Search Filters</span>
-            {isDesktopExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            Price: <strong>{(localFilters.priceFrom || localFilters.priceTo) 
+              ? `${priceSteps.find(s => s.value === localFilters.priceFrom)?.label || 'Any'} - ${priceSteps.find(s => s.value === localFilters.priceTo)?.label || 'Any'}`
+              : 'Any'}</strong>
           </button>
-          <div className="text-sm text-muted-foreground">
-            {resultsCount} {resultsCount === 1 ? 'property' : 'properties'}
+
+          <button
+            onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-input hover:bg-card-hover transition-smooth"
+          >
+            Beds: <strong>{(localFilters.bedroomsMin || localFilters.bedroomsMax)
+              ? `${bedroomOptions.find(b => b.value === localFilters.bedroomsMin)?.label || 'Any'} - ${bedroomOptions.find(b => b.value === localFilters.bedroomsMax)?.label || 'Any'}`
+              : 'Any'}</strong>
+          </button>
+
+          <button
+            onClick={() => setIsDesktopExpanded(!isDesktopExpanded)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full border border-input hover:bg-card-hover transition-smooth"
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+            More
+          </button>
+
+          <div className="flex-1" />
+
+          {hasActiveFilters && (
+            <button
+              onClick={handleReset}
+              className="px-3 py-1.5 text-sm rounded-full border border-dashed border-input hover:bg-card-hover transition-smooth text-muted-foreground"
+            >
+              Clear all
+            </button>
+          )}
+
+          <div className="text-sm font-medium text-muted-foreground" aria-live="polite">
+            {resultsCount} results
           </div>
         </div>
 
-        <div className={`${isDesktopExpanded ? 'block animate-accordion-down' : 'hidden'} space-y-2`}>
-          <div className="grid grid-cols-4 gap-3">
-            {/* Price From/To */}
-            <div>
-              <Label className="text-xs font-medium mb-1 block">Price From</Label>
-              <Select value={localFilters.priceFrom || undefined} onValueChange={value => updateLocalFilter('priceFrom', value)}>
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="No min" />
-                </SelectTrigger>
-                <SelectContent>
-                  {priceSteps.map(step => (
-                    <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-xs font-medium mb-1 block">Price To</Label>
-              <Select value={localFilters.priceTo || undefined} onValueChange={value => updateLocalFilter('priceTo', value)}>
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="No max" />
-                </SelectTrigger>
-                <SelectContent>
-                  {priceSteps.map(step => (
-                    <SelectItem key={step.value} value={step.value}>{step.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Tenure */}
-            <div>
-              <Label className="text-xs font-medium mb-1 block">Tenure</Label>
-              <Select value={localFilters.tenure} onValueChange={value => updateLocalFilter('tenure', value)}>
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="Any" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">Any</SelectItem>
-                  <SelectItem value="freehold">Freehold</SelectItem>
-                  <SelectItem value="leasehold">Leasehold</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Walk to Station */}
-            <div>
-              <Label className="text-xs font-medium mb-1 block">Walk to Station</Label>
-              <Select value={localFilters.walkToStation} onValueChange={value => updateLocalFilter('walkToStation', value)}>
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="Any" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">Any</SelectItem>
-                  <SelectItem value="5">≤ 5 min</SelectItem>
-                  <SelectItem value="10">≤ 10 min</SelectItem>
-                  <SelectItem value="15">≤ 15 min</SelectItem>
-                  <SelectItem value="20">≤ 20 min</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            {/* Bedrooms */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-xs font-medium mb-1 block">Min Bedrooms</Label>
-                <Select value={localFilters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder="No min" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bedroomOptions.map(opt => (
-                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-xs font-medium mb-1 block">Max Bedrooms</Label>
-                <Select value={localFilters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder="No max" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bedroomOptions.map(opt => (
-                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Zone and Amenities */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-xs font-medium mb-1 block">Zone</Label>
-                <Select 
-                  value={localFilters.zones.length > 0 ? localFilters.zones[0] : undefined} 
-                  onValueChange={value => updateLocalFilter('zones', value ? [value] : [])}
-                >
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder="Any" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">Zone 1</SelectItem>
-                    <SelectItem value="2">Zone 2</SelectItem>
-                    <SelectItem value="3">Zone 3</SelectItem>
-                    <SelectItem value="4">Zone 4</SelectItem>
-                    <SelectItem value="5">Zone 5</SelectItem>
-                    <SelectItem value="6">Zone 6</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-xs font-medium mb-1 block">Amenities</Label>
-                <div className="grid grid-cols-2 gap-1.5 h-[50px] overflow-y-auto pr-1 border border-border rounded-md p-2">
-                  {amenitiesList.map(amenity => (
-                    <div key={amenity} className="flex items-center space-x-1">
-                      <Checkbox
-                        id={`desktop-amenity-${amenity}`}
-                        checked={localFilters.amenities.includes(amenity)}
-                        onCheckedChange={() => toggleAmenity(amenity)}
-                        className="h-2 w-2 min-h-0 min-w-0"
-                      />
-                      <Label htmlFor={`desktop-amenity-${amenity}`} className="text-xs cursor-pointer">
-                        {amenity}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center justify-end gap-2 pt-1">
+        {/* Expanded filter panel */}
+        <div className={`${isDesktopExpanded ? 'block animate-accordion-down' : 'hidden'} mt-4 p-4 bg-secondary/30 rounded-lg`}>
+          <FilterControls />
+          
+          <div className="flex items-center justify-end gap-2 mt-4">
             <Button
               variant="outline"
               onClick={handleReset}
-              className="h-9"
-              aria-label="Reset all filters"
+              size="sm"
             >
               Reset All
             </Button>
             <Button
-              variant="premium"
+              variant="default"
               onClick={handleApply}
-              className="h-9"
-              aria-label="Apply filters"
+              size="sm"
             >
-              Apply
+              Apply Filters
             </Button>
           </div>
         </div>

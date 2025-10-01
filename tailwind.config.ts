@@ -83,6 +83,7 @@ export default {
         "medium": "var(--shadow-medium)",
         "strong": "var(--shadow-strong)",
         "premium": "var(--shadow-premium)",
+        "card-hover": "var(--shadow-card-hover)",
       },
       transitionProperty: {
         "smooth": "var(--transition-smooth)",
