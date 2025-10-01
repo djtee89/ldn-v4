@@ -220,11 +220,6 @@ const Index = () => {
           onBookViewing={() => {
             setIsBookingModalOpen(true);
           }}
-          onRequestInfo={() => {
-            // Handle request info - could open a separate modal
-            console.log('Request info for:', selectedDevelopment.name);
-          }}
-          nearbyAmenities={(selectedDevelopment as any).nearbyAmenities}
           isInShortlist={isInShortlist(selectedDevelopment.name)}
           onToggleShortlist={() => handleToggleShortlist(selectedDevelopment)}
           language={language}
