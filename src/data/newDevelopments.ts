@@ -713,11 +713,11 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "Residents' gym", "Communal gardens"],
     areaOverview: "Be part of London's next exciting chapter. Bermondsey Place puts you at the heart of a vibrant area that's rapidly transforming. The lifestyle is about discovery – exploring the independent breweries and food stalls of the famous Bermondsey Beer Mile, browsing the antique markets, or cycling to the creative hub of nearby Peckham. With London Bridge just one train stop away, you have incredible value and connectivity, getting in on the ground floor of an area with a bright future.",
     images: [
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/bermondsey-place/gallery/bermondsey-place_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/bermondsey-place/gallery/bermondsey-place_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/bermondsey-place/gallery/bermondsey-place_interior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/bermondsey-place/gallery/bermondsey-place_interior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/bermondsey-place/gallery/bermondsey-place_interior-3.ashx"
     ]
   },
   {
@@ -781,9 +781,9 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "'The Avery Club' includes a swimming pool", "Spa", "State-of-the-art gym", "Business lounge", "Private cinema"],
     areaOverview: "Positioned on the edge of everything that makes London great. West End Gate offers prime central living with unparalleled convenience. The lifestyle is effortlessly luxurious. You're a short stroll from the chic boutiques of Marylebone High Street, the world-class theatres of the West End, the tranquil canals of Little Venice, and the open spaces of Hyde Park. With four tube lines outside your front door, the whole city is your playground. This is for those who desire a sophisticated home with London's finest experiences within immediate reach.",
     images: [
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/west-end-gate/gallery/west-end-gate_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/west-end-gate/gallery/west-end-gate_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/west-end-gate/gallery/west-end-gate_interior-1.ashx"
     ]
   },
   {
@@ -813,9 +813,9 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "Residents' gym", "Lounge", "Co-working spaces", "On-site cafés", "Shops", "Community spaces"],
     areaOverview: "Discover a green neighbourhood in the heart of East London's creative buzz. Bow Green offers a tranquil escape that's perfectly connected to the capital's key hubs. Your lifestyle here is about balance: peaceful morning walks in the park, easy commutes to Canary Wharf or the City, and vibrant weekends exploring the nearby canals of Hackney Wick or the Olympic Park. You're surrounded by history and character, but with all the comforts of a modern, design-led home. It's the ideal spot for those who want green space without giving up the energy of East London.",
     images: [
-      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/bow-green/gallery/bow-green_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/bow-green/gallery/bow-green_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/bow-green/gallery/bow-green_interior-1.ashx"
     ]
   },
   {
@@ -842,9 +842,9 @@ export const developments: Development[] = [
     amenities: ["Boutique hotel", "Gym", "Residents' facilities", "Shops", "Cafés", "Restaurants", "New microbrewery"],
     areaOverview: "Be part of the rebirth of a London icon. Wandsworth Mills is set to become one of Southwest London's most exciting new destinations. The lifestyle will be a vibrant mix of heritage and modern living, centred around a new public square filled with artisan food, craft beer from the on-site microbrewery, and boutique shops. You're moments from the charming pubs of Old York Road, the greenery of Wandsworth Park, and the bustling Southside shopping centre. It's a community for those who appreciate history, character, and a lively local scene.",
     images: [
-      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/wandsworth-mills/gallery/wandsworth-mills_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/wandsworth-mills/gallery/wandsworth-mills_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/wandsworth-mills/gallery/wandsworth-mills_interior-1.ashx"
     ]
   },
   {
@@ -874,9 +874,9 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "Luxury gym", "Swimming pool", "Spa facilities", "On-site Sainsbury's Local", "Cafés", "Community centre", "West Reservoir watersports facility"],
     areaOverview: "This is London's hidden nature reserve. Woodberry Down offers a lifestyle that feels a world away from the hustle of the city, yet you're only a short tube ride from the centre. Life here is lived by the water; morning coffees overlooking the reservoir, weekend afternoons spent sailing or kayaking, and evening strolls watching the birds. You're surrounded by an incredible sense of peace and openness. With the cool bars and restaurants of Stoke Newington and Finsbury Park nearby, it's a perfect home for those who want a city life with nature at its very core.",
     images: [
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/woodberry-down/gallery/woodberry-down_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/woodberry-down/gallery/woodberry-down_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/woodberry-down/gallery/woodberry-down_interior-1.ashx"
     ]
   },
   {
@@ -906,9 +906,9 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "Gym", "Swimming pool", "Private cinema", "Business/residents' lounge", "New secondary school", "Community hub", "Shops", "Cafés", "Large supermarket"],
     areaOverview: "Live at the centre of your own universe. TwelveTrees Park is all about connection. It's built for a fast-paced London lifestyle, where you can get anywhere you need to be, effortlessly. From a quick hop to Canary Wharf for work, to a shopping spree at Westfield Stratford, or a night out in the West End, it's all just minutes away. But it's not just a transport hub; a huge new park and on-site amenities mean you can just as easily stay local and enjoy a relaxed weekend. It's the perfect launchpad for anyone who wants to experience everything London has to offer.",
     images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/twelvetrees-park/gallery/twelvetrees-park_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/twelvetrees-park/gallery/twelvetrees-park_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/twelvetrees-park/gallery/twelvetrees-park_interior-1.ashx"
     ]
   },
   {
@@ -1008,9 +1008,9 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "'The Silk Club' includes a gym", "Swimming pool", "Spa facilities", "Screening room", "Virtual golf suite"],
     areaOverview: "Find your green sanctuary in North London. Silkstream offers a peaceful retreat with the city still within easy reach. The lifestyle is one of relaxation and convenience. Enjoy tranquil walks along the river, explore the vast open space of the nearby reservoir, or simply unwind in the residents' spa. When you need the excitement of the city, the Northern Line and fast rail links are minutes away. With the huge transformation of Brent Cross happening nearby, you're investing in an area with a very bright future. It's the perfect home for balancing a busy work life with a need for nature.",
     images: [
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/silkstream/gallery/silkstream_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/silkstream/gallery/silkstream_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/silkstream/gallery/silkstream_interior-1.ashx"
     ]
   },
   {
@@ -1040,9 +1040,9 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "Residents' gym", "Lounge", "Co-working spaces", "Space for new on-site shops and cafés"],
     areaOverview: "Be part of Southeast London's exciting transformation. Lombard Square offers modern, connected living in an area that's on the rise. Thanks to the Elizabeth Line, this part of London has never been better connected, making it a smart choice for professionals and investors. The lifestyle is about enjoying great value without compromising on quality or commute time. Explore the historic Royal Arsenal in Woolwich, with its new restaurants and cultural venues, or enjoy the peaceful, green expanse of Plumstead Common. It's a chance to get into a thriving, well-connected community.",
     images: [
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/lombard-square/gallery/lombard-square_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/lombard-square/gallery/lombard-square_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/lombard-square/gallery/lombard-square_interior-1.ashx"
     ]
   },
   {
@@ -1069,9 +1069,9 @@ export const developments: Development[] = [
     amenities: ["'The Spa' with a large swimming pool", "State-of-the-art gym", "Sauna and steam room", "Numerous shops", "Restaurants", "Cafés", "Tesco Express", "Medical centre", "Dental surgery", "Nursery"],
     areaOverview: "Welcome to the complete modern village. Beaufort Park is more than just a place to live; it's a fully-formed community where everything you need is right on your doorstep. The lifestyle is one of ultimate convenience. Start your day at the residents' gym, grab a coffee from the on-site café, and do your shopping without ever leaving the development. With its tree-lined streets, friendly atmosphere, and direct line into central London, it offers a relaxed, safe, and social environment. It's the perfect choice for those who want the buzz of a community and the ease of having it all in one place.",
     images: [
-      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/beaufort-park/gallery/beaufort-park_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/beaufort-park/gallery/beaufort-park_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/beaufort-park/gallery/beaufort-park_interior-1.ashx"
     ]
   },
   {
@@ -1101,9 +1101,9 @@ export const developments: Development[] = [
     amenities: ["The Lawn Club provides residents with an open-air swimming pool", "State-of-the-art gym", "Tennis courts", "Shuttle bus service", "Restored Mansion House with exclusive apartments and further facilities"],
     areaOverview: "Live in London's country estate. Trent Park offers a lifestyle that is simply not found anywhere else in the capital. This is for those who dream of country living – the vast open spaces, the peace and quiet, the connection to nature – but don't want to leave London. Your daily life is set against a backdrop of ancient woodland and historic architecture. Weekends are for long walks in the park, a game of tennis, or a swim in the outdoor pool. It's an escape, a sanctuary, and a truly unique place to call home, all while remaining on the Tube map.",
     images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/trent-park/gallery/trent-park_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/trent-park/gallery/trent-park_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/trent-park/gallery/trent-park_interior-1.ashx"
     ]
   },
   {
@@ -1134,9 +1134,9 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "'The Riverside Club' includes a large swimming pool with panoramic river views", "Spa", "Gym", "Residents' lounge", "Private cinema", "New riverside pub", "Cafés and shops"],
     areaOverview: "Discover East London's new riverside destination. Poplar Riverside is perfectly placed between the financial might of Canary Wharf and the creative energy of the Royal Docks. The lifestyle is about enjoying stunning river views and beautiful green spaces, without losing your connection to the city. Imagine morning runs along the new promenade, weekends exploring nearby Trinity Buoy Wharf, and evenings watching the lights of the O2 from the residents' pool. It's a bold vision for modern, green, riverside living.",
     images: [
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/heron-wharf/gallery/heron-wharf_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/heron-wharf/gallery/heron-wharf_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/heron-wharf/gallery/heron-wharf_interior-1.ashx"
     ]
   },
   {
@@ -1163,9 +1163,9 @@ export const developments: Development[] = [
     amenities: ["24hr concierge", "Wellness centre", "Cinema", "Squash court", "Rooftop bar"],
     areaOverview: "A landmark development on Regent's Canal, moments from Broadway Market and London Fields.",
     images: [
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/regents-view/gallery/regents-view_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/regents-view/gallery/regents-view_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/regents-view/gallery/regents-view_interior-1.ashx"
     ]
   },
   {
@@ -1192,9 +1192,9 @@ export const developments: Development[] = [
     amenities: ["Extensive wellness spa with pool, hydrotherapy, sauna, ice plunge"],
     areaOverview: "Westminster's tallest residential tower, offering sky-high luxury living and panoramic views.",
     images: [
-      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/trillium/gallery/trillium_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/trillium/gallery/trillium_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/trillium/gallery/trillium_interior-1.ashx"
     ]
   },
   {
@@ -1252,9 +1252,9 @@ export const developments: Development[] = [
     amenities: ["24hr concierge", "Underground parking", "Access to hotel spa"],
     areaOverview: "Boutique apartments offering tranquil parkside living directly opposite Battersea Park.",
     images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/parkside-collection/gallery/parkside-collection_exterior-1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/parkside-collection/gallery/parkside-collection_exterior-2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/parkside-collection/gallery/parkside-collection_interior-1.ashx"
     ]
   },
   {
