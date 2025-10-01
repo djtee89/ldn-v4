@@ -1346,6 +1346,367 @@ export const developments: Development[] = [
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop",
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop"
     ]
+  },
+  {
+    id: "holland-park-gate",
+    name: "Holland Park Gate",
+    developer: "Lodha Group",
+    zone: 1,
+    location: "High Street Kensington",
+    postcode: "W8 6NB",
+    nearestTube: {
+      station: "High Street Kensington",
+      line: "Circle, District",
+      walkTime: 3
+    },
+    coordinates: { lat: 51.4990, lng: -0.1938 },
+    prices: {
+      twoBed: "£2,755,000+",
+      threeBed: "£3,500,000+",
+      fourBed: "£5,000,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Fox Primary School (Outstanding)", "Holland Park School (Outstanding)"],
+    hospital: "Chelsea and Westminster Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "Directly opposite Holland Park",
+    amenities: ["24-hour concierge", "Private residents' lounge", "Gym", "Cinema", "Wine cellar", "Spa treatment rooms"],
+    areaOverview: "Holland Park Gate combines luxury and style with elegant buildings located directly opposite the beautiful Holland Park. Experience London living at its finest in this prestigious Kensington location with world-class amenities and transport links.",
+    images: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "cundy-street-quarter",
+    name: "Cundy Street Quarter",
+    developer: "Grosvenor",
+    zone: 1,
+    location: "Sloane Square",
+    postcode: "SW1W 8EE",
+    nearestTube: {
+      station: "Sloane Square",
+      line: "Circle, District",
+      walkTime: 5
+    },
+    coordinates: { lat: 51.4925, lng: -0.1563 },
+    prices: {
+      oneBed: "£4,950,000+",
+      twoBed: "£6,500,000+",
+      threeBed: "£8,000,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Eaton House The Manor (Outstanding)", "Sussex House School"],
+    hospital: "Royal Brompton Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "Near Sloane Square Gardens",
+    amenities: ["Concierge", "Landscaped gardens", "Low carbon design", "Affordable housing included"],
+    areaOverview: "The Cundy Street Quarter will transform a closed off site into a handsome, low carbon neighbourhood. This development features modern design with public amenities and improved affordable housing, creating a vibrant community in the heart of Belgravia.",
+    images: [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "chelsea-barracks",
+    name: "Chelsea Barracks",
+    developer: "Qatari Diar",
+    zone: 1,
+    location: "Sloane Square",
+    postcode: "SW1W 8BQ",
+    nearestTube: {
+      station: "Sloane Square",
+      line: "Circle, District",
+      walkTime: 8
+    },
+    coordinates: { lat: 51.4902, lng: -0.1538 },
+    prices: {
+      oneBed: "£3,300,000+",
+      twoBed: "£5,000,000+",
+      threeBed: "£8,500,000+",
+      fourBed: "£15,000,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Eaton House The Manor (Outstanding)", "Hill House School"],
+    hospital: "Royal Hospital Chelsea",
+    transportScore: "Excellent",
+    greenSpaces: "Extensive private gardens and squares",
+    amenities: ["24-hour concierge", "Gym", "Swimming pool", "Cinema", "Private gardens", "Residents' club"],
+    areaOverview: "Chelsea Barracks is the definition of luxury living - a modern age estate centered in the heart of London's most prestigious neighbourhood. This development offers unparalleled luxury with world-class amenities and stunning architecture by renowned designers.",
+    images: [
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "wardian-canary-wharf",
+    name: "Wardian",
+    developer: "Ballymore",
+    zone: 2,
+    location: "Canary Wharf",
+    postcode: "E14 9QD",
+    nearestTube: {
+      station: "Canary Wharf",
+      line: "Jubilee, DLR",
+      walkTime: 5
+    },
+    coordinates: { lat: 51.5033, lng: -0.0194 },
+    prices: {
+      oneBed: "£788,750+",
+      twoBed: "£1,200,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Canary Wharf College", "Bygrove Primary School (Good)"],
+    hospital: "The Royal London Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "Sky gardens on every floor, Jubilee Park nearby",
+    amenities: ["Sky gardens", "Observatory lounge", "Gym", "Cinema", "Spa", "24-hour concierge", "Business lounge"],
+    areaOverview: "Designed by Glenn Howells architects, Wardian comprises two residential towers of 55 and 50-storeys containing 766 homes. Each apartment features its own private botanical sky garden, bringing nature into every home with panoramic views across London.",
+    images: [
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "1a-st-johns-wood-park",
+    name: "1A St John's Wood Park",
+    developer: "Almax Group",
+    zone: 2,
+    location: "Swiss Cottage",
+    postcode: "NW8 7SP",
+    nearestTube: {
+      station: "Swiss Cottage",
+      line: "Jubilee",
+      walkTime: 8
+    },
+    coordinates: { lat: 51.5438, lng: -0.1743 },
+    prices: {
+      twoBed: "£2,200,000+",
+      threeBed: "£3,500,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["St Christina's School (Good)", "Arnold House School"],
+    hospital: "Royal Free Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "Adjacent to Regent's Park and Primrose Hill",
+    amenities: ["Private gardens", "Underground parking", "Concierge", "Show apartments available"],
+    areaOverview: "Five fully furnished and dressed apartments designed by international award-winning architects Maccreanor Lavington. This exclusive development offers luxury living in one of London's most desirable postcodes, moments from Regent's Park.",
+    images: [
+      "https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "bermondsey-heights-barratt",
+    name: "Bermondsey Heights",
+    developer: "Barratt London",
+    zone: 2,
+    location: "South Bermondsey",
+    postcode: "SE16 5TS",
+    nearestTube: {
+      station: "South Bermondsey",
+      line: "Overground",
+      walkTime: 5
+    },
+    coordinates: { lat: 51.4837, lng: -0.0525 },
+    prices: {
+      oneBed: "£445,000+",
+      twoBed: "£595,000+",
+      threeBed: "£750,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["St James' C of E Primary (Good)", "Bermondsey Village"],
+    hospital: "Guy's Hospital",
+    transportScore: "Good",
+    greenSpaces: "Southwark Park nearby",
+    amenities: ["Communal gardens", "Cycle storage", "Private balconies", "Modern finishes"],
+    areaOverview: "Experience the thriving spirit of Bermondsey Heights, a superb collection of 163 newly built one, two and three-bedroom apartments in Zone 2, southeastern London. With only a five-minute walk to South Bermondsey station, this development offers excellent value and connectivity.",
+    images: [
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "park-modern-queensway",
+    name: "Park Modern",
+    developer: "Fenton Whelan",
+    zone: 1,
+    location: "Queensway",
+    postcode: "W2 4QH",
+    nearestTube: {
+      station: "Queensway",
+      line: "Central",
+      walkTime: 3
+    },
+    coordinates: { lat: 51.5110, lng: -0.1876 },
+    prices: {
+      oneBed: "£1,500,000+",
+      twoBed: "£2,800,000+",
+      threeBed: "£4,500,000+",
+      fourBed: "£8,000,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Gateway Primary School (Outstanding)", "St Stephen's C of E Primary"],
+    hospital: "St Mary's Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "Overlooking Hyde Park",
+    amenities: ["24-hour concierge", "Gym", "Cinema", "Spa", "Wine store", "Private dining room", "Hyde Park views"],
+    areaOverview: "So spectacular is the view at Park Modern that it sells itself - overlooking Hyde Park with floor-to-ceiling windows. This prestigious development offers unmatched luxury in one of London's most iconic locations, with world-class amenities and finishes.",
+    images: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "owo-residences-raffles",
+    name: "The OWO Residences",
+    developer: "Hinduja Group",
+    zone: 1,
+    location: "Embankment",
+    postcode: "SW1A 2EU",
+    nearestTube: {
+      station: "Embankment",
+      line: "Circle, District, Northern, Bakerloo",
+      walkTime: 2
+    },
+    coordinates: { lat: 51.5043, lng: -0.1234 },
+    prices: {
+      oneBed: "£4,000,000+",
+      twoBed: "£7,000,000+",
+      threeBed: "£12,000,000+",
+      fourBed: "£20,000,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Westminster Cathedral Choir School", "Westminster Under School"],
+    hospital: "St Thomas' Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "Adjacent to Horse Guards Parade and St James's Park",
+    amenities: ["Raffles hotel services", "Spa", "Swimming pool", "Cinema", "Wine cellar", "24-hour concierge", "Private dining"],
+    areaOverview: "The OWO Residences by Raffles offers the pinnacle of luxury living in the historic Old War Office building. With full Raffles hotel services, these residences combine heritage architecture with modern luxury in the heart of Whitehall.",
+    images: [
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "battersea-power-station-residential",
+    name: "Battersea Power Station",
+    developer: "Battersea Power Station Development Company",
+    zone: 1,
+    location: "Battersea Power Station",
+    postcode: "SW8 5BN",
+    nearestTube: {
+      station: "Battersea Power Station",
+      line: "Northern",
+      walkTime: 1
+    },
+    coordinates: { lat: 51.4817, lng: -0.1450 },
+    prices: {
+      studio: "£645,000+",
+      twoBed: "£1,200,000+",
+      threeBed: "£2,000,000+",
+      fourBed: "£3,500,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Eaton House Belgravia", "Thomas's Battersea"],
+    hospital: "St George's Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "Riverside park and gardens",
+    amenities: ["24-hour concierge", "Gym", "Cinema", "Rooftop gardens", "Riverside walks", "Shopping arcade", "Restaurants"],
+    areaOverview: "Located at the heart of one of Central London's most dynamic regeneration zones, Battersea Power Station features ready-to-move-in apartments within the iconic Grade II* listed building. With its own Northern Line station and vibrant riverside community, this is urban living at its finest.",
+    images: [
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "queen-annes-gate-maple",
+    name: "Queen Anne's Gate",
+    developer: "Maple Springfield",
+    zone: 1,
+    location: "St. James's Park",
+    postcode: "SW1H 9AA",
+    nearestTube: {
+      station: "St. James's Park",
+      line: "Circle, District",
+      walkTime: 3
+    },
+    coordinates: { lat: 51.4992, lng: -0.1340 },
+    prices: {
+      oneBed: "£2,000,000+",
+      twoBed: "£3,500,000+",
+      threeBed: "£5,500,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Westminster Cathedral Choir School", "The Grey Coat Hospital"],
+    hospital: "St Thomas' Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "St. James's Park adjacent",
+    amenities: ["Concierge", "Private entrance", "High-end finishes", "Historic building"],
+    areaOverview: "A spectacular collection of apartments within the exquisite New One Queen Anne's Gate Development featuring immaculate interiors. This prestigious Westminster address offers unparalleled access to London's political and cultural heart, with St. James's Park on your doorstep.",
+    images: [
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "brigade-court-borough",
+    name: "Brigade Court",
+    developer: "Hadston",
+    zone: 1,
+    location: "Borough",
+    postcode: "SE1 1GY",
+    nearestTube: {
+      station: "Borough",
+      line: "Northern",
+      walkTime: 3
+    },
+    coordinates: { lat: 51.5005, lng: -0.0943 },
+    prices: {
+      studio: "£665,000+",
+      oneBed: "£850,000+",
+      twoBed: "£1,200,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["Cathedral School", "Charles Dickens Primary (Outstanding)"],
+    hospital: "Guy's Hospital",
+    transportScore: "Excellent",
+    greenSpaces: "Near Borough Market and riverside walks",
+    amenities: ["Concierge", "Communal gardens", "Heritage architecture", "Modern interiors"],
+    areaOverview: "Brigade Court is a new residential community in the heart of Borough, SE1. Set in the former home of the London Fire Brigade, it connects past, present and future through a mix of heritage architecture and contemporary design, moments from Borough Market and London Bridge.",
+    images: [
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop"
+    ]
+  },
+  {
+    id: "dockley-apartments-bermondsey",
+    name: "Dockley Apartments",
+    developer: "Matching Green",
+    zone: 2,
+    location: "Bermondsey",
+    postcode: "SE16 3SF",
+    nearestTube: {
+      station: "Bermondsey",
+      line: "Jubilee",
+      walkTime: 8
+    },
+    coordinates: { lat: 51.4948, lng: -0.0638 },
+    prices: {
+      oneBed: "£495,000+",
+      twoBed: "£695,000+"
+    },
+    tenure: "Leasehold",
+    schools: ["St Joseph's Catholic Primary (Good)", "Tower Bridge Primary"],
+    hospital: "Guy's Hospital",
+    transportScore: "Good",
+    greenSpaces: "Thames riverside walks nearby",
+    amenities: ["Communal terrace", "Cycle storage", "Secure entry", "Modern kitchens"],
+    areaOverview: "Bermondsey is perfectly positioned just south of the River Thames to offer access to some of London's iconic landmarks. Dockley Apartments provides contemporary living in this vibrant neighbourhood, with excellent transport links and a thriving food and culture scene.",
+    images: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop"
+    ]
   }
 ];
 
