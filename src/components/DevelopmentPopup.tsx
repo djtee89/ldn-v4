@@ -100,20 +100,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
                 <Badge variant="secondary" className="mt-1">{development.developer}</Badge>
               </div>
-              {development.developer === 'Berkeley Homes' && (
-                <img 
-                  src="/logos/berkeley.jpg" 
-                  alt="Berkeley Homes" 
-                  className="h-16 w-auto object-contain rounded-lg shadow-sm"
-                />
-              )}
-              {development.developer === 'Barratt Homes' && (
-                <img 
-                  src="/logos/barratt.jpg" 
-                  alt="Barratt Homes" 
-                  className="h-16 w-auto object-contain rounded-lg shadow-sm"
-                />
-              )}
+              {development.developer === 'Berkeley Homes' && <img src="/logos/berkeley.jpg" alt="Berkeley Homes" className="h-16 w-auto object-contain rounded-lg shadow-sm" />}
+              {development.developer === 'Barratt Homes' && <img src="/logos/barratt.jpg" alt="Barratt Homes" className="h-16 w-auto object-contain rounded-lg shadow-sm" />}
             </div>
             <div className="flex items-center gap-2">
               <TooltipProvider>
@@ -195,14 +183,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
               {/* CTA Row */}
               <div className="flex flex-wrap gap-3">
-                <Button variant="default" size="lg" onClick={onBookViewing} className="flex-1 min-w-[200px]">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Book a viewing
-                </Button>
-                <Button variant="outline" size="lg" className="flex-1 min-w-[200px]">
-                  <Download className="mr-2 h-4 w-4" />
-                  Download brochure
-                </Button>
+                
+                
               </div>
 
               {/* Location */}
