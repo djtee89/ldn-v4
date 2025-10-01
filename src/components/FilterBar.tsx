@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -484,8 +485,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
           </div>
         </div>
 
-        {/* Overlay filter panel */}
-        {isDesktopExpanded && (
+        {/* Overlay filter panel - using portal to render at root level */}
+        {isDesktopExpanded && createPortal(
           <>
             {/* Backdrop */}
             <div 
@@ -493,7 +494,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               onClick={() => setIsDesktopExpanded(false)}
             />
             
-            {/* Filter dropdown - fixed to break out of stacking context */}
+            {/* Filter dropdown */}
             <div className="fixed top-32 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-4xl px-4 animate-scale-in">
               <div className="bg-card border border-border rounded-2xl shadow-lg p-6">
                 <FilterControls />
@@ -519,7 +520,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 </div>
               </div>
             </div>
-          </>
+          </>,
+          document.body
         )}
       </div>
     </div>
