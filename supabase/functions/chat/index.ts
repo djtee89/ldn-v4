@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -24,7 +25,7 @@ Your expertise includes:
 Key Guidelines:
 - Be friendly, concise, and helpful
 - Always ask clarifying questions to understand user needs
-- Suggest booking viewings when appropriate
+- When a user wants to book a viewing or provides contact details, use the create_booking tool to capture their information
 - Provide specific area recommendations based on user requirements
 - Explain London zones and transport if users are unfamiliar
 
@@ -36,6 +37,48 @@ Available developments data:
 - Different amenities like gyms, concierge, terraces
 
 Keep responses conversational and engaging. Use emojis occasionally but professionally.`;
+
+    const tools = [{
+      type: "function",
+      function: {
+        name: "create_booking",
+        description: "Create a booking request when a user wants to schedule a viewing or provides their contact information",
+        parameters: {
+          type: "object",
+          properties: {
+            name: { 
+              type: "string",
+              description: "User's full name"
+            },
+            email: { 
+              type: "string",
+              description: "User's email address"
+            },
+            phone: { 
+              type: "string",
+              description: "User's phone number"
+            },
+            development_name: {
+              type: "string",
+              description: "Name of the property/development they're interested in (optional)"
+            },
+            preferred_date: {
+              type: "string",
+              description: "Preferred date for viewing (optional)"
+            },
+            preferred_time: {
+              type: "string",
+              description: "Preferred time for viewing (optional)"
+            },
+            message: {
+              type: "string",
+              description: "Any additional message or requirements from the user (optional)"
+            }
+          },
+          required: ["name", "email", "phone"]
+        }
+      }
+    }];
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -49,6 +92,7 @@ Keep responses conversational and engaging. Use emojis occasionally but professi
           { role: "system", content: systemPrompt },
           ...messages,
         ],
+        tools,
         stream: true,
       }),
     });
@@ -74,7 +118,93 @@ Keep responses conversational and engaging. Use emojis occasionally but professi
       });
     }
 
-    return new Response(response.body, {
+    // Stream response and check for tool calls
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+    const encoder = new TextEncoder();
+    
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          let buffer = "";
+          
+          while (true) {
+            const { done, value } = await reader!.read();
+            if (done) break;
+            
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || "";
+            
+            for (const line of lines) {
+              if (!line.trim() || line.startsWith(':')) continue;
+              if (!line.startsWith('data: ')) continue;
+              
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+              
+              try {
+                const parsed = JSON.parse(data);
+                
+                // Check for tool calls
+                const toolCalls = parsed.choices?.[0]?.delta?.tool_calls;
+                if (toolCalls) {
+                  for (const toolCall of toolCalls) {
+                    if (toolCall.function?.name === 'create_booking' && toolCall.function?.arguments) {
+                      try {
+                        const args = JSON.parse(toolCall.function.arguments);
+                        
+                        // Create Supabase client
+                        const supabase = createClient(
+                          Deno.env.get('SUPABASE_URL') ?? '',
+                          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+                        );
+                        
+                        // Save booking to database
+                        const { error: dbError } = await supabase
+                          .from('bookings')
+                          .insert({
+                            name: args.name,
+                            email: args.email,
+                            phone: args.phone,
+                            development_name: args.development_name,
+                            preferred_date: args.preferred_date,
+                            preferred_time: args.preferred_time,
+                            message: args.message,
+                            source: 'ai_chat',
+                            status: 'pending'
+                          });
+                        
+                        if (dbError) {
+                          console.error('Failed to save booking:', dbError);
+                        } else {
+                          console.log('Booking saved successfully:', args);
+                        }
+                      } catch (parseError) {
+                        console.error('Failed to parse tool arguments:', parseError);
+                      }
+                    }
+                  }
+                }
+                
+                // Forward the data to client
+                controller.enqueue(encoder.encode(line + '\n'));
+              } catch (parseError) {
+                // Forward unparseable lines as-is
+                controller.enqueue(encoder.encode(line + '\n'));
+              }
+            }
+          }
+          
+          controller.close();
+        } catch (e) {
+          console.error('Stream processing error:', e);
+          controller.error(e);
+        }
+      }
+    });
+
+    return new Response(stream, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (e) {
