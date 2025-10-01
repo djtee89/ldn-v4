@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -18,6 +19,7 @@ const LiveChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const suggestions = [
     "Show me 2-bed properties in Zone 1",
@@ -88,6 +90,30 @@ const LiveChat = () => {
                 updated[updated.length - 1] = { role: 'assistant', content: assistantMessage };
                 return updated;
               });
+            }
+            
+            // Check for navigation tool calls
+            const toolCalls = parsed.choices?.[0]?.delta?.tool_calls;
+            if (toolCalls) {
+              for (const toolCall of toolCalls) {
+                if (toolCall.function?.name === 'navigate_to_page' && toolCall.function?.arguments) {
+                  try {
+                    const args = JSON.parse(toolCall.function.arguments);
+                    if (args.page === 'contact') {
+                      setTimeout(() => {
+                        setIsOpen(false);
+                        navigate('/contact-options');
+                        toast({
+                          title: "Redirecting to Contact Page",
+                          description: args.reason || "I'll take you to our contact page where you can reach us directly.",
+                        });
+                      }, 1000);
+                    }
+                  } catch (parseError) {
+                    console.error('Failed to parse navigation arguments:', parseError);
+                  }
+                }
+              }
             }
           } catch {
             textBuffer = line + '\n' + textBuffer;

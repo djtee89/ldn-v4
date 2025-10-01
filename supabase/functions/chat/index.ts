@@ -26,6 +26,7 @@ Key Guidelines:
 - Be friendly, concise, and helpful
 - Always ask clarifying questions to understand user needs
 - When a user wants to book a viewing or provides contact details, use the create_booking tool to capture their information
+- When a user asks to contact you, speak to an agent, get more help, or wants direct human communication, use the navigate_to_page tool to direct them to the contact page where they can email, call, or message via WeChat/WhatsApp
 - Provide specific area recommendations based on user requirements
 - Explain London zones and transport if users are unfamiliar
 
@@ -76,6 +77,27 @@ Keep responses conversational and engaging. Use emojis occasionally but professi
             }
           },
           required: ["name", "email", "phone"]
+        }
+      }
+    }, {
+      type: "function",
+      function: {
+        name: "navigate_to_page",
+        description: "Direct the user to a specific page when they request to contact someone, speak to an agent, or need direct human communication",
+        parameters: {
+          type: "object",
+          properties: {
+            page: {
+              type: "string",
+              enum: ["contact"],
+              description: "The page to navigate to"
+            },
+            reason: {
+              type: "string",
+              description: "Brief explanation of why they're being directed to this page"
+            }
+          },
+          required: ["page", "reason"]
         }
       }
     }];
@@ -183,6 +205,8 @@ Keep responses conversational and engaging. Use emojis occasionally but professi
                       } catch (parseError) {
                         console.error('Failed to parse tool arguments:', parseError);
                       }
+                    } else if (toolCall.function?.name === 'navigate_to_page') {
+                      console.log('Navigation tool called:', toolCall.function?.arguments);
                     }
                   }
                 }
