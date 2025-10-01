@@ -52,7 +52,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
               </span>
             )}
           </h3>
-          <p className="text-xs text-muted-foreground mt-0.5">Discover London's finest amenities</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Schools, transport, dining, lifestyle—your London, simplified</p>
         </div>
         <div className="shrink-0">
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
