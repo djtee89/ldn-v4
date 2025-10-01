@@ -408,7 +408,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             aria-label={isDesktopExpanded ? "Collapse filters" : "Expand filters"}
           >
             <SlidersHorizontal className="h-4 w-4" />
-            <span className="text-sm font-medium">Property Filters</span>
+            <span className="text-sm font-medium">Property Search Filters</span>
             {isDesktopExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
           <div className="text-sm text-muted-foreground">
