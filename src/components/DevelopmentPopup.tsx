@@ -95,9 +95,18 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
         {/* Header */}
         <div className="modal-header">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
-              <Badge variant="secondary" className="mt-1">{development.developer}</Badge>
+            <div className="flex items-center gap-3">
+              <div>
+                <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
+                <Badge variant="secondary" className="mt-1">{development.developer}</Badge>
+              </div>
+              {development.developer === 'Berkeley' && (
+                <img 
+                  src="/logos/berkeley.jpg" 
+                  alt="Berkeley Homes" 
+                  className="h-12 w-auto object-contain"
+                />
+              )}
             </div>
             <div className="flex items-center gap-2">
               <TooltipProvider>
