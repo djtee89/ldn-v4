@@ -195,14 +195,17 @@ const Index = () => {
         shortlistCount={shortlist.length}
       />
       <Hero 
-        filters={filters}
-        onFiltersChange={setFilters}
-        resultsCount={filteredDevelopments.length}
-      />
-      <DeveloperBanner 
         onDeveloperClick={handleDeveloperClick}
         highlightedDeveloper={highlightedDeveloper}
       />
+      
+      <div className="my-6 px-4">
+        <FilterBar 
+          filters={filters}
+          onFiltersChange={setFilters}
+          resultsCount={filteredDevelopments.length}
+        />
+      </div>
       
       <LifestyleFilterBar
         selectedTypes={lifestyleFilters}

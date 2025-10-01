@@ -1,13 +1,12 @@
 import React from 'react';
-import FilterBar, { FilterState } from '@/components/FilterBar';
+import DeveloperBanner from '@/components/DeveloperBanner';
 
 interface HeroProps {
-  filters: FilterState;
-  onFiltersChange: (filters: FilterState) => void;
-  resultsCount: number;
+  onDeveloperClick: (developer: string) => void;
+  highlightedDeveloper: string | null;
 }
 
-const Hero: React.FC<HeroProps> = ({ filters, onFiltersChange, resultsCount }) => {
+const Hero: React.FC<HeroProps> = ({ onDeveloperClick, highlightedDeveloper }) => {
 
   return (
     <section className="relative isolate">
@@ -39,12 +38,11 @@ const Hero: React.FC<HeroProps> = ({ filters, onFiltersChange, resultsCount }) =
             </p>
           </div>
 
-          {/* Filter panel */}
-          <div className="mt-6 max-w-4xl">
-            <FilterBar 
-              filters={filters}
-              onFiltersChange={onFiltersChange}
-              resultsCount={resultsCount}
+          {/* Developer Banner */}
+          <div className="mt-6">
+            <DeveloperBanner 
+              onDeveloperClick={onDeveloperClick}
+              highlightedDeveloper={highlightedDeveloper}
             />
           </div>
         </div>
