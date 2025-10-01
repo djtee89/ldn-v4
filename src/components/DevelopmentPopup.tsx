@@ -145,11 +145,11 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           <div className="sticky top-0 z-10 bg-background border-b px-4 sm:px-6 py-2">
             <TabsList className="w-full justify-start overflow-x-auto flex-nowrap">
               <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="availability">Availability</TabsTrigger>
               <TabsTrigger value="amenities">Amenities</TabsTrigger>
               <TabsTrigger value="transport">Transport</TabsTrigger>
               <TabsTrigger value="schools">Schools</TabsTrigger>
-              
               <TabsTrigger value="calculators">Calculators</TabsTrigger>
               <TabsTrigger value="faq">FAQ</TabsTrigger>
             </TabsList>
@@ -212,8 +212,10 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                     </Badge>}
                 </div>
               </div>
+            </TabsContent>
 
-              {/* Unique Value */}
+            {/* About Tab */}
+            <TabsContent value="about" className="space-y-6 mt-0">
               <div className="space-y-3">
                 <h4 className="font-semibold">About this development</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
