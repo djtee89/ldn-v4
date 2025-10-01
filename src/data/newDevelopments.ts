@@ -972,9 +972,11 @@ export const developments: Development[] = [
     amenities: ["24-hour concierge", "'The Union Club' includes a gym", "Swimming pool", "Sauna and steam room", "Treatment room", "Residents' lounge", "Community Hub", "Bowling alley", "Creative workspaces", "Nursery", "Canalside piazza with shops and cafés"],
     areaOverview: "Discover London's new creative waterside village. Grand Union is a destination in the making, transforming an underused area into a vibrant community hub. The lifestyle here is active and social, built around the canal. Spend weekends kayaking, cycling the towpaths, or meeting friends at the canalside cafés. With a bowling alley, creative studios, and extensive gardens on-site, there's a real sense of community. It's an opportunity to be part of a forward-thinking neighbourhood that blends industrial heritage with a modern, wellness-focused way of life.",
     images: [
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/grand-union/gallery/life-at-grand-union/grand-union---gallery-life-at-image-1_12062025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/grand-union/gallery/life-at-grand-union/grand-union---gallery-life-at-image-2_12062025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/grand-union/gallery/life-at-grand-union/grand-union---gallery-life-at-image-3_12062025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/grand-union/gallery/life-at-grand-union/grand-union---gallery-life-at-image-4_12062025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/grand-union/gallery/life-at-grand-union/grand-union---gallery-life-at-image-5_12062025.ashx"
     ]
   },
   {
