@@ -387,24 +387,28 @@ export const developments: Development[] = [
     name: "The Green Quarter",
     developer: "Berkeley Homes",
     zone: 4,
-    location: "Southall",
+    location: "Southall / Ealing",
     postcode: "UB1 1BL",
     nearestTube: {
       station: "Southall",
-      line: "Elizabeth Line",
-      walkTime: 9
+      line: "Elizabeth Line, National Rail",
+      walkTime: 5
     },
     coordinates: postcodeToCoords("UB1 1BL"),
     prices: {
-      range: "£540k - £850k"
+      studio: "From £387,500",
+      oneBed: "From £450,000",
+      twoBed: "From £585,000",
+      threeBed: "From £752,500",
+      range: "£387.5k - £752.5k+"
     },
-    tenure: "Leasehold",
-    schools: ["Villiers High (Outstanding)"],
+    tenure: "999-year leasehold",
+    schools: ["Three Bridges Primary School (Outstanding)", "Villiers High School (Outstanding)"],
     hospital: "Ealing Hospital",
-    transportScore: "Very Good",
-    greenSpaces: "13 acres of parkland & wetlands on-site",
-    amenities: ["Gym", "Co-working space", "Concierge", "Future swimming pool"],
-    areaOverview: "A pioneering project focused on creating one of the UK's most biodiverse developments.",
+    transportScore: "Excellent — The Elizabeth Line is a game-changer, offering rapid access to Central London (Bond Street in 17 mins, Canary Wharf in 31 mins) and Heathrow Airport (8 mins).",
+    greenSpaces: "The development is defined by its green space. It includes 13 acres of new parkland, wetlands, and open spaces, with two new parks and a pedestrianised piazza. Adjacent to the 90-acre Minet Country Park.",
+    amenities: ["24-hour concierge", "Fully-equipped gym", "Swimming pool", "Spa", "Co-working space", "Private cinema", "Residents' lounge", "New primary school", "Cafés and retail spaces"],
+    areaOverview: "This is where city living truly meets nature. The Green Quarter is one of London's most ambitious regeneration projects, transforming a former industrial area into a green oasis. Your lifestyle here revolves around wellness and the outdoors, with acres of parkland and canal towpaths on your doorstep for morning runs or evening strolls. Yet, you're not sacrificing city convenience; the Elizabeth Line means you can be in the heart of the West End in under 20 minutes. It's a vision of future London living: sustainable, connected, and surrounded by nature.",
     images: []
   },
   {
@@ -412,24 +416,27 @@ export const developments: Development[] = [
     name: "Kidbrooke Village",
     developer: "Berkeley Homes",
     zone: 3,
-    location: "Greenwich",
-    postcode: "SE3 9FW",
+    location: "Kidbrooke / Royal Borough of Greenwich",
+    postcode: "SE3 9ST",
     nearestTube: {
       station: "Kidbrooke",
-      line: "National Rail",
-      walkTime: 3
+      line: "Southeastern National Rail",
+      walkTime: 5
     },
-    coordinates: postcodeToCoords("SE3 9FW"),
+    coordinates: postcodeToCoords("SE3"),
     prices: {
-      range: "£350k - £1.15M"
+      oneBed: "From £495,000",
+      twoBed: "From £650,000",
+      threeBed: "From £872,500",
+      range: "£495k - £872.5k+"
     },
-    tenure: "Leasehold",
-    schools: ["Wingfield Primary (Good)"],
-    hospital: "Lewisham Hospital",
-    transportScore: "Good",
-    greenSpaces: "136 acres of parkland (Cator & Sutcliffe Parks)",
-    amenities: ["Pool", "Gym", "Cinema", "24hr concierge", "On-site shops & school"],
-    areaOverview: "An established, award-winning village with a strong community feel and abundant nature.",
+    tenure: "999-year leasehold",
+    schools: ["Wingfield Primary School (Good)", "Harris Academy Greenwich (Outstanding)"],
+    hospital: "Queen Elizabeth Hospital",
+    transportScore: "Very Good — Direct trains from the on-site station reach London Bridge in 17 minutes and Charing Cross in 25 minutes, providing easy access to the City and West End.",
+    greenSpaces: "Exceptional. The masterplan includes 136 acres of parks, wetlands, and open space. The award-winning Cator Park, with its wetlands and play areas, is at the heart of the community.",
+    amenities: ["24-hour concierge", "Gym", "Swimming pool", "Cinema", "Business lounge", "Residents' dining room", "Supermarket", "Shops", "Café", "Doctor's surgery", "Schools"],
+    areaOverview: "Welcome to a true London village. Kidbrooke Village is one of the capital's most acclaimed regeneration stories, creating a genuinely self-contained community. Life here is about balance – the peace and quiet of acres of parkland, combined with the convenience of an on-site station and shops. It's perfect for families and those seeking a calmer pace of life without sacrificing a London postcode. Weekends are for farmers' markets in the square, walks in the park, and knowing your neighbours.",
     images: []
   },
   {
@@ -437,24 +444,28 @@ export const developments: Development[] = [
     name: "White City Living",
     developer: "Berkeley Homes",
     zone: 2,
-    location: "White City",
+    location: "White City / Hammersmith & Fulham",
     postcode: "W12 7RQ",
     nearestTube: {
       station: "White City / Wood Lane",
-      line: "Central / Circle, H&C",
-      walkTime: 2
+      line: "Central / Circle, Hammersmith & City",
+      walkTime: 5
     },
-    coordinates: postcodeToCoords("W12 7RQ"),
+    coordinates: postcodeToCoords("W12"),
     prices: {
-      range: "£635k - £3.2M"
+      studio: "From £785,000",
+      oneBed: "From £810,000",
+      twoBed: "From £1,110,000",
+      threeBed: "From £2,000,000",
+      range: "£785k - £2M+"
     },
-    tenure: "Leasehold",
-    schools: ["Ark Burlington Danes (Outstanding)"],
+    tenure: "999-year leasehold",
+    schools: ["St Stephen's C of E Primary (Outstanding)", "The Cardinal Vaughan Memorial RC School (Outstanding)"],
     hospital: "Hammersmith Hospital",
-    transportScore: "Excellent",
-    greenSpaces: "8 acres of gardens including a 5-acre park",
-    amenities: ["Two cinemas", "Pool", "Hydro-pool", "Gym", "Business lounge", "24hr concierge"],
-    areaOverview: "A vibrant new district in West London's creative hub, next to Westfield and Imperial College.",
+    transportScore: "Exceptional — Direct access to two tube stations and three tube lines provides phenomenal connectivity across London. The West End is just 12 minutes away on the Central Line.",
+    greenSpaces: "Features 8 acres of landscaping, including a central water garden and connections to the adjacent 10-acre Hammersmith Park, which has Japanese gardens, a playground, and tennis courts.",
+    amenities: ["24-hour concierge", "Extensive spa and pool facilities", "State-of-the-art gym", "Cinemas", "Business lounge", "Club lounge", "Adjacent to Westfield London"],
+    areaOverview: "Live at the vibrant epicentre of West London's creative new hub. White City Living places you in the middle of everything. Your neighbours are the world-class shops and restaurants of Westfield, the groundbreaking ideas of Imperial College, and the creative energy of Television Centre. The lifestyle is pure convenience and luxury – from a morning workout in the residents' spa to an evening exploring the best retail on your doorstep. This is for those who want to be plugged into the dynamic, energetic pulse of modern London.",
     images: []
   },
   {
@@ -462,24 +473,27 @@ export const developments: Development[] = [
     name: "London Dock",
     developer: "Berkeley Homes",
     zone: 1,
-    location: "Wapping",
+    location: "Wapping / Tower Hamlets",
     postcode: "E1W 2AA",
     nearestTube: {
-      station: "Tower Hill / Wapping",
-      line: "Tube / Overground",
+      station: "Tower Hill / Tower Gateway / Wapping",
+      line: "District, Circle / DLR / Overground",
       walkTime: 12
     },
-    coordinates: postcodeToCoords("E1W 2AA"),
+    coordinates: postcodeToCoords("E1W"),
     prices: {
-      range: "£658k - £2.3M"
+      oneBed: "From £875,000",
+      twoBed: "From £1,370,000",
+      threeBed: "From £1,990,000",
+      range: "£875k - £3M+"
     },
-    tenure: "Leasehold",
-    schools: ["St Paul's Way Trust (Outstanding)"],
-    hospital: "The Royal London",
-    transportScore: "Excellent",
-    greenSpaces: "7.5 acres of gardens & squares",
-    amenities: ["Pool", "Spa", "Gym", "Virtual golf", "Squash court", "Cinema", "24hr concierge"],
-    areaOverview: "Historic, cobbled-street area beside St Katharine Docks, offering luxury moments from the City.",
+    tenure: "999-year leasehold",
+    schools: ["St Paul's Whitechapel C of E Primary School (Outstanding)", "Mulberry School for Girls (Outstanding)"],
+    hospital: "The Royal London Hospital",
+    transportScore: "Excellent — Being in Zone 1 and a short walk from the City of London is a major advantage. Multiple transport links provide easy access to Canary Wharf, the West End, and City Airport.",
+    greenSpaces: "The development features 7.5 acres of beautifully landscaped public space, including tree-lined promenades, water gardens, and Gauging Square with its interactive water features.",
+    amenities: ["24-hour concierge", "'The Club' features a state-of-the-art gym", "Swimming pool and spa", "Virtual golf suite", "Squash court", "Private cinema"],
+    areaOverview: "Discover a tranquil, sophisticated retreat right on the edge of the City. London Dock blends the area's rich maritime history with stunning contemporary design. The lifestyle here is about having a peaceful, waterside home just moments from the buzz of London's financial heart. Your weekends could be spent exploring the cobbled streets and historic pubs of Wapping, strolling to St Katharine Docks for lunch, or simply relaxing by the water gardens in Gauging Square. It's the perfect address for those who want to walk to work in the City and come home to a calming oasis.",
     images: []
   },
   {
@@ -487,24 +501,27 @@ export const developments: Development[] = [
     name: "Camden Goods Yard",
     developer: "Berkeley Homes",
     zone: 2,
-    location: "Camden",
-    postcode: "NW1 8EH",
+    location: "Chalk Farm / Camden",
+    postcode: "NW1 8AB",
     nearestTube: {
       station: "Chalk Farm / Camden Town",
       line: "Northern",
-      walkTime: 6
+      walkTime: 7
     },
-    coordinates: postcodeToCoords("NW1 8EH"),
+    coordinates: postcodeToCoords("NW1"),
     prices: {
-      range: "£945k - £2.1M"
+      oneBed: "From £875,000",
+      twoBed: "From £1,400,000",
+      threeBed: "From £2,250,000",
+      range: "£875k - £2.25M+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Primrose Hill School (Outstanding)"],
     hospital: "Royal Free Hospital",
-    transportScore: "Excellent",
-    greenSpaces: "New public park, near Regent's Park",
-    amenities: ["Wellness suite with pool, steam & sauna", "Gym", "Cinema", "24hr concierge"],
-    areaOverview: "A major new destination transforming a historic site in London's iconic cultural epicentre.",
+    transportScore: "Excellent — Superb Northern Line connections provide rapid access to the City and West End. King's Cross St. Pancras is just two stops away.",
+    greenSpaces: "The development will create new rooftop gardens, courtyards, and public squares. It's perfectly located between the iconic green spaces of Regent's Park and Primrose Hill, both just a short walk away.",
+    amenities: ["24-hour concierge", "'The Goods Yard' residents' club featuring a swimming pool", "Spa", "State-of-the-art gym", "Cinema", "Large new Morrisons supermarket", "Cafés and retail spaces"],
+    areaOverview: "Imagine living where London's creative energy meets village-like charm. Camden Goods Yard places you at the crossroads of cool. Spend your mornings strolling up Primrose Hill for panoramic city views, your afternoons browsing the eclectic Camden Market, and your evenings catching a gig at The Roundhouse. This is a lifestyle of endless variety, with the tranquility of Regent's Park and the buzz of Camden Town on your doorstep. It's for those who want a sophisticated home in the heart of London's most vibrant cultural quarter.",
     images: []
   },
   {
@@ -551,25 +568,29 @@ export const developments: Development[] = [
     id: "oval-village-berkeley",
     name: "Oval Village",
     developer: "Berkeley Homes",
-    zone: 1,
-    location: "Oval",
-    postcode: "SE11 5QY",
+    zone: 2,
+    location: "Oval / Kennington / Lambeth",
+    postcode: "SE11 5SS",
     nearestTube: {
-      station: "Oval / Vauxhall",
-      line: "Northern / Victoria, National Rail",
-      walkTime: 8
+      station: "Oval / Vauxhall / Kennington",
+      line: "Northern / Victoria, National Rail / Northern",
+      walkTime: 10
     },
-    coordinates: postcodeToCoords("SE11 5QY"),
+    coordinates: postcodeToCoords("SE11"),
     prices: {
-      range: "£595k - £2.3M"
+      studio: "From £610,000",
+      oneBed: "From £715,000",
+      twoBed: "From £900,000",
+      threeBed: "From £1,650,000",
+      range: "£610k - £1.65M+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Keyworth Primary (Good)"],
     hospital: "St Thomas' Hospital",
-    transportScore: "Excellent",
-    greenSpaces: "On-site gardens, near Kennington Park",
-    amenities: ["Pool", "Spa", "Gym", "Cinema", "Residents' lounge", "24hr concierge"],
-    areaOverview: "A new community at a classic London crossroads, famed for its cricket ground and connectivity.",
+    transportScore: "Exceptional — Access to both the Northern and Victoria lines provides incredibly fast journeys across London. Being on the edge of Zone 1 makes it a walker's and cyclist's paradise.",
+    greenSpaces: "A new, beautifully landscaped public park is at the heart of the development. It is also a short walk to the historic Kennington Park.",
+    amenities: ["24-hour concierge", "Gym", "Swimming pool", "Spa", "Steam room", "Sauna", "Residents' lounge", "Private cinema", "New retail", "Café spaces", "Extensive co-working areas"],
+    areaOverview: "Experience central London living with a unique sense of space and history. Oval Village offers a dynamic lifestyle where you can be in the West End in minutes, yet come home to a calming green oasis. Your weekends could involve watching world-class cricket at The Oval, exploring the trendy farmers' markets of Kennington, or jogging in the park. With its blend of historic landmarks and modern design, this is a sophisticated base for exploring everything the capital has to offer.",
     images: [
       "/oval-village-1.png",
       "/oval-village-2.png",
@@ -586,49 +607,55 @@ export const developments: Development[] = [
     name: "Bermondsey Place",
     developer: "Berkeley Homes",
     zone: 2,
-    location: "Bermondsey",
-    postcode: "SE1 5AY",
+    location: "Bermondsey / Southwark",
+    postcode: "SE16 3RP",
     nearestTube: {
       station: "South Bermondsey / Bermondsey",
       line: "National Rail / Jubilee",
-      walkTime: 7
+      walkTime: 8
     },
-    coordinates: postcodeToCoords("SE1 5AY"),
+    coordinates: { lat: 51.4906, lng: -0.0673 },
     prices: {
-      range: "£500k - £835k"
+      oneBed: "From £550,000",
+      twoBed: "From £690,000",
+      threeBed: "From £820,000",
+      range: "£550k - £820k+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Southwark Park Primary (Good)"],
     hospital: "Guy's Hospital",
-    transportScore: "Very Good",
-    greenSpaces: "Close to Southwark Park, Tanner Street Park",
-    amenities: ["Concierge", "State-of-the-art gym", "Business lounge"],
-    areaOverview: "A trendy, foodie hotspot known for Bermondsey Street, Maltby Street Market, and converted warehouses.",
+    transportScore: "Very Good — The adjacent National Rail station gets you to London Bridge in just 4 minutes. The Jubilee line provides excellent access to Canary Wharf and the West End. The area is also set to benefit from the future Bakerloo Line extension.",
+    greenSpaces: "Features landscaped gardens and new public realm. The large Southwark Park, with its boating lake and sports facilities, is just a short walk away.",
+    amenities: ["24-hour concierge", "Residents' gym", "Communal gardens"],
+    areaOverview: "Be part of London's next exciting chapter. Bermondsey Place puts you at the heart of a vibrant area that's rapidly transforming. The lifestyle is about discovery – exploring the independent breweries and food stalls of the famous Bermondsey Beer Mile, browsing the antique markets, or cycling to the creative hub of nearby Peckham. With London Bridge just one train stop away, you have incredible value and connectivity, getting in on the ground floor of an area with a bright future.",
     images: []
   },
   {
     id: "prince-of-wales-drive-berkeley",
     name: "Prince of Wales Drive",
     developer: "Berkeley Homes",
-    zone: 1,
-    location: "Battersea",
+    zone: 2,
+    location: "Battersea / Wandsworth",
     postcode: "SW11 4FA",
     nearestTube: {
-      station: "Battersea Park / Battersea Power Station",
-      line: "National Rail / Northern",
+      station: "Battersea Power Station / Battersea Park / Queenstown Road",
+      line: "Northern / National Rail / National Rail",
       walkTime: 7
     },
-    coordinates: postcodeToCoords("SW11 4FA"),
+    coordinates: postcodeToCoords("SW11"),
     prices: {
-      range: "POA (Resale)"
+      oneBed: "From £780,000",
+      twoBed: "From £1,100,000",
+      threeBed: "From £1,815,000",
+      range: "£780k - £1.82M+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Newton Prep (Outstanding)"],
     hospital: "Chelsea and Westminster",
-    transportScore: "Very Good",
-    greenSpaces: "Opposite Battersea Park, on-site gardens",
-    amenities: ["17m pool", "Vitality pool", "Spa", "8th-floor roof terrace", "24hr concierge"],
-    areaOverview: "Sophisticated development benefiting from the vast regeneration of Battersea Power Station.",
+    transportScore: "Exceptional — The Northern Line extension provides direct access to the City and West End. Two nearby National Rail stations offer quick links to Victoria and Waterloo.",
+    greenSpaces: "Superb. The development is located directly opposite the 200-acre Battersea Park, offering a boating lake, sports facilities, and beautiful gardens as your extended front yard. The development itself has 2.5 acres of landscaped gardens.",
+    amenities: ["24-hour concierge", "17m swimming pool and spa", "Rooftop terrace with panoramic views", "Residents' lounge"],
+    areaOverview: "This is the ultimate blend of parkside tranquility and city sophistication. Prince of Wales Drive offers a lifestyle where your morning run is through one of London's most beautiful parks, and your evenings are spent exploring the world-class restaurants and shops at the regenerated Battersea Power Station. It's an elegant, established, and incredibly well-connected neighbourhood that gives you the best of both worlds: a green escape and a prime central London address.",
     images: []
   },
   {
@@ -636,49 +663,55 @@ export const developments: Development[] = [
     name: "West End Gate",
     developer: "Berkeley Homes",
     zone: 1,
-    location: "Marylebone",
-    postcode: "W2 1BY",
+    location: "Marylebone / Paddington / City of Westminster",
+    postcode: "W2 1JA",
     nearestTube: {
       station: "Edgware Road",
-      line: "District, Circle, H&C",
-      walkTime: 2
+      line: "Circle, District, H&C, Bakerloo",
+      walkTime: 1
     },
-    coordinates: postcodeToCoords("W2 1BY"),
+    coordinates: postcodeToCoords("W2"),
     prices: {
-      range: "POA (Resale)"
+      studio: "From £925,000",
+      oneBed: "From £1,115,000",
+      twoBed: "From £1,750,000",
+      range: "£925k - £1.75M+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["St Mary's Bryanston Sq (Outstanding)"],
     hospital: "St Mary's Hospital",
-    transportScore: "Excellent",
-    greenSpaces: "Landscaped gardens, near Hyde Park",
-    amenities: ["Pool", "Spa", "Gym", "Private cinema", "Business lounge", "24hr concierge"],
-    areaOverview: "Manhattan-style architecture providing a gateway to the West End and prime central London.",
+    transportScore: "Exceptional — With four tube lines on the doorstep, connectivity is phenomenal. Paddington (with Elizabeth Line and Heathrow Express) is a short walk away. The rest of London is quickly and easily accessible.",
+    greenSpaces: "Features a central landscaped courtyard providing a private oasis for residents. The vast green spaces of Hyde Park and Regent's Park are both within a 15-minute walk.",
+    amenities: ["24-hour concierge", "'The Avery Club' includes a swimming pool", "Spa", "State-of-the-art gym", "Business lounge", "Private cinema"],
+    areaOverview: "Positioned on the edge of everything that makes London great. West End Gate offers prime central living with unparalleled convenience. The lifestyle is effortlessly luxurious. You're a short stroll from the chic boutiques of Marylebone High Street, the world-class theatres of the West End, the tranquil canals of Little Venice, and the open spaces of Hyde Park. With four tube lines outside your front door, the whole city is your playground. This is for those who desire a sophisticated home with London's finest experiences within immediate reach.",
     images: []
   },
   {
     id: "bow-green-berkeley",
     name: "Bow Green",
     developer: "Berkeley Homes",
-    zone: 2,
-    location: "Bow",
-    postcode: "E3 4BH",
+    zone: 3,
+    location: "Bow / Tower Hamlets",
+    postcode: "E3 3LL",
     nearestTube: {
-      station: "Mile End / Bow Road",
-      line: "Central, District, H&C",
-      walkTime: 12
+      station: "Bromley-by-Bow / Devons Road",
+      line: "District, Hammersmith & City / DLR",
+      walkTime: 5
     },
-    coordinates: postcodeToCoords("E3 4BH"),
+    coordinates: postcodeToCoords("E3"),
     prices: {
-      range: "£460k - £725k"
+      oneBed: "From £490,000",
+      twoBed: "From £650,000",
+      threeBed: "From £780,000",
+      range: "£490k - £780k+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Bonner Primary School (Good)"],
     hospital: "Mile End Hospital",
-    transportScore: "Very Good",
-    greenSpaces: "Opposite Tower Hamlets Cemetery Park",
-    amenities: ["Serenity pool", "Gym", "Spa", "Residents' lounge", "On-site restaurant"],
-    areaOverview: "A calm, green haven in the heart of the well-connected and rapidly evolving East End.",
+    transportScore: "Excellent — The District and H&C lines offer easy access to the City and Westminster, while the DLR is a direct link to Canary Wharf (12 mins) and Stratford (7 mins).",
+    greenSpaces: "The development is designed around a new central landscaped park and gardens. It is also a short walk from the historic Tower Hamlets Cemetery Park and a 15-minute walk to the Queen Elizabeth Olympic Park.",
+    amenities: ["24-hour concierge", "Residents' gym", "Lounge", "Co-working spaces", "On-site cafés", "Shops", "Community spaces"],
+    areaOverview: "Discover a green neighbourhood in the heart of East London's creative buzz. Bow Green offers a tranquil escape that's perfectly connected to the capital's key hubs. Your lifestyle here is about balance: peaceful morning walks in the park, easy commutes to Canary Wharf or the City, and vibrant weekends exploring the nearby canals of Hackney Wick or the Olympic Park. You're surrounded by history and character, but with all the comforts of a modern, design-led home. It's the ideal spot for those who want green space without giving up the energy of East London.",
     images: []
   },
   {
@@ -687,148 +720,164 @@ export const developments: Development[] = [
     developer: "Berkeley Homes",
     zone: 2,
     location: "Wandsworth",
-    postcode: "SW18 1TH",
+    postcode: "SW18 1DE",
     nearestTube: {
       station: "Wandsworth Town",
       line: "National Rail",
-      walkTime: 7
+      walkTime: 5
     },
-    coordinates: postcodeToCoords("SW18 1TH"),
+    coordinates: postcodeToCoords("SW18"),
     prices: {
-      range: "£625k - £1.8M"
+      range: "TBC (launching late 2025)"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Brandlehow Primary (Outstanding)"],
     hospital: "St George's Hospital",
-    transportScore: "Good",
-    greenSpaces: "King George's Park, Wandsworth Common",
-    amenities: ["Pool", "Gym", "Spa", "Residents' lounge", "Cinema", "Garden atrium"],
-    areaOverview: "A new riverside quarter on the River Wandle, blending heritage with modern design.",
+    transportScore: "Very Good — National Rail services from Wandsworth Town reach Waterloo in just 14 minutes. The nearby River Bus pier also offers a scenic commute into the city.",
+    greenSpaces: "The development will create new public squares and open up access to the River Wandle, with new riverside walkways. It is also a short walk to the expansive Wandsworth Park and Wandsworth Common.",
+    amenities: ["Boutique hotel", "Gym", "Residents' facilities", "Shops", "Cafés", "Restaurants", "New microbrewery"],
+    areaOverview: "Be part of the rebirth of a London icon. Wandsworth Mills is set to become one of Southwest London's most exciting new destinations. The lifestyle will be a vibrant mix of heritage and modern living, centred around a new public square filled with artisan food, craft beer from the on-site microbrewery, and boutique shops. You're moments from the charming pubs of Old York Road, the greenery of Wandsworth Park, and the bustling Southside shopping centre. It's a community for those who appreciate history, character, and a lively local scene.",
     images: []
   },
   {
     id: "woodberry-down-berkeley",
     name: "Woodberry Down",
     developer: "Berkeley Homes",
-    zone: 2,
-    location: "Finsbury Park",
-    postcode: "N4 2BA",
+    zone: 3,
+    location: "Finsbury Park / Hackney",
+    postcode: "N4 2SB",
     nearestTube: {
       station: "Manor House",
-      line: "Piccadilly",
-      walkTime: 4
+      line: "Piccadilly Line",
+      walkTime: 7
     },
-    coordinates: postcodeToCoords("N4 2BA"),
+    coordinates: postcodeToCoords("N4"),
     prices: {
-      range: "£555k - £1.8M"
+      oneBed: "From £580,000",
+      twoBed: "From £750,000",
+      threeBed: "From £1,100,000",
+      range: "£580k - £1.1M+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Parkwood Primary (Good)"],
     hospital: "Whittington Hospital",
-    transportScore: "Very Good",
-    greenSpaces: "Set beside 42 acres of open water",
-    amenities: ["Pool", "Gym", "Screening room", "Residents' lounge", "24hr concierge"],
-    areaOverview: "A unique urban village with a stunning natural waterside setting, offering a tranquil escape.",
+    transportScore: "Excellent — The Piccadilly Line provides direct, fast access to King's Cross (10 mins), Covent Garden (16 mins), and Heathrow Airport. Finsbury Park station (Victoria, Piccadilly, National Rail) is also nearby.",
+    greenSpaces: "Unparalleled for London. The development is set amongst 64 acres of open water (two large reservoirs) and 15 acres of parkland and landscaping. Finsbury Park is a 10-minute walk away.",
+    amenities: ["24-hour concierge", "Luxury gym", "Swimming pool", "Spa facilities", "On-site Sainsbury's Local", "Cafés", "Community centre", "West Reservoir watersports facility"],
+    areaOverview: "This is London's hidden nature reserve. Woodberry Down offers a lifestyle that feels a world away from the hustle of the city, yet you're only a short tube ride from the centre. Life here is lived by the water; morning coffees overlooking the reservoir, weekend afternoons spent sailing or kayaking, and evening strolls watching the birds. You're surrounded by an incredible sense of peace and openness. With the cool bars and restaurants of Stoke Newington and Finsbury Park nearby, it's a perfect home for those who want a city life with nature at its very core.",
     images: []
   },
   {
     id: "twelvetrees-park-berkeley",
     name: "TwelveTrees Park",
     developer: "Berkeley Homes",
-    zone: 2,
-    location: "West Ham",
-    postcode: "E15 3FQ",
+    zone: 3,
+    location: "West Ham / Newham",
+    postcode: "E16 4GU",
     nearestTube: {
       station: "West Ham",
-      line: "Jubilee, District, H&C, DLR, c2c",
-      walkTime: 1
+      line: "Jubilee, DLR, District, Hammersmith & City, c2c National Rail",
+      walkTime: 2
     },
-    coordinates: postcodeToCoords("E15 3FQ"),
+    coordinates: postcodeToCoords("E16"),
     prices: {
-      range: "£598k - £1M"
+      studio: "From £460,000",
+      oneBed: "From £530,000",
+      twoBed: "From £695,000",
+      range: "£460k - £695k+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Colegrave Primary (Outstanding)"],
     hospital: "Newham University Hospital",
-    transportScore: "Excellent",
-    greenSpaces: "A 12-acre park is the heart of the development",
-    amenities: ["Gym", "Business lounge", "Screening room", "24hr concierge"],
-    areaOverview: "A major new community built around one of London's best-connected transport hubs.",
+    transportScore: "Exceptional — West Ham is one of the best-connected stations in London. The Jubilee Line offers rapid access to Canary Wharf (4 mins) and Bond Street (17 mins). The DLR, District, and H&C lines provide numerous other direct routes across the capital.",
+    greenSpaces: "The development is centered around a new 4.5-acre park (the 'Linear Park'), with extensive landscaping, gardens, and play areas throughout the 26-acre site. It is also close to the Queen Elizabeth Olympic Park.",
+    amenities: ["24-hour concierge", "Gym", "Swimming pool", "Private cinema", "Business/residents' lounge", "New secondary school", "Community hub", "Shops", "Cafés", "Large supermarket"],
+    areaOverview: "Live at the centre of your own universe. TwelveTrees Park is all about connection. It's built for a fast-paced London lifestyle, where you can get anywhere you need to be, effortlessly. From a quick hop to Canary Wharf for work, to a shopping spree at Westfield Stratford, or a night out in the West End, it's all just minutes away. But it's not just a transport hub; a huge new park and on-site amenities mean you can just as easily stay local and enjoy a relaxed weekend. It's the perfect launchpad for anyone who wants to experience everything London has to offer.",
     images: []
   },
   {
     id: "alexandra-gate-berkeley",
-    name: "Alexandra Gate",
+    name: "Alexandra Gate at Beaufort Park",
     developer: "Berkeley Homes",
-    zone: 3,
-    location: "Haringey",
-    postcode: "N8 0ES",
+    zone: 4,
+    location: "Colindale / Barnet",
+    postcode: "NW9 5GW",
     nearestTube: {
-      station: "Wood Green / Turnpike Lane",
-      line: "Piccadilly",
-      walkTime: 12
+      station: "Colindale",
+      line: "Northern Line",
+      walkTime: 5
     },
-    coordinates: postcodeToCoords("N8 0ES"),
+    coordinates: { lat: 51.5835, lng: -0.2480 },
     prices: {
-      range: "£435k - £650k"
+      oneBed: "From £410,000",
+      twoBed: "From £570,000",
+      range: "£410k - £570k+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Alexandra Park School (Outstanding)"],
     hospital: "North Middlesex Hospital",
-    transportScore: "Good",
-    greenSpaces: "Adjacent to the 196-acre Alexandra Park",
-    amenities: ["Landscaped gardens", "Children's play area"],
-    areaOverview: "A new creative district offering panoramic city views and vast open green spaces.",
+    transportScore: "Very Good — The Northern Line provides direct 24-hour service to Central London, with journeys to King's Cross in around 25 minutes. Colindale station has also recently undergone a major upgrade.",
+    greenSpaces: "Residents have access to 8 acres of landscaped parkland and courtyards within the wider Beaufort Park development.",
+    amenities: ["Access to 'The Spa' in Beaufort Park with gym", "Swimming pool", "Sauna", "Steam room", "On-site shops", "Bars", "Restaurants", "Medical centre", "Nursery", "Private podium garden"],
+    areaOverview: "Experience the best of both worlds: a brand-new, premium apartment within a thriving and established community. Alexandra Gate offers a sophisticated lifestyle where everything you need is on your doorstep. Your weekend could start with a workout at the residents' spa, followed by brunch at an on-site café, and then an easy trip into Central London on the Northern Line. It's a life of ultimate convenience in a friendly, buzzing neighbourhood that has already come to life. It's perfect for those who want a new home with the benefits of a mature and fully-formed community from day one.",
     images: []
   },
   {
     id: "grand-union-berkeley",
     name: "Grand Union",
     developer: "Berkeley Homes",
-    zone: 3,
-    location: "Wembley",
+    zone: 4,
+    location: "Alperton / Brent",
     postcode: "HA0 1NW",
     nearestTube: {
       station: "Stonebridge Park / Alperton",
-      line: "Bakerloo / Piccadilly",
-      walkTime: 10
+      line: "Bakerloo Line, Overground / Piccadilly Line",
+      walkTime: 12
     },
-    coordinates: postcodeToCoords("HA0 1NW"),
+    coordinates: postcodeToCoords("HA0"),
     prices: {
-      range: "£388k - £820k"
+      studio: "From £425,000",
+      oneBed: "From £495,000",
+      twoBed: "From £635,000",
+      threeBed: "From £795,000",
+      range: "£425k - £795k+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Ark Academy (Outstanding)"],
     hospital: "Central Middlesex Hospital",
-    transportScore: "Good",
-    greenSpaces: "Canalside piazza, meadows and gardens",
-    amenities: ["Residents' lounge", "Bowling alley", "Co-working space"],
-    areaOverview: "A new canalside neighbourhood creating a vibrant community in a major regeneration zone.",
+    transportScore: "Good — The Bakerloo and Piccadilly lines offer direct routes into Central London. Wembley Stadium and the London Designer Outlet are just a short journey away.",
+    greenSpaces: "A key feature of the development is the 11 acres of new public green space, including landscaped gardens, riverside meadows, and walkways along the Grand Union Canal and River Brent.",
+    amenities: ["24-hour concierge", "'The Union Club' includes a gym", "Swimming pool", "Sauna and steam room", "Treatment room", "Residents' lounge", "Community Hub", "Bowling alley", "Creative workspaces", "Nursery", "Canalside piazza with shops and cafés"],
+    areaOverview: "Discover London's new creative waterside village. Grand Union is a destination in the making, transforming an underused area into a vibrant community hub. The lifestyle here is active and social, built around the canal. Spend weekends kayaking, cycling the towpaths, or meeting friends at the canalside cafés. With a bowling alley, creative studios, and extensive gardens on-site, there's a real sense of community. It's an opportunity to be part of a forward-thinking neighbourhood that blends industrial heritage with a modern, wellness-focused way of life.",
     images: []
   },
   {
     id: "silkstream-berkeley",
     name: "Silkstream",
     developer: "Berkeley Homes",
-    zone: 3,
-    location: "Hendon",
-    postcode: "NW9 7TH",
+    zone: 4,
+    location: "Hendon / Barnet",
+    postcode: "NW9 6FB",
     nearestTube: {
       station: "Hendon / Hendon Central",
-      line: "Thameslink / Northern",
-      walkTime: 12
+      line: "National Rail / Northern Line",
+      walkTime: 7
     },
     coordinates: { lat: 51.5889, lng: -0.2265 },
     prices: {
-      range: "£433k - £705k"
+      studio: "From £399,000",
+      oneBed: "From £465,000",
+      twoBed: "From £595,000",
+      threeBed: "From £799,000",
+      range: "£399k - £799k+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["St Joseph's Catholic Primary (Outstanding)"],
     hospital: "Royal Free Hospital",
-    transportScore: "Good",
-    greenSpaces: "New 1.5-acre park, podium gardens",
-    amenities: ["Gym", "Screening rooms", "Co-working area", "24hr concierge"],
-    areaOverview: "Well-connected North West London living benefiting from the Brent Cross regeneration.",
+    transportScore: "Very Good — National Rail offers a fast 16-minute journey to St Pancras International. The Northern Line provides 24-hour service and direct access to both the City and West End branches.",
+    greenSpaces: "The development is set within 1.5 acres of its own landscaped gardens and sits alongside the Silk Stream river. The 150-acre Brent Reservoir (The Welsh Harp) and its nature reserve are just a short walk away, offering extensive walks and sailing.",
+    amenities: ["24-hour concierge", "'The Silk Club' includes a gym", "Swimming pool", "Spa facilities", "Screening room", "Virtual golf suite"],
+    areaOverview: "Find your green sanctuary in North London. Silkstream offers a peaceful retreat with the city still within easy reach. The lifestyle is one of relaxation and convenience. Enjoy tranquil walks along the river, explore the vast open space of the nearby reservoir, or simply unwind in the residents' spa. When you need the excitement of the city, the Northern Line and fast rail links are minutes away. With the huge transformation of Brent Cross happening nearby, you're investing in an area with a very bright future. It's the perfect home for balancing a busy work life with a need for nature.",
     images: []
   },
   {
@@ -836,24 +885,27 @@ export const developments: Development[] = [
     name: "Lombard Square",
     developer: "Berkeley Homes",
     zone: 4,
-    location: "Plumstead",
-    postcode: "SE28 0FX",
+    location: "Plumstead / Royal Borough of Greenwich",
+    postcode: "SE18 6FR",
     nearestTube: {
-      station: "Plumstead / Woolwich Arsenal",
-      line: "National Rail / Elizabeth",
-      walkTime: 7
+      station: "Plumstead / Woolwich",
+      line: "Southeastern, Elizabeth Line / Southeastern, DLR, Elizabeth Line",
+      walkTime: 10
     },
-    coordinates: postcodeToCoords("SE28 0FX"),
+    coordinates: postcodeToCoords("SE18"),
     prices: {
-      range: "£345k - £670k"
+      oneBed: "From £425,000",
+      twoBed: "From £540,000",
+      threeBed: "From £650,000",
+      range: "£425k - £650k+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["St Patrick's Catholic Primary (Good)"],
     hospital: "Queen Elizabeth Hospital",
-    transportScore: "Good",
-    greenSpaces: "Over 1.8 acres of new parkland on-site",
-    amenities: ["12-hour concierge", "Gym", "Secure bike storage"],
-    areaOverview: "A new neighbourhood bringing green squares and modern living to historic Plumstead.",
+    transportScore: "Excellent — The arrival of the Elizabeth Line at nearby Woolwich has been transformative, offering incredibly fast journeys to Canary Wharf (8 mins), Liverpool Street (14 mins), and Heathrow Airport.",
+    greenSpaces: "The development is designed around a new public square and four private landscaped courtyard gardens, creating a series of green oases. The vast green spaces of Plumstead Common and Winn's Common are just a short walk away.",
+    amenities: ["24-hour concierge", "Residents' gym", "Lounge", "Co-working spaces", "Space for new on-site shops and cafés"],
+    areaOverview: "Be part of Southeast London's exciting transformation. Lombard Square offers modern, connected living in an area that's on the rise. Thanks to the Elizabeth Line, this part of London has never been better connected, making it a smart choice for professionals and investors. The lifestyle is about enjoying great value without compromising on quality or commute time. Explore the historic Royal Arsenal in Woolwich, with its new restaurants and cultural venues, or enjoy the peaceful, green expanse of Plumstead Common. It's a chance to get into a thriving, well-connected community.",
     images: []
   },
   {
@@ -861,24 +913,24 @@ export const developments: Development[] = [
     name: "Beaufort Park",
     developer: "Berkeley Homes",
     zone: 4,
-    location: "Colindale",
-    postcode: "NW9 5GW",
+    location: "Colindale / Barnet",
+    postcode: "NW9 5EN",
     nearestTube: {
       station: "Colindale",
       line: "Northern",
-      walkTime: 5
+      walkTime: 7
     },
     coordinates: { lat: 51.5835, lng: -0.2480 },
     prices: {
-      range: "POA (Resale)"
+      range: "From £410k (new-phase apartments)"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["The Orion Primary (Outstanding)"],
     hospital: "Royal Free Hospital",
-    transportScore: "Good",
-    greenSpaces: "25 acres of landscaped parkland on-site",
-    amenities: ["Pool", "Spa", "Gym", "On-site shops, bars & restaurants"],
-    areaOverview: "A fully established, modern urban village with a wide range of on-site amenities.",
+    transportScore: "Very Good — The Northern Line provides direct 24-hour service to Central London (King's Cross in 25 mins, Leicester Square in 30 mins). The station itself has recently been modernised and upgraded.",
+    greenSpaces: "Features 8 acres of beautifully maintained, award-winning landscaped parkland, private courtyards, and tree-lined boulevards, creating a green and pleasant environment throughout the development.",
+    amenities: ["'The Spa' with a large swimming pool", "State-of-the-art gym", "Sauna and steam room", "Numerous shops", "Restaurants", "Cafés", "Tesco Express", "Medical centre", "Dental surgery", "Nursery"],
+    areaOverview: "Welcome to the complete modern village. Beaufort Park is more than just a place to live; it's a fully-formed community where everything you need is right on your doorstep. The lifestyle is one of ultimate convenience. Start your day at the residents' gym, grab a coffee from the on-site café, and do your shopping without ever leaving the development. With its tree-lined streets, friendly atmosphere, and direct line into central London, it offers a relaxed, safe, and social environment. It's the perfect choice for those who want the buzz of a community and the ease of having it all in one place.",
     images: []
   },
   {
@@ -886,49 +938,56 @@ export const developments: Development[] = [
     name: "Trent Park",
     developer: "Berkeley Homes",
     zone: 5,
-    location: "Enfield",
-    postcode: "EN4 0FD",
+    location: "Oakwood / Enfield",
+    postcode: "EN4 0PS",
     nearestTube: {
-      station: "Cockfosters / Oakwood",
+      station: "Oakwood / Cockfosters",
       line: "Piccadilly",
       walkTime: 25
     },
-    coordinates: postcodeToCoords("EN4 0FD"),
+    coordinates: postcodeToCoords("EN4"),
     prices: {
-      range: "£750k - £2.3M"
+      oneBed: "From £595,000",
+      twoBed: "From £750,000 (Apartments) / From £1,200,000 (Houses)",
+      threeBed: "From £1,050,000 (Apartments) / From £1,600,000 (Houses)",
+      range: "£595k - £1.6M+"
     },
-    tenure: "Freehold (Houses) & Leasehold (Apts)",
+    tenure: "Freehold (Houses) & 999-year Leasehold (Apartments)",
     schools: ["Trent CofE Primary (Outstanding)"],
     hospital: "Chase Farm Hospital",
-    transportScore: "Fair",
-    greenSpaces: "Set within a 413-acre historic park",
-    amenities: ["Outdoor pool", "Gym", "Tennis courts", "Shuttle bus to station"],
-    areaOverview: "Unique country estate living, blending restored mansions with new homes in a vast park.",
+    transportScore: "Good — The Piccadilly Line provides a direct and reliable service into Central London (King's Cross in 27 mins). The M25 is also easily accessible by car.",
+    greenSpaces: "Unrivalled. The development is set within 56 acres of private grounds, which itself is surrounded by over 400 acres of Trent Country Park, a former royal hunting ground. Residents have access to lawns, historic walled gardens, and ancient woodland.",
+    amenities: ["The Lawn Club provides residents with an open-air swimming pool", "State-of-the-art gym", "Tennis courts", "Shuttle bus service", "Restored Mansion House with exclusive apartments and further facilities"],
+    areaOverview: "Live in London's country estate. Trent Park offers a lifestyle that is simply not found anywhere else in the capital. This is for those who dream of country living – the vast open spaces, the peace and quiet, the connection to nature – but don't want to leave London. Your daily life is set against a backdrop of ancient woodland and historic architecture. Weekends are for long walks in the park, a game of tennis, or a swim in the outdoor pool. It's an escape, a sanctuary, and a truly unique place to call home, all while remaining on the Tube map.",
     images: []
   },
   {
     id: "heron-wharf-berkeley",
     name: "Heron Wharf (Poplar Riverside)",
     developer: "Berkeley Homes",
-    zone: 2,
-    location: "Poplar",
-    postcode: "E14 0LL",
+    zone: 3,
+    location: "Poplar / Tower Hamlets",
+    postcode: "E14 0JW",
     nearestTube: {
-      station: "Canning Town / Langdon Park",
+      station: "Canning Town / East India",
       line: "Jubilee, DLR / DLR",
-      walkTime: 12
+      walkTime: 10
     },
-    coordinates: postcodeToCoords("E14 0LL"),
+    coordinates: postcodeToCoords("E14-LL"),
     prices: {
-      range: "£455k - £930k"
+      studio: "From £480,000",
+      oneBed: "From £570,000",
+      twoBed: "From £715,000",
+      threeBed: "From £875,000",
+      range: "£480k - £875k+"
     },
-    tenure: "Leasehold",
+    tenure: "999-year leasehold",
     schools: ["Culloden Primary (Outstanding)"],
     hospital: "The Royal London",
-    transportScore: "Very Good",
-    greenSpaces: "2.5-acre public park, riverside walk",
-    amenities: ["Pool", "Spa with sauna & steam", "Gym", "Cinema", "Co-working space"],
-    areaOverview: "A new riverside village on the River Lea, with extensive parkland and resident facilities.",
+    transportScore: "Excellent — The Jubilee Line at Canning Town provides superb connections to Canary Wharf (4 mins), London Bridge (10 mins), and the West End. The DLR links directly to the City and City Airport.",
+    greenSpaces: "A new 2.5-acre public park is the centrepiece of the development, running down to the river. A new riverside walkway will also be created, connecting to the wider Leamouth Peninsula.",
+    amenities: ["24-hour concierge", "'The Riverside Club' includes a large swimming pool with panoramic river views", "Spa", "Gym", "Residents' lounge", "Private cinema", "New riverside pub", "Cafés and shops"],
+    areaOverview: "Discover East London's new riverside destination. Poplar Riverside is perfectly placed between the financial might of Canary Wharf and the creative energy of the Royal Docks. The lifestyle is about enjoying stunning river views and beautiful green spaces, without losing your connection to the city. Imagine morning runs along the new promenade, weekends exploring nearby Trinity Buoy Wharf, and evenings watching the lights of the O2 from the residents' pool. It's a bold vision for modern, green, riverside living.",
     images: []
   },
   {
