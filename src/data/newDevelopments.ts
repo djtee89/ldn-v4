@@ -834,30 +834,37 @@ export const developments: Development[] = [
   },
   {
     id: "alexandra-gate-berkeley",
-    name: "Alexandra Gate at Beaufort Park",
+    name: "Alexandra Gate",
     developer: "Berkeley Homes",
-    zone: 4,
-    location: "Colindale / Barnet",
-    postcode: "NW9 5GW",
+    zone: 3,
+    location: "Haringey",
+    postcode: "N8 0ES",
     nearestTube: {
-      station: "Colindale",
-      line: "Northern Line",
-      walkTime: 5
+      station: "Alexandra Palace / Hornsey / Bowes Park / Wood Green",
+      line: "Great Northern / Piccadilly",
+      walkTime: 10
     },
-    coordinates: { lat: 51.5835, lng: -0.2480 },
+    coordinates: { lat: 51.5904, lng: -0.1218 },
     prices: {
-      oneBed: "From £410,000",
-      twoBed: "From £570,000",
-      range: "£410k - £570k+"
+      studio: "From £435,000",
+      oneBed: "From £435,000",
+      twoBed: "From £590,000",
+      range: "£435k - £650k"
     },
     tenure: "999-year leasehold",
     schools: ["Alexandra Park School (Outstanding)"],
     hospital: "North Middlesex Hospital",
-    transportScore: "Very Good — The Northern Line provides direct 24-hour service to Central London, with journeys to King's Cross in around 25 minutes. Colindale station has also recently undergone a major upgrade.",
-    greenSpaces: "Residents have access to 8 acres of landscaped parkland and courtyards within the wider Beaufort Park development.",
-    amenities: ["Access to 'The Spa' in Beaufort Park with gym", "Swimming pool", "Sauna", "Steam room", "On-site shops", "Bars", "Restaurants", "Medical centre", "Nursery", "Private podium garden"],
-    areaOverview: "Experience the best of both worlds: a brand-new, premium apartment within a thriving and established community. Alexandra Gate offers a sophisticated lifestyle where everything you need is on your doorstep. Your weekend could start with a workout at the residents' spa, followed by brunch at an on-site café, and then an easy trip into Central London on the Northern Line. It's a life of ultimate convenience in a friendly, buzzing neighbourhood that has already come to life. It's perfect for those who want a new home with the benefits of a mature and fully-formed community from day one.",
-    images: []
+    transportScore: "Very Good — Short walk to four key Zone 3 stations providing excellent connectivity. King's Cross is just 10 minutes by train with direct services from Alexandra Palace.",
+    greenSpaces: "Located beside the iconic Alexandra Park and Alexandra Palace, offering extensive green space, stunning city views, and recreational facilities.",
+    amenities: ["'The Park Club' residents' facilities", "Gym", "Swimming pool", "Spa facilities", "Sauna", "Steam room", "Meeting spaces", "Community lounge", "Waterside Café", "On-site retail coming soon"],
+    areaOverview: "Experience the best of both worlds: a brand-new, premium home beside one of London's most iconic landmarks. Alexandra Gate offers a sophisticated lifestyle where everything you need is on your doorstep. Your weekend could start with a walk through Alexandra Park, followed by brunch at the on-site café, and then an easy trip into Central London. It's a life of ultimate convenience in a thriving neighbourhood with spectacular views and green space on your doorstep.",
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/alexandra-gate/gallery/alexandra-gate-the-park-club-image-1_28042025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/alexandra-gate/gallery/alexandra-gate-the-park-club-image-10_28042025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/alexandra-gate/gallery/alexandra-gate-the-park-club-image-11_28042025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/alexandra-gate/gallery/alexandra-gate-the-park-club-image-3_28042025.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/alexandra-gate/gallery/alexandra-gate-the-park-club-image-4_28042025.ashx"
+    ]
   },
   {
     id: "grand-union-berkeley",
