@@ -133,9 +133,11 @@ export const developments: Development[] = [
     chineseSupermarket: "15 mins",
     areaOverview: "Historic riverside location with stunning Thames views and excellent transport links to the City.",
     images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/jade-wharf-showhome/london-dock_jade-wharf-sh_living-dining.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/jade-wharf-showhome/london-dock_jade-wharf-sh_kitchen-dining.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/facilities/london-dock_residents-fac_pool.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/exterior/london-dock_exteriors_outside-grounds.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/local-area/london-dock_local-area_dockyard.ashx"
     ]
   },
   {
