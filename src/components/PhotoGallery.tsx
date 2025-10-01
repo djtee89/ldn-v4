@@ -10,6 +10,17 @@ interface PhotoGalleryProps {
 export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+
+  const fallbackImage = "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&h=800&fit=crop";
+  
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => new Set(prev).add(index));
+  };
+  
+  const getImageSrc = (index: number) => {
+    return imageErrors.has(index) ? fallbackImage : images[index];
+  };
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -39,11 +50,12 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
         {/* Main Image */}
         <div className="relative aspect-[24/9] w-full overflow-hidden rounded-lg bg-muted">
           <img
-            src={images[currentIndex]}
+            src={getImageSrc(currentIndex)}
             alt={`${name} - Image ${currentIndex + 1}`}
             className="w-full h-full object-cover cursor-pointer"
             onClick={() => setLightboxOpen(true)}
             loading={currentIndex === 0 ? 'eager' : 'lazy'}
+            onError={() => handleImageError(currentIndex)}
           />
           
           {/* Navigation Arrows */}
@@ -85,10 +97,11 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
                 }`}
               >
                 <img
-                  src={img}
+                  src={getImageSrc(actualIndex)}
                   alt={`Thumbnail ${actualIndex + 1}`}
                   className="w-full h-full object-cover"
                   loading="lazy"
+                  onError={() => handleImageError(actualIndex)}
                 />
               </button>
             );
@@ -118,9 +131,10 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
           </Button>
 
           <img
-            src={images[currentIndex]}
+            src={getImageSrc(currentIndex)}
             alt={`${name} - Image ${currentIndex + 1}`}
             className="max-w-[90vw] max-h-[90vh] object-contain"
+            onError={() => handleImageError(currentIndex)}
           />
 
           <Button
