@@ -16,12 +16,13 @@ import { Button } from '@/components/ui/button';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
 import Contact from './Contact';
-import { developments, propertyOfTheWeek } from '@/data/newDevelopments';
+import { propertyOfTheWeek } from '@/data/newDevelopments';
 import { Development } from '@/data/newDevelopments';
 import { AmenityType } from '@/data/amenities';
 import { useShortlist } from '@/hooks/use-shortlist';
 import { useToast } from '@/hooks/use-toast';
 import { translations } from '@/i18n/translations';
+import { useDevelopments } from '@/hooks/use-developments';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide' | 'contact'>('main');
@@ -33,6 +34,7 @@ const Index = () => {
   
   const { shortlist, toggleShortlist, isInShortlist, removeFromShortlist } = useShortlist();
   const { toast } = useToast();
+  const { data: developments = [], isLoading: isDevelopmentsLoading } = useDevelopments();
   const [activeDirections, setActiveDirections] = useState<{ 
     developmentId: string;
     destination: {
@@ -174,9 +176,17 @@ const Index = () => {
     });
   };
 
+  if (isDevelopmentsLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Loading developments...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      <Header 
+      <Header
         onAboutClick={() => setCurrentView('about')}
         onBookViewingClick={() => setCurrentView('contact')}
         onGuideClick={() => setCurrentView('guide')}
