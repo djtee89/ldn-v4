@@ -38,32 +38,33 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
   const amenityTypesList: AmenityType[] = ['private_schools', 'prep_schools', 'state_schools', 'grammar_schools', 'universities', 'michelin_restaurants', 'culture_landmarks', 'shopping_lifestyle', 'hospitals_clinics', 'transport_hubs'];
 
   return (
-    <div className="bg-card border-b border-border">
-      <div className="container mx-auto px-4 py-3">
+    <div className="mx-auto max-w-6xl px-4 py-4">
+      <div className="rounded-2xl bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-4">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center justify-between w-full hover:opacity-70 transition-opacity"
+          className="flex items-center justify-between w-full hover:opacity-70 transition-smooth"
           aria-expanded={isExpanded}
           aria-label={isExpanded ? "Collapse amenity filters" : "Expand amenity filters"}
         >
           <div className="text-left">
-            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-              Best of London
+            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Curated</p>
+            <h2 className="text-2xl font-bold text-neutral-900">Best of London</h2>
+            <p className="mt-1 text-sm text-neutral-600">
+              Schools, transport, dining, lifestyle—your London, simplified
               {selectedTypes.length > 0 && (
-                <span className="text-xs font-normal text-muted-foreground">
-                  ({selectedTypes.length} active)
+                <span className="ml-2 inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                  {selectedTypes.length} active
                 </span>
               )}
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">Schools, transport, dining, lifestyle—your London, simplified</p>
+            </p>
           </div>
           <div className="shrink-0">
-            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            {isExpanded ? <ChevronUp className="w-5 h-5 text-neutral-700" /> : <ChevronDown className="w-5 h-5 text-neutral-700" />}
           </div>
         </button>
       
-        <div className={`${isExpanded ? 'block animate-accordion-down' : 'hidden animate-accordion-up'} mt-3`}>
-          <div className="flex flex-wrap gap-2 pb-2">
+        <div className={`${isExpanded ? 'block animate-accordion-down' : 'hidden animate-accordion-up'} mt-4 pt-4 border-t border-neutral-200`}>
+          <div className="flex flex-wrap gap-2">
             {amenityTypesList.map((type) => {
               const isSelected = selectedTypes.includes(type);
               return (
@@ -72,7 +73,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
                   variant={isSelected ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleType(type)}
-                  className="h-8 text-xs gap-1.5 whitespace-nowrap rounded-full"
+                  className="h-9 text-sm gap-2 whitespace-nowrap rounded-xl shadow-sm hover:shadow-md transition-shadow"
                 >
                   {amenityIcons[type]}
                   <span>{amenityLabels[type]}</span>
@@ -82,15 +83,14 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
           </div>
           
           {selectedTypes.length > 0 && (
-            <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-              <span>{selectedTypes.length} layer{selectedTypes.length > 1 ? 's' : ''} active</span>
+            <div className="mt-4 flex items-center justify-end">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onTypesChange([])}
-                className="h-7 text-xs hover:bg-destructive/10 hover:text-destructive rounded-full"
+                className="h-8 text-sm hover:bg-destructive/10 hover:text-destructive rounded-xl"
               >
-                Clear overlays
+                Clear all filters
               </Button>
             </div>
           )}

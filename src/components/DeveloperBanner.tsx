@@ -22,26 +22,35 @@ const developers = [
 
 const DeveloperBanner: React.FC<DeveloperBannerProps> = ({ onDeveloperClick, highlightedDeveloper }) => {
   return (
-    <div className="bg-muted border-y border-border py-3 overflow-hidden">
-      <div className="animate-marquee whitespace-nowrap">
-        <div className="inline-flex items-center gap-8">
-          {[...developers, ...developers].map((developer, index) => (
-            <div 
-              key={`${developer.name}-${index}`}
-              onClick={() => onDeveloperClick(developer.name)}
-              className={`w-40 h-20 rounded-lg shadow-soft border transition-smooth cursor-pointer overflow-hidden ${
-                highlightedDeveloper === developer.name
-                  ? 'border-primary shadow-premium ring-2 ring-primary'
-                  : 'border-border hover:shadow-lg'
-              }`}
-            >
-              <img 
-                src={developer.logo} 
-                alt={`${developer.name} logo`}
-                className="w-full h-full object-cover"
-              />
+    <div className="mx-auto max-w-6xl px-4 py-4">
+      <div className="rounded-2xl bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-base font-semibold text-neutral-900">Featured Developers</h3>
+        </div>
+        
+        <div className="relative overflow-hidden -mx-2">
+          <div className="animate-marquee whitespace-nowrap">
+            <div className="inline-flex items-center gap-4 px-2">
+              {[...developers, ...developers].map((developer, index) => (
+                <button 
+                  key={`${developer.name}-${index}`}
+                  onClick={() => onDeveloperClick(developer.name)}
+                  className={`group shrink-0 w-40 h-20 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all overflow-hidden ${
+                    highlightedDeveloper === developer.name
+                      ? 'border-primary ring-2 ring-primary/20'
+                      : 'border-neutral-200 hover:border-neutral-300'
+                  }`}
+                >
+                  <img 
+                    src={developer.logo} 
+                    alt={`${developer.name} logo`}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
+                    loading="lazy"
+                  />
+                </button>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
       

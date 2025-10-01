@@ -431,6 +431,15 @@
     }
   }
 
+  /* Grayscale Filter */
+  .grayscale {
+    filter: grayscale(100%);
+  }
+
+  .group:hover .grayscale {
+    filter: grayscale(0%);
+  }
+
   /* Responsive Viewport Heights */
   .vh-full {
     height: 100vh;
