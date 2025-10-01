@@ -6,6 +6,9 @@ interface DeveloperBannerProps {
 }
 
 const developers = [
+  { name: 'Ballymore', logo: '/logos/ballymore.jpeg' },
+  { name: 'Barratt London', logo: '/logos/barratt.jpg' },
+  { name: 'Bellway', logo: '/logos/bellway.jpg' },
   { name: 'Berkeley Homes', logo: '/logos/berkeley.jpg' },
   { name: 'Canary Wharf Group', logo: '/logos/canary-wharf.jpg' },
   { name: 'Countryside Homes', logo: '/logos/countryside.jpg' },
@@ -26,7 +29,7 @@ const DeveloperBanner: React.FC<DeveloperBannerProps> = ({ onDeveloperClick, hig
             <div 
               key={`${developer.name}-${index}`}
               onClick={() => onDeveloperClick(developer.name)}
-              className={`px-6 py-3 rounded-lg shadow-soft border transition-smooth cursor-pointer bg-white ${
+              className={`w-40 h-20 rounded-lg shadow-soft border transition-smooth cursor-pointer overflow-hidden ${
                 highlightedDeveloper === developer.name
                   ? 'border-primary shadow-premium ring-2 ring-primary'
                   : 'border-border hover:shadow-lg'
@@ -35,7 +38,7 @@ const DeveloperBanner: React.FC<DeveloperBannerProps> = ({ onDeveloperClick, hig
               <img 
                 src={developer.logo} 
                 alt={`${developer.name} logo`}
-                className="h-8 w-auto object-contain"
+                className="w-full h-full object-cover"
               />
             </div>
           ))}
