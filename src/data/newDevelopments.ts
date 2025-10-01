@@ -410,7 +410,13 @@ export const developments: Development[] = [
     greenSpaces: "The development is defined by its green space. It includes 13 acres of new parkland, wetlands, and open spaces, with two new parks and a pedestrianised piazza. Adjacent to the 90-acre Minet Country Park.",
     amenities: ["24-hour concierge", "Fully-equipped gym", "Swimming pool", "Spa", "Co-working space", "Private cinema", "Residents' lounge", "New primary school", "Cafés and retail spaces"],
     areaOverview: "This is where city living truly meets nature. The Green Quarter is one of London's most ambitious regeneration projects, transforming a former industrial area into a green oasis. Your lifestyle here revolves around wellness and the outdoors, with acres of parkland and canal towpaths on your doorstep for morning runs or evening strolls. Yet, you're not sacrificing city convenience; the Elizabeth Line means you can be in the heart of the West End in under 20 minutes. It's a vision of future London living: sustainable, connected, and surrounded by nature.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/the-green-quarter/gallery/exteriors/the-green-quarter_exterior_12062025_1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/the-green-quarter/gallery/exteriors/the-green-quarter_exterior_12062025_2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/the-green-quarter/gallery/parkside-padel-club/the-green-quarter_parkside-club_12062025_1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/the-green-quarter/gallery/parkside-padel-club/the-green-quarter_parkside-club_12062025_6.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/the-green-quarter/gallery/parkside-yards/the-green-quarter_parkside-yards_12062025_1.ashx"
+    ]
   },
   {
     id: "kidbrooke-village-berkeley",
@@ -438,7 +444,13 @@ export const developments: Development[] = [
     greenSpaces: "Exceptional. The masterplan includes 136 acres of parks, wetlands, and open space. The award-winning Cator Park, with its wetlands and play areas, is at the heart of the community.",
     amenities: ["24-hour concierge", "Gym", "Swimming pool", "Cinema", "Business lounge", "Residents' dining room", "Supermarket", "Shops", "Café", "Doctor's surgery", "Schools"],
     areaOverview: "Welcome to a true London village. Kidbrooke Village is one of the capital's most acclaimed regeneration stories, creating a genuinely self-contained community. Life here is about balance – the peace and quiet of acres of parkland, combined with the convenience of an on-site station and shops. It's perfect for families and those seeking a calmer pace of life without sacrificing a London postcode. Weekends are for farmers' markets in the square, walks in the park, and knowing your neighbours.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/central-gardens---the-village-collection/gallery/kidbrooke-village_central-gardens_exterior1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/central-gardens---the-village-collection/gallery/kidbrooke-village_central-gardens_interior-kitchen2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/gallery/kidbrooke-village_central-gardens_interior_living_24072024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/gallery/kidbrooke-village_central-gardens_interior_bedroom2_24072024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/gallery/our-community/kidbrooke-village_our-community_image-1.ashx"
+    ]
   },
   {
     id: "white-city-living-berkeley",
@@ -495,7 +507,13 @@ export const developments: Development[] = [
     greenSpaces: "The development features 7.5 acres of beautifully landscaped public space, including tree-lined promenades, water gardens, and Gauging Square with its interactive water features.",
     amenities: ["24-hour concierge", "'The Club' features a state-of-the-art gym", "Swimming pool and spa", "Virtual golf suite", "Squash court", "Private cinema"],
     areaOverview: "Discover a tranquil, sophisticated retreat right on the edge of the City. London Dock blends the area's rich maritime history with stunning contemporary design. The lifestyle here is about having a peaceful, waterside home just moments from the buzz of London's financial heart. Your weekends could be spent exploring the cobbled streets and historic pubs of Wapping, strolling to St Katharine Docks for lunch, or simply relaxing by the water gardens in Gauging Square. It's the perfect address for those who want to walk to work in the City and come home to a calming oasis.",
-    images: []
+    images: [
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/jade-wharf-showhome/london-dock_jade-wharf-sh_living-dining.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/jade-wharf-showhome/london-dock_jade-wharf-sh_kitchen-dining.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/facilities/london-dock_residents-fac_pool.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/exterior/london-dock_exteriors_outside-grounds.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/london-dock/gallery/local-area/london-dock_local-area_dockyard.ashx"
+    ]
   },
   {
     id: "camden-goods-yard-berkeley",
