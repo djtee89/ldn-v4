@@ -37,7 +37,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
     <>
       <div className="w-full space-y-2">
         {/* Main Image */}
-        <div className="relative aspect-[21/9] w-full overflow-hidden rounded-lg bg-muted">
+        <div className="relative aspect-[24/9] w-full overflow-hidden rounded-lg bg-muted">
           <img
             src={images[currentIndex]}
             alt={`${name} - Image ${currentIndex + 1}`}
