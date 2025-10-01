@@ -104,7 +104,14 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <img 
                   src="/logos/berkeley.jpg" 
                   alt="Berkeley Homes" 
-                  className="h-12 w-auto object-contain"
+                  className="h-16 w-auto object-contain rounded-lg shadow-sm"
+                />
+              )}
+              {development.developer === 'Barratt Homes' && (
+                <img 
+                  src="/logos/barratt.jpg" 
+                  alt="Barratt Homes" 
+                  className="h-16 w-auto object-contain rounded-lg shadow-sm"
                 />
               )}
             </div>
