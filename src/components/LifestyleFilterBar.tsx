@@ -23,7 +23,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
   selectedTypes,
   onTypesChange,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleType = (type: AmenityType) => {
     if (selectedTypes.includes(type)) {
