@@ -13,6 +13,7 @@ const PropertyOfTheWeek: React.FC<PropertyOfTheWeekProps> = ({
     development,
     floorplanUrl
   } = propertyOfTheWeek;
-  return;
+  
+  return null;
 };
 export default PropertyOfTheWeek;

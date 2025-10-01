@@ -202,13 +202,6 @@ const Index = () => {
             // Handle request info - could open a separate modal
             console.log('Request info for:', selectedDevelopment.name);
           }}
-          onGetDirections={(destination) => {
-            setActiveDirections({ 
-              developmentId: selectedDevelopment.id,
-              destination
-            });
-            setSelectedDevelopment(null);
-          }}
           nearbyAmenities={(selectedDevelopment as any).nearbyAmenities}
         />
       )}

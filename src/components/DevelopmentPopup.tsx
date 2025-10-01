@@ -13,11 +13,10 @@ import {
   Building,
   Star,
   Calendar,
-  MessageSquare,
-  Navigation
+  MessageSquare
 } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import DestinationSelector from '@/components/DestinationSelector';
+
 import { Amenity, AmenityType, amenityLabels } from '@/data/amenities';
 
 interface DevelopmentPopupProps {
@@ -25,7 +24,6 @@ interface DevelopmentPopupProps {
   onClose: () => void;
   onBookViewing: () => void;
   onRequestInfo: () => void;
-  onGetDirections?: (stationCoords: { lat: number; lng: number; name: string; line: string }) => void;
   nearbyAmenities?: Record<AmenityType, Amenity[]>;
 }
 
@@ -34,11 +32,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   onClose,
   onBookViewing,
   onRequestInfo,
-  onGetDirections,
   nearbyAmenities = {}
 }) => {
   const [activeSection, setActiveSection] = useState<string>('overview');
-  const [showDestinationSelector, setShowDestinationSelector] = useState(false);
 
   // Body scroll lock
   useEffect(() => {
@@ -310,7 +306,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
         {/* Sticky Footer Actions */}
         <div className="modal-footer">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
             <Button variant="premium" onClick={onBookViewing} className="flex items-center justify-center gap-2 text-sm sm:text-base">
               <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="truncate">Book Viewing</span>
@@ -328,34 +324,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="truncate">WhatsApp</span>
             </Button>
-            {onGetDirections && (
-              <Button 
-                variant="secondary" 
-                onClick={() => setShowDestinationSelector(true)}
-                className="flex items-center justify-center gap-2 text-sm sm:text-base"
-              >
-                <Navigation className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="truncate">Directions</span>
-              </Button>
-            )}
           </div>
         </div>
-
-        {/* Destination Selector */}
-        <DestinationSelector
-          isOpen={showDestinationSelector}
-          onClose={() => setShowDestinationSelector(false)}
-          nearestStation={development.nearestTube}
-          developmentLocation={development.location}
-          onSelectDestination={(station) => {
-            onGetDirections?.({
-              lat: station.coordinates.lat,
-              lng: station.coordinates.lng,
-              name: station.name,
-              line: station.line
-            });
-          }}
-        />
       </div>
     </div>
   );
