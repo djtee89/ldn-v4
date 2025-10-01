@@ -38,8 +38,8 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
   const amenityTypesList: AmenityType[] = ['private_schools', 'prep_schools', 'state_schools', 'grammar_schools', 'universities', 'michelin_restaurants', 'culture_landmarks', 'shopping_lifestyle', 'hospitals_clinics', 'transport_hubs'];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-4">
-      <div className="rounded-2xl bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-4">
+    <div className="w-full px-6 py-6">
+      <div className="rounded-2xl bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-6">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex items-center justify-between w-full hover:opacity-70 transition-smooth"
