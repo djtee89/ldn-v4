@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dumbbell, ShoppingCart, Trees, GraduationCap, ChevronDown, ChevronUp, Activity, Cross, CupSoda, Utensils } from 'lucide-react';
+import { Dumbbell, ShoppingCart, Trees, GraduationCap, ChevronDown, ChevronUp, Activity, Cross, CupSoda, Utensils, School } from 'lucide-react';
 import { AmenityType, amenityLabels } from '@/data/amenities';
 
 interface LifestyleFilterBarProps {
@@ -17,6 +17,7 @@ const amenityIcons: Record<AmenityType, React.ReactNode> = {
   gyms: <Dumbbell className="w-4 h-4" />,
   hospitals: <Cross className="w-4 h-4" />,
   cafes: <CupSoda className="w-4 h-4" />,
+  private_schools: <School className="w-4 h-4" />,
 };
 
 const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
@@ -33,7 +34,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
     }
   };
 
-  const amenityTypesList: AmenityType[] = ['tennis', 'grammar_schools', 'chinese_restaurants', 'supermarkets', 'parks', 'gyms', 'hospitals', 'cafes'];
+  const amenityTypesList: AmenityType[] = ['private_schools', 'grammar_schools', 'tennis', 'chinese_restaurants', 'supermarkets', 'parks', 'gyms', 'hospitals', 'cafes'];
 
   return (
     <div className="bg-card border border-border rounded-lg shadow-sm mb-4">

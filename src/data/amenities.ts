@@ -1,5 +1,5 @@
 // Mock amenities data - can be replaced with Google Places API or OpenStreetMap
-export type AmenityType = 'tennis' | 'grammar_schools' | 'chinese_restaurants' | 'supermarkets' | 'parks' | 'gyms' | 'hospitals' | 'cafes';
+export type AmenityType = 'tennis' | 'grammar_schools' | 'chinese_restaurants' | 'supermarkets' | 'parks' | 'gyms' | 'hospitals' | 'cafes' | 'private_schools';
 
 export interface Amenity {
   id: string;
@@ -22,6 +22,7 @@ export const amenityColors: Record<AmenityType, string> = {
   gyms: '#3B82F6', // blue
   hospitals: '#DC2626', // dark red
   cafes: '#6366F1', // indigo
+  private_schools: '#D946EF', // fuchsia
 };
 
 export const amenityLabels: Record<AmenityType, string> = {
@@ -33,6 +34,7 @@ export const amenityLabels: Record<AmenityType, string> = {
   gyms: 'Gyms',
   hospitals: 'Hospitals / Clinics',
   cafes: 'Cafés',
+  private_schools: 'Top Private Schools',
 };
 
 // Extensive amenities data across London
@@ -302,6 +304,164 @@ export const amenities: Amenity[] = [
   { id: 'cafe-38', name: 'Climpson & Sons', type: 'cafes', coordinates: { lat: 51.5465, lng: -0.0545 }, walkTime: 11 },
   { id: 'cafe-39', name: 'The Watch House', type: 'cafes', coordinates: { lat: 51.5055, lng: -0.0815 }, walkTime: 5 },
   { id: 'cafe-40', name: 'Copper Grind', type: 'cafes', coordinates: { lat: 51.5115, lng: -0.0895 }, walkTime: 4 },
+
+  // Top Private Schools (150+ locations across London)
+  // Central / Kensington & Chelsea / Westminster / H&F
+  { id: 'private-1', name: 'Norland Place School', type: 'private_schools', coordinates: { lat: 51.5115, lng: -0.2025 }, walkTime: 12 },
+  { id: 'private-2', name: 'Pembridge Hall School', type: 'private_schools', coordinates: { lat: 51.5125, lng: -0.2035 }, walkTime: 12 },
+  { id: 'private-3', name: 'Chepstow House School', type: 'private_schools', coordinates: { lat: 51.5135, lng: -0.2045 }, walkTime: 12 },
+  { id: 'private-4', name: 'Glendower Preparatory School', type: 'private_schools', coordinates: { lat: 51.4995, lng: -0.1785 }, walkTime: 11 },
+  { id: 'private-5', name: 'Falkner House', type: 'private_schools', coordinates: { lat: 51.4915, lng: -0.1685 }, walkTime: 10 },
+  { id: 'private-6', name: 'Bute House Preparatory School', type: 'private_schools', coordinates: { lat: 51.4935, lng: -0.2235 }, walkTime: 13 },
+  { id: 'private-7', name: 'St James Preparatory School', type: 'private_schools', coordinates: { lat: 51.4895, lng: -0.1825 }, walkTime: 11 },
+  { id: 'private-8', name: 'St James Senior Girls\' School', type: 'private_schools', coordinates: { lat: 51.4905, lng: -0.1835 }, walkTime: 11 },
+  { id: 'private-9', name: 'Garden House School', type: 'private_schools', coordinates: { lat: 51.4885, lng: -0.1705 }, walkTime: 10 },
+  { id: 'private-10', name: 'Knightsbridge School', type: 'private_schools', coordinates: { lat: 51.4965, lng: -0.1615 }, walkTime: 9 },
+  { id: 'private-11', name: 'Sussex House School', type: 'private_schools', coordinates: { lat: 51.4945, lng: -0.1685 }, walkTime: 10 },
+  { id: 'private-12', name: 'Cameron Vale School', type: 'private_schools', coordinates: { lat: 51.4975, lng: -0.1745 }, walkTime: 10 },
+  { id: 'private-13', name: 'Hill House International Junior School', type: 'private_schools', coordinates: { lat: 51.4975, lng: -0.1665 }, walkTime: 10 },
+  { id: 'private-14', name: 'Eaton Square Belgravia', type: 'private_schools', coordinates: { lat: 51.4955, lng: -0.1515 }, walkTime: 9 },
+  { id: 'private-15', name: 'Eaton Square Mayfair (Senior)', type: 'private_schools', coordinates: { lat: 51.5095, lng: -0.1485 }, walkTime: 9 },
+  { id: 'private-16', name: 'Kensington Wade (Bilingual)', type: 'private_schools', coordinates: { lat: 51.5005, lng: -0.1895 }, walkTime: 11 },
+  { id: 'private-17', name: 'More House School (Knightsbridge)', type: 'private_schools', coordinates: { lat: 51.4975, lng: -0.1625 }, walkTime: 9 },
+  { id: 'private-18', name: 'Queen\'s College Preparatory School', type: 'private_schools', coordinates: { lat: 51.5205, lng: -0.1595 }, walkTime: 10 },
+  { id: 'private-19', name: 'Abercorn School', type: 'private_schools', coordinates: { lat: 51.5345, lng: -0.1705 }, walkTime: 12 },
+  { id: 'private-20', name: 'Wetherby School (Notting Hill)', type: 'private_schools', coordinates: { lat: 51.5145, lng: -0.2055 }, walkTime: 12 },
+  { id: 'private-21', name: 'Wetherby Kensington', type: 'private_schools', coordinates: { lat: 51.5015, lng: -0.1935 }, walkTime: 11 },
+  { id: 'private-22', name: 'Wetherby Prep', type: 'private_schools', coordinates: { lat: 51.5135, lng: -0.1755 }, walkTime: 11 },
+  { id: 'private-23', name: 'Wetherby Senior', type: 'private_schools', coordinates: { lat: 51.5125, lng: -0.1765 }, walkTime: 11 },
+  { id: 'private-24', name: 'Latymer Prep School (Hammersmith)', type: 'private_schools', coordinates: { lat: 51.4925, lng: -0.2265 }, walkTime: 13 },
+  { id: 'private-25', name: 'Ravenscourt Park Preparatory School', type: 'private_schools', coordinates: { lat: 51.4945, lng: -0.2365 }, walkTime: 14 },
+  { id: 'private-26', name: 'ArtsEd Day School & Sixth Form', type: 'private_schools', coordinates: { lat: 51.4925, lng: -0.2455 }, walkTime: 14 },
+  { id: 'private-27', name: 'Kew Green Preparatory School', type: 'private_schools', coordinates: { lat: 51.4825, lng: -0.2885 }, walkTime: 18 },
+  { id: 'private-28', name: 'Kew College Prep', type: 'private_schools', coordinates: { lat: 51.4835, lng: -0.2895 }, walkTime: 18 },
+  { id: 'private-29', name: 'Unicorn School (Kew)', type: 'private_schools', coordinates: { lat: 51.4845, lng: -0.2905 }, walkTime: 18 },
+  { id: 'private-30', name: 'Broomfield House School (Kew)', type: 'private_schools', coordinates: { lat: 51.4855, lng: -0.2915 }, walkTime: 18 },
+
+  // Hampstead / St John's Wood / Camden / Islington / North Inner
+  { id: 'private-31', name: 'The Hall School, Hampstead', type: 'private_schools', coordinates: { lat: 51.5525, lng: -0.1785 }, walkTime: 14 },
+  { id: 'private-32', name: 'Arnold House School', type: 'private_schools', coordinates: { lat: 51.5345, lng: -0.1715 }, walkTime: 12 },
+  { id: 'private-33', name: 'Devonshire House Preparatory School', type: 'private_schools', coordinates: { lat: 51.5485, lng: -0.1745 }, walkTime: 13 },
+  { id: 'private-34', name: 'St Anthony\'s School for Boys', type: 'private_schools', coordinates: { lat: 51.5465, lng: -0.1805 }, walkTime: 13 },
+  { id: 'private-35', name: 'St Anthony\'s School for Girls', type: 'private_schools', coordinates: { lat: 51.5455, lng: -0.1815 }, walkTime: 13 },
+  { id: 'private-36', name: 'St Christina\'s School', type: 'private_schools', coordinates: { lat: 51.5435, lng: -0.1765 }, walkTime: 13 },
+  { id: 'private-37', name: 'Trevor-Roberts School', type: 'private_schools', coordinates: { lat: 51.5445, lng: -0.1755 }, walkTime: 13 },
+  { id: 'private-38', name: 'UCS Junior Branch', type: 'private_schools', coordinates: { lat: 51.5495, lng: -0.1785 }, walkTime: 11 },
+  { id: 'private-39', name: 'North Bridge House Prep (Regent\'s Park)', type: 'private_schools', coordinates: { lat: 51.5305, lng: -0.1545 }, walkTime: 10 },
+  { id: 'private-40', name: 'North Bridge House Senior Hampstead', type: 'private_schools', coordinates: { lat: 51.5515, lng: -0.1775 }, walkTime: 14 },
+  { id: 'private-41', name: 'North Bridge House Senior Canonbury', type: 'private_schools', coordinates: { lat: 51.5385, lng: -0.0985 }, walkTime: 10 },
+  { id: 'private-42', name: 'Southbank International School (Westminster campus)', type: 'private_schools', coordinates: { lat: 51.5025, lng: -0.1435 }, walkTime: 9 },
+  { id: 'private-43', name: 'Southbank International School (Kensington campus)', type: 'private_schools', coordinates: { lat: 51.5015, lng: -0.1945 }, walkTime: 11 },
+  { id: 'private-44', name: 'ICS London (International Community School)', type: 'private_schools', coordinates: { lat: 51.5445, lng: -0.1655 }, walkTime: 12 },
+  { id: 'private-45', name: 'The Cavendish School (Camden)', type: 'private_schools', coordinates: { lat: 51.5355, lng: -0.1435 }, walkTime: 10 },
+  { id: 'private-46', name: 'Halcyon London International School', type: 'private_schools', coordinates: { lat: 51.5215, lng: -0.1755 }, walkTime: 11 },
+  { id: 'private-47', name: 'The Lyceum School (City)', type: 'private_schools', coordinates: { lat: 51.5165, lng: -0.0925 }, walkTime: 7 },
+
+  // West / Ealing / Hounslow / Hammersmith & Fulham / Richmond
+  { id: 'private-48', name: 'Notting Hill & Ealing High Junior', type: 'private_schools', coordinates: { lat: 51.5105, lng: -0.3055 }, walkTime: 19 },
+  { id: 'private-49', name: 'St Benedict\'s Junior School (Ealing)', type: 'private_schools', coordinates: { lat: 51.5095, lng: -0.3175 }, walkTime: 20 },
+  { id: 'private-50', name: 'Durston House School', type: 'private_schools', coordinates: { lat: 51.5085, lng: -0.3115 }, walkTime: 20 },
+  { id: 'private-51', name: 'Harrodian Prep (within The Harrodian)', type: 'private_schools', coordinates: { lat: 51.4685, lng: -0.2585 }, walkTime: 17 },
+  { id: 'private-52', name: 'Falcons Prep Richmond', type: 'private_schools', coordinates: { lat: 51.4625, lng: -0.2685 }, walkTime: 18 },
+  { id: 'private-53', name: 'Falcons School for Girls (Putney edge)', type: 'private_schools', coordinates: { lat: 51.4645, lng: -0.2195 }, walkTime: 16 },
+  { id: 'private-54', name: 'The Mall School (Twickenham)', type: 'private_schools', coordinates: { lat: 51.4465, lng: -0.3345 }, walkTime: 24 },
+  { id: 'private-55', name: 'Newland House School (Twickenham)', type: 'private_schools', coordinates: { lat: 51.4455, lng: -0.3365 }, walkTime: 24 },
+  { id: 'private-56', name: 'Jack & Jill School (Twickenham/Hampton)', type: 'private_schools', coordinates: { lat: 51.4285, lng: -0.3545 }, walkTime: 26 },
+  { id: 'private-57', name: 'St Catherine\'s School, Twickenham', type: 'private_schools', coordinates: { lat: 51.4475, lng: -0.3385 }, walkTime: 24 },
+  { id: 'private-58', name: 'Old Vicarage School (Richmond)', type: 'private_schools', coordinates: { lat: 51.4565, lng: -0.2985 }, walkTime: 20 },
+  { id: 'private-59', name: 'Twickenham Preparatory School (Teddington)', type: 'private_schools', coordinates: { lat: 51.4275, lng: -0.3335 }, walkTime: 25 },
+  { id: 'private-60', name: 'Hampton Prep School', type: 'private_schools', coordinates: { lat: 51.4195, lng: -0.3655 }, walkTime: 25 },
+  { id: 'private-61', name: 'Lady Eleanor Holles Junior', type: 'private_schools', coordinates: { lat: 51.4145, lng: -0.3785 }, walkTime: 25 },
+  { id: 'private-62', name: 'Hampton Court House', type: 'private_schools', coordinates: { lat: 51.4035, lng: -0.3485 }, walkTime: 27 },
+  { id: 'private-63', name: 'Ibstock Place (Prep)', type: 'private_schools', coordinates: { lat: 51.4575, lng: -0.2525 }, walkTime: 17 },
+  { id: 'private-64', name: 'St James Senior Boys (Ashford)', type: 'private_schools', coordinates: { lat: 51.4315, lng: -0.4635 }, walkTime: 30 },
+  { id: 'private-65', name: 'The German School London (DSL)', type: 'private_schools', coordinates: { lat: 51.4225, lng: -0.3835 }, walkTime: 26 },
+  { id: 'private-66', name: 'The Swedish School in London', type: 'private_schools', coordinates: { lat: 51.4565, lng: -0.2475 }, walkTime: 17 },
+
+  // South West / Wandsworth / Merton / Kingston
+  { id: 'private-67', name: 'Newton Preparatory School (Battersea)', type: 'private_schools', coordinates: { lat: 51.4735, lng: -0.1585 }, walkTime: 11 },
+  { id: 'private-68', name: 'Dolphin School (Battersea)', type: 'private_schools', coordinates: { lat: 51.4745, lng: -0.1595 }, walkTime: 11 },
+  { id: 'private-69', name: 'Thomas\'s Battersea', type: 'private_schools', coordinates: { lat: 51.4755, lng: -0.1565 }, walkTime: 11 },
+  { id: 'private-70', name: 'Thomas\'s Clapham', type: 'private_schools', coordinates: { lat: 51.4595, lng: -0.1415 }, walkTime: 13 },
+  { id: 'private-71', name: 'Thomas\'s Fulham', type: 'private_schools', coordinates: { lat: 51.4765, lng: -0.1945 }, walkTime: 12 },
+  { id: 'private-72', name: 'Thomas\'s Kensington', type: 'private_schools', coordinates: { lat: 51.4985, lng: -0.1915 }, walkTime: 11 },
+  { id: 'private-73', name: 'Broomwood Prep Boys', type: 'private_schools', coordinates: { lat: 51.4625, lng: -0.1695 }, walkTime: 14 },
+  { id: 'private-74', name: 'Broomwood Prep Girls', type: 'private_schools', coordinates: { lat: 51.4635, lng: -0.1705 }, walkTime: 14 },
+  { id: 'private-75', name: 'Northcote Lodge', type: 'private_schools', coordinates: { lat: 51.4655, lng: -0.1725 }, walkTime: 14 },
+  { id: 'private-76', name: 'Finton House School', type: 'private_schools', coordinates: { lat: 51.4615, lng: -0.1725 }, walkTime: 14 },
+  { id: 'private-77', name: 'Oliver House School', type: 'private_schools', coordinates: { lat: 51.4665, lng: -0.1745 }, walkTime: 14 },
+  { id: 'private-78', name: 'Prospect House School (Putney)', type: 'private_schools', coordinates: { lat: 51.4645, lng: -0.2155 }, walkTime: 16 },
+  { id: 'private-79', name: 'Merlin School (Putney)', type: 'private_schools', coordinates: { lat: 51.4655, lng: -0.2165 }, walkTime: 16 },
+  { id: 'private-80', name: 'The Study Prep (Wimbledon)', type: 'private_schools', coordinates: { lat: 51.4255, lng: -0.2075 }, walkTime: 14 },
+  { id: 'private-81', name: 'Donhead Preparatory School', type: 'private_schools', coordinates: { lat: 51.4285, lng: -0.2085 }, walkTime: 14 },
+  { id: 'private-82', name: 'Willington School (Wimbledon)', type: 'private_schools', coordinates: { lat: 51.4215, lng: -0.2045 }, walkTime: 14 },
+  { id: 'private-83', name: 'King\'s College Junior School (Wimbledon)', type: 'private_schools', coordinates: { lat: 51.4175, lng: -0.2065 }, walkTime: 14 },
+  { id: 'private-84', name: 'Wimbledon High Junior School', type: 'private_schools', coordinates: { lat: 51.4235, lng: -0.2055 }, walkTime: 14 },
+  { id: 'private-85', name: 'Rokeby School (Kingston)', type: 'private_schools', coordinates: { lat: 51.4125, lng: -0.2955 }, walkTime: 20 },
+  { id: 'private-86', name: 'Surbiton High School', type: 'private_schools', coordinates: { lat: 51.3965, lng: -0.3045 }, walkTime: 21 },
+  { id: 'private-87', name: 'Surbiton High Boys\' Prep', type: 'private_schools', coordinates: { lat: 51.3975, lng: -0.3035 }, walkTime: 21 },
+  { id: 'private-88', name: 'Surbiton High Girls\' Prep', type: 'private_schools', coordinates: { lat: 51.3985, lng: -0.3025 }, walkTime: 21 },
+  { id: 'private-89', name: 'Shrewsbury House School (Surbiton)', type: 'private_schools', coordinates: { lat: 51.3995, lng: -0.3055 }, walkTime: 21 },
+  { id: 'private-90', name: 'Holy Cross Preparatory School (Kingston)', type: 'private_schools', coordinates: { lat: 51.4115, lng: -0.2985 }, walkTime: 20 },
+  { id: 'private-91', name: 'Marymount International School (Kingston)', type: 'private_schools', coordinates: { lat: 51.4085, lng: -0.2895 }, walkTime: 20 },
+  { id: 'private-92', name: 'Canbury School (Kingston)', type: 'private_schools', coordinates: { lat: 51.4135, lng: -0.2995 }, walkTime: 20 },
+  { id: 'private-93', name: 'Park Hill School (Kingston)', type: 'private_schools', coordinates: { lat: 51.4155, lng: -0.3025 }, walkTime: 20 },
+
+  // North West / Barnet / Brent / Harrow / Hillingdon
+  { id: 'private-94', name: 'Mill Hill International', type: 'private_schools', coordinates: { lat: 51.6145, lng: -0.2285 }, walkTime: 21 },
+  { id: 'private-95', name: 'Belmont (Mill Hill Prep)', type: 'private_schools', coordinates: { lat: 51.6125, lng: -0.2295 }, walkTime: 21 },
+  { id: 'private-96', name: 'Grimsdell (Mill Hill Pre-Prep)', type: 'private_schools', coordinates: { lat: 51.6155, lng: -0.2265 }, walkTime: 21 },
+  { id: 'private-97', name: 'John Lyon School (Harrow)', type: 'private_schools', coordinates: { lat: 51.5755, lng: -0.3365 }, walkTime: 23 },
+  { id: 'private-98', name: 'Orley Farm School (Harrow)', type: 'private_schools', coordinates: { lat: 51.5785, lng: -0.3345 }, walkTime: 23 },
+  { id: 'private-99', name: 'Quainton Hall School (Harrow)', type: 'private_schools', coordinates: { lat: 51.5765, lng: -0.3385 }, walkTime: 23 },
+  { id: 'private-100', name: 'Alpha Preparatory School (Harrow)', type: 'private_schools', coordinates: { lat: 51.5745, lng: -0.3405 }, walkTime: 23 },
+  { id: 'private-101', name: 'Reddiford School (Pinner)', type: 'private_schools', coordinates: { lat: 51.5935, lng: -0.3865 }, walkTime: 27 },
+  { id: 'private-102', name: 'St John\'s School (Northwood)', type: 'private_schools', coordinates: { lat: 51.6085, lng: -0.4195 }, walkTime: 28 },
+  { id: 'private-103', name: 'St Martin\'s School (Northwood)', type: 'private_schools', coordinates: { lat: 51.6075, lng: -0.4175 }, walkTime: 28 },
+  { id: 'private-104', name: 'Merchant Taylors\' School (Northwood)', type: 'private_schools', coordinates: { lat: 51.6105, lng: -0.4215 }, walkTime: 28 },
+  { id: 'private-105', name: 'North London Grammar School (Hendon)', type: 'private_schools', coordinates: { lat: 51.5835, lng: -0.2175 }, walkTime: 19 },
+  { id: 'private-106', name: 'Dwight School London (Friern Barnet)', type: 'private_schools', coordinates: { lat: 51.6155, lng: -0.1505 }, walkTime: 18 },
+  { id: 'private-107', name: 'Lycée International de Londres Winston Churchill (Wembley)', type: 'private_schools', coordinates: { lat: 51.5555, lng: -0.2845 }, walkTime: 17 },
+  { id: 'private-108', name: 'St Mary\'s School, Hampstead (RC)', type: 'private_schools', coordinates: { lat: 51.5545, lng: -0.1785 }, walkTime: 14 },
+  { id: 'private-109', name: 'Immanuel College (Bushey)', type: 'private_schools', coordinates: { lat: 51.6465, lng: -0.3635 }, walkTime: 30 },
+
+  // North / North East / Enfield / Haringey / Waltham Forest / Redbridge
+  { id: 'private-110', name: 'Highgate Pre-Prep / Junior', type: 'private_schools', coordinates: { lat: 51.5705, lng: -0.1515 }, walkTime: 16 },
+  { id: 'private-111', name: 'Channing Junior', type: 'private_schools', coordinates: { lat: 51.5745, lng: -0.1485 }, walkTime: 15 },
+  { id: 'private-112', name: 'Keble Preparatory School (Winchmore Hill)', type: 'private_schools', coordinates: { lat: 51.6235, lng: -0.1075 }, walkTime: 18 },
+  { id: 'private-113', name: 'Palmers Green High School', type: 'private_schools', coordinates: { lat: 51.6185, lng: -0.1125 }, walkTime: 18 },
+  { id: 'private-114', name: 'Vita et Pax Preparatory School (Southgate)', type: 'private_schools', coordinates: { lat: 51.6315, lng: -0.1245 }, walkTime: 20 },
+  { id: 'private-115', name: 'Bancroft\'s Prep (Woodford Green)', type: 'private_schools', coordinates: { lat: 51.5905, lng: 0.0255 }, walkTime: 23 },
+  { id: 'private-116', name: 'Forest School Prep (Walthamstow)', type: 'private_schools', coordinates: { lat: 51.5885, lng: 0.0115 }, walkTime: 22 },
+  { id: 'private-117', name: 'St Aubyn\'s School (Woodford Green)', type: 'private_schools', coordinates: { lat: 51.5925, lng: 0.0265 }, walkTime: 23 },
+  { id: 'private-118', name: 'Snaresbrook Preparatory School', type: 'private_schools', coordinates: { lat: 51.5855, lng: 0.0185 }, walkTime: 22 },
+  { id: 'private-119', name: 'Woodford Green Preparatory School', type: 'private_schools', coordinates: { lat: 51.5965, lng: 0.0295 }, walkTime: 24 },
+  { id: 'private-120', name: 'Gatehouse School (Victoria Park)', type: 'private_schools', coordinates: { lat: 51.5355, lng: -0.0425 }, walkTime: 10 },
+  { id: 'private-121', name: 'Faraday Preparatory School (Trinity Buoy Wharf)', type: 'private_schools', coordinates: { lat: 51.5095, lng: 0.0085 }, walkTime: 12 },
+
+  // South / South East / Dulwich / Lewisham / Greenwich / Bromley / Croydon
+  { id: 'private-122', name: 'Dulwich Prep London', type: 'private_schools', coordinates: { lat: 51.4455, lng: -0.0835 }, walkTime: 12 },
+  { id: 'private-123', name: 'Rosemead Preparatory School', type: 'private_schools', coordinates: { lat: 51.4435, lng: -0.0815 }, walkTime: 12 },
+  { id: 'private-124', name: 'Herne Hill School', type: 'private_schools', coordinates: { lat: 51.4535, lng: -0.1015 }, walkTime: 11 },
+  { id: 'private-125', name: 'Sydenham High School (GDST)', type: 'private_schools', coordinates: { lat: 51.4325, lng: -0.0545 }, walkTime: 15 },
+  { id: 'private-126', name: 'Colfe\'s Junior School', type: 'private_schools', coordinates: { lat: 51.4655, lng: 0.0135 }, walkTime: 18 },
+  { id: 'private-127', name: 'Blackheath Prep (formerly Blackheath Preparatory)', type: 'private_schools', coordinates: { lat: 51.4675, lng: 0.0025 }, walkTime: 17 },
+  { id: 'private-128', name: 'Pointers School (Blackheath)', type: 'private_schools', coordinates: { lat: 51.4685, lng: 0.0045 }, walkTime: 17 },
+  { id: 'private-129', name: 'Eltham College Junior School', type: 'private_schools', coordinates: { lat: 51.4505, lng: 0.0565 }, walkTime: 20 },
+  { id: 'private-130', name: 'Babington House School (Chislehurst)', type: 'private_schools', coordinates: { lat: 51.4185, lng: 0.0735 }, walkTime: 23 },
+  { id: 'private-131', name: 'Bromley High School (GDST)', type: 'private_schools', coordinates: { lat: 51.4075, lng: 0.0205 }, walkTime: 22 },
+  { id: 'private-132', name: 'Bickley Park School', type: 'private_schools', coordinates: { lat: 51.3965, lng: 0.0425 }, walkTime: 24 },
+  { id: 'private-133', name: 'Farringtons School (Chislehurst)', type: 'private_schools', coordinates: { lat: 51.4195, lng: 0.0745 }, walkTime: 23 },
+  { id: 'private-134', name: 'Croydon High School (GDST)', type: 'private_schools', coordinates: { lat: 51.3715, lng: -0.0945 }, walkTime: 30 },
+  { id: 'private-135', name: 'Cumnor House School for Boys (Purley)', type: 'private_schools', coordinates: { lat: 51.3375, lng: -0.1125 }, walkTime: 33 },
+  { id: 'private-136', name: 'Cumnor House School for Girls (Purley)', type: 'private_schools', coordinates: { lat: 51.3385, lng: -0.1135 }, walkTime: 33 },
+
+  // Specialist / SEN independents
+  { id: 'private-137', name: 'Fairley House School (Westminster)', type: 'private_schools', coordinates: { lat: 51.5005, lng: -0.1345 }, walkTime: 8 },
+  { id: 'private-138', name: 'The Moat School (Fulham)', type: 'private_schools', coordinates: { lat: 51.4795, lng: -0.1925 }, walkTime: 12 },
+  { id: 'private-139', name: 'Centre Academy London (Battersea)', type: 'private_schools', coordinates: { lat: 51.4765, lng: -0.1575 }, walkTime: 11 },
+  { id: 'private-140', name: 'The Chelsea Group of Children – Chelsea Hall School', type: 'private_schools', coordinates: { lat: 51.4885, lng: -0.1725 }, walkTime: 10 },
+  { id: 'private-141', name: 'Riverston School (Eltham)', type: 'private_schools', coordinates: { lat: 51.4485, lng: 0.0595 }, walkTime: 20 },
 ];
 
 // Get all amenities by selected types (for map display)
