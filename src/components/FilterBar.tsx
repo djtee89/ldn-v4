@@ -431,7 +431,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
   // Desktop view - compact pills
   return (
-    <div className="bg-card border-b border-border">
+    <div className="bg-card border-b border-border rounded-2xl mx-4">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center gap-3">
           {/* Filter pills */}
