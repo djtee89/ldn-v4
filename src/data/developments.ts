@@ -313,9 +313,11 @@ export const developments: Development[] = [
     chineseSupermarket: "25 mins",
     areaOverview: "Award-winning sustainable community with excellent schools, green spaces and growing transport links.",
     images: [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop"
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/central-gardens---the-village-collection/gallery/kidbrooke-village_central-gardens_exterior1.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/central-gardens---the-village-collection/gallery/kidbrooke-village_central-gardens_interior-kitchen2.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/gallery/kidbrooke-village_central-gardens_interior_living_24072024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/gallery/kidbrooke-village_central-gardens_interior_bedroom2_24072024.ashx",
+      "https://www.berkeleygroup.co.uk/-/media/migration/berkeley-group/developments/kidbrooke-village/gallery/our-community/kidbrooke-village_our-community_image-1.ashx"
     ]
   },
   {
