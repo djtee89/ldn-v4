@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import DeveloperBanner from '@/components/DeveloperBanner';
+import BestOfLondon from '@/components/BestOfLondon';
 import FilterBar, { FilterState } from '@/components/FilterBar';
 import MapComponent from '@/components/MapComponent';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
@@ -191,6 +192,10 @@ const Index = () => {
       <DeveloperBanner 
         onDeveloperClick={handleDeveloperClick}
         highlightedDeveloper={highlightedDeveloper}
+      />
+      
+      <BestOfLondon 
+        count={filteredDevelopments.length}
       />
       
       <LifestyleFilterBar
