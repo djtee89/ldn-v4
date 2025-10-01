@@ -9,6 +9,7 @@ import { X, Calendar, MessageCircle, Phone, Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import wechatQR from '@/assets/qr_wechat.png';
 import { supabase } from '@/integrations/supabase/client';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -28,14 +29,18 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
     phone: '',
     preferredDate: '',
     preferredTime: '',
-    message: ''
+    message: '',
+    honeypot: '', // Hidden field for bot detection
+    consentGiven: false // GDPR consent
   });
 
   const [wechatForm, setWechatForm] = useState({
     name: '',
     email: '',
     phone: '',
-    wechatId: ''
+    wechatId: '',
+    honeypot: '',
+    consentGiven: false
   });
 
   const [agentForm, setAgentForm] = useState({
@@ -47,7 +52,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const FORMSPREE_URL = 'https://formspree.io/f/mnngdrog';
 
   // Body scroll lock
   useEffect(() => {
@@ -75,57 +79,47 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
 
   const handleCalendarSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side validation
+    if (!calendarForm.consentGiven) {
+      toast({
+        title: "Consent required",
+        description: "Please accept the privacy policy to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
-      // Get current user session
+      // Get current user session for auth token
       const { data: { session } } = await supabase.auth.getSession();
       
-      // Save to database (with user_id if authenticated)
-      const bookingData = {
-        development_name: developmentName,
-        name: calendarForm.name.trim(),
-        email: calendarForm.email.trim(),
-        phone: calendarForm.phone.trim(),
-        preferred_date: calendarForm.preferredDate,
-        preferred_time: calendarForm.preferredTime || 'Flexible',
-        message: calendarForm.message.trim() || 'None',
-        source: 'calendar_booking',
-        status: 'pending',
-        user_id: session?.user?.id || null // Set user_id if authenticated, null if anonymous
-      };
-
-      const { error: dbError } = await supabase
-        .from('bookings')
-        .insert([bookingData]);
-
-      if (dbError) {
-        console.error('Database error:', dbError);
-        throw new Error('Failed to save booking');
-      }
-
-      // Also send via email (Formspree)
-      await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          development: developmentName,
-          name: calendarForm.name.trim(),
-          email: calendarForm.email.trim(),
-          phone: calendarForm.phone.trim(),
+      // Submit via secure edge function
+      const { data, error } = await supabase.functions.invoke('submit-contact-form', {
+        body: {
+          name: calendarForm.name,
+          email: calendarForm.email,
+          phone: calendarForm.phone,
           preferredDate: calendarForm.preferredDate,
           preferredTime: calendarForm.preferredTime || 'Flexible',
-          message: calendarForm.message.trim() || 'None',
-        }),
+          message: calendarForm.message || '',
+          developmentName: developmentName,
+          source: 'calendar_booking',
+          honeypot: calendarForm.honeypot,
+          consentGiven: calendarForm.consentGiven
+        },
+        headers: session?.access_token ? {
+          Authorization: `Bearer ${session.access_token}`
+        } : {}
       });
+
+      if (error) throw error;
 
       toast({
         title: "Request sent!",
-        description: session?.user 
-          ? "Your viewing request has been saved and you can view it in your bookings."
-          : "We've received your viewing request and will contact you soon."
+        description: data?.message || "We've received your viewing request and will contact you soon."
       });
       
       // Reset form
@@ -135,15 +129,16 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
         phone: '',
         preferredDate: '',
         preferredTime: '',
-        message: ''
+        message: '',
+        honeypot: '',
+        consentGiven: false
       });
       
       onClose();
     } catch (error) {
-      console.error('Form submission error:', error);
       toast({
         title: "Submission failed",
-        description: "Please try again or contact us via WhatsApp.",
+        description: error instanceof Error ? error.message : "Please try again or contact us via WhatsApp.",
         variant: "destructive"
       });
     } finally {
@@ -151,13 +146,65 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
     }
   };
 
-  const handleWeChatSubmit = (e: React.FormEvent) => {
+  const handleWeChatSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "WeChat request submitted",
-      description: "Our team will contact you via WeChat within 24 hours."
-    });
-    onClose();
+    
+    if (!wechatForm.consentGiven) {
+      toast({
+        title: "Consent required",
+        description: "Please accept the privacy policy to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const { data, error } = await supabase.functions.invoke('submit-contact-form', {
+        body: {
+          name: wechatForm.name,
+          email: wechatForm.email,
+          phone: wechatForm.phone,
+          message: `WeChat ID: ${wechatForm.wechatId || 'Not provided'}`,
+          developmentName: developmentName,
+          source: 'wechat_booking',
+          honeypot: wechatForm.honeypot,
+          consentGiven: wechatForm.consentGiven
+        },
+        headers: session?.access_token ? {
+          Authorization: `Bearer ${session.access_token}`
+        } : {}
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "WeChat request submitted",
+        description: "Our team will contact you via WeChat within 24 hours."
+      });
+      
+      setWechatForm({
+        name: '',
+        email: '',
+        phone: '',
+        wechatId: '',
+        honeypot: '',
+        consentGiven: false
+      });
+      
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Submission failed",
+        description: error instanceof Error ? error.message : "Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleAgentSubmit = (e: React.FormEvent) => {
@@ -272,6 +319,33 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                         onChange={(e) => setCalendarForm({...calendarForm, message: e.target.value})}
                       />
                     </div>
+                    
+                    {/* Honeypot field - hidden from users, catches bots */}
+                    <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                      <Input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={calendarForm.honeypot}
+                        onChange={(e) => setCalendarForm({...calendarForm, honeypot: e.target.value})}
+                      />
+                    </div>
+                    
+                    {/* GDPR Consent */}
+                    <div className="flex items-start gap-2 pt-2">
+                      <input
+                        type="checkbox"
+                        id="cal-consent"
+                        checked={calendarForm.consentGiven}
+                        onChange={(e) => setCalendarForm({...calendarForm, consentGiven: e.target.checked})}
+                        required
+                        className="mt-1"
+                      />
+                      <Label htmlFor="cal-consent" className="text-xs leading-tight cursor-pointer">
+                        I agree to the <a href="/privacy-policy" target="_blank" className="text-primary underline">Privacy Policy</a> and consent to my personal data being processed for this booking request. *
+                      </Label>
+                    </div>
                   </form>
                 </CardContent>
               </Card>
@@ -350,6 +424,33 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                           onChange={(e) => setWechatForm({...wechatForm, wechatId: e.target.value})}
                         />
                       </div>
+                    </div>
+                    
+                    {/* Honeypot field */}
+                    <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                      <Input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={wechatForm.honeypot}
+                        onChange={(e) => setWechatForm({...wechatForm, honeypot: e.target.value})}
+                      />
+                    </div>
+                    
+                    {/* GDPR Consent */}
+                    <div className="flex items-start gap-2 pt-2">
+                      <input
+                        type="checkbox"
+                        id="wc-consent"
+                        checked={wechatForm.consentGiven}
+                        onChange={(e) => setWechatForm({...wechatForm, consentGiven: e.target.checked})}
+                        required
+                        className="mt-1"
+                      />
+                      <Label htmlFor="wc-consent" className="text-xs leading-tight cursor-pointer">
+                        I agree to the <a href="/privacy-policy" target="_blank" className="text-primary underline">Privacy Policy</a> and consent to my personal data being processed for this request. *
+                      </Label>
                     </div>
                   </form>
                 </CardContent>

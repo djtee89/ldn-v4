@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import wechatQR from '@/assets/qr_wechat.png';
+import { supabase } from '@/integrations/supabase/client';
 interface ContactProps {
   onBack: () => void;
 }
@@ -24,9 +25,69 @@ const Contact: React.FC<ContactProps> = ({
     name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
+    honeypot: '',
+    consentGiven: false
   });
-  const FORMSPREE_URL = 'https://formspree.io/f/mnngdrog';
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!emailForm.consentGiven) {
+      toast({
+        title: "Consent required",
+        description: "Please accept the privacy policy to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const { data, error } = await supabase.functions.invoke('submit-contact-form', {
+        body: {
+          name: emailForm.name,
+          email: emailForm.email,
+          phone: emailForm.phone,
+          message: emailForm.message,
+          source: 'email_contact',
+          honeypot: emailForm.honeypot,
+          consentGiven: emailForm.consentGiven
+        },
+        headers: session?.access_token ? {
+          Authorization: `Bearer ${session.access_token}`
+        } : {}
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message sent!",
+        description: "We've received your inquiry and will respond within 24 hours."
+      });
+      
+      setEmailForm({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        honeypot: '',
+        consentGiven: false
+      });
+      
+      setIsEmailDialogOpen(false);
+    } catch (error) {
+      toast({
+        title: "Submission failed",
+        description: error instanceof Error ? error.message : "Please try again or contact us via WhatsApp.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const handleCopyWeChat = () => {
     navigator.clipboard.writeText('LDN_Properties_2024');
     setCopied(true);
@@ -36,56 +97,16 @@ const Contact: React.FC<ContactProps> = ({
       description: "WeChat ID has been copied to your clipboard"
     });
   };
+  
   const handleEmailClick = () => {
     setIsEmailDialogOpen(true);
   };
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const response = await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: emailForm.name.trim(),
-          email: emailForm.email.trim(),
-          phone: emailForm.phone.trim(),
-          message: emailForm.message.trim(),
-          subject: 'Property Inquiry - Contact Form'
-        })
-      });
-      if (response.ok) {
-        toast({
-          title: "Message sent!",
-          description: "We've received your inquiry and will respond within 24 hours."
-        });
-        setEmailForm({
-          name: '',
-          email: '',
-          phone: '',
-          message: ''
-        });
-        setIsEmailDialogOpen(false);
-      } else {
-        throw new Error('Failed to submit form');
-      }
-    } catch (error) {
-      console.error('Form submission error:', error);
-      toast({
-        title: "Submission failed",
-        description: "Please try again or contact us via WhatsApp.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent("Hi, I would like to speak with an expert about London properties.");
     window.open(`https://wa.me/447776598031?text=${message}`, '_blank');
   };
+  
   return <div className="min-h-screen bg-background overflow-y-auto pb-8">
       {/* Header */}
       <div className="border-b border-border">
@@ -245,6 +266,34 @@ const Contact: React.FC<ContactProps> = ({
               message: e.target.value
             })} required rows={4} />
             </div>
+            
+            {/* Honeypot field */}
+            <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
+              <Input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={emailForm.honeypot}
+                onChange={e => setEmailForm({ ...emailForm, honeypot: e.target.value })}
+              />
+            </div>
+            
+            {/* GDPR Consent */}
+            <div className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                id="email-consent"
+                checked={emailForm.consentGiven}
+                onChange={e => setEmailForm({ ...emailForm, consentGiven: e.target.checked })}
+                required
+                className="mt-1"
+              />
+              <Label htmlFor="email-consent" className="text-xs leading-tight cursor-pointer">
+                I agree to the <a href="/privacy-policy" target="_blank" className="text-primary underline">Privacy Policy</a> and consent to my personal data being processed for this inquiry. *
+              </Label>
+            </div>
+            
             <Button type="submit" variant="premium" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? 'Sending...' : 'Send Message'}
             </Button>
