@@ -50,13 +50,13 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" onClick={onAboutClick} className="font-medium">
+            <Button variant="outline" onClick={onAboutClick} className="font-medium">
               {language === 'en' ? 'About Us' : '关于我们'}
             </Button>
             <Button variant="outline" onClick={onGuideClick}>
               {language === 'en' ? 'Property Guide' : '购房指南'}
             </Button>
-            <Button variant="premium" size="sm" onClick={onBookViewingClick}>
+            <Button variant="outline" onClick={onBookViewingClick}>
               {language === 'en' ? 'Speak to an Expert' : '联系专家'}
             </Button>
             <Select value={language} onValueChange={setLanguage}>
