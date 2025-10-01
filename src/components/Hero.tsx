@@ -8,30 +8,29 @@ const Hero: React.FC<HeroProps> = ({
   onDeveloperClick,
   highlightedDeveloper
 }) => {
-  return <section className="relative isolate">
+  return <section className="relative isolate mb-6">
       {/* Banner image */}
       <div className="relative overflow-hidden rounded-[24px]">
-        <img src="/kings-road-park-1.jpeg" alt="" className="h-[clamp(280px,35vh,400px)] w-full object-cover" loading="eager" />
+        <img src="/kings-road-park-1.jpeg" alt="London property development" className="h-[clamp(320px,40vh,450px)] w-full object-cover" loading="eager" />
         {/* Gradient overlay for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/50" />
       </div>
 
       {/* Content overlay */}
-      <div className="pointer-events-none absolute inset-0 flex items-center">
+      <div className="pointer-events-none absolute inset-0 flex flex-col justify-center">
         <div className="pointer-events-auto mx-auto w-full max-w-6xl px-4">
           {/* Heading */}
           <div className="max-w-3xl">
-            
-            <h1 className="mt-2 text-white text-2xl sm:text-4xl md:text-5xl font-bold leading-tight">
+            <h1 className="text-white text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight">
               Search new-build property across London
             </h1>
-            <p className="mt-2 sm:mt-3 text-white/90 text-base sm:text-lg">
+            <p className="mt-2 sm:mt-3 text-white/95 text-base sm:text-lg font-light">
               Off-plan and ready-to-move homes from leading developers.
             </p>
           </div>
 
-          {/* Developer Banner */}
-          <div className="mt-3">
+          {/* Developer Banner - Transparent Overlay */}
+          <div className="mt-6">
             <DeveloperBanner onDeveloperClick={onDeveloperClick} highlightedDeveloper={highlightedDeveloper} />
           </div>
         </div>

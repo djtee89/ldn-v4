@@ -199,18 +199,21 @@ const Index = () => {
         highlightedDeveloper={highlightedDeveloper}
       />
       
-      <div className="my-6 px-4">
+      <div className="my-6 px-4 container mx-auto">
         <FilterBar 
           filters={filters}
           onFiltersChange={setFilters}
           resultsCount={filteredDevelopments.length}
+          onSearch={() => setShowMobileMap(true)}
         />
       </div>
       
-      <LifestyleFilterBar
-        selectedTypes={lifestyleFilters}
-        onTypesChange={setLifestyleFilters}
-      />
+      <div className="px-4 container mx-auto mb-6">
+        <LifestyleFilterBar
+          selectedTypes={lifestyleFilters}
+          onTypesChange={setLifestyleFilters}
+        />
+      </div>
       
       {/* Mobile View Toggle */}
       <div className="md:hidden sticky top-[60px] z-30 bg-background border-b px-4 py-2">

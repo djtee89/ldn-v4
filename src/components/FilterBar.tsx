@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerFooter } from '@/components/ui/drawer';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { SlidersHorizontal, ChevronDown, X, MapPin, Home, Coins } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, X, MapPin, Home, Coins, Search } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export interface FilterState {
@@ -27,9 +27,9 @@ interface FilterBarProps {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
   resultsCount: number;
+  onSearch?: () => void;
 }
 
-// Price steps as specified
 const priceSteps = [
   { value: '200000', label: '£200k' },
   { value: '250000', label: '£250k' },
@@ -79,20 +79,17 @@ const bedroomOptions = [
 
 const amenitiesList = ['Gym', 'Pool', 'Concierge', '24/7 Security', 'Parking', 'Balcony'];
 
-const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, resultsCount }) => {
+const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, resultsCount, onSearch }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDesktopExpanded, setIsDesktopExpanded] = useState(false);
   const [localFilters, setLocalFilters] = useState<FilterState>(filters);
   const isMobile = useIsMobile();
   const drawerTriggerRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  // Sync local filters with prop filters when they change externally
   useEffect(() => {
     setLocalFilters(filters);
   }, [filters]);
 
-  // Lock body scroll when drawer is open
   useEffect(() => {
     if (isDrawerOpen && isMobile) {
       previousFocusRef.current = document.activeElement as HTMLElement;
@@ -109,7 +106,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || '0') * -1);
       }
-      // Restore focus
       if (previousFocusRef.current) {
         previousFocusRef.current.focus();
       }
@@ -131,12 +127,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   };
 
   const handleApply = () => {
-    // Validate price range
     if (localFilters.priceFrom && localFilters.priceTo) {
       const from = parseInt(localFilters.priceFrom);
       const to = parseInt(localFilters.priceTo);
       if (from > to) {
-        // Swap them
         onFiltersChange({
           ...localFilters,
           priceFrom: localFilters.priceTo,
@@ -149,13 +143,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
       onFiltersChange(localFilters);
     }
     
-    // Close drawer on mobile and scroll to results
     if (isMobile) {
       setIsDrawerOpen(false);
     }
     
-    // Scroll to top of results
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (onSearch) {
+      onSearch();
+    }
   };
 
   const handleReset = () => {
@@ -176,7 +170,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
     setLocalFilters(defaultFilters);
     onFiltersChange(defaultFilters);
     
-    // Close drawer on mobile
     if (isMobile) {
       setIsDrawerOpen(false);
     }
@@ -184,7 +177,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
   const handleBedroomsMinChange = (value: string) => {
     updateLocalFilter('bedroomsMin', value);
-    // Auto-adjust max if needed
     if (localFilters.bedroomsMax && value) {
       const minVal = parseInt(value);
       const maxVal = parseInt(localFilters.bedroomsMax);
@@ -196,7 +188,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
   const handleBedroomsMaxChange = (value: string) => {
     updateLocalFilter('bedroomsMax', value);
-    // Auto-adjust min if needed
     if (localFilters.bedroomsMin && value) {
       const minVal = parseInt(localFilters.bedroomsMin);
       const maxVal = parseInt(value);
@@ -208,7 +199,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
   const FilterControls = () => (
     <div className="space-y-3.5">
-      {/* Price Range */}
       <div>
         <Label className="text-xs font-semibold mb-2 block flex items-center gap-1.5">
           <Coins className="h-3.5 w-3.5" />
@@ -238,7 +228,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         </div>
       </div>
 
-      {/* Bedrooms */}
       <div>
         <Label className="text-xs font-semibold mb-2 block flex items-center gap-1.5">
           <Home className="h-3.5 w-3.5" />
@@ -268,7 +257,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         </div>
       </div>
 
-      {/* Zone & Distance */}
       <div>
         <Label className="text-xs font-semibold mb-2 block flex items-center gap-1.5">
           <MapPin className="h-3.5 w-3.5" />
@@ -306,7 +294,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         </div>
       </div>
 
-      {/* Tenure */}
       <div>
         <Label className="text-xs font-semibold mb-2 block">Tenure</Label>
         <Select value={localFilters.tenure} onValueChange={value => updateLocalFilter('tenure', value)}>
@@ -321,7 +308,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
         </Select>
       </div>
 
-      {/* Amenities */}
       <div>
         <Label className="text-xs font-semibold mb-2 block">Amenities</Label>
         <div className="grid grid-cols-2 gap-1.5">
@@ -342,7 +328,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
     </div>
   );
 
-  // Get active filter summary
   const getActiveFilterSummary = () => {
     const active = [];
     if (localFilters.zones.length > 0) {
@@ -363,23 +348,20 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
   const hasActiveFilters = getActiveFilterSummary().length > 0;
 
-  // Mobile view with drawer
   if (isMobile) {
     return (
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="container mx-auto px-4 py-2.5">
-          <div className="flex items-center gap-2.5">
+      <div className="w-full">
+        <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg border border-border/50 p-3">
+          <div className="flex items-center gap-2">
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
                 <Button
                   ref={drawerTriggerRef}
                   variant="outline"
                   size="sm"
-                  className="rounded-full shadow-sm h-8 text-xs"
-                  aria-expanded={isDrawerOpen}
-                  aria-label="Open filters"
+                  className="rounded-full shadow-sm h-9 text-xs"
                 >
-                  <SlidersHorizontal className="h-3.5 w-3.5 mr-1" />
+                  <SlidersHorizontal className="h-3.5 w-3.5 mr-1.5" />
                   Filters
                   {hasActiveFilters && (
                     <span className="ml-1.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
@@ -396,68 +378,84 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                   <FilterControls />
                 </div>
                 <DrawerFooter className="flex flex-row gap-2.5 border-t p-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleReset}
-                    className="flex-1"
-                    disabled={!hasActiveFilters}
-                  >
+                  <Button variant="outline" size="sm" onClick={handleReset} className="flex-1" disabled={!hasActiveFilters}>
                     Reset
                   </Button>
-                  <Button
-                    size="sm"
-                    onClick={handleApply}
-                    className="flex-1"
-                  >
-                    Show {resultsCount} {resultsCount === 1 ? 'property' : 'properties'}
+                  <Button size="sm" onClick={handleApply} className="flex-1">
+                    Show {resultsCount}
                   </Button>
                 </DrawerFooter>
               </DrawerContent>
             </Drawer>
             
-            {hasActiveFilters && (
-              <div className="flex-1 overflow-x-auto scrollbar-hide">
-                <div className="flex items-center gap-1.5">
-                  {getActiveFilterSummary().map((summary, idx) => (
-                    <div key={idx} className="flex items-center gap-1 px-2.5 py-1 bg-primary/10 text-primary text-[11px] font-medium rounded-full whitespace-nowrap">
-                      {summary}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="text-xs font-medium text-muted-foreground whitespace-nowrap ml-auto">
-              {resultsCount}
-            </div>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={localFilters.keyword}
+              onChange={(e) => updateLocalFilter('keyword', e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleApply();
+                }
+              }}
+              className="flex-1 h-9 px-3 text-xs bg-background border border-input rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+            
+            <Button 
+              size="sm" 
+              onClick={handleApply}
+              className="h-9 px-4 rounded-full font-medium text-xs"
+            >
+              <Search className="h-3.5 w-3.5 md:mr-1.5" />
+              <span className="hidden md:inline">Search</span>
+            </Button>
           </div>
+          
+          {hasActiveFilters && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {getActiveFilterSummary().map((summary, idx) => (
+                <div key={idx} className="flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-medium rounded-full">
+                  {summary}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
-  // Desktop view - sleek pills with popovers
   return (
-    <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-      <div className="container mx-auto px-6 py-3">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            {/* Price Filter */}
+    <div className="w-full">
+      <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg border border-border/50 p-4">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+          <input
+            type="text"
+            placeholder="Filter by price, beds, zone… then hit Search"
+            value={localFilters.keyword}
+            onChange={(e) => updateLocalFilter('keyword', e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleApply();
+              }
+            }}
+            className="flex-1 h-10 px-4 text-sm bg-background border border-input rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 transition-all"
+          />
+          <div className="flex flex-wrap items-center gap-2">
             <Popover>
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="rounded-full h-8 px-3 gap-1.5 hover:bg-muted transition-colors text-xs"
+                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium"
                 >
                   <Coins className="h-3.5 w-3.5 text-primary" />
-                  <span className="text-xs">
+                  <span>
                     {(localFilters.priceFrom || localFilters.priceTo) 
                       ? `${priceSteps.find(s => s.value === localFilters.priceFrom)?.label || 'Any'} - ${priceSteps.find(s => s.value === localFilters.priceTo)?.label || 'Any'}`
                       : 'Price'}
                   </span>
-                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-80 p-4" align="start">
@@ -487,33 +485,24 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                       </Select>
                     </div>
                   </div>
-                  <div className="flex gap-2 pt-2">
-                    <Button variant="outline" size="sm" onClick={handleReset} className="flex-1">
-                      Reset
-                    </Button>
-                    <Button size="sm" onClick={handleApply} className="flex-1">
-                      Apply
-                    </Button>
-                  </div>
                 </div>
               </PopoverContent>
             </Popover>
 
-            {/* Bedrooms Filter */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="rounded-full h-8 px-3 gap-1.5 hover:bg-muted transition-colors text-xs"
+                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium"
                 >
                   <Home className="h-3.5 w-3.5 text-primary" />
-                  <span className="text-xs">
+                  <span>
                     {(localFilters.bedroomsMin || localFilters.bedroomsMax)
-                      ? `${bedroomOptions.find(b => b.value === localFilters.bedroomsMin)?.label || 'Any'} - ${bedroomOptions.find(b => b.value === localFilters.bedroomsMax)?.label || 'Any'} beds`
+                      ? `${bedroomOptions.find(b => b.value === localFilters.bedroomsMin)?.label || 'Any'} - ${bedroomOptions.find(b => b.value === localFilters.bedroomsMax)?.label || 'Any'}`
                       : 'Bedrooms'}
                   </span>
-                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-80 p-4" align="start">
@@ -543,31 +532,22 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                       </Select>
                     </div>
                   </div>
-                  <div className="flex gap-2 pt-2">
-                    <Button variant="outline" size="sm" onClick={handleReset} className="flex-1">
-                      Reset
-                    </Button>
-                    <Button size="sm" onClick={handleApply} className="flex-1">
-                      Apply
-                    </Button>
-                  </div>
                 </div>
               </PopoverContent>
             </Popover>
 
-            {/* Location Filter */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="rounded-full h-8 px-3 gap-1.5 hover:bg-muted transition-colors text-xs"
+                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium"
                 >
                   <MapPin className="h-3.5 w-3.5 text-primary" />
-                  <span className="text-xs">
+                  <span>
                     {localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Location'}
                   </span>
-                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-80 p-4" align="start">
@@ -605,34 +585,25 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                       </Select>
                     </div>
                   </div>
-                  <div className="flex gap-2 pt-2">
-                    <Button variant="outline" size="sm" onClick={handleReset} className="flex-1">
-                      Reset
-                    </Button>
-                    <Button size="sm" onClick={handleApply} className="flex-1">
-                      Apply
-                    </Button>
-                  </div>
                 </div>
               </PopoverContent>
             </Popover>
 
-            {/* More Filters */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="rounded-full h-8 px-3 gap-1.5 hover:bg-muted transition-colors text-xs"
+                  className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium"
                 >
                   <SlidersHorizontal className="h-3.5 w-3.5" />
-                  <span className="text-xs">More</span>
+                  <span>More</span>
                   {(localFilters.tenure !== 'any' || localFilters.amenities.length > 0) && (
                     <span className="h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
                       {(localFilters.tenure !== 'any' ? 1 : 0) + localFilters.amenities.length}
                     </span>
                   )}
-                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-96 p-4" align="start">
@@ -667,35 +638,30 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                       ))}
                     </div>
                   </div>
-                  <div className="flex gap-2 pt-2">
-                    <Button variant="outline" size="sm" onClick={handleReset} className="flex-1">
-                      Reset All
-                    </Button>
-                    <Button size="sm" onClick={handleApply} className="flex-1">
-                      Apply
-                    </Button>
-                  </div>
                 </div>
               </PopoverContent>
             </Popover>
 
-            {/* Clear all filters button */}
             {hasActiveFilters && (
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={handleReset}
-                className="rounded-full h-8 px-2.5 text-muted-foreground hover:text-foreground text-xs"
+                className="rounded-full h-9 px-3 text-muted-foreground hover:text-foreground text-xs"
               >
-                <X className="h-3.5 w-3.5 mr-1" />
-                Clear all
+                <X className="h-3 w-3 mr-1" />
+                Clear
               </Button>
             )}
-          </div>
-
-          {/* Results count */}
-          <div className="text-xs font-medium text-foreground">
-            <span className="text-muted-foreground">Showing</span> {resultsCount} {resultsCount === 1 ? 'property' : 'properties'}
+            
+            <Button 
+              size="sm" 
+              onClick={handleApply}
+              className="h-9 px-5 rounded-full font-semibold text-xs shadow-md hover:shadow-lg transition-all"
+            >
+              <Search className="h-3.5 w-3.5 mr-1.5" />
+              Search
+            </Button>
           </div>
         </div>
       </div>

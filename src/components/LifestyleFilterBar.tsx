@@ -39,31 +39,31 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
 
   return (
     <div className="w-full">
-      <div className="rounded-3xl bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-4">
+      <div className="rounded-2xl bg-white/90 backdrop-blur-lg shadow-lg border border-border/50 p-4">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center justify-between w-full hover:opacity-70 transition-smooth"
+          className="flex items-center justify-between w-full hover:opacity-80 transition-all group"
           aria-expanded={isExpanded}
           aria-label={isExpanded ? "Collapse amenity filters" : "Expand amenity filters"}
         >
           <div className="text-left">
-            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Curated</p>
-            <h2 className="text-xl font-bold text-neutral-900">Best of London</h2>
-            <p className="text-sm text-neutral-600">
-              Schools, transport, dining, lifestyle—your London, simplified
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Explore</p>
+            <h2 className="text-lg font-bold text-foreground tracking-tight">Best of London</h2>
+            <p className="text-xs text-muted-foreground font-light">
+              Explore the best of London around your new home.
               {selectedTypes.length > 0 && (
-                <span className="ml-2 inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                <span className="ml-2 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
                   {selectedTypes.length} active
                 </span>
               )}
             </p>
           </div>
           <div className="shrink-0">
-            {isExpanded ? <ChevronUp className="w-5 h-5 text-neutral-700" /> : <ChevronDown className="w-5 h-5 text-neutral-700" />}
+            {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" /> : <ChevronDown className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />}
           </div>
         </button>
       
-        <div className={`${isExpanded ? 'block animate-accordion-down' : 'hidden animate-accordion-up'} mt-4 pt-4 border-t border-neutral-200`}>
+        <div className={`${isExpanded ? 'block animate-accordion-down' : 'hidden animate-accordion-up'} mt-3 pt-3 border-t border-border/50`}>
           <div className="flex flex-wrap gap-2">
             {amenityTypesList.map((type) => {
               const isSelected = selectedTypes.includes(type);
@@ -73,7 +73,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
                   variant={isSelected ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => toggleType(type)}
-                  className="h-9 text-sm gap-2 whitespace-nowrap rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                  className="h-8 text-xs gap-1.5 whitespace-nowrap rounded-full font-medium hover:shadow-md transition-all"
                 >
                   {amenityIcons[type]}
                   <span>{amenityLabels[type]}</span>
@@ -83,14 +83,14 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
           </div>
           
           {selectedTypes.length > 0 && (
-            <div className="mt-4 flex items-center justify-end">
+            <div className="mt-3 flex items-center justify-end">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onTypesChange([])}
-                className="h-8 text-sm hover:bg-destructive/10 hover:text-destructive rounded-xl"
+                className="h-7 text-xs hover:bg-destructive/10 hover:text-destructive rounded-full"
               >
-                Clear all filters
+                Clear all
               </Button>
             </div>
           )}

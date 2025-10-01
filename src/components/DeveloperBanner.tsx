@@ -45,18 +45,44 @@ const DeveloperBanner: React.FC<DeveloperBannerProps> = ({
   highlightedDeveloper
 }) => {
   return <div className="w-full">
-      <div className="bg-white/70 backdrop-blur-md shadow-soft ring-1 ring-black/5 supports-[backdrop-filter]:bg-white/60 p-2 rounded-lg">
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="text-sm font-semibold text-neutral-900">Featured Developers</h3>
-        </div>
-        
-        <div className="relative overflow-hidden -mx-2">
-          <div className="animate-marquee whitespace-nowrap">
-            <div className="inline-flex items-center gap-4 px-2">
-              {[...developers, ...developers].map((developer, index) => <button key={`${developer.name}-${index}`} onClick={() => onDeveloperClick(developer.name)} className={`group shrink-0 w-40 h-20 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all overflow-hidden ${highlightedDeveloper === developer.name ? 'border-primary ring-2 ring-primary/20' : 'border-neutral-200 hover:border-neutral-300'}`}>
-                  <img src={developer.logo} alt={`${developer.name} logo`} className="w-full h-full object-cover transition-all" loading="lazy" />
-                </button>)}
-            </div>
+      <div className="relative overflow-hidden">
+        <div className="animate-marquee whitespace-nowrap">
+          <div className="inline-flex items-center gap-3 px-1">
+            {[...developers, ...developers].map((developer, index) => (
+              <button 
+                key={`${developer.name}-${index}`} 
+                onClick={() => onDeveloperClick(developer.name)} 
+                className={`group shrink-0 w-32 h-16 rounded-lg overflow-hidden transition-all duration-300 ${
+                  highlightedDeveloper === developer.name 
+                    ? 'ring-2 ring-white/90 shadow-lg scale-105' 
+                    : 'hover:ring-2 hover:ring-white/60 hover:shadow-md hover:scale-105'
+                }`}
+                style={{
+                  filter: 'grayscale(20%) brightness(1.1) contrast(0.9)',
+                  backdropFilter: 'blur(4px)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.filter = 'grayscale(0%) brightness(1.15) contrast(1)';
+                  e.currentTarget.style.animationPlayState = 'paused';
+                  e.currentTarget.parentElement!.style.animationPlayState = 'paused';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.filter = 'grayscale(20%) brightness(1.1) contrast(0.9)';
+                  e.currentTarget.parentElement!.style.animationPlayState = 'running';
+                }}
+              >
+                <img 
+                  src={developer.logo} 
+                  alt={`${developer.name} logo`} 
+                  className="w-full h-full object-cover transition-transform duration-300" 
+                  loading="lazy"
+                  style={{
+                    mixBlendMode: 'luminosity',
+                    opacity: 0.85,
+                  }}
+                />
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -67,7 +93,10 @@ const DeveloperBanner: React.FC<DeveloperBannerProps> = ({
           100% { transform: translate3d(-50%, 0, 0); }
         }
         .animate-marquee {
-          animation: marquee 30s linear infinite;
+          animation: marquee 40s linear infinite;
+        }
+        .animate-marquee:hover {
+          animation-play-state: paused;
         }
       `}</style>
     </div>;
