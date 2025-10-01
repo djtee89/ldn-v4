@@ -3,8 +3,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { Link } from 'react-router-dom';
 
 interface ClaimTokenDialogProps {
   isOpen: boolean;
@@ -17,8 +20,11 @@ const ClaimTokenDialog: React.FC<ClaimTokenDialogProps> = ({ isOpen, onClose, of
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [honeypot, setHoneypot] = useState('');
+  const [consentGiven, setConsentGiven] = useState(false);
   const [token, setToken] = useState('');
   const [copied, setCopied] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const generateToken = () => {
@@ -30,7 +36,7 @@ const ClaimTokenDialog: React.FC<ClaimTokenDialogProps> = ({ isOpen, onClose, of
     return result;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!name || !email) {
@@ -42,24 +48,49 @@ const ClaimTokenDialog: React.FC<ClaimTokenDialogProps> = ({ isOpen, onClose, of
       return;
     }
 
-    const newToken = generateToken();
-    setToken(newToken);
+    if (!consentGiven) {
+      toast({
+        title: "Consent required",
+        description: "Please accept our privacy policy to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Log to console for now (would be sent to backend in production)
-    console.log('Token claimed:', {
-      token: newToken,
-      offer: offerTitle,
-      development,
-      name,
-      email,
-      phone,
-      timestamp: new Date().toISOString(),
-    });
+    setIsSubmitting(true);
 
-    toast({
-      title: "Token claimed!",
-      description: "Your unique token has been sent to your email.",
-    });
+    try {
+      const { error } = await supabase.functions.invoke('submit-contact-form', {
+        body: {
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          developmentName: development,
+          offerTitle: offerTitle,
+          source: 'token_claim',
+          honeypot,
+          consentGiven,
+        },
+      });
+
+      if (error) throw error;
+
+      const newToken = generateToken();
+      setToken(newToken);
+
+      toast({
+        title: "Token claimed!",
+        description: "Your unique token has been generated. We'll contact you shortly.",
+      });
+    } catch (error) {
+      toast({
+        title: "Submission failed",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const copyToken = () => {
@@ -76,6 +107,8 @@ const ClaimTokenDialog: React.FC<ClaimTokenDialogProps> = ({ isOpen, onClose, of
     setName('');
     setEmail('');
     setPhone('');
+    setHoneypot('');
+    setConsentGiven(false);
     setToken('');
     setCopied(false);
     onClose();
@@ -93,6 +126,17 @@ const ClaimTokenDialog: React.FC<ClaimTokenDialogProps> = ({ isOpen, onClose, of
 
         {!token ? (
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Honeypot field - hidden from real users */}
+            <input
+              type="text"
+              name="website"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              style={{ display: 'none' }}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+
             <div className="space-y-2">
               <Label htmlFor="name">Name *</Label>
               <Input
@@ -100,6 +144,7 @@ const ClaimTokenDialog: React.FC<ClaimTokenDialogProps> = ({ isOpen, onClose, of
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your full name"
+                maxLength={100}
                 required
               />
             </div>
@@ -112,23 +157,44 @@ const ClaimTokenDialog: React.FC<ClaimTokenDialogProps> = ({ isOpen, onClose, of
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
+                maxLength={255}
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone (optional)</Label>
+              <Label htmlFor="phone">Phone</Label>
               <Input
                 id="phone"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+44 7XXX XXXXXX"
+                maxLength={20}
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              Generate Token
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="consent"
+                checked={consentGiven}
+                onCheckedChange={(checked) => setConsentGiven(checked === true)}
+                required
+              />
+              <label
+                htmlFor="consent"
+                className="text-sm text-muted-foreground leading-tight cursor-pointer"
+              >
+                I agree to the{' '}
+                <Link to="/privacy-policy" className="text-primary hover:underline" target="_blank">
+                  Privacy Policy
+                </Link>{' '}
+                and consent to my data being processed for this token claim. *
+              </label>
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Generate Token'}
             </Button>
           </form>
         ) : (

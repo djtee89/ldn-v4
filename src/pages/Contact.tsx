@@ -6,9 +6,12 @@ import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import wechatQR from '@/assets/qr_wechat.png';
 import { supabase } from '@/integrations/supabase/client';
+import { Link } from 'react-router-dom';
+
 interface ContactProps {
   onBack: () => void;
 }
@@ -48,10 +51,10 @@ const Contact: React.FC<ContactProps> = ({
       
       const { data, error } = await supabase.functions.invoke('submit-contact-form', {
         body: {
-          name: emailForm.name,
-          email: emailForm.email,
-          phone: emailForm.phone,
-          message: emailForm.message,
+          name: emailForm.name.trim(),
+          email: emailForm.email.trim(),
+          phone: emailForm.phone.trim(),
+          message: emailForm.message.trim(),
           source: 'email_contact',
           honeypot: emailForm.honeypot,
           consentGiven: emailForm.consentGiven
@@ -238,60 +241,79 @@ const Contact: React.FC<ContactProps> = ({
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleEmailSubmit} className="space-y-4">
+            {/* Honeypot field - hidden from real users */}
+            <input
+              type="text"
+              name="website"
+              value={emailForm.honeypot}
+              onChange={e => setEmailForm({ ...emailForm, honeypot: e.target.value })}
+              style={{ display: 'none' }}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+
             <div>
               <Label htmlFor="email-name">Full Name *</Label>
-              <Input id="email-name" value={emailForm.name} onChange={e => setEmailForm({
-              ...emailForm,
-              name: e.target.value
-            })} required />
+              <Input 
+                id="email-name" 
+                value={emailForm.name} 
+                onChange={e => setEmailForm({ ...emailForm, name: e.target.value })} 
+                maxLength={100}
+                required 
+              />
             </div>
             <div>
               <Label htmlFor="email-email">Email Address *</Label>
-              <Input id="email-email" type="email" value={emailForm.email} onChange={e => setEmailForm({
-              ...emailForm,
-              email: e.target.value
-            })} required />
+              <Input 
+                id="email-email" 
+                type="email" 
+                value={emailForm.email} 
+                onChange={e => setEmailForm({ ...emailForm, email: e.target.value })} 
+                maxLength={255}
+                required 
+              />
             </div>
             <div>
               <Label htmlFor="email-phone">Phone Number *</Label>
-              <Input id="email-phone" type="tel" value={emailForm.phone} onChange={e => setEmailForm({
-              ...emailForm,
-              phone: e.target.value
-            })} required />
+              <Input 
+                id="email-phone" 
+                type="tel" 
+                value={emailForm.phone} 
+                onChange={e => setEmailForm({ ...emailForm, phone: e.target.value })} 
+                maxLength={20}
+                required 
+              />
             </div>
             <div>
               <Label htmlFor="email-message">Message *</Label>
-              <Textarea id="email-message" placeholder="Tell us about your property requirements..." value={emailForm.message} onChange={e => setEmailForm({
-              ...emailForm,
-              message: e.target.value
-            })} required rows={4} />
-            </div>
-            
-            {/* Honeypot field */}
-            <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
-              <Input
-                type="text"
-                name="website"
-                tabIndex={-1}
-                autoComplete="off"
-                value={emailForm.honeypot}
-                onChange={e => setEmailForm({ ...emailForm, honeypot: e.target.value })}
+              <Textarea 
+                id="email-message" 
+                placeholder="Tell us about your property requirements..." 
+                value={emailForm.message} 
+                onChange={e => setEmailForm({ ...emailForm, message: e.target.value })} 
+                maxLength={1000}
+                required 
+                rows={4} 
               />
             </div>
             
-            {/* GDPR Consent */}
-            <div className="flex items-start gap-2">
-              <input
-                type="checkbox"
+            <div className="flex items-start space-x-2">
+              <Checkbox
                 id="email-consent"
                 checked={emailForm.consentGiven}
-                onChange={e => setEmailForm({ ...emailForm, consentGiven: e.target.checked })}
+                onCheckedChange={(checked) => setEmailForm({ ...emailForm, consentGiven: checked === true })}
                 required
-                className="mt-1"
               />
-              <Label htmlFor="email-consent" className="text-xs leading-tight cursor-pointer">
-                I agree to the <a href="/privacy-policy" target="_blank" className="text-primary underline">Privacy Policy</a> and consent to my personal data being processed for this inquiry. *
-              </Label>
+              <label
+                htmlFor="email-consent"
+                className="text-sm text-muted-foreground leading-tight cursor-pointer"
+              >
+                I agree to the{' '}
+                <Link to="/privacy-policy" className="text-primary hover:underline" target="_blank">
+                  Privacy Policy
+                </Link>{' '}
+                and consent to my data being processed for this inquiry. *
+              </label>
             </div>
             
             <Button type="submit" variant="premium" className="w-full" disabled={isSubmitting}>

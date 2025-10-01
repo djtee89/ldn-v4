@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Mail, MessageCircle, Copy, Check } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { supabase } from '@/integrations/supabase/client';
 import wechatQR from '@/assets/qr_wechat.png';
 
 const ContactOptions: React.FC = () => {
@@ -20,10 +22,10 @@ const ContactOptions: React.FC = () => {
     name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
+    honeypot: '',
+    consentGiven: false
   });
-
-  const FORMSPREE_URL = 'https://formspree.io/f/mnngdrog';
 
   const handleCopyWeChat = () => {
     navigator.clipboard.writeText('LDN_Properties_2024');
@@ -41,42 +43,49 @@ const ContactOptions: React.FC = () => {
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!emailForm.consentGiven) {
+      toast({
+        title: "Consent required",
+        description: "Please accept our privacy policy to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
-      const response = await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { error } = await supabase.functions.invoke('submit-contact-form', {
+        body: {
           name: emailForm.name.trim(),
           email: emailForm.email.trim(),
           phone: emailForm.phone.trim(),
           message: emailForm.message.trim(),
-          subject: 'Property Inquiry - Contact Options'
-        }),
+          source: 'contact_options',
+          honeypot: emailForm.honeypot,
+          consentGiven: emailForm.consentGiven,
+        },
       });
 
-      if (response.ok) {
-        toast({
-          title: "Message sent!",
-          description: "We've received your inquiry and will respond within 24 hours."
-        });
-        
-        setEmailForm({
-          name: '',
-          email: '',
-          phone: '',
-          message: ''
-        });
-        
-        setIsEmailDialogOpen(false);
-      } else {
-        throw new Error('Failed to submit form');
-      }
+      if (error) throw error;
+
+      toast({
+        title: "Message sent!",
+        description: "We've received your inquiry and will respond within 24 hours."
+      });
+      
+      setEmailForm({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        honeypot: '',
+        consentGiven: false
+      });
+      
+      setIsEmailDialogOpen(false);
     } catch (error) {
-      console.error('Form submission error:', error);
       toast({
         title: "Submission failed",
         description: "Please try again or contact us via WhatsApp.",
@@ -251,12 +260,24 @@ const ContactOptions: React.FC = () => {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleEmailSubmit} className="space-y-4">
+            {/* Honeypot field - hidden from real users */}
+            <input
+              type="text"
+              name="website"
+              value={emailForm.honeypot}
+              onChange={(e) => setEmailForm({...emailForm, honeypot: e.target.value})}
+              style={{ display: 'none' }}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+
             <div>
               <Label htmlFor="email-name">Full Name *</Label>
               <Input
                 id="email-name"
                 value={emailForm.name}
                 onChange={(e) => setEmailForm({...emailForm, name: e.target.value})}
+                maxLength={100}
                 required
               />
             </div>
@@ -267,6 +288,7 @@ const ContactOptions: React.FC = () => {
                 type="email"
                 value={emailForm.email}
                 onChange={(e) => setEmailForm({...emailForm, email: e.target.value})}
+                maxLength={255}
                 required
               />
             </div>
@@ -277,6 +299,7 @@ const ContactOptions: React.FC = () => {
                 type="tel"
                 value={emailForm.phone}
                 onChange={(e) => setEmailForm({...emailForm, phone: e.target.value})}
+                maxLength={20}
                 required
               />
             </div>
@@ -287,10 +310,31 @@ const ContactOptions: React.FC = () => {
                 placeholder="Tell us about your property requirements..."
                 value={emailForm.message}
                 onChange={(e) => setEmailForm({...emailForm, message: e.target.value})}
+                maxLength={1000}
                 required
                 rows={4}
               />
             </div>
+
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="email-consent"
+                checked={emailForm.consentGiven}
+                onCheckedChange={(checked) => setEmailForm({...emailForm, consentGiven: checked === true})}
+                required
+              />
+              <label
+                htmlFor="email-consent"
+                className="text-sm text-muted-foreground leading-tight cursor-pointer"
+              >
+                I agree to the{' '}
+                <Link to="/privacy-policy" className="text-primary hover:underline" target="_blank">
+                  Privacy Policy
+                </Link>{' '}
+                and consent to my data being processed for this inquiry. *
+              </label>
+            </div>
+
             <Button 
               type="submit" 
               variant="premium" 

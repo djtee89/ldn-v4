@@ -4,12 +4,13 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none';",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://api.mapbox.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
 };
 
 interface ContactFormData {
@@ -20,7 +21,8 @@ interface ContactFormData {
   preferredDate?: string;
   preferredTime?: string;
   developmentName?: string;
-  source: 'calendar_booking' | 'wechat_booking' | 'email_contact';
+  offerTitle?: string;
+  source: 'calendar_booking' | 'wechat_booking' | 'email_contact' | 'token_claim' | 'contact_options';
   honeypot?: string;
   consentGiven: boolean;
 }
@@ -121,7 +123,7 @@ serve(async (req) => {
       message: formData.message ? sanitizeInput(formData.message, 1000) : undefined,
       preferredDate: formData.preferredDate,
       preferredTime: formData.preferredTime,
-      developmentName: formData.developmentName,
+      developmentName: formData.developmentName || formData.offerTitle,
       source: formData.source,
     };
 
@@ -182,11 +184,20 @@ serve(async (req) => {
       }]);
 
     if (dbError) {
-      console.error('Database error:', dbError.message);
+      // Log error without exposing PII
+      console.error('Database error:', { 
+        code: dbError.code, 
+        message: dbError.message,
+        source: sanitizedData.source 
+      });
       throw new Error('Failed to save submission');
     }
 
-    console.log(`Form submitted successfully from IP: ${clientIp}`);
+    // Log success without PII
+    console.log('Form submitted successfully', { 
+      source: sanitizedData.source,
+      timestamp: new Date().toISOString() 
+    });
 
     return new Response(
       JSON.stringify({ 
@@ -202,7 +213,11 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Form submission error:', error instanceof Error ? error.message : 'Unknown error');
+    // Log error without exposing PII
+    console.error('Form submission error', { 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    });
     
     return new Response(
       JSON.stringify({ error: 'Failed to process submission. Please try again.' }),
