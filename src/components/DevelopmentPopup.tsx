@@ -100,7 +100,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <h2 className="text-xl font-bold text-foreground">{development.name}</h2>
                 <Badge variant="secondary" className="mt-1">{development.developer}</Badge>
               </div>
-              {development.developer === 'Berkeley' && (
+              {development.developer === 'Berkeley Homes' && (
                 <img 
                   src="/logos/berkeley.jpg" 
                   alt="Berkeley Homes" 
