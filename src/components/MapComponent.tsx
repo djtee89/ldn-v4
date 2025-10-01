@@ -5,7 +5,7 @@ import { Development } from '@/data/newDevelopments';
 import { Button } from '@/components/ui/button';
 import DirectionsPanel from './DirectionsPanel';
 import { getDirections, DirectionsData, estimateStationCoordinates } from '@/lib/directions';
-import { AmenityType, getNearbyAmenities, amenityColors, Amenity } from '@/data/amenities';
+import { AmenityType, getNearbyAmenities, getAmenitiesByTypes, amenityColors, Amenity } from '@/data/amenities';
 import AmenityLegend from './AmenityLegend';
 
 interface MapComponentProps {
@@ -372,18 +372,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
       return;
     }
 
-    // Get all amenities near all developments
-    const allAmenities = developments.flatMap(dev => 
-      getNearbyAmenities(dev.coordinates.lat, dev.coordinates.lng, lifestyleFilters, 15)
-    );
-
-    // Remove duplicates by ID
-    const uniqueAmenities = Array.from(
-      new Map(allAmenities.map(a => [a.id, a])).values()
-    );
+    // Get all amenities across London for selected types
+    const allAmenities = getAmenitiesByTypes(lifestyleFilters);
 
     // Create GeoJSON features
-    const features = uniqueAmenities.map(amenity => ({
+    const features = allAmenities.map(amenity => ({
       type: 'Feature' as const,
       geometry: {
         type: 'Point' as const,
@@ -402,7 +395,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       type: 'FeatureCollection',
       features
     });
-  }, [lifestyleFilters, developments, isMapLoaded]);
+  }, [lifestyleFilters, isMapLoaded]);
 
   // This effect is no longer needed as we handle clicks directly in the map event handlers
   // Removed to prevent duplicate calls to onDevelopmentClick
