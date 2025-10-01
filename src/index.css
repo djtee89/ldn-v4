@@ -14,11 +14,11 @@
     --s5: 24px;
     --s6: 32px;
     
-    /* Fluid Typography */
-    --fs: clamp(15px, 1.6vw, 16px);
-    --h1: clamp(26px, 5vw, 36px);
-    --h2: clamp(22px, 4vw, 28px);
-    --h3: clamp(18px, 3.5vw, 22px);
+    /* Fluid Typography - Smaller & Sleeker */
+    --fs: clamp(14px, 1.5vw, 15px);
+    --h1: clamp(22px, 4.5vw, 30px);
+    --h2: clamp(18px, 3.5vw, 24px);
+    --h3: clamp(16px, 3vw, 20px);
     
     /* Core Brand Colors */
     --background: 0 0% 97%;
@@ -374,21 +374,21 @@
     }
   }
 
-  /* Touch-Friendly Buttons & Inputs */
+  /* Touch-Friendly Buttons & Inputs - Reduced for sleeker look */
   button,
   .btn,
   a.btn {
-    min-height: 48px;
-    min-width: 48px;
+    min-height: 38px;
+    min-width: 38px;
   }
 
   input,
   select,
   textarea {
     width: 100%;
-    min-height: 48px;
-    padding: 0.7em 0.9em;
-    border-radius: 12px;
+    min-height: 38px;
+    padding: 0.5em 0.75em;
+    border-radius: 8px;
   }
 
   /* Property Gallery Mobile Optimization */
@@ -451,15 +451,15 @@
     min-height: 100dvh;
   }
 
-  /* Touch-friendly targets (minimum 44x44px) */
+  /* Touch-friendly targets - Reduced for sleeker look */
   .touch-target {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 38px;
+    min-width: 38px;
   }
 
-  /* Mobile-optimized text sizing (prevent iOS zoom on focus) */
+  /* Mobile-optimized text sizing */
   input, select, textarea, button {
-    font-size: 16px !important;
+    font-size: 14px !important;
   }
   
   /* Better mobile spacing */

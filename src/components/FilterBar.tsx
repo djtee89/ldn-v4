@@ -207,16 +207,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   };
 
   const FilterControls = () => (
-    <div className="space-y-4">
+    <div className="space-y-3.5">
       {/* Price Range */}
       <div>
-        <Label className="text-sm font-semibold mb-2 block flex items-center gap-2">
-          <Coins className="h-4 w-4" />
+        <Label className="text-xs font-semibold mb-2 block flex items-center gap-1.5">
+          <Coins className="h-3.5 w-3.5" />
           Price Range
         </Label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5">
           <Select value={localFilters.priceFrom || undefined} onValueChange={value => updateLocalFilter('priceFrom', value)}>
-            <SelectTrigger className="h-10">
+            <SelectTrigger className="h-9 text-xs">
               <SelectValue placeholder="No min" />
             </SelectTrigger>
             <SelectContent className="max-h-[240px]">
@@ -226,7 +226,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             </SelectContent>
           </Select>
           <Select value={localFilters.priceTo || undefined} onValueChange={value => updateLocalFilter('priceTo', value)}>
-            <SelectTrigger className="h-10">
+            <SelectTrigger className="h-9 text-xs">
               <SelectValue placeholder="No max" />
             </SelectTrigger>
             <SelectContent className="max-h-[240px]">
@@ -240,13 +240,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
       {/* Bedrooms */}
       <div>
-        <Label className="text-sm font-semibold mb-2 block flex items-center gap-2">
-          <Home className="h-4 w-4" />
+        <Label className="text-xs font-semibold mb-2 block flex items-center gap-1.5">
+          <Home className="h-3.5 w-3.5" />
           Bedrooms
         </Label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5">
           <Select value={localFilters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
-            <SelectTrigger className="h-10">
+            <SelectTrigger className="h-9 text-xs">
               <SelectValue placeholder="No min" />
             </SelectTrigger>
             <SelectContent>
@@ -256,7 +256,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             </SelectContent>
           </Select>
           <Select value={localFilters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
-            <SelectTrigger className="h-10">
+            <SelectTrigger className="h-9 text-xs">
               <SelectValue placeholder="No max" />
             </SelectTrigger>
             <SelectContent>
@@ -270,16 +270,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
       {/* Zone & Distance */}
       <div>
-        <Label className="text-sm font-semibold mb-2 block flex items-center gap-2">
-          <MapPin className="h-4 w-4" />
+        <Label className="text-xs font-semibold mb-2 block flex items-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5" />
           Location
         </Label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5">
           <Select 
             value={localFilters.zones.length > 0 ? localFilters.zones[0] : undefined} 
             onValueChange={value => updateLocalFilter('zones', value ? [value] : [])}
           >
-            <SelectTrigger className="h-10">
+            <SelectTrigger className="h-9 text-xs">
               <SelectValue placeholder="Any zone" />
             </SelectTrigger>
             <SelectContent>
@@ -292,7 +292,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             </SelectContent>
           </Select>
           <Select value={localFilters.walkToStation} onValueChange={value => updateLocalFilter('walkToStation', value)}>
-            <SelectTrigger className="h-10">
+            <SelectTrigger className="h-9 text-xs">
               <SelectValue placeholder="Walk time" />
             </SelectTrigger>
             <SelectContent>
@@ -308,9 +308,9 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
       {/* Tenure */}
       <div>
-        <Label className="text-sm font-semibold mb-2 block">Tenure</Label>
+        <Label className="text-xs font-semibold mb-2 block">Tenure</Label>
         <Select value={localFilters.tenure} onValueChange={value => updateLocalFilter('tenure', value)}>
-          <SelectTrigger className="h-10">
+          <SelectTrigger className="h-9 text-xs">
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent>
@@ -323,16 +323,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
 
       {/* Amenities */}
       <div>
-        <Label className="text-sm font-semibold mb-2 block">Amenities</Label>
-        <div className="grid grid-cols-2 gap-2">
+        <Label className="text-xs font-semibold mb-2 block">Amenities</Label>
+        <div className="grid grid-cols-2 gap-1.5">
           {amenitiesList.map(amenity => (
-            <div key={amenity} className="flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors">
+            <div key={amenity} className="flex items-center space-x-1.5 p-1.5 rounded-md hover:bg-muted transition-colors">
               <Checkbox
                 id={`amenity-${amenity}`}
                 checked={localFilters.amenities.includes(amenity)}
                 onCheckedChange={() => toggleAmenity(amenity)}
               />
-              <Label htmlFor={`amenity-${amenity}`} className="text-sm cursor-pointer flex-1">
+              <Label htmlFor={`amenity-${amenity}`} className="text-xs cursor-pointer flex-1">
                 {amenity}
               </Label>
             </div>
@@ -367,22 +367,22 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   if (isMobile) {
     return (
       <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center gap-3">
+        <div className="container mx-auto px-4 py-2.5">
+          <div className="flex items-center gap-2.5">
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
                 <Button
                   ref={drawerTriggerRef}
                   variant="outline"
                   size="sm"
-                  className="rounded-full shadow-sm"
+                  className="rounded-full shadow-sm h-8 text-xs"
                   aria-expanded={isDrawerOpen}
                   aria-label="Open filters"
                 >
-                  <SlidersHorizontal className="h-4 w-4 mr-1.5" />
+                  <SlidersHorizontal className="h-3.5 w-3.5 mr-1" />
                   Filters
                   {hasActiveFilters && (
-                    <span className="ml-1.5 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                    <span className="ml-1.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
                       {getActiveFilterSummary().length}
                     </span>
                   )}
@@ -390,14 +390,15 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               </DrawerTrigger>
               <DrawerContent className="max-h-[90vh] flex flex-col">
                 <DrawerHeader className="border-b">
-                  <DrawerTitle className="text-lg font-bold">Filter Properties</DrawerTitle>
+                  <DrawerTitle className="text-base font-bold">Filter Properties</DrawerTitle>
                 </DrawerHeader>
-                <div className="px-4 py-6 overflow-y-auto flex-1">
+                <div className="px-4 py-5 overflow-y-auto flex-1">
                   <FilterControls />
                 </div>
-                <DrawerFooter className="flex flex-row gap-3 border-t p-4">
+                <DrawerFooter className="flex flex-row gap-2.5 border-t p-3">
                   <Button
                     variant="outline"
+                    size="sm"
                     onClick={handleReset}
                     className="flex-1"
                     disabled={!hasActiveFilters}
@@ -405,6 +406,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                     Reset
                   </Button>
                   <Button
+                    size="sm"
                     onClick={handleApply}
                     className="flex-1"
                   >
@@ -416,9 +418,9 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
             
             {hasActiveFilters && (
               <div className="flex-1 overflow-x-auto scrollbar-hide">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   {getActiveFilterSummary().map((summary, idx) => (
-                    <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-xs font-medium rounded-full whitespace-nowrap">
+                    <div key={idx} className="flex items-center gap-1 px-2.5 py-1 bg-primary/10 text-primary text-[11px] font-medium rounded-full whitespace-nowrap">
                       {summary}
                     </div>
                   ))}
@@ -426,7 +428,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               </div>
             )}
 
-            <div className="text-sm font-medium text-muted-foreground whitespace-nowrap ml-auto">
+            <div className="text-xs font-medium text-muted-foreground whitespace-nowrap ml-auto">
               {resultsCount}
             </div>
           </div>
@@ -438,23 +440,24 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
   // Desktop view - sleek pills with popovers
   return (
     <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {/* Price Filter */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="rounded-full h-10 px-4 gap-2 hover:bg-muted transition-colors"
+                  size="sm"
+                  className="rounded-full h-8 px-3 gap-1.5 hover:bg-muted transition-colors text-xs"
                 >
-                  <Coins className="h-4 w-4 text-primary" />
-                  <span className="text-sm">
+                  <Coins className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-xs">
                     {(localFilters.priceFrom || localFilters.priceTo) 
                       ? `${priceSteps.find(s => s.value === localFilters.priceFrom)?.label || 'Any'} - ${priceSteps.find(s => s.value === localFilters.priceTo)?.label || 'Any'}`
                       : 'Price'}
                   </span>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-80 p-4" align="start">
@@ -463,7 +466,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                     <Label className="text-sm font-semibold mb-3 block">Price Range</Label>
                     <div className="grid grid-cols-2 gap-3">
                       <Select value={localFilters.priceFrom || undefined} onValueChange={value => updateLocalFilter('priceFrom', value)}>
-                        <SelectTrigger className="h-10">
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue placeholder="No min" />
                         </SelectTrigger>
                         <SelectContent className="max-h-[240px]">
@@ -473,7 +476,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                         </SelectContent>
                       </Select>
                       <Select value={localFilters.priceTo || undefined} onValueChange={value => updateLocalFilter('priceTo', value)}>
-                        <SelectTrigger className="h-10">
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue placeholder="No max" />
                         </SelectTrigger>
                         <SelectContent className="max-h-[240px]">
@@ -501,15 +504,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="rounded-full h-10 px-4 gap-2 hover:bg-muted transition-colors"
+                  size="sm"
+                  className="rounded-full h-8 px-3 gap-1.5 hover:bg-muted transition-colors text-xs"
                 >
-                  <Home className="h-4 w-4 text-primary" />
-                  <span className="text-sm">
+                  <Home className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-xs">
                     {(localFilters.bedroomsMin || localFilters.bedroomsMax)
                       ? `${bedroomOptions.find(b => b.value === localFilters.bedroomsMin)?.label || 'Any'} - ${bedroomOptions.find(b => b.value === localFilters.bedroomsMax)?.label || 'Any'} beds`
                       : 'Bedrooms'}
                   </span>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-80 p-4" align="start">
@@ -518,7 +522,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                     <Label className="text-sm font-semibold mb-3 block">Bedrooms</Label>
                     <div className="grid grid-cols-2 gap-3">
                       <Select value={localFilters.bedroomsMin || undefined} onValueChange={handleBedroomsMinChange}>
-                        <SelectTrigger className="h-10">
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue placeholder="No min" />
                         </SelectTrigger>
                         <SelectContent>
@@ -528,7 +532,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                         </SelectContent>
                       </Select>
                       <Select value={localFilters.bedroomsMax || undefined} onValueChange={handleBedroomsMaxChange}>
-                        <SelectTrigger className="h-10">
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue placeholder="No max" />
                         </SelectTrigger>
                         <SelectContent>
@@ -556,13 +560,14 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="rounded-full h-10 px-4 gap-2 hover:bg-muted transition-colors"
+                  size="sm"
+                  className="rounded-full h-8 px-3 gap-1.5 hover:bg-muted transition-colors text-xs"
                 >
-                  <MapPin className="h-4 w-4 text-primary" />
-                  <span className="text-sm">
+                  <MapPin className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-xs">
                     {localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Location'}
                   </span>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-80 p-4" align="start">
@@ -574,7 +579,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                         value={localFilters.zones.length > 0 ? localFilters.zones[0] : undefined} 
                         onValueChange={value => updateLocalFilter('zones', value ? [value] : [])}
                       >
-                        <SelectTrigger className="h-10">
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue placeholder="Any zone" />
                         </SelectTrigger>
                         <SelectContent>
@@ -587,7 +592,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                         </SelectContent>
                       </Select>
                       <Select value={localFilters.walkToStation} onValueChange={value => updateLocalFilter('walkToStation', value)}>
-                        <SelectTrigger className="h-10">
+                        <SelectTrigger className="h-9 text-sm">
                           <SelectValue placeholder="Walk time" />
                         </SelectTrigger>
                         <SelectContent>
@@ -617,16 +622,17 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="rounded-full h-10 px-4 gap-2 hover:bg-muted transition-colors"
+                  size="sm"
+                  className="rounded-full h-8 px-3 gap-1.5 hover:bg-muted transition-colors text-xs"
                 >
-                  <SlidersHorizontal className="h-4 w-4" />
-                  <span className="text-sm">More</span>
+                  <SlidersHorizontal className="h-3.5 w-3.5" />
+                  <span className="text-xs">More</span>
                   {(localFilters.tenure !== 'any' || localFilters.amenities.length > 0) && (
-                    <span className="h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                    <span className="h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
                       {(localFilters.tenure !== 'any' ? 1 : 0) + localFilters.amenities.length}
                     </span>
                   )}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-96 p-4" align="start">
@@ -634,7 +640,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                   <div>
                     <Label className="text-sm font-semibold mb-2 block">Tenure</Label>
                     <Select value={localFilters.tenure} onValueChange={value => updateLocalFilter('tenure', value)}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="h-9 text-sm">
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
@@ -654,7 +660,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                             checked={localFilters.amenities.includes(amenity)}
                             onCheckedChange={() => toggleAmenity(amenity)}
                           />
-                          <Label htmlFor={`amenity-desktop-${amenity}`} className="text-sm cursor-pointer flex-1">
+                          <Label htmlFor={`amenity-desktop-${amenity}`} className="text-xs cursor-pointer flex-1">
                             {amenity}
                           </Label>
                         </div>
@@ -679,16 +685,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange, results
                 variant="ghost" 
                 size="sm"
                 onClick={handleReset}
-                className="rounded-full h-10 px-3 text-muted-foreground hover:text-foreground"
+                className="rounded-full h-8 px-2.5 text-muted-foreground hover:text-foreground text-xs"
               >
-                <X className="h-4 w-4 mr-1" />
+                <X className="h-3.5 w-3.5 mr-1" />
                 Clear all
               </Button>
             )}
           </div>
 
           {/* Results count */}
-          <div className="text-sm font-medium text-foreground">
+          <div className="text-xs font-medium text-foreground">
             <span className="text-muted-foreground">Showing</span> {resultsCount} {resultsCount === 1 ? 'property' : 'properties'}
           </div>
         </div>
