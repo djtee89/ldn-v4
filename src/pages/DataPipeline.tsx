@@ -175,12 +175,12 @@ export default function DataPipeline() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-ink-muted">
-              Upload an Excel or PDF file with development information to create a new entry.
+              Upload a CSV or Excel file with development information to create a new entry.
               The file should include: name, developer, location, amenities, price ranges, etc.
             </p>
             <Input
               type="file"
-              accept=".csv,.xlsx,.pdf"
+              accept=".csv,.xlsx"
               onChange={(e) => setNewDevFile(e.target.files?.[0] || null)}
             />
             <Button

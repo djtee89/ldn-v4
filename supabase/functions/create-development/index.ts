@@ -5,26 +5,9 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Simple PDF text extraction using pdfjs-dist
-async function extractTextFromPDF(buffer: ArrayBuffer): Promise<string> {
-  try {
-    const pdfjsLib = await import('https://esm.sh/pdfjs-dist@3.11.174/build/pdf.mjs');
-    
-    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
-    let fullText = '';
-    
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items.map((item: any) => item.str).join(' ');
-      fullText += pageText + '\n';
-    }
-    
-    return fullText;
-  } catch (error) {
-    console.error('[PDF extraction error]', error);
-    throw new Error('Failed to extract text from PDF');
-  }
+// Note: PDF parsing requires conversion - use CSV/Excel for best results
+async function extractTextFromPDF(_buffer: ArrayBuffer): Promise<string> {
+  throw new Error('PDF upload is not yet supported for development creation. Please convert your PDF to CSV or Excel format and try again.');
 }
 
 function generateSlug(name: string): string {
