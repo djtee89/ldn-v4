@@ -157,18 +157,49 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
           <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 overscroll-contain">
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-6 mt-0">
-              {/* Quick Facts Bar */}
-              <div className="flex flex-wrap gap-3">
-                {development.prices.oneBed && <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
-                    <span className="text-sm font-medium">1-bed {development.prices.oneBed}</span>
-                  </div>}
-                {development.prices.twoBed && <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
-                    <span className="text-sm font-medium">2-bed {development.prices.twoBed}</span>
-                  </div>}
-                {development.prices.threeBed && <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary">
-                    <span className="text-sm font-medium">3-bed {development.prices.threeBed}</span>
-                  </div>}
-              </div>
+              {/* Pricing Section */}
+              <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+                <CardContent className="p-5">
+                  <h4 className="font-semibold text-base mb-4">Pricing</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {development.prices.studio && (
+                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                        <p className="text-xs text-muted-foreground mb-1">Studio</p>
+                        <p className="font-bold text-primary">{development.prices.studio}</p>
+                      </div>
+                    )}
+                    {development.prices.oneBed && (
+                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                        <p className="text-xs text-muted-foreground mb-1">1 Bedroom</p>
+                        <p className="font-bold text-primary">{development.prices.oneBed}</p>
+                      </div>
+                    )}
+                    {development.prices.twoBed && (
+                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                        <p className="text-xs text-muted-foreground mb-1">2 Bedrooms</p>
+                        <p className="font-bold text-primary">{development.prices.twoBed}</p>
+                      </div>
+                    )}
+                    {development.prices.threeBed && (
+                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                        <p className="text-xs text-muted-foreground mb-1">3 Bedrooms</p>
+                        <p className="font-bold text-primary">{development.prices.threeBed}</p>
+                      </div>
+                    )}
+                    {development.prices.fourBed && (
+                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                        <p className="text-xs text-muted-foreground mb-1">4 Bedrooms</p>
+                        <p className="font-bold text-primary">{development.prices.fourBed}</p>
+                      </div>
+                    )}
+                  </div>
+                  {development.prices.range && (
+                    <p className="text-xs text-muted-foreground mt-3 text-center">
+                      Full price range: {development.prices.range}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
 
               {/* Zone & Tenure */}
               <div className="flex flex-wrap gap-3">
@@ -176,7 +207,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <Badge variant="secondary" className="px-4 py-2 text-base">{development.tenure}</Badge>
                 {isKRP && <Badge variant="secondary" className="px-4 py-2 text-base flex items-center gap-1">
                     <Car className="h-4 w-4" />
-                    Underground (2-bed+) • EV points
+                    Underground Parking (2-bed+) • EV Charging
                   </Badge>}
               </div>
 
