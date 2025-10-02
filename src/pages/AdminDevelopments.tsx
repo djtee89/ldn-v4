@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Upload, Plus, FileSpreadsheet, Trash2, Download, GripVertical, Star, EyeOff, Eye } from "lucide-react";
@@ -190,8 +191,31 @@ function DevelopmentsList({
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
 }) {
+  const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
   const [editingDev, setEditingDev] = useState<any>(null);
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; dev: any | null }>({ open: false, dev: null });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (devId: string) => {
+      const { error } = await supabase
+        .from('developments')
+        .delete()
+        .eq('id', devId);
+      if (error) throw error;
+    },
+    onSuccess: (_, devId) => {
+      queryClient.invalidateQueries({ queryKey: ['developments'] });
+      if (selectedDev === devId) {
+        onSelect('');
+      }
+      toast.success('Development deleted');
+      setDeleteDialog({ open: false, dev: null });
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to delete: ${error.message}`);
+    },
+  });
 
   return (
     <Card>
@@ -291,6 +315,14 @@ function DevelopmentsList({
                       >
                         Edit
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDeleteDialog({ open: true, dev })}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -299,6 +331,26 @@ function DevelopmentsList({
           </TableBody>
         </Table>
       </CardContent>
+
+      <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, dev: null })}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Development</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{deleteDialog.dev?.name}</strong>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteDialog.dev && deleteMutation.mutate(deleteDialog.dev.id)}
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
