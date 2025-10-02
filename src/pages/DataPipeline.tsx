@@ -142,9 +142,12 @@ export default function DataPipeline() {
           <CardContent className="space-y-4">
             <Input
               type="file"
-              accept=".csv,.xlsx"
+              accept=".csv,.xlsx,.pdf"
               onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
             />
+            <p className="text-xs text-muted-foreground mt-2">
+              Supported formats: CSV, Excel (.xlsx), PDF (tables will be extracted - may require review)
+            </p>
             <Button
               onClick={handleIngest}
               disabled={!selectedDev || !selectedFile || ingestMutation.isPending}
