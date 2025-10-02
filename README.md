@@ -1,8 +1,38 @@
-# Welcome to your Lovable project
+# LDN Premium Property Platform
 
-## Project info
+A modern, secure property search platform for London new-build developments.
 
-**URL**: https://lovable.dev/projects/7a2ca503-8bf7-45e0-9be2-06d6ba391f4a
+**Project URL**: https://lovable.dev/projects/7a2ca503-8bf7-45e0-9be2-06d6ba391f4a
+
+## Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Environment Setup
+
+This project uses Lovable Cloud for backend services (database, auth, storage). 
+
+**Required environment variables:**
+
+1. Copy `.env.example` to `.env` (if not already present)
+2. Add your Mapbox public token:
+   ```
+   VITE_PUBLIC_MAPBOX_TOKEN=your_token_here
+   ```
+
+**Note:** Supabase/Cloud variables (`VITE_SUPABASE_*`) are auto-managed by Lovable and should not be edited manually.
 
 ## How can I edit this code?
 
@@ -50,24 +80,60 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+## Tech Stack
 
-This project is built with:
+### Frontend
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Tailwind CSS** - Utility-first styling
+- **shadcn/ui** - Accessible component library
+- **Mapbox GL** - Interactive maps
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Backend (Lovable Cloud)
+- **Database** - PostgreSQL via Supabase
+- **Authentication** - Built-in auth system
+- **Edge Functions** - Serverless API endpoints
+- **Storage** - File uploads and management
+
+### Quality Assurance
+- **ESLint** - Code linting
+- **GitHub Actions** - CI/CD pipeline
+- **TypeScript** - Compile-time type checking
 
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/7a2ca503-8bf7-45e0-9be2-06d6ba391f4a) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
+## Project Structure
 
-Yes, you can!
+```
+src/
+├── components/       # React components
+│   ├── ui/          # shadcn/ui components
+│   └── ...          # Feature components
+├── data/            # Static data and types
+├── hooks/           # Custom React hooks
+├── lib/             # Utilities and helpers
+├── pages/           # Route pages
+└── integrations/    # External service clients
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+supabase/
+├── functions/       # Edge functions (serverless)
+└── config.toml      # Supabase configuration
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Security & Best Practices
+
+✅ **Secrets Management**: All API keys stored securely (never in git)  
+✅ **Environment Validation**: Runtime checks for required variables  
+✅ **CI/CD**: Automated build checks on every push  
+✅ **Accessibility**: WCAG 2.1 AA compliant with ARIA labels  
+✅ **Performance**: Lazy loading, optimized images, code splitting  
+✅ **Type Safety**: Full TypeScript coverage
+
+## Custom Domain
+
+To connect a custom domain, navigate to **Project > Settings > Domains** and click **Connect Domain**.
+
+[Learn more about custom domains](https://docs.lovable.dev/features/custom-domain#custom-domain)

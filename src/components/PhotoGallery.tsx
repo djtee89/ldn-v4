@@ -109,14 +109,20 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox with accessibility */}
       {lightboxOpen && (
-        <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+        <div 
+          role="dialog" 
+          aria-modal="true" 
+          aria-label={`Photo gallery for ${name}`}
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+        >
           <Button
             variant="ghost"
             size="icon"
             className="absolute top-4 right-4 text-white hover:bg-white/20"
             onClick={() => setLightboxOpen(false)}
+            aria-label="Close gallery"
           >
             <X className="h-6 w-6" />
           </Button>
@@ -126,6 +132,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
             size="icon"
             className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
             onClick={goToPrevious}
+            aria-label="Previous image"
           >
             <ChevronLeft className="h-8 w-8" />
           </Button>
@@ -142,6 +149,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
             size="icon"
             className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
             onClick={goToNext}
+            aria-label="Next image"
           >
             <ChevronRight className="h-8 w-8" />
           </Button>

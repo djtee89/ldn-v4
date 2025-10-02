@@ -69,6 +69,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        ink: {
+          DEFAULT: "#0b0f17",
+          muted: "#5b6472",
+        },
+        line: "#edf0f2",
+        panel: "#0b1530",
       },
       backgroundImage: {
         "premium-gradient": "var(--premium-gradient)",
@@ -84,6 +90,7 @@ export default {
         "strong": "var(--shadow-strong)",
         "premium": "var(--shadow-premium)",
         "card-hover": "var(--shadow-card-hover)",
+        "lift": "0 10px 24px rgba(0,0,0,.10)",
       },
       transitionProperty: {
         "smooth": "var(--transition-smooth)",
@@ -93,6 +100,11 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        card: "16px",
+        hero: "24px",
+      },
+      spacing: {
+        1.5: "6px",
       },
       keyframes: {
         "accordion-down": {
