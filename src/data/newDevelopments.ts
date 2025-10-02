@@ -15,18 +15,21 @@ export interface Development {
     lng: number;
   };
   prices: {
+    [key: string]: any;
     studio?: string | number;
     oneBed?: string | number;
+    '1bed'?: any;
+    '1-bed'?: any;
     twoBed?: string | number;
+    '2bed'?: any;
+    '2-bed'?: any;
     threeBed?: string | number;
+    '3bed'?: any;
+    '3-bed'?: any;
     fourBed?: string | number;
+    '4bed'?: any;
+    '4-bed'?: any;
     range?: string;
-    '1'?: string | number;
-    '2'?: string | number;
-    '3'?: string | number;
-    '1bed'?: string | number;
-    '2bed'?: string | number;
-    '3bed'?: string | number;
   };
   tenure: string;
   completionDate?: string;

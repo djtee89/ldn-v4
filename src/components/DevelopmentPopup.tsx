@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { X, MapPin, Train, GraduationCap, Download, Heart, Share2, Car, Calendar } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { translations } from '@/i18n/translations';
@@ -92,7 +93,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
     });
   };
   return <div className="modal-backdrop">
-      <div className="modal-panel modal-panel-wide overflow-hidden flex flex-col max-h-[95vh] md:max-h-[90vh]">
+      <div className="modal-panel modal-panel-wide overflow-hidden flex flex-col h-[95vh] md:h-[90vh]">
         {/* Header */}
         <div className="modal-header flex-shrink-0">
           <div className="flex items-center justify-between gap-2">
@@ -162,7 +163,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             </TabsList>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 overscroll-contain">
+          <ScrollArea className="flex-1">
+            <div className="px-3 sm:px-6 py-4">
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-6 mt-0">
               {/* Pricing Section */}
@@ -930,7 +932,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <YieldCalculator />
             </TabsContent>
 
-          </div>
+            </div>
+          </ScrollArea>
         </Tabs>
 
         {/* Sticky Footer */}

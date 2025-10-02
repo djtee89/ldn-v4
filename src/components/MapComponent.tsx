@@ -445,7 +445,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
         id: dev.id,
         name: dev.name,
         developer: dev.developer,
-        price: dev.prices.oneBed || dev.prices.range || 'POA',
+        price: (() => {
+          const { extractAllPrices } = require('@/lib/priceParser');
+          const priceData = extractAllPrices(dev.prices);
+          return priceData.oneBed || priceData.studio || priceData.twoBed || priceData.range || 'POA';
+        })(),
         highlighted: highlightedDeveloper ? dev.developer === highlightedDeveloper : false
       }
     }));

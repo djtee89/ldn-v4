@@ -35,16 +35,8 @@ export const useDevelopments = () => {
 
       // Transform database format to Development interface - DB is now single source of truth
       return data.map((dev): Development => {
-        // Transform prices from DB format {"0": "£X", "1": "£Y"} to component format
-        const dbPrices = (dev.prices as Record<string, string>) || {};
-        const prices: Development['prices'] = {
-          studio: dbPrices['0'],
-          oneBed: dbPrices['1'],
-          twoBed: dbPrices['2'],
-          threeBed: dbPrices['3'],
-          fourBed: dbPrices['4'],
-          range: (typeof dev.prices === 'object' && dev.prices ? (dev.prices as any).range : undefined),
-        };
+        // Keep raw prices object - let the parser handle all variations
+        const prices = dev.prices || {};
 
         // Parse nearby stations
         const nearbyStations = (dev.nearby_stations as any[]) || [];
