@@ -1,15 +1,11 @@
 import React from 'react';
-import DeveloperBanner from '@/components/DeveloperBanner';
 
 interface HeroProps {
   onDeveloperClick?: (developer: string) => void;
   highlightedDeveloper?: string | null;
 }
 
-const Hero: React.FC<HeroProps> = ({
-  onDeveloperClick,
-  highlightedDeveloper
-}) => {
+const Hero: React.FC<HeroProps> = () => {
   return (
     <section className="relative isolate overflow-hidden rounded-3xl mx-4 mt-4 sm:mx-6 sm:mt-6">
       {/* Hero image */}
@@ -34,18 +30,6 @@ const Hero: React.FC<HeroProps> = ({
           <p className="mt-3 sm:mt-4 text-white/90 text-base sm:text-lg md:text-xl font-light drop-shadow">
             Off-plan and ready-to-move homes from leading developers.
           </p>
-          
-          {/* Developer Banner */}
-          {onDeveloperClick && (
-            <div className="mt-6 sm:mt-8">
-              <div className="rounded-2xl bg-card/95 backdrop-blur-sm p-4 shadow-strong border border-border/50">
-                <DeveloperBanner 
-                  onDeveloperClick={onDeveloperClick} 
-                  highlightedDeveloper={highlightedDeveloper} 
-                />
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </section>
