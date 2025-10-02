@@ -508,19 +508,203 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
             {/* Schools Tab */}
             <TabsContent value="schools" className="space-y-4 mt-0">
-              {development.schools.map((school, index) => <Card key={index}>
-                  <CardContent className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <GraduationCap className="h-5 w-5 text-primary" />
-                      <span className="font-medium">{school}</span>
+              <div className="mb-4">
+                <h4 className="font-semibold text-base mb-2">Nearby Schools & Education</h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  The area offers excellent educational facilities, from outstanding primary schools to prestigious secondary institutions and further education colleges.
+                </p>
+              </div>
+              
+              {isKRP ? (
+                <>
+                  <div className="space-y-3">
+                    <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Primary Schools</h5>
+                    
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-start gap-3 flex-1">
+                            <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-semibold">Chelsea Academy</p>
+                              <p className="text-sm text-muted-foreground mt-1">Primary & Secondary • Outstanding Ofsted</p>
+                              <p className="text-xs text-muted-foreground mt-1">0.4 miles • 8 min walk</p>
+                            </div>
+                          </div>
+                          <Badge className="bg-green-600">Outstanding</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Fulham Primary School</p>
+                            <p className="text-sm text-muted-foreground mt-1">Community Primary • Good Ofsted</p>
+                            <p className="text-xs text-muted-foreground mt-1">0.5 miles • 10 min walk</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Parsons Green Prep School</p>
+                            <p className="text-sm text-muted-foreground mt-1">Independent Prep • Excellent facilities</p>
+                            <p className="text-xs text-muted-foreground mt-1">0.6 miles • 12 min walk</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="space-y-3 pt-4">
+                    <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Secondary Schools</h5>
+                    
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Chelsea Academy (Secondary)</p>
+                            <p className="text-sm text-muted-foreground mt-1">Ages 11-18 • Outstanding Ofsted • Strong academics & sports</p>
+                            <p className="text-xs text-muted-foreground mt-1">0.4 miles</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">The London Oratory School</p>
+                            <p className="text-sm text-muted-foreground mt-1">Boys' Catholic Secondary • Outstanding Ofsted</p>
+                            <p className="text-xs text-muted-foreground mt-1">1.2 miles • 20 min bus</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Lady Margaret School</p>
+                            <p className="text-sm text-muted-foreground mt-1">Girls' Church of England • Outstanding Ofsted</p>
+                            <p className="text-xs text-muted-foreground mt-1">0.8 miles • 15 min walk</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="space-y-3 pt-4">
+                    <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Independent Schools</h5>
+                    
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Hill House International School</p>
+                            <p className="text-sm text-muted-foreground mt-1">Co-ed Independent • Ages 4-13</p>
+                            <p className="text-xs text-muted-foreground mt-1">1.5 miles • Chelsea</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Falkner House</p>
+                            <p className="text-sm text-muted-foreground mt-1">Girls' Independent • Ages 3-11</p>
+                            <p className="text-xs text-muted-foreground mt-1">1.8 miles • South Kensington</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="space-y-3 pt-4">
+                    <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Further Education</h5>
+                    
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Imperial College London</p>
+                            <p className="text-sm text-muted-foreground mt-1">World-leading university • Science & Engineering</p>
+                            <p className="text-xs text-muted-foreground mt-1">2 miles • 15 min tube to South Kensington</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Royal College of Art</p>
+                            <p className="text-sm text-muted-foreground mt-1">World's leading art & design university</p>
+                            <p className="text-xs text-muted-foreground mt-1">2.5 miles • South Kensington</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {development.schools && development.schools.length > 0 ? (
+                    <div className="space-y-3">
+                      {development.schools.map((school, index) => (
+                        <Card key={index}>
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-start gap-3 flex-1">
+                                <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <p className="font-semibold">{school}</p>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    {school.toLowerCase().includes('primary') ? 'Primary School' : 
+                                     school.toLowerCase().includes('secondary') ? 'Secondary School' : 
+                                     school.toLowerCase().includes('college') || school.toLowerCase().includes('university') ? 'Further Education' : 'School'}
+                                  </p>
+                                </div>
+                              </div>
+                              {school.toLowerCase().includes('outstanding') && <Badge className="bg-green-600">Outstanding</Badge>}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
-                    {school.toLowerCase().includes('outstanding') && <Badge className="bg-green-600">Outstanding</Badge>}
-                  </CardContent>
-                </Card>)}
-              <Card>
+                  ) : (
+                    <Card>
+                      <CardContent className="p-6 text-center">
+                        <p className="text-muted-foreground">Contact us for information about schools in this area.</p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </>
+              )}
+
+              <Card className="mt-4 bg-accent/50">
                 <CardContent className="p-4">
-                  <p className="text-sm">
-                    <strong>Nearby hospital:</strong> {development.hospital}
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    <strong>Note:</strong> School catchment areas and admission policies change regularly. Distances are approximate walking distances. Always verify current catchment areas, Ofsted ratings, and admission criteria directly with schools before making decisions.
                   </p>
                 </CardContent>
               </Card>
