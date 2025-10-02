@@ -9,20 +9,18 @@ const Hero: React.FC<HeroProps> = ({
   highlightedDeveloper
 }) => {
   return (
-    <section className="relative isolate mb-6">
+    <section className="relative isolate">
       {/* Hero image with responsive srcset */}
-      <div className="relative overflow-hidden rounded-hero">
+      <div className="relative overflow-hidden">
         <img 
-          src="/hero-london-1280.webp" 
-          srcSet="/hero-london-960.webp 960w, /hero-london-1280.webp 1280w, /hero-london-1920.webp 1920w"
-          sizes="(min-width:1024px) 960px, 100vw"
-          alt="London skyline with Tower Bridge and The Shard" 
-          className="h-[clamp(320px,40vh,450px)] w-full object-cover" 
+          src="/battersea-hero.png" 
+          alt="Battersea Power Station rooftop pool with iconic chimneys and London skyline" 
+          className="h-[clamp(400px,50vh,600px)] w-full object-cover" 
           loading="eager"
           fetchPriority="high"
         />
         {/* Gradient overlay for text legibility on bright images */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
       </div>
 
       {/* Content overlay */}
