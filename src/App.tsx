@@ -7,6 +7,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Map from "./pages/Map";
 import ContactOptions from "./pages/ContactOptions";
+import LiveAnalysis from "./pages/LiveAnalysis";
 import Offers from "./pages/Offers";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/map" element={<Map />} />
           <Route path="/contact-options" element={<ContactOptions />} />
+          <Route path="/live-analysis" element={<LiveAnalysis />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Admin /></ProtectedRoute>} />

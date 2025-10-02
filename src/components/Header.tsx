@@ -62,6 +62,24 @@ const Header: React.FC<HeaderProps> = ({
             >
               Property Guide
             </Button>
+            <Link to="/contact-options">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="text-sm font-medium"
+              >
+                Speak to Expert
+              </Button>
+            </Link>
+            <Link to="/live-analysis">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="text-sm font-medium"
+              >
+                Live Analysis
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               size="sm"
@@ -117,6 +135,26 @@ const Header: React.FC<HeaderProps> = ({
             >
               Property Guide
             </Button>
+            <Link to="/contact-options" className="block">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full justify-start text-sm"
+              >
+                Speak to Expert
+              </Button>
+            </Link>
+            <Link to="/live-analysis" className="block">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full justify-start text-sm"
+              >
+                Live Analysis
+              </Button>
+            </Link>
             <Button 
               variant="ghost" 
               size="sm" 

@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import SecondHero from '@/components/SecondHero';
+import DeveloperBanner from '@/components/DeveloperBanner';
 import BestDealsSection from '@/components/BestDealsSection';
 import ThisWeeksOffers from '@/components/ThisWeeksOffers';
 import { FilterState } from '@/components/FilterBar';
@@ -19,6 +22,7 @@ import { useDevelopments } from '@/hooks/use-developments';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide' | 'contact'>('main');
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -164,14 +168,29 @@ const Index = () => {
         onLanguageChange={setLanguage}
       />
       
-      {/* Hero Section with Search & Filters */}
-      <Hero 
+      {/* Hero Section - Just image and title */}
+      <Hero />
+      
+      {/* Filter Section - Black background */}
+      <SecondHero 
         filters={filters}
         onFiltersChange={setFilters}
         resultsCount={filteredDevelopments.length}
         lifestyleFilters={lifestyleFilters}
         onLifestyleFiltersChange={setLifestyleFilters}
       />
+      
+      {/* Developer Slider - White background */}
+      <section className="bg-background py-8 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto">
+          <DeveloperBanner
+            onDeveloperClick={(developer) => {
+              navigate(`/map?developer=${encodeURIComponent(developer)}`);
+            }}
+            highlightedDeveloper={null}
+          />
+        </div>
+      </section>
       
       {/* Best Deals Section */}
       <BestDealsSection />

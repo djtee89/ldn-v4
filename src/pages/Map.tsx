@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import Header from '@/components/Header';
+import FilterBar, { FilterState } from '@/components/FilterBar';
 import MapComponent from '@/components/MapComponent';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
 import { useDevelopments } from '@/hooks/use-developments';
 import { useShortlist } from '@/hooks/use-shortlist';
 import { useToast } from '@/hooks/use-toast';
-import { FilterState } from '@/components/FilterBar';
 import { AmenityType } from '@/data/amenities';
 import { Development } from '@/data/newDevelopments';
 
 const Map = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { data: developments = [], isLoading } = useDevelopments();
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
@@ -21,6 +20,21 @@ const Map = () => {
   const [language, setLanguage] = useState<'en' | 'zh'>('en');
   const { isInShortlist, toggleShortlist } = useShortlist();
   const { toast } = useToast();
+  
+  // Initialize filters from URL
+  const [filters, setFilters] = useState<FilterState>({
+    priceFrom: searchParams.get('priceFrom') || '',
+    priceTo: searchParams.get('priceTo') || '',
+    tenure: 'any',
+    bedroomsMin: searchParams.get('bedroomsMin') || '',
+    bedroomsMax: searchParams.get('bedroomsMax') || '',
+    zones: searchParams.get('zones')?.split(',') || [],
+    walkToStation: 'any',
+    amenities: [],
+    completedNow: false,
+    completionYear: 'any',
+    keyword: ''
+  });
 
   // Parse URL parameters to create filters
   const urlFilters = useMemo(() => {
@@ -133,28 +147,48 @@ const Map = () => {
   };
 
   return (
-    <div className="relative h-screen w-full">
-      {/* Back button */}
-      <div className="absolute top-4 left-4 z-50">
-        <Button
-          onClick={() => navigate('/')}
-          variant="default"
-          size="sm"
-          className="shadow-lg"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Home
-        </Button>
+    <div className="flex flex-col h-screen w-full">
+      {/* Header */}
+      <Header
+        onAboutClick={() => navigate('/')}
+        onGuideClick={() => navigate('/')}
+        onShortlistClick={() => {}}
+        shortlistCount={0}
+        language={language}
+        onLanguageChange={(lang) => setLanguage(lang as 'en' | 'zh')}
+      />
+
+      {/* Filter Bar */}
+      <div className="bg-white border-b border-border p-4 z-40">
+        <div className="max-w-7xl mx-auto">
+          <FilterBar
+            filters={filters}
+            onFiltersChange={(newFilters) => {
+              setFilters(newFilters);
+              // Update URL params
+              const params = new URLSearchParams();
+              if (newFilters.priceFrom) params.set('priceFrom', newFilters.priceFrom);
+              if (newFilters.priceTo) params.set('priceTo', newFilters.priceTo);
+              if (newFilters.bedroomsMin) params.set('bedroomsMin', newFilters.bedroomsMin);
+              if (newFilters.bedroomsMax) params.set('bedroomsMax', newFilters.bedroomsMax);
+              if (newFilters.zones.length > 0) params.set('zones', newFilters.zones.join(','));
+              setSearchParams(params);
+            }}
+            resultsCount={filteredDevelopments.length}
+          />
+        </div>
       </div>
 
       {/* Map */}
-      <MapComponent
-        developments={filteredDevelopments}
-        onDevelopmentClick={setSelectedDevelopment}
-        highlightedDeveloper={urlFilters.developer || null}
-        lifestyleFilters={urlFilters.lifestyle || []}
-        activeDirections={null}
-      />
+      <div className="flex-1 relative">
+        <MapComponent
+          developments={filteredDevelopments}
+          onDevelopmentClick={setSelectedDevelopment}
+          highlightedDeveloper={urlFilters.developer || null}
+          lifestyleFilters={urlFilters.lifestyle || []}
+          activeDirections={null}
+        />
+      </div>
 
       {/* Development Popup Modal */}
       {selectedDevelopment && (
