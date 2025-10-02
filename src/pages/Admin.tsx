@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw } from 'lucide-react';
+import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Database, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 type Booking = {
   id: string;
@@ -25,6 +26,7 @@ const Admin = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -126,6 +128,26 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Admin Navigation */}
+        <div className="flex gap-2 mb-6">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/admin/developments')}
+            className="gap-2"
+          >
+            <Building2 className="h-4 w-4" />
+            Developments
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/data-pipeline')}
+            className="gap-2"
+          >
+            <Upload className="h-4 w-4" />
+            Data Pipeline
+          </Button>
+        </div>
+
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Booking Requests</h1>
