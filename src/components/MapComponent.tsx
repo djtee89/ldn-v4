@@ -175,33 +175,64 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
           const coordinates = [development.coordinates.lng, development.coordinates.lat];
           
-          // Build prices string
+          // Build comprehensive prices string
           let pricesHtml = '<div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">';
-          if (development.prices['1']) {
-            pricesHtml += `<div style="font-size: 12px;"><strong>1-bed:</strong> ${development.prices['1']}</div>`;
+          pricesHtml += '<div style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #1a1a1a;">Prices from:</div>';
+          
+          if (development.prices?.studio) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>Studio:</strong> £${typeof development.prices.studio === 'number' ? development.prices.studio.toLocaleString() : development.prices.studio}</div>`;
           }
-          if (development.prices['2']) {
-            pricesHtml += `<div style="font-size: 12px;"><strong>2-bed:</strong> ${development.prices['2']}</div>`;
+          if (development.prices?.['1bed'] || development.prices?.['1']) {
+            const price = development.prices['1bed'] || development.prices['1'];
+            pricesHtml += `<div style="font-size: 12px;"><strong>1-bed:</strong> £${typeof price === 'number' ? price.toLocaleString() : price}</div>`;
           }
-          if (development.prices['3']) {
-            pricesHtml += `<div style="font-size: 12px;"><strong>3-bed:</strong> ${development.prices['3']}</div>`;
+          if (development.prices?.['2bed'] || development.prices?.['2']) {
+            const price = development.prices['2bed'] || development.prices['2'];
+            pricesHtml += `<div style="font-size: 12px;"><strong>2-bed:</strong> £${typeof price === 'number' ? price.toLocaleString() : price}</div>`;
+          }
+          if (development.prices?.['3bed'] || development.prices?.['3']) {
+            const price = development.prices['3bed'] || development.prices['3'];
+            pricesHtml += `<div style="font-size: 12px;"><strong>3-bed:</strong> £${typeof price === 'number' ? price.toLocaleString() : price}</div>`;
           }
           pricesHtml += '</div>';
 
-          const popupContent = `
-            <div style="padding: 12px; min-width: 220px;">
-              <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${development.name}</div>
-              <div style="color: #666; font-size: 12px; margin-bottom: 2px;">${development.developer}</div>
-              <div style="color: #666; font-size: 11px; margin-bottom: 8px;">${development.location}</div>
-              ${pricesHtml}
-              <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
-                <div style="font-size: 11px; color: #666; margin-bottom: 4px;">
-                  <strong>Zone ${development.zone}</strong> • ${development.tenure}
-                </div>
-                <div style="font-size: 11px; color: #666;">
-                  🚇 ${development.nearestTube?.station || 'N/A'} (${development.nearestTube?.walkTime || 'N/A'} min)
-                </div>
+          // Build transport info
+          const transportHtml = `
+            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
+              <div style="font-size: 11px; color: #666; margin-bottom: 4px;">
+                🚇 <strong>${development.nearestTube?.station || 'N/A'}</strong> (${development.nearestTube?.walkTime || 'N/A'} min)
               </div>
+              ${development.nearestTube?.line ? `<div style="font-size: 10px; color: #888;">${development.nearestTube.line}</div>` : ''}
+              ${development.transportScore ? `<div style="font-size: 10px; color: #888; margin-top: 2px;">Transport: ${development.transportScore}</div>` : ''}
+            </div>
+          `;
+
+          // Build additional details
+          const detailsHtml = `
+            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
+              <div style="font-size: 11px; color: #666; margin-bottom: 4px;">
+                <strong>${development.zone}</strong> • ${development.tenure}
+              </div>
+              ${development.completionDate ? `<div style="font-size: 11px; color: #666; margin-bottom: 2px;">Completion: ${development.completionDate}</div>` : ''}
+              ${development.status ? `<div style="font-size: 11px; color: ${development.status === 'Available' ? '#16a34a' : '#ea580c'}; font-weight: 500;">Status: ${development.status}</div>` : ''}
+            </div>
+          `;
+
+          const popupContent = `
+            <div style="padding: 12px; min-width: 260px; max-width: 320px;">
+              <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #1a1a1a;">${development.name}</div>
+              <div style="color: #666; font-size: 12px; margin-bottom: 2px;">${development.developer}</div>
+              <div style="color: #666; font-size: 11px; margin-bottom: 8px;">${development.location}${development.postcode ? ` • ${development.postcode}` : ''}</div>
+              ${pricesHtml}
+              ${transportHtml}
+              ${detailsHtml}
+              ${development.greenSpaces ? `
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
+                  <div style="font-size: 11px; color: #666;">
+                    🌳 ${development.greenSpaces}
+                  </div>
+                </div>
+              ` : ''}
               <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; text-align: center;">
                 <div style="font-size: 10px; color: #999;">Click for full details</div>
               </div>

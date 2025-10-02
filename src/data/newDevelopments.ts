@@ -15,14 +15,22 @@ export interface Development {
     lng: number;
   };
   prices: {
-    studio?: string;
-    oneBed?: string;
-    twoBed?: string;
-    threeBed?: string;
-    fourBed?: string;
+    studio?: string | number;
+    oneBed?: string | number;
+    twoBed?: string | number;
+    threeBed?: string | number;
+    fourBed?: string | number;
     range?: string;
+    '1'?: string | number;
+    '2'?: string | number;
+    '3'?: string | number;
+    '1bed'?: string | number;
+    '2bed'?: string | number;
+    '3bed'?: string | number;
   };
   tenure: string;
+  completionDate?: string;
+  status?: string;
   schools: string[];
   hospital: string;
   transportScore: string;
