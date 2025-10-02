@@ -31,12 +31,12 @@ const App = () => (
           <Route path="/contact-options" element={<ContactOptions />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-          <Route path="/admin/developments" element={<ProtectedRoute><AdminDevelopments /></ProtectedRoute>} />
-          <Route path="/admin/bulk-import" element={<ProtectedRoute><BulkImport /></ProtectedRoute>} />
-          <Route path="/admin/error-log" element={<ProtectedRoute><ErrorLog /></ProtectedRoute>} />
-          <Route path="/admin/scheduling" element={<ProtectedRoute><Scheduling /></ProtectedRoute>} />
-          <Route path="/data-pipeline" element={<ProtectedRoute><DataPipeline /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Admin /></ProtectedRoute>} />
+          <Route path="/admin/developments" element={<ProtectedRoute requiredRole="admin"><AdminDevelopments /></ProtectedRoute>} />
+          <Route path="/admin/bulk-import" element={<ProtectedRoute requiredRole="admin"><BulkImport /></ProtectedRoute>} />
+          <Route path="/admin/error-log" element={<ProtectedRoute requiredRole="admin"><ErrorLog /></ProtectedRoute>} />
+          <Route path="/admin/scheduling" element={<ProtectedRoute requiredRole="admin"><Scheduling /></ProtectedRoute>} />
+          <Route path="/data-pipeline" element={<ProtectedRoute requiredRole="admin"><DataPipeline /></ProtectedRoute>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
