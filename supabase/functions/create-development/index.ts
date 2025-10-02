@@ -1,9 +1,25 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import * as XLSX from 'https://esm.sh/xlsx@0.18.5';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Parse Excel files
+async function parseExcel(buffer: ArrayBuffer): Promise<string> {
+  try {
+    const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+    
+    // Convert to CSV for easier parsing
+    const csv = XLSX.utils.sheet_to_csv(firstSheet);
+    return csv;
+  } catch (error) {
+    console.error('[Excel parsing error]', error);
+    throw new Error('Failed to parse Excel file');
+  }
+}
 
 // Note: PDF parsing requires conversion - use CSV/Excel for best results
 async function extractTextFromPDF(_buffer: ArrayBuffer): Promise<string> {
@@ -109,8 +125,11 @@ Deno.serve(async (req) => {
     if (fileExt === 'pdf') {
       console.log('[create-development] parsing PDF');
       text = await extractTextFromPDF(fileBuffer);
+    } else if (fileExt === 'xlsx' || fileExt === 'xls') {
+      console.log('[create-development] parsing Excel');
+      text = await parseExcel(fileBuffer);
     } else {
-      // For CSV/Excel, decode as text
+      // For CSV, decode as text
       text = new TextDecoder().decode(fileBuffer);
     }
 
