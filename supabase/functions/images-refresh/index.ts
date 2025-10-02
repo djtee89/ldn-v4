@@ -6,26 +6,29 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
+  const start = Date.now();
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    console.log('[images-refresh] start', { method: req.method, url: req.url });
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { dev_id } = await req.json();
+    const { dev_id } = await req.json().catch(() => ({}));
+    console.log('[images-refresh] payload', { dev_id });
 
     if (!dev_id) {
+      console.log('[images-refresh] error: missing dev_id', { ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Missing dev_id' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-
-    console.log(`Refreshing images for dev_id: ${dev_id}`);
 
     // Get development and developer info
     const { data: dev } = await supabase
@@ -35,6 +38,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (!dev || !dev.site_url) {
+      console.error('[images-refresh] dev not found or no site_url', { dev_id, ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Development not found or missing site_url' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -43,9 +47,11 @@ Deno.serve(async (req) => {
 
     const allowedDomains = dev.developers?.allow_domains || [];
     const siteUrl = new URL(dev.site_url);
+    console.log('[images-refresh] fetching', { site_url: dev.site_url, allowed_domains: allowedDomains });
 
     // Check if site_url is in allowed domains
     if (!allowedDomains.some((domain: string) => siteUrl.hostname.includes(domain))) {
+      console.error('[images-refresh] domain not allowed', { hostname: siteUrl.hostname, allowed: allowedDomains, ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Site URL not in allowed domains' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -85,6 +91,7 @@ Deno.serve(async (req) => {
 
     // Take up to 6 images
     const selectedImages = images.slice(0, 6);
+    console.log('[images-refresh] extracted', { count: selectedImages.length, sources: selectedImages.map(i => i.source) });
 
     // Update development
     await supabase
@@ -95,8 +102,7 @@ Deno.serve(async (req) => {
       })
       .eq('id', dev_id);
 
-    console.log(`Updated ${selectedImages.length} images for ${dev_id}`);
-
+    console.log('[images-refresh] ok', { ms: Date.now() - start, images_count: selectedImages.length });
     return new Response(
       JSON.stringify({
         success: true,
@@ -107,7 +113,11 @@ Deno.serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error in images-refresh function:', error);
+    console.error('[images-refresh] error', { 
+      err: String(error), 
+      stack: (error as Error)?.stack, 
+      ms: Date.now() - start 
+    });
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ error: message }),

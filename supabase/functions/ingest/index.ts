@@ -22,11 +22,14 @@ interface DiffResult {
 }
 
 Deno.serve(async (req) => {
+  const start = Date.now();
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    console.log('[ingest] start', { method: req.method, url: req.url });
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -37,13 +40,14 @@ Deno.serve(async (req) => {
     const file = formData.get('file') as File;
 
     if (!dev_id || !file) {
+      console.log('[ingest] error: missing params', { ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Missing dev_id or file' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    console.log(`Processing ingest for dev_id: ${dev_id}, file: ${file.name}`);
+    console.log('[ingest] payload', { dev_id, fileName: file.name, fileSize: file.size });
 
     // Upload file to storage
     const timestamp = Date.now();
@@ -59,12 +63,14 @@ Deno.serve(async (req) => {
       });
 
     if (uploadError) {
-      console.error('Upload error:', uploadError);
+      console.error('[ingest] storage upload failed', { error: String(uploadError), ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Failed to upload file' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    console.log('[ingest] file uploaded', { storagePath });
 
     // Parse CSV (simplified - in production use a CSV parser library)
     const text = new TextDecoder().decode(fileBuffer);
@@ -106,12 +112,14 @@ Deno.serve(async (req) => {
       .single();
 
     if (plError || !priceList) {
-      console.error('Price list creation error:', plError);
+      console.error('[ingest] price list creation failed', { error: String(plError), ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Failed to create price list' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    console.log('[ingest] price_list created', { id: priceList.id, rowCount: rows.length });
 
     // Insert price_list_rows
     const priceListRows = rows.map((row, idx) => ({
@@ -130,7 +138,9 @@ Deno.serve(async (req) => {
       .insert(priceListRows);
 
     if (rowsError) {
-      console.error('Rows insert error:', rowsError);
+      console.error('[ingest] rows insert error', { error: String(rowsError) });
+    } else {
+      console.log('[ingest] price_list_rows inserted', { count: priceListRows.length });
     }
 
     // Get current units for diff
@@ -203,12 +213,15 @@ Deno.serve(async (req) => {
 
     // Auto-publish if safe
     if (diff.auto_publish) {
-      console.log('Auto-publishing safe changes');
+      console.log('[ingest] auto-publishing', { price_list_id: priceList.id, diff });
       await supabase.functions.invoke('publish', {
         body: { price_list_id: priceList.id },
       });
+    } else {
+      console.log('[ingest] manual approval required', { error_rate: diff.error_rate, large_changes: diff.price_changes.length });
     }
 
+    console.log('[ingest] ok', { ms: Date.now() - start, auto_publish: diff.auto_publish });
     return new Response(
       JSON.stringify({
         success: true,
@@ -219,7 +232,11 @@ Deno.serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error in ingest function:', error);
+    console.error('[ingest] error', { 
+      err: String(error), 
+      stack: (error as Error)?.stack, 
+      ms: Date.now() - start 
+    });
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ error: message }),

@@ -6,26 +6,29 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
+  const start = Date.now();
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    console.log('[publish] start', { method: req.method, url: req.url });
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { price_list_id } = await req.json();
+    const { price_list_id } = await req.json().catch(() => ({}));
+    console.log('[publish] payload', { price_list_id });
 
     if (!price_list_id) {
+      console.log('[publish] error: missing price_list_id', { ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Missing price_list_id' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-
-    console.log(`Publishing price list: ${price_list_id}`);
 
     // Get price list and rows
     const { data: priceList, error: plError } = await supabase
@@ -35,6 +38,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (plError || !priceList) {
+      console.error('[publish] price list not found', { error: String(plError), ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Price list not found' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -42,6 +46,7 @@ Deno.serve(async (req) => {
     }
 
     const dev_id = priceList.dev_id;
+    console.log('[publish] processing', { dev_id, rowCount: priceList.price_list_rows?.length || 0 });
     let updated = 0;
 
     // Upsert units
@@ -98,12 +103,15 @@ Deno.serve(async (req) => {
       .single();
 
     if (!hottest || !hottest.override) {
-      console.log('Triggering hottest unit recalculation');
+      console.log('[publish] triggering hot-auto', { dev_id });
       await supabase.functions.invoke('hot-auto', {
         body: { dev_id },
       });
+    } else {
+      console.log('[publish] skipping hot-auto (override active)', { dev_id });
     }
 
+    console.log('[publish] ok', { ms: Date.now() - start, units_updated: updated, start_prices: startPrices });
     return new Response(
       JSON.stringify({
         success: true,
@@ -114,7 +122,11 @@ Deno.serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error in publish function:', error);
+    console.error('[publish] error', { 
+      err: String(error), 
+      stack: (error as Error)?.stack, 
+      ms: Date.now() - start 
+    });
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ error: message }),

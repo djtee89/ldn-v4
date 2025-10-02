@@ -16,26 +16,29 @@ interface ScoringReason {
 }
 
 Deno.serve(async (req) => {
+  const start = Date.now();
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    console.log('[hot-auto] start', { method: req.method, url: req.url });
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { dev_id } = await req.json();
+    const { dev_id } = await req.json().catch(() => ({}));
+    console.log('[hot-auto] payload', { dev_id });
 
     if (!dev_id) {
+      console.log('[hot-auto] error: missing dev_id', { ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'Missing dev_id' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-
-    console.log(`Calculating hottest unit for dev_id: ${dev_id}`);
 
     // Get available/negotiation units
     const { data: units } = await supabase
@@ -45,11 +48,14 @@ Deno.serve(async (req) => {
       .in('status', ['Available', 'Negotiation']);
 
     if (!units || units.length === 0) {
+      console.log('[hot-auto] no available units', { dev_id, ms: Date.now() - start });
       return new Response(JSON.stringify({ error: 'No available units' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    console.log('[hot-auto] scoring', { dev_id, unit_count: units.length });
 
     // Calculate price per sqft for all units
     const unitsWithPpsqft = units.map(u => ({
@@ -140,6 +146,11 @@ Deno.serve(async (req) => {
     // Pick highest scoring unit
     scoredUnits.sort((a, b) => b.reason.total_score - a.reason.total_score);
     const winner = scoredUnits[0];
+    console.log('[hot-auto] winner selected', { 
+      unit_number: winner.unit.unit_number, 
+      score: winner.reason.total_score,
+      top_reasons: winner.reason.details.slice(0, 3)
+    });
 
     // Upsert hottest_unit
     await supabase
@@ -155,8 +166,7 @@ Deno.serve(async (req) => {
         onConflict: 'dev_id',
       });
 
-    console.log(`Hottest unit set: ${winner.unit.unit_number} with score ${winner.reason.total_score}`);
-
+    console.log('[hot-auto] ok', { ms: Date.now() - start, unit_number: winner.unit.unit_number, score: winner.reason.total_score });
     return new Response(
       JSON.stringify({
         success: true,
@@ -170,7 +180,11 @@ Deno.serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error in hot-auto function:', error);
+    console.error('[hot-auto] error', { 
+      err: String(error), 
+      stack: (error as Error)?.stack, 
+      ms: Date.now() - start 
+    });
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ error: message }),
