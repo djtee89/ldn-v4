@@ -149,7 +149,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <TabsTrigger value="availability">Availability</TabsTrigger>
               <TabsTrigger value="amenities">Amenities</TabsTrigger>
               <TabsTrigger value="transport">Transport</TabsTrigger>
-              <TabsTrigger value="schools">Schools</TabsTrigger>
+              <TabsTrigger value="education">Education</TabsTrigger>
               <TabsTrigger value="calculators">Calculators</TabsTrigger>
             </TabsList>
           </div>
@@ -506,8 +506,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               </div>
             </TabsContent>
 
-            {/* Schools Tab */}
-            <TabsContent value="schools" className="space-y-4 mt-0">
+            {/* Education Tab */}
+            <TabsContent value="education" className="space-y-4 mt-0">
               <div className="mb-4">
                 <h4 className="font-semibold text-base mb-2">Nearby Schools & Education</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
