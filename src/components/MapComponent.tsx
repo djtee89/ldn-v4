@@ -7,6 +7,7 @@ import DirectionsPanel from './DirectionsPanel';
 import { getDirections, DirectionsData, estimateStationCoordinates } from '@/lib/directions';
 import { AmenityType, getNearbyAmenities, getAmenitiesByTypes, amenityColors, Amenity } from '@/data/amenities';
 import AmenityLegend from './AmenityLegend';
+import { extractAllPrices } from '@/lib/priceParser';
 
 interface MapComponentProps {
   developments: Development[];
@@ -175,43 +176,62 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
           const coordinates = [development.coordinates.lng, development.coordinates.lat];
           
-          // Build comprehensive prices string
+          // Build comprehensive prices string using robust parser
+          const priceData = extractAllPrices(development.prices);
+          
           let pricesHtml = '<div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">';
           pricesHtml += '<div style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #1a1a1a;">Prices from:</div>';
           
-          if (development.prices?.studio) {
-            pricesHtml += `<div style="font-size: 12px;"><strong>Studio:</strong> £${typeof development.prices.studio === 'number' ? development.prices.studio.toLocaleString() : development.prices.studio}</div>`;
+          let hasPrices = false;
+          if (priceData.studio) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>Studio:</strong> ${priceData.studio}</div>`;
+            hasPrices = true;
           }
-          if (development.prices?.['1bed'] || development.prices?.['1']) {
-            const price = development.prices['1bed'] || development.prices['1'];
-            pricesHtml += `<div style="font-size: 12px;"><strong>1-bed:</strong> £${typeof price === 'number' ? price.toLocaleString() : price}</div>`;
+          if (priceData.oneBed) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>1-bed:</strong> ${priceData.oneBed}</div>`;
+            hasPrices = true;
           }
-          if (development.prices?.['2bed'] || development.prices?.['2']) {
-            const price = development.prices['2bed'] || development.prices['2'];
-            pricesHtml += `<div style="font-size: 12px;"><strong>2-bed:</strong> £${typeof price === 'number' ? price.toLocaleString() : price}</div>`;
+          if (priceData.twoBed) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>2-bed:</strong> ${priceData.twoBed}</div>`;
+            hasPrices = true;
           }
-          if (development.prices?.['3bed'] || development.prices?.['3']) {
-            const price = development.prices['3bed'] || development.prices['3'];
-            pricesHtml += `<div style="font-size: 12px;"><strong>3-bed:</strong> £${typeof price === 'number' ? price.toLocaleString() : price}</div>`;
+          if (priceData.threeBed) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>3-bed:</strong> ${priceData.threeBed}</div>`;
+            hasPrices = true;
           }
+          if (priceData.fourBed) {
+            pricesHtml += `<div style="font-size: 12px;"><strong>4-bed:</strong> ${priceData.fourBed}</div>`;
+            hasPrices = true;
+          }
+          
+          if (!hasPrices) {
+            pricesHtml += '<div style="font-size: 12px; color: #666;">Contact for pricing</div>';
+          }
+          
           pricesHtml += '</div>';
 
-          // Build transport info
+          // Build transport info with fallbacks
+          const station = development.nearestTube?.station || 'Contact for details';
+          const walkTime = development.nearestTube?.walkTime ? `${development.nearestTube.walkTime} min` : '';
+          
           const transportHtml = `
             <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
               <div style="font-size: 11px; color: #666; margin-bottom: 4px;">
-                🚇 <strong>${development.nearestTube?.station || 'N/A'}</strong> (${development.nearestTube?.walkTime || 'N/A'} min)
+                🚇 <strong>${station}</strong>${walkTime ? ` (${walkTime})` : ''}
               </div>
               ${development.nearestTube?.line ? `<div style="font-size: 10px; color: #888;">${development.nearestTube.line}</div>` : ''}
               ${development.transportScore ? `<div style="font-size: 10px; color: #888; margin-top: 2px;">Transport: ${development.transportScore}</div>` : ''}
             </div>
           `;
 
-          // Build additional details
+          // Build additional details with fallbacks
+          const zone = development.zone || 'Central London';
+          const tenure = development.tenure || 'Contact for details';
+          
           const detailsHtml = `
             <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
               <div style="font-size: 11px; color: #666; margin-bottom: 4px;">
-                <strong>${development.zone}</strong> • ${development.tenure}
+                <strong>Zone ${zone}</strong> • ${tenure}
               </div>
               ${development.completionDate ? `<div style="font-size: 11px; color: #666; margin-bottom: 2px;">Completion: ${development.completionDate}</div>` : ''}
               ${development.status ? `<div style="font-size: 11px; color: ${development.status === 'Available' ? '#16a34a' : '#ea580c'}; font-weight: 500;">Status: ${development.status}</div>` : ''}

@@ -14,6 +14,7 @@ import { KrpAskBox } from '@/components/KrpAskBox';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { extractAllPrices } from '@/lib/priceParser';
 interface Unit {
   id: string;
   unit_number: string;
@@ -169,36 +170,49 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <CardContent className="p-5">
                   <h4 className="font-semibold text-base mb-4">Pricing</h4>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {development.prices.studio && (
-                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
-                        <p className="text-xs text-muted-foreground mb-1">Studio</p>
-                        <p className="font-bold text-primary">{development.prices.studio}</p>
-                      </div>
-                    )}
-                    {development.prices.oneBed && (
-                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
-                        <p className="text-xs text-muted-foreground mb-1">1 Bedroom</p>
-                        <p className="font-bold text-primary">{development.prices.oneBed}</p>
-                      </div>
-                    )}
-                    {development.prices.twoBed && (
-                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
-                        <p className="text-xs text-muted-foreground mb-1">2 Bedrooms</p>
-                        <p className="font-bold text-primary">{development.prices.twoBed}</p>
-                      </div>
-                    )}
-                    {development.prices.threeBed && (
-                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
-                        <p className="text-xs text-muted-foreground mb-1">3 Bedrooms</p>
-                        <p className="font-bold text-primary">{development.prices.threeBed}</p>
-                      </div>
-                    )}
-                    {development.prices.fourBed && (
-                      <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
-                        <p className="text-xs text-muted-foreground mb-1">4 Bedrooms</p>
-                        <p className="font-bold text-primary">{development.prices.fourBed}</p>
-                      </div>
-                    )}
+                    {(() => {
+                      const priceData = extractAllPrices(development.prices);
+                      
+                      return (
+                        <>
+                          {priceData.studio && (
+                            <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                              <p className="text-xs text-muted-foreground mb-1">Studio</p>
+                              <p className="font-bold text-primary">{priceData.studio}</p>
+                            </div>
+                          )}
+                          {priceData.oneBed && (
+                            <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                              <p className="text-xs text-muted-foreground mb-1">1 Bedroom</p>
+                              <p className="font-bold text-primary">{priceData.oneBed}</p>
+                            </div>
+                          )}
+                          {priceData.twoBed && (
+                            <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                              <p className="text-xs text-muted-foreground mb-1">2 Bedrooms</p>
+                              <p className="font-bold text-primary">{priceData.twoBed}</p>
+                            </div>
+                          )}
+                          {priceData.threeBed && (
+                            <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                              <p className="text-xs text-muted-foreground mb-1">3 Bedrooms</p>
+                              <p className="font-bold text-primary">{priceData.threeBed}</p>
+                            </div>
+                          )}
+                          {priceData.fourBed && (
+                            <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border">
+                              <p className="text-xs text-muted-foreground mb-1">4 Bedrooms</p>
+                              <p className="font-bold text-primary">{priceData.fourBed}</p>
+                            </div>
+                          )}
+                          {!priceData.studio && !priceData.oneBed && !priceData.twoBed && !priceData.threeBed && !priceData.fourBed && (
+                            <div className="bg-background/80 backdrop-blur-sm p-3 rounded-lg border col-span-2">
+                              <p className="text-sm text-muted-foreground">Contact us for pricing information</p>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                   </div>
                   {development.prices.range && (
                     <p className="text-xs text-muted-foreground mt-3 text-center">
