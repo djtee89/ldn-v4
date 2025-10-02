@@ -65,10 +65,12 @@ export type Database = {
           area_overview: string | null
           bedrooms: string[] | null
           completion_date: string | null
+          cover_image_index: number | null
           created_at: string | null
           developer: string | null
           distance_to_tube: string | null
           featured: boolean | null
+          hidden_images: number[] | null
           id: string
           images: string[] | null
           lat: number | null
@@ -77,6 +79,8 @@ export type Database = {
           name: string
           nearest_tube: string | null
           prices: Json | null
+          schools: Json | null
+          stations: Json | null
           status: string | null
           tenure: string | null
           updated_at: string | null
@@ -87,10 +91,12 @@ export type Database = {
           area_overview?: string | null
           bedrooms?: string[] | null
           completion_date?: string | null
+          cover_image_index?: number | null
           created_at?: string | null
           developer?: string | null
           distance_to_tube?: string | null
           featured?: boolean | null
+          hidden_images?: number[] | null
           id: string
           images?: string[] | null
           lat?: number | null
@@ -99,6 +105,8 @@ export type Database = {
           name: string
           nearest_tube?: string | null
           prices?: Json | null
+          schools?: Json | null
+          stations?: Json | null
           status?: string | null
           tenure?: string | null
           updated_at?: string | null
@@ -109,10 +117,12 @@ export type Database = {
           area_overview?: string | null
           bedrooms?: string[] | null
           completion_date?: string | null
+          cover_image_index?: number | null
           created_at?: string | null
           developer?: string | null
           distance_to_tube?: string | null
           featured?: boolean | null
+          hidden_images?: number[] | null
           id?: string
           images?: string[] | null
           lat?: number | null
@@ -121,6 +131,8 @@ export type Database = {
           name?: string
           nearest_tube?: string | null
           prices?: Json | null
+          schools?: Json | null
+          stations?: Json | null
           status?: string | null
           tenure?: string | null
           updated_at?: string | null
@@ -155,6 +167,57 @@ export type Database = {
           id?: string
           occurred_at?: string | null
           resolved?: boolean | null
+        }
+        Relationships: []
+      }
+      header_mappings: {
+        Row: {
+          created_at: string | null
+          developer: string
+          id: string
+          source_header: string
+          target_field: string
+        }
+        Insert: {
+          created_at?: string | null
+          developer: string
+          id?: string
+          source_header: string
+          target_field: string
+        }
+        Update: {
+          created_at?: string | null
+          developer?: string
+          id?: string
+          source_header?: string
+          target_field?: string
+        }
+        Relationships: []
+      }
+      hottest_unit: {
+        Row: {
+          dev_id: string
+          manual_override: boolean | null
+          override_reason: string | null
+          score: number | null
+          unit_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          dev_id: string
+          manual_override?: boolean | null
+          override_reason?: string | null
+          score?: number | null
+          unit_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          dev_id?: string
+          manual_override?: boolean | null
+          override_reason?: string | null
+          score?: number | null
+          unit_id?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -298,6 +361,36 @@ export type Database = {
           embedding?: string
           id?: number
           source?: string
+        }
+        Relationships: []
+      }
+      scheduled_tasks: {
+        Row: {
+          created_at: string | null
+          enabled: boolean | null
+          id: string
+          last_run: string | null
+          next_run: string | null
+          schedule: string
+          task_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          enabled?: boolean | null
+          id?: string
+          last_run?: string | null
+          next_run?: string | null
+          schedule: string
+          task_name: string
+        }
+        Update: {
+          created_at?: string | null
+          enabled?: boolean | null
+          id?: string
+          last_run?: string | null
+          next_run?: string | null
+          schedule?: string
+          task_name?: string
         }
         Relationships: []
       }

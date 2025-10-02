@@ -257,6 +257,35 @@ export default function Admin() {
             <Upload className="h-4 w-4" />
             Data Pipeline
           </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/admin/bulk-import')}
+            className="gap-2"
+          >
+            <Upload className="h-4 w-4" />
+            Bulk Import
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/admin/error-log')}
+            className="gap-2"
+          >
+            <AlertCircle className="h-4 w-4" />
+            Error Log
+            {stats.recentErrors > 0 && (
+              <Badge variant="destructive" className="ml-1">
+                {stats.recentErrors}
+              </Badge>
+            )}
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/admin/scheduling')}
+            className="gap-2"
+          >
+            <Clock className="h-4 w-4" />
+            Scheduling
+          </Button>
         </div>
 
         {/* Bookings Section */}
