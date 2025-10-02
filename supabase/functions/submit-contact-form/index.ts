@@ -25,6 +25,31 @@ interface ContactFormData {
   source: 'calendar_booking' | 'wechat_booking' | 'email_contact' | 'token_claim' | 'contact_options';
   honeypot?: string;
   consentGiven: boolean;
+  captchaToken?: string;
+}
+
+async function verifyHCaptcha(token: string): Promise<boolean> {
+  const secretKey = Deno.env.get('HCAPTCHA_SECRET_KEY');
+  if (!secretKey) {
+    console.error('HCAPTCHA_SECRET_KEY not configured');
+    return false;
+  }
+
+  try {
+    const response = await fetch('https://hcaptcha.com/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `response=${token}&secret=${secretKey}`,
+    });
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error('hCaptcha verification error:', error);
+    return false;
+  }
 }
 
 // Rate limiting store (in-memory, resets on function restart)
@@ -113,6 +138,21 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       );
+    }
+
+    // hCaptcha verification
+    if (formData.captchaToken) {
+      const captchaValid = await verifyHCaptcha(formData.captchaToken);
+      if (!captchaValid) {
+        console.warn(`hCaptcha verification failed for IP: ${clientIp}`);
+        return new Response(
+          JSON.stringify({ error: 'Security verification failed. Please try again.' }),
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
     }
 
     // Validate and sanitize inputs

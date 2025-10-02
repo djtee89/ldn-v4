@@ -41,8 +41,30 @@ export default function Admin() {
     pendingBookings: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [visiblePII, setVisiblePII] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const togglePIIVisibility = (bookingId: string) => {
+    setVisiblePII(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(bookingId)) {
+        newSet.delete(bookingId);
+      } else {
+        newSet.add(bookingId);
+      }
+      return newSet;
+    });
+  };
+
+  const maskEmail = (email: string) => {
+    const [local, domain] = email.split('@');
+    return `${local.substring(0, 2)}***@${domain}`;
+  };
+
+  const maskPhone = (phone: string) => {
+    return `***${phone.slice(-4)}`;
+  };
 
   const fetchStats = async () => {
     try {
@@ -337,15 +359,21 @@ export default function Admin() {
                       <div className="grid gap-2 text-sm">
                         <div className="flex items-center gap-2">
                           <Mail className="h-4 w-4 text-muted-foreground" />
-                          <a href={`mailto:${booking.email}`} className="hover:underline">
-                            {booking.email}
-                          </a>
+                          <button
+                            onClick={() => togglePIIVisibility(booking.id)}
+                            className="hover:underline cursor-pointer text-left"
+                          >
+                            {visiblePII.has(booking.id) ? booking.email : maskEmail(booking.email)}
+                          </button>
                         </div>
                         <div className="flex items-center gap-2">
                           <Phone className="h-4 w-4 text-muted-foreground" />
-                          <a href={`tel:${booking.phone}`} className="hover:underline">
-                            {booking.phone}
-                          </a>
+                          <button
+                            onClick={() => togglePIIVisibility(booking.id)}
+                            className="hover:underline cursor-pointer text-left"
+                          >
+                            {visiblePII.has(booking.id) ? booking.phone : maskPhone(booking.phone)}
+                          </button>
                         </div>
                         {booking.development_name && (
                           <div className="flex items-center gap-2">

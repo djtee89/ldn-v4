@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +12,8 @@ import wechatQR from '@/assets/qr_wechat.png';
 import { supabase } from '@/integrations/supabase/client';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+
+const HCAPTCHA_SITE_KEY = '10000000-ffff-ffff-ffff-000000000001'; // Test key - replace with real key in production
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -53,7 +56,10 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>('');
   const trapRef = useFocusTrap<HTMLDivElement>();
+  const calendarCaptchaRef = useRef<HCaptcha>(null);
+  const wechatCaptchaRef = useRef<HCaptcha>(null);
 
   // Body scroll lock
   useEffect(() => {
@@ -92,6 +98,15 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
       return;
     }
 
+    if (!captchaToken) {
+      toast({
+        title: "Verification required",
+        description: "Please complete the security verification.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -110,7 +125,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
           developmentName: developmentName,
           source: 'calendar_booking',
           honeypot: calendarForm.honeypot,
-          consentGiven: calendarForm.consentGiven
+          consentGiven: calendarForm.consentGiven,
+          captchaToken: captchaToken
         },
         headers: session?.access_token ? {
           Authorization: `Bearer ${session.access_token}`
@@ -135,6 +151,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
         honeypot: '',
         consentGiven: false
       });
+      setCaptchaToken('');
+      calendarCaptchaRef.current?.resetCaptcha();
       
       onClose();
     } catch (error) {
@@ -160,6 +178,15 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
       return;
     }
 
+    if (!captchaToken) {
+      toast({
+        title: "Verification required",
+        description: "Please complete the security verification.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -174,7 +201,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
           developmentName: developmentName,
           source: 'wechat_booking',
           honeypot: wechatForm.honeypot,
-          consentGiven: wechatForm.consentGiven
+          consentGiven: wechatForm.consentGiven,
+          captchaToken: captchaToken
         },
         headers: session?.access_token ? {
           Authorization: `Bearer ${session.access_token}`
@@ -196,6 +224,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
         honeypot: '',
         consentGiven: false
       });
+      setCaptchaToken('');
+      wechatCaptchaRef.current?.resetCaptcha();
       
       onClose();
     } catch (error) {
@@ -355,6 +385,16 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                         I agree to the <a href="/privacy-policy" target="_blank" className="text-primary underline">Privacy Policy</a> and consent to my personal data being processed for this booking request. *
                       </Label>
                     </div>
+                    
+                    {/* hCaptcha */}
+                    <div className="flex justify-center pt-2">
+                      <HCaptcha
+                        ref={calendarCaptchaRef}
+                        sitekey={HCAPTCHA_SITE_KEY}
+                        onVerify={(token) => setCaptchaToken(token)}
+                        onExpire={() => setCaptchaToken('')}
+                      />
+                    </div>
                   </form>
                 </CardContent>
               </Card>
@@ -460,6 +500,16 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
                       <Label htmlFor="wc-consent" className="text-xs leading-tight cursor-pointer">
                         I agree to the <a href="/privacy-policy" target="_blank" className="text-primary underline">Privacy Policy</a> and consent to my personal data being processed for this request. *
                       </Label>
+                    </div>
+                    
+                    {/* hCaptcha */}
+                    <div className="flex justify-center pt-2">
+                      <HCaptcha
+                        ref={wechatCaptchaRef}
+                        sitekey={HCAPTCHA_SITE_KEY}
+                        onVerify={(token) => setCaptchaToken(token)}
+                        onExpire={() => setCaptchaToken('')}
+                      />
                     </div>
                   </form>
                 </CardContent>
