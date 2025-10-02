@@ -151,7 +151,6 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <TabsTrigger value="transport">Transport</TabsTrigger>
               <TabsTrigger value="schools">Schools</TabsTrigger>
               <TabsTrigger value="calculators">Calculators</TabsTrigger>
-              <TabsTrigger value="faq">FAQ</TabsTrigger>
             </TabsList>
           </div>
 
@@ -216,25 +215,92 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
             {/* About Tab */}
             <TabsContent value="about" className="space-y-6 mt-0">
-              <div className="space-y-3">
-                <h4 className="font-semibold">About this development</h4>
+              <div className="space-y-4">
+                <h4 className="font-semibold text-lg">About {development.name}</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {development.areaOverview}
                 </p>
-                {isKRP && <>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      <strong>Landmark & views:</strong> Public park encircles a restored Grade II listed gasholder; upper floors may see the City and the Thames.
-                    </p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      <strong>Green space:</strong> 6 acres of parkland and landscaped gardens; near Eel Brook Common and Parsons Green.
-                    </p>
-                  </>}
-              </div>
+                
+                {isKRP ? (
+                  <>
+                    <div className="space-y-3 pt-2">
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">The Development</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          King's Road Park is a landmark regeneration project by Berkeley Homes, transforming a historic gasworks site into a vibrant mixed-use community. The development features contemporary architecture designed by award-winning architects, creating a harmonious blend of modern design and heritage preservation.
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">Heritage & Design</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          At the heart of the development sits a beautifully restored Grade II listed gasholder, now transformed into a stunning public park. This 6-acre green space offers residents and visitors a peaceful retreat with landscaped gardens, walking paths, and community spaces. The architecture celebrates this industrial heritage while providing contemporary living spaces with floor-to-ceiling windows, private balconies, and premium finishes throughout.
+                        </p>
+                      </div>
 
-              {/* Status */}
-              {isKRP && <p className="text-xs text-muted-foreground">
-                  Phased completion; first residents 2022. Key buildings: The Beaumont, The Windsor, The Wren. Construction ongoing.
-                </p>}
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">Location & Lifestyle</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Perfectly positioned at the intersection of Chelsea and Fulham, King's Road Park offers the best of both worlds. The iconic King's Road is moments away, lined with designer boutiques, artisan cafes, and world-class restaurants. Fulham's village atmosphere provides local character, with Parsons Green, Eel Brook Common, and the River Thames all within easy reach.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">Views & Aspect</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Upper floor apartments offer breathtaking views across London, with vistas of the City skyline and the Thames. Park-facing homes overlook the central gasholder park, while river-view apartments capture the beauty of the Thames. All residences benefit from excellent natural light and thoughtful orientation.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">Completion Status</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          The development is being delivered in phases, with the first residents moving in from 2022. Key buildings include The Beaumont, The Windsor, and The Wren, each offering distinctive character while maintaining the development's cohesive architectural language. Construction continues on later phases, with completion expected in the coming years.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">Parking & EV Charging</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Underground parking is available for 2-bedroom apartments and larger, with dedicated spaces and secure access. All parking spaces are equipped with electric vehicle charging points, supporting sustainable living and future-proofing your investment.
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="space-y-3 pt-2">
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">The Development</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {development.name} represents {development.developer}'s commitment to creating exceptional living spaces in prime London locations. This development combines contemporary design with thoughtful amenities to create a true sense of community.
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">Design & Architecture</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          The architecture features clean lines, premium materials, and floor-to-ceiling windows that maximize natural light. Each home is designed with modern living in mind, offering open-plan layouts, high-quality finishes, and attention to detail throughout.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">Location Benefits</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Located in {development.location}, this development offers excellent connectivity across London. Zone {development.zone} location provides fast access to Central London, with {development.nearestTube.station} station just {development.nearestTube.walkTime} minutes away on the {development.nearestTube.line}.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h5 className="font-semibold text-base mb-2">Community & Lifestyle</h5>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          The surrounding area offers a wealth of amenities, from boutique shops and restaurants to parks and cultural venues. This is more than just a place to live—it's a complete lifestyle destination where everything you need is right at your doorstep.
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
 
               {/* KRP Ask Box */}
               {isKRP && <div className="pt-4">
@@ -311,61 +377,133 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
             {/* Transport Tab */}
             <TabsContent value="transport" className="space-y-6 mt-0">
-              <Card>
-                <CardContent className="p-4 space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <Train className="h-4 w-4 text-primary" />
-                      Stations & Lines
-                    </h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <p className="font-medium">{development.nearestTube.station}</p>
-                          <p className="text-sm text-muted-foreground">{development.nearestTube.line}</p>
-                        </div>
-                        <Badge variant="secondary">{development.nearestTube.walkTime} min walk</Badge>
-                      </div>
-                      {isKRP && <div className="flex justify-between items-center">
-                          <div>
-                            <p className="font-medium">Imperial Wharf</p>
-                            <p className="text-sm text-muted-foreground">Overground / National Rail</p>
+              <div className="space-y-4">
+                <Card>
+                  <CardContent className="p-5 space-y-5">
+                    <div>
+                      <h4 className="font-semibold text-base mb-4 flex items-center gap-2">
+                        <Train className="h-5 w-5 text-primary" />
+                        Nearby Stations & Lines
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-start p-3 bg-accent/50 rounded-lg">
+                          <div className="flex-1">
+                            <p className="font-semibold text-base">{development.nearestTube.station}</p>
+                            <p className="text-sm text-muted-foreground mt-1">{development.nearestTube.line}</p>
+                            <p className="text-xs text-muted-foreground mt-1">Zone {development.zone}</p>
                           </div>
-                          <Badge variant="secondary">10 min walk</Badge>
-                        </div>}
+                          <Badge variant="default" className="text-sm px-3 py-1">
+                            {development.nearestTube.walkTime} min walk
+                          </Badge>
+                        </div>
+                        
+                        {isKRP && (
+                          <div className="flex justify-between items-start p-3 bg-accent/50 rounded-lg">
+                            <div className="flex-1">
+                              <p className="font-semibold text-base">Imperial Wharf</p>
+                              <p className="text-sm text-muted-foreground mt-1">London Overground / National Rail</p>
+                              <p className="text-xs text-muted-foreground mt-1">Zone 2/3</p>
+                            </div>
+                            <Badge variant="default" className="text-sm px-3 py-1">10 min walk</Badge>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  {isKRP && <div>
-                      <h4 className="font-semibold mb-3">Typical Journeys</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Bond Street</span>
-                          <span className="font-medium">~15 mins</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Bank/Monument</span>
-                          <span className="font-medium">~20 mins</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">UCL (Euston Square)</span>
-                          <span className="font-medium">~25 mins</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Heathrow (T2/3)</span>
-                          <span className="font-medium">~45 mins</span>
+                    <div className="border-t pt-4">
+                      <h4 className="font-semibold text-base mb-3">Journey Times to Key Destinations</h4>
+                      <div className="space-y-2.5">
+                        {isKRP ? (
+                          <>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Sloane Square (King's Road)</span>
+                              <span className="font-semibold text-sm">~8 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">South Kensington (Museums)</span>
+                              <span className="font-semibold text-sm">~12 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Bond Street (Oxford Street)</span>
+                              <span className="font-semibold text-sm">~15 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Bank / Monument (City)</span>
+                              <span className="font-semibold text-sm">~20 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">King's Cross St. Pancras</span>
+                              <span className="font-semibold text-sm">~22 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Canary Wharf</span>
+                              <span className="font-semibold text-sm">~25 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Heathrow Airport (T2/3)</span>
+                              <span className="font-semibold text-sm">~45 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Gatwick Airport</span>
+                              <span className="font-semibold text-sm">~55 mins</span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Oxford Circus</span>
+                              <span className="font-semibold text-sm">~15 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">King's Cross St. Pancras</span>
+                              <span className="font-semibold text-sm">~20 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Canary Wharf</span>
+                              <span className="font-semibold text-sm">~25 mins</span>
+                            </div>
+                            <div className="flex justify-between items-center p-2 hover:bg-accent/30 rounded transition-colors">
+                              <span className="text-sm">Heathrow Airport</span>
+                              <span className="font-semibold text-sm">~45 mins</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-4">
+                      <h4 className="font-semibold text-base mb-3">Transport Score</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {development.transportScore}
+                      </p>
+                    </div>
+
+                    {isKRP && (
+                      <div className="border-t pt-4">
+                        <h4 className="font-semibold text-base mb-3">Additional Transport Options</h4>
+                        <div className="space-y-2 text-sm">
+                          <p className="text-muted-foreground leading-relaxed">
+                            <strong>Bus routes:</strong> Multiple routes serve the area, connecting to Chelsea, South Kensington, Victoria, and beyond.
+                          </p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            <strong>Cycling:</strong> Cycle Superhighway 8 nearby; secure bike storage available in development.
+                          </p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            <strong>Thames Clipper:</strong> River bus services accessible from nearby piers for unique river commute.
+                          </p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            <strong>Road access:</strong> A4/M4 corridor provides direct routes west to Heathrow and M25.
+                          </p>
                         </div>
                       </div>
-                    </div>}
+                    )}
 
-                  <p className="text-xs text-muted-foreground pt-4 border-t">
-                    {development.transportScore}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Indicative journey times. Check TfL for live information.
-                  </p>
-                </CardContent>
-              </Card>
+                    <p className="text-xs text-muted-foreground pt-4 border-t">
+                      All journey times are approximate and based on typical off-peak travel. Check TfL Journey Planner for real-time information and alternative routes.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
 
             {/* Schools Tab */}
@@ -405,31 +543,6 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <YieldCalculator />
             </TabsContent>
 
-            {/* FAQ Tab */}
-            <TabsContent value="faq" className="space-y-4 mt-0">
-              <Card>
-                <CardContent className="p-4">
-                  <h4 className="font-semibold mb-2">What is the tenure?</h4>
-                  <p className="text-sm text-muted-foreground">{development.tenure}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <h4 className="font-semibold mb-2">What amenities are included?</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {development.amenities.slice(0, 3).join(', ')}, and more.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <h4 className="font-semibold mb-2">How do I book a viewing?</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Click the "Book a viewing" button or contact our team directly.
-                  </p>
-                </CardContent>
-              </Card>
-            </TabsContent>
           </div>
         </Tabs>
 
