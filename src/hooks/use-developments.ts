@@ -6,10 +6,30 @@ export const useDevelopments = () => {
   return useQuery({
     queryKey: ['developments'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('developments')
-        .select('*')
-        .order('name');
+      // Check if user is authenticated to determine which table to query
+      const { data: { session } } = await supabase.auth.getSession();
+      const isAuthenticated = !!session?.user;
+
+      let data: any[];
+      let error: any;
+
+      if (isAuthenticated) {
+        // Authenticated users get full access to developments table
+        const result = await supabase
+          .from('developments')
+          .select('*')
+          .order('name');
+        data = result.data || [];
+        error = result.error;
+      } else {
+        // Public users only see developments_public view (customer-facing data)
+        const result = await supabase
+          .from('developments_public' as any)
+          .select('*')
+          .order('name');
+        data = result.data || [];
+        error = result.error;
+      }
 
       if (error) throw error;
 
@@ -44,7 +64,7 @@ export const useDevelopments = () => {
           }
         }
 
-        // Get additional details from raw_details
+        // Get additional details from raw_details (only available for authenticated users)
         const rawDetails = (dev.raw_details as any) || {};
 
         return {

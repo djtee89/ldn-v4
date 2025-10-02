@@ -777,7 +777,99 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      developments_public: {
+        Row: {
+          amenities: string[] | null
+          area_overview: string | null
+          bedrooms: string[] | null
+          completion_date: string | null
+          cover_image_index: number | null
+          created_at: string | null
+          developer: string | null
+          distance_to_tube: string | null
+          featured: boolean | null
+          green_spaces: string | null
+          id: string | null
+          images: string[] | null
+          lat: number | null
+          lng: number | null
+          location: string | null
+          name: string | null
+          nearby_stations: Json | null
+          nearest_tube: string | null
+          nearest_tube_line: string | null
+          postcode: string | null
+          prices: Json | null
+          schools: Json | null
+          stations: Json | null
+          status: string | null
+          tenure: string | null
+          transport_score: string | null
+          updated_at: string | null
+          zone: string | null
+        }
+        Insert: {
+          amenities?: string[] | null
+          area_overview?: string | null
+          bedrooms?: string[] | null
+          completion_date?: string | null
+          cover_image_index?: number | null
+          created_at?: string | null
+          developer?: string | null
+          distance_to_tube?: string | null
+          featured?: boolean | null
+          green_spaces?: string | null
+          id?: string | null
+          images?: string[] | null
+          lat?: number | null
+          lng?: number | null
+          location?: string | null
+          name?: string | null
+          nearby_stations?: Json | null
+          nearest_tube?: string | null
+          nearest_tube_line?: string | null
+          postcode?: string | null
+          prices?: never
+          schools?: Json | null
+          stations?: Json | null
+          status?: string | null
+          tenure?: string | null
+          transport_score?: string | null
+          updated_at?: string | null
+          zone?: string | null
+        }
+        Update: {
+          amenities?: string[] | null
+          area_overview?: string | null
+          bedrooms?: string[] | null
+          completion_date?: string | null
+          cover_image_index?: number | null
+          created_at?: string | null
+          developer?: string | null
+          distance_to_tube?: string | null
+          featured?: boolean | null
+          green_spaces?: string | null
+          id?: string | null
+          images?: string[] | null
+          lat?: number | null
+          lng?: number | null
+          location?: string | null
+          name?: string | null
+          nearby_stations?: Json | null
+          nearest_tube?: string | null
+          nearest_tube_line?: string | null
+          postcode?: string | null
+          prices?: never
+          schools?: Json | null
+          stations?: Json | null
+          status?: string | null
+          tenure?: string | null
+          transport_score?: string | null
+          updated_at?: string | null
+          zone?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       binary_quantize: {
