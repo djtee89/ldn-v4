@@ -23,6 +23,7 @@ import { TemplateGenerator } from "@/components/TemplateGenerator";
 import { AnomalyDashboard } from "@/components/AnomalyDashboard";
 import { ChangeDiary } from "@/components/ChangeDiary";
 import { MandatoryFieldsGate } from "@/components/MandatoryFieldsGate";
+import { DataMigrationTool } from "@/components/DataMigrationTool";
 import { useNavigate } from "react-router-dom";
 
 type PriceList = {
@@ -111,6 +112,7 @@ export default function AdminDevelopments() {
       <Tabs defaultValue="developments" className="space-y-4">
         <TabsList>
           <TabsTrigger value="developments">Developments</TabsTrigger>
+          <TabsTrigger value="migration">Data Migration</TabsTrigger>
           <TabsTrigger value="images" disabled={!selectedDev}>Images</TabsTrigger>
           <TabsTrigger value="pricelists" disabled={!selectedDev}>Price Lists</TabsTrigger>
           <TabsTrigger value="hottest" disabled={!selectedDev}>Hottest Unit</TabsTrigger>
@@ -130,6 +132,10 @@ export default function AdminDevelopments() {
             filters={filters}
             onFiltersChange={setFilters}
           />
+        </TabsContent>
+
+        <TabsContent value="migration">
+          <DataMigrationTool />
         </TabsContent>
 
         <TabsContent value="images">
@@ -287,12 +293,27 @@ function DevelopmentsList({
                   <TableCell>{dev.zone}</TableCell>
                   <TableCell>{dev.postcode}</TableCell>
                   <TableCell>
-                    <div className="flex gap-1">
+                    <div className="flex flex-wrap gap-1">
                       {(!dev.images || dev.images.length === 0) && (
                         <Badge variant="outline" className="text-xs">No images</Badge>
                       )}
                       {(!dev.stations || dev.stations.length === 0) && (
                         <Badge variant="outline" className="text-xs">No stations</Badge>
+                      )}
+                      {!dev.area_overview && (
+                        <Badge variant="outline" className="text-xs text-yellow-600">No overview</Badge>
+                      )}
+                      {!dev.postcode && (
+                        <Badge variant="outline" className="text-xs text-yellow-600">No postcode</Badge>
+                      )}
+                      {!dev.tenure && (
+                        <Badge variant="outline" className="text-xs text-yellow-600">No tenure</Badge>
+                      )}
+                      {(!dev.amenities || dev.amenities.length === 0) && (
+                        <Badge variant="outline" className="text-xs text-yellow-600">No amenities</Badge>
+                      )}
+                      {(!dev.schools || dev.schools.length === 0) && (
+                        <Badge variant="outline" className="text-xs text-yellow-600">No schools</Badge>
                       )}
                     </div>
                   </TableCell>

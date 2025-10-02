@@ -103,6 +103,7 @@ export type Database = {
           developer: string | null
           distance_to_tube: string | null
           featured: boolean | null
+          green_spaces: string | null
           hidden_images: number[] | null
           id: string
           images: string[] | null
@@ -110,12 +111,17 @@ export type Database = {
           lng: number | null
           location: string | null
           name: string
+          nearby_stations: Json | null
           nearest_tube: string | null
+          nearest_tube_line: string | null
+          postcode: string | null
           prices: Json | null
+          raw_details: Json | null
           schools: Json | null
           stations: Json | null
           status: string | null
           tenure: string | null
+          transport_score: string | null
           updated_at: string | null
           validation_status: Json | null
           zone: string | null
@@ -130,6 +136,7 @@ export type Database = {
           developer?: string | null
           distance_to_tube?: string | null
           featured?: boolean | null
+          green_spaces?: string | null
           hidden_images?: number[] | null
           id: string
           images?: string[] | null
@@ -137,12 +144,17 @@ export type Database = {
           lng?: number | null
           location?: string | null
           name: string
+          nearby_stations?: Json | null
           nearest_tube?: string | null
+          nearest_tube_line?: string | null
+          postcode?: string | null
           prices?: Json | null
+          raw_details?: Json | null
           schools?: Json | null
           stations?: Json | null
           status?: string | null
           tenure?: string | null
+          transport_score?: string | null
           updated_at?: string | null
           validation_status?: Json | null
           zone?: string | null
@@ -157,6 +169,7 @@ export type Database = {
           developer?: string | null
           distance_to_tube?: string | null
           featured?: boolean | null
+          green_spaces?: string | null
           hidden_images?: number[] | null
           id?: string
           images?: string[] | null
@@ -164,12 +177,17 @@ export type Database = {
           lng?: number | null
           location?: string | null
           name?: string
+          nearby_stations?: Json | null
           nearest_tube?: string | null
+          nearest_tube_line?: string | null
+          postcode?: string | null
           prices?: Json | null
+          raw_details?: Json | null
           schools?: Json | null
           stations?: Json | null
           status?: string | null
           tenure?: string | null
+          transport_score?: string | null
           updated_at?: string | null
           validation_status?: Json | null
           zone?: string | null

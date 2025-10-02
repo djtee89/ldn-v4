@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.krp-ask]
 verify_jwt = false
+
+[functions.migrate-developments]
+verify_jwt = false
