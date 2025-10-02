@@ -61,31 +61,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     // Wait for map to fully load
     map.current.on('load', async () => {
-      // Load house icon
-      const houseIconSvg = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="#FF6B6B" stroke="#FFFFFF" stroke-width="2"/>
-          <path d="M9 22V12h6v10" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1"/>
-        </svg>
-      `;
-      
-      const img = new Image(24, 24);
-      img.src = 'data:image/svg+xml;base64,' + btoa(houseIconSvg);
-      await new Promise((resolve) => { img.onload = resolve; });
-      map.current!.addImage('house-icon', img);
-      
-      // Load highlighted house icon
-      const houseIconHighlightedSvg = `
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="#FF6B6B" stroke="#FFD700" stroke-width="3"/>
-          <path d="M9 22V12h6v10" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1"/>
-        </svg>
-      `;
-      
-      const imgHighlighted = new Image(28, 28);
-      imgHighlighted.src = 'data:image/svg+xml;base64,' + btoa(houseIconHighlightedSvg);
-      await new Promise((resolve) => { imgHighlighted.onload = resolve; });
-      map.current!.addImage('house-icon-highlighted', imgHighlighted);
+      // Icons are no longer needed - using simple circles
       
       // Add source for development pins
       map.current!.addSource('developments', {
@@ -137,31 +113,31 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
-      // Add layer for normal property pins (ABOVE amenity pins) - using house icons
+      // Add layer for normal property pins (ABOVE amenity pins) - simple blue circles
       map.current!.addLayer({
         id: 'development-pins',
-        type: 'symbol',
+        type: 'circle',
         source: 'developments',
         filter: ['!=', ['get', 'highlighted'], true],
-        layout: {
-          'icon-image': 'house-icon',
-          'icon-size': 1,
-          'icon-allow-overlap': true,
-          'icon-anchor': 'bottom'
+        paint: {
+          'circle-radius': 8,
+          'circle-color': '#3b82f6',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff'
         }
       });
 
-      // Add layer for highlighted property pins - larger house icons
+      // Add layer for highlighted property pins - larger blue circles with glow
       map.current!.addLayer({
         id: 'development-pins-highlighted',
-        type: 'symbol',
+        type: 'circle',
         source: 'developments',
         filter: ['==', ['get', 'highlighted'], true],
-        layout: {
-          'icon-image': 'house-icon-highlighted',
-          'icon-size': 1.2,
-          'icon-allow-overlap': true,
-          'icon-anchor': 'bottom'
+        paint: {
+          'circle-radius': 10,
+          'circle-color': '#3b82f6',
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#fbbf24'
         }
       });
 
@@ -173,7 +149,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         layout: {
           'text-field': ['get', 'price'],
           'text-size': 11,
-          'text-offset': [0, -1.8],
+          'text-offset': [0, -1.3],
           'text-anchor': 'top'
         },
         paint: {
