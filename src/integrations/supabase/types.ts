@@ -92,6 +92,39 @@ export type Database = {
         }
         Relationships: []
       }
+      developer_registry: {
+        Row: {
+          active: boolean
+          allow_domains: Json
+          created_at: string
+          id: string
+          image_rules: Json
+          index_urls: Json
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          allow_domains?: Json
+          created_at?: string
+          id: string
+          image_rules?: Json
+          index_urls?: Json
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          allow_domains?: Json
+          created_at?: string
+          id?: string
+          image_rules?: Json
+          index_urls?: Json
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       developments: {
         Row: {
           amenities: string[] | null
@@ -193,6 +226,65 @@ export type Database = {
           zone?: string | null
         }
         Relationships: []
+      }
+      discovery_queue: {
+        Row: {
+          created_at: string
+          developer_id: string
+          id: string
+          images: Json
+          imported_at: string | null
+          is_london: boolean
+          location: string | null
+          name: string
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          scraped_data: Json
+          status: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          developer_id: string
+          id?: string
+          images?: Json
+          imported_at?: string | null
+          is_london?: boolean
+          location?: string | null
+          name: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scraped_data?: Json
+          status?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          developer_id?: string
+          id?: string
+          images?: Json
+          imported_at?: string | null
+          is_london?: boolean
+          location?: string | null
+          name?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scraped_data?: Json
+          status?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discovery_queue_developer_id_fkey"
+            columns: ["developer_id"]
+            isOneToOne: false
+            referencedRelation: "developer_registry"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       email_ingests: {
         Row: {
@@ -513,6 +605,47 @@ export type Database = {
           task_name?: string
         }
         Relationships: []
+      }
+      scrape_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          developer_id: string
+          discovered_count: number | null
+          error_message: string | null
+          id: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          developer_id: string
+          discovered_count?: number | null
+          error_message?: string | null
+          id?: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          developer_id?: string
+          discovered_count?: number | null
+          error_message?: string | null
+          id?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scrape_jobs_developer_id_fkey"
+            columns: ["developer_id"]
+            isOneToOne: false
+            referencedRelation: "developer_registry"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       unit_anomalies: {
         Row: {

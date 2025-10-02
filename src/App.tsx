@@ -14,6 +14,7 @@ import DataPipeline from "./pages/DataPipeline";
 import ErrorLog from "./pages/ErrorLog";
 import BulkImport from "./pages/BulkImport";
 import Scheduling from "./pages/Scheduling";
+import Discovery from "./pages/Discovery";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/admin/bulk-import" element={<ProtectedRoute requiredRole="admin"><BulkImport /></ProtectedRoute>} />
           <Route path="/admin/error-log" element={<ProtectedRoute requiredRole="admin"><ErrorLog /></ProtectedRoute>} />
           <Route path="/admin/scheduling" element={<ProtectedRoute requiredRole="admin"><Scheduling /></ProtectedRoute>} />
+          <Route path="/admin/discovery" element={<ProtectedRoute requiredRole="admin"><Discovery /></ProtectedRoute>} />
           <Route path="/data-pipeline" element={<ProtectedRoute requiredRole="admin"><DataPipeline /></ProtectedRoute>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
