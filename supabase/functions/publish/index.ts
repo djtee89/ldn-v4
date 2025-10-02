@@ -1,0 +1,124 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    const { price_list_id } = await req.json();
+
+    if (!price_list_id) {
+      return new Response(JSON.stringify({ error: 'Missing price_list_id' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    console.log(`Publishing price list: ${price_list_id}`);
+
+    // Get price list and rows
+    const { data: priceList, error: plError } = await supabase
+      .from('price_lists')
+      .select('*, price_list_rows(*)')
+      .eq('id', price_list_id)
+      .single();
+
+    if (plError || !priceList) {
+      return new Response(JSON.stringify({ error: 'Price list not found' }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const dev_id = priceList.dev_id;
+    let updated = 0;
+
+    // Upsert units
+    for (const row of priceList.price_list_rows || []) {
+      const { error: upsertError } = await supabase
+        .from('units')
+        .upsert({
+          dev_id,
+          unit_number: row.unit_code,
+          beds: row.beds,
+          size_sqft: row.size_sqft,
+          price: row.price,
+          status: row.status,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'dev_id,unit_number',
+        });
+
+      if (!upsertError) updated++;
+    }
+
+    // Recompute start prices by bed count
+    const { data: units } = await supabase
+      .from('units')
+      .select('beds, price')
+      .eq('dev_id', dev_id)
+      .in('status', ['Available', 'Negotiation']);
+
+    const pricesByBeds = new Map<number, number[]>();
+    units?.forEach(u => {
+      if (!pricesByBeds.has(u.beds)) pricesByBeds.set(u.beds, []);
+      pricesByBeds.get(u.beds)!.push(u.price);
+    });
+
+    const startPrices: Record<string, number> = {};
+    for (const [beds, prices] of pricesByBeds) {
+      startPrices[`${beds}bed`] = Math.min(...prices);
+    }
+
+    // Update development
+    await supabase
+      .from('developments')
+      .update({
+        prices: startPrices,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', dev_id);
+
+    // Check if we should recompute hottest unit
+    const { data: hottest } = await supabase
+      .from('hottest_unit')
+      .select('override')
+      .eq('dev_id', dev_id)
+      .single();
+
+    if (!hottest || !hottest.override) {
+      console.log('Triggering hottest unit recalculation');
+      await supabase.functions.invoke('hot-auto', {
+        body: { dev_id },
+      });
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        dev_id,
+        units_updated: updated,
+        start_prices: startPrices,
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error in publish function:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return new Response(
+      JSON.stringify({ error: message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+});

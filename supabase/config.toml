@@ -5,3 +5,18 @@ verify_jwt = false
 
 [functions.submit-contact-form]
 verify_jwt = false
+
+[functions.ingest]
+verify_jwt = false
+
+[functions.publish]
+verify_jwt = false
+
+[functions.images-refresh]
+verify_jwt = false
+
+[functions.hot-auto]
+verify_jwt = false
+
+[functions.hot-override]
+verify_jwt = false

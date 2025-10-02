@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import ContactOptions from "./pages/ContactOptions";
 import Offers from "./pages/Offers";
 import Admin from "./pages/Admin";
+import DataPipeline from "./pages/DataPipeline";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/contact-options" element={<ContactOptions />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/data-pipeline" element={<DataPipeline />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
