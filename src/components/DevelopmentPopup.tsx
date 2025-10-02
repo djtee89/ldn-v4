@@ -509,9 +509,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             {/* Education Tab */}
             <TabsContent value="education" className="space-y-4 mt-0">
               <div className="mb-4">
-                <h4 className="font-semibold text-base mb-2">Nearby Schools & Education</h4>
+                <h4 className="font-semibold text-base mb-2">Nearby Schools & Universities</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  The area offers excellent educational facilities, from outstanding primary schools to prestigious secondary institutions and further education colleges.
+                  The area offers excellent educational facilities, from outstanding primary schools to prestigious secondary institutions and world-class universities.
                 </p>
               </div>
               
@@ -526,9 +526,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                           <div className="flex items-start gap-3 flex-1">
                             <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="font-semibold">Chelsea Academy</p>
-                              <p className="text-sm text-muted-foreground mt-1">Primary & Secondary • Outstanding Ofsted</p>
-                              <p className="text-xs text-muted-foreground mt-1">0.4 miles • 8 min walk</p>
+                              <p className="font-semibold">Thomas's Fulham</p>
+                              <p className="text-sm text-muted-foreground mt-1">Independent Co-ed • Outstanding</p>
+                              <p className="text-xs text-muted-foreground mt-1">0.3 miles • 6 min walk</p>
                             </div>
                           </div>
                           <Badge className="bg-green-600">Outstanding</Badge>
@@ -561,6 +561,19 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                         </div>
                       </CardContent>
                     </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">St Stephen's C of E Primary</p>
+                            <p className="text-sm text-muted-foreground mt-1">Church of England Primary • Outstanding</p>
+                            <p className="text-xs text-muted-foreground mt-1">0.4 miles • 8 min walk</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
 
                   <div className="space-y-3 pt-4">
@@ -568,13 +581,32 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                     
                     <Card>
                       <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                          <div>
-                            <p className="font-semibold">Chelsea Academy (Secondary)</p>
-                            <p className="text-sm text-muted-foreground mt-1">Ages 11-18 • Outstanding Ofsted • Strong academics & sports</p>
-                            <p className="text-xs text-muted-foreground mt-1">0.4 miles</p>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-start gap-3 flex-1">
+                            <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-semibold">Lady Margaret School</p>
+                              <p className="text-sm text-muted-foreground mt-1">Girls' Church of England • Outstanding Ofsted</p>
+                              <p className="text-xs text-muted-foreground mt-1">0.8 miles • 15 min walk</p>
+                            </div>
                           </div>
+                          <Badge className="bg-green-600">Outstanding</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-start gap-3 flex-1">
+                            <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-semibold">The London Oratory School</p>
+                              <p className="text-sm text-muted-foreground mt-1">Boys' Catholic Secondary • Outstanding Ofsted</p>
+                              <p className="text-xs text-muted-foreground mt-1">1.2 miles • 20 min bus</p>
+                            </div>
+                          </div>
+                          <Badge className="bg-green-600">Outstanding</Badge>
                         </div>
                       </CardContent>
                     </Card>
@@ -584,22 +616,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                         <div className="flex items-start gap-3">
                           <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                           <div>
-                            <p className="font-semibold">The London Oratory School</p>
-                            <p className="text-sm text-muted-foreground mt-1">Boys' Catholic Secondary • Outstanding Ofsted</p>
-                            <p className="text-xs text-muted-foreground mt-1">1.2 miles • 20 min bus</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                          <div>
-                            <p className="font-semibold">Lady Margaret School</p>
-                            <p className="text-sm text-muted-foreground mt-1">Girls' Church of England • Outstanding Ofsted</p>
-                            <p className="text-xs text-muted-foreground mt-1">0.8 miles • 15 min walk</p>
+                            <p className="font-semibold">Chelsea Academy</p>
+                            <p className="text-sm text-muted-foreground mt-1">Ages 11-18 • Good Ofsted • Strong academics</p>
+                            <p className="text-xs text-muted-foreground mt-1">0.6 miles • 12 min walk</p>
                           </div>
                         </div>
                       </CardContent>
@@ -616,7 +635,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                           <div>
                             <p className="font-semibold">Hill House International School</p>
                             <p className="text-sm text-muted-foreground mt-1">Co-ed Independent • Ages 4-13</p>
-                            <p className="text-xs text-muted-foreground mt-1">1.5 miles • Chelsea</p>
+                            <p className="text-xs text-muted-foreground mt-1">1.5 miles • 10 min tube to Knightsbridge</p>
                           </div>
                         </div>
                       </CardContent>
@@ -637,7 +656,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                   </div>
 
                   <div className="space-y-3 pt-4">
-                    <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Further Education</h5>
+                    <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Universities & Higher Education</h5>
                     
                     <Card>
                       <CardContent className="p-4">
@@ -645,8 +664,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                           <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                           <div>
                             <p className="font-semibold">Imperial College London</p>
-                            <p className="text-sm text-muted-foreground mt-1">World-leading university • Science & Engineering</p>
-                            <p className="text-xs text-muted-foreground mt-1">2 miles • 15 min tube to South Kensington</p>
+                            <p className="text-sm text-muted-foreground mt-1">World-leading university • Science, Engineering, Medicine & Business</p>
+                            <p className="text-xs text-muted-foreground mt-1">2.2 miles • 15 min tube to South Kensington</p>
                           </div>
                         </div>
                       </CardContent>
@@ -658,8 +677,47 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                           <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                           <div>
                             <p className="font-semibold">Royal College of Art</p>
-                            <p className="text-sm text-muted-foreground mt-1">World's leading art & design university</p>
-                            <p className="text-xs text-muted-foreground mt-1">2.5 miles • South Kensington</p>
+                            <p className="text-sm text-muted-foreground mt-1">World's top-ranked art & design university</p>
+                            <p className="text-xs text-muted-foreground mt-1">2.5 miles • 15 min tube to South Kensington</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">Royal College of Music</p>
+                            <p className="text-sm text-muted-foreground mt-1">Leading conservatoire • Performance & Composition</p>
+                            <p className="text-xs text-muted-foreground mt-1">2.3 miles • 15 min tube to South Kensington</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">King's College London</p>
+                            <p className="text-sm text-muted-foreground mt-1">Russell Group university • Multiple campuses</p>
+                            <p className="text-xs text-muted-foreground mt-1">3.5 miles • 25 min tube to Strand Campus</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-semibold">London School of Economics (LSE)</p>
+                            <p className="text-sm text-muted-foreground mt-1">World-renowned social sciences university</p>
+                            <p className="text-xs text-muted-foreground mt-1">3.8 miles • 25 min tube to Holborn</p>
                           </div>
                         </div>
                       </CardContent>
@@ -669,32 +727,125 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               ) : (
                 <>
                   {development.schools && development.schools.length > 0 ? (
-                    <div className="space-y-3">
-                      {development.schools.map((school, index) => (
-                        <Card key={index}>
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="flex items-start gap-3 flex-1">
-                                <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                                <div>
-                                  <p className="font-semibold">{school}</p>
-                                  <p className="text-xs text-muted-foreground mt-1">
-                                    {school.toLowerCase().includes('primary') ? 'Primary School' : 
-                                     school.toLowerCase().includes('secondary') ? 'Secondary School' : 
-                                     school.toLowerCase().includes('college') || school.toLowerCase().includes('university') ? 'Further Education' : 'School'}
-                                  </p>
+                    <>
+                      <div className="space-y-3">
+                        <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Nearby Schools</h5>
+                        {development.schools.map((school, index) => (
+                          <Card key={index}>
+                            <CardContent className="p-4">
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-start gap-3 flex-1">
+                                  <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                  <div>
+                                    <p className="font-semibold">{school.replace(/\s*\((Good|Outstanding)\)/, '')}</p>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                      {school.toLowerCase().includes('primary') ? 'Primary School' : 
+                                       school.toLowerCase().includes('secondary') || school.toLowerCase().includes('academy') || school.toLowerCase().includes('high school') ? 'Secondary School' : 
+                                       school.toLowerCase().includes('college') ? 'College' : 
+                                       school.toLowerCase().includes('prep') ? 'Preparatory School' : 'School'}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">Walking distance from development</p>
+                                  </div>
                                 </div>
+                                {school.toLowerCase().includes('outstanding') && <Badge className="bg-green-600 flex-shrink-0">Outstanding</Badge>}
+                                {school.toLowerCase().includes('good') && !school.toLowerCase().includes('outstanding') && <Badge variant="secondary" className="flex-shrink-0">Good</Badge>}
                               </div>
-                              {school.toLowerCase().includes('outstanding') && <Badge className="bg-green-600">Outstanding</Badge>}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+
+                      <div className="space-y-3 pt-4">
+                        <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Nearby Universities</h5>
+                        
+                        {development.location.toLowerCase().includes('canary wharf') || development.location.toLowerCase().includes('poplar') || development.location.toLowerCase().includes('e14') ? (
+                          <>
+                            <Card>
+                              <CardContent className="p-4">
+                                <div className="flex items-start gap-3">
+                                  <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                  <div>
+                                    <p className="font-semibold">Queen Mary University of London</p>
+                                    <p className="text-sm text-muted-foreground mt-1">Russell Group university • Mile End Campus</p>
+                                    <p className="text-xs text-muted-foreground mt-1">2.5 miles • 15 min tube</p>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardContent className="p-4">
+                                <div className="flex items-start gap-3">
+                                  <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                  <div>
+                                    <p className="font-semibold">University of Greenwich</p>
+                                    <p className="text-sm text-muted-foreground mt-1">Modern university • Maritime Greenwich Campus</p>
+                                    <p className="text-xs text-muted-foreground mt-1">3 miles • 20 min DLR</p>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </>
+                        ) : development.location.toLowerCase().includes('marylebone') || development.location.toLowerCase().includes('w2') ? (
+                          <>
+                            <Card>
+                              <CardContent className="p-4">
+                                <div className="flex items-start gap-3">
+                                  <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                  <div>
+                                    <p className="font-semibold">University College London (UCL)</p>
+                                    <p className="text-sm text-muted-foreground mt-1">World-leading research university</p>
+                                    <p className="text-xs text-muted-foreground mt-1">1.5 miles • 10 min tube to Euston Square</p>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardContent className="p-4">
+                                <div className="flex items-start gap-3">
+                                  <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                  <div>
+                                    <p className="font-semibold">University of Westminster</p>
+                                    <p className="text-sm text-muted-foreground mt-1">Regent Campus • Media, Arts & Design</p>
+                                    <p className="text-xs text-muted-foreground mt-1">0.8 miles • 15 min walk</p>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </>
+                        ) : (
+                          <>
+                            <Card>
+                              <CardContent className="p-4">
+                                <div className="flex items-start gap-3">
+                                  <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                  <div>
+                                    <p className="font-semibold">King's College London</p>
+                                    <p className="text-sm text-muted-foreground mt-1">Russell Group university • Multiple London campuses</p>
+                                    <p className="text-xs text-muted-foreground mt-1">25-30 min by tube</p>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardContent className="p-4">
+                                <div className="flex items-start gap-3">
+                                  <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                  <div>
+                                    <p className="font-semibold">London School of Economics (LSE)</p>
+                                    <p className="text-sm text-muted-foreground mt-1">World-renowned for social sciences</p>
+                                    <p className="text-xs text-muted-foreground mt-1">30 min by tube to Holborn</p>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </>
+                        )}
+                      </div>
+                    </>
                   ) : (
                     <Card>
                       <CardContent className="p-6 text-center">
-                        <p className="text-muted-foreground">Contact us for information about schools in this area.</p>
+                        <p className="text-muted-foreground">Contact us for information about schools and universities in this area.</p>
                       </CardContent>
                     </Card>
                   )}
@@ -704,7 +855,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <Card className="mt-4 bg-accent/50">
                 <CardContent className="p-4">
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    <strong>Note:</strong> School catchment areas and admission policies change regularly. Distances are approximate walking distances. Always verify current catchment areas, Ofsted ratings, and admission criteria directly with schools before making decisions.
+                    <strong>Note:</strong> School catchment areas and admission policies change regularly. Distances and journey times are approximate. Always verify current catchment areas, Ofsted ratings, and admission criteria directly with schools before making decisions.
                   </p>
                 </CardContent>
               </Card>
