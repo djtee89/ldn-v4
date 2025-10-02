@@ -128,6 +128,152 @@ export type Database = {
         }
         Relationships: []
       }
+      error_log: {
+        Row: {
+          context: Json | null
+          error_message: string
+          error_type: string
+          file_path: string | null
+          id: string
+          occurred_at: string | null
+          resolved: boolean | null
+        }
+        Insert: {
+          context?: Json | null
+          error_message: string
+          error_type: string
+          file_path?: string | null
+          id?: string
+          occurred_at?: string | null
+          resolved?: boolean | null
+        }
+        Update: {
+          context?: Json | null
+          error_message?: string
+          error_type?: string
+          file_path?: string | null
+          id?: string
+          occurred_at?: string | null
+          resolved?: boolean | null
+        }
+        Relationships: []
+      }
+      price_list_rows: {
+        Row: {
+          beds: number | null
+          created_at: string | null
+          id: string
+          price: number | null
+          price_list_id: string
+          size_sqft: number | null
+          status: string | null
+          unit_code: string
+        }
+        Insert: {
+          beds?: number | null
+          created_at?: string | null
+          id?: string
+          price?: number | null
+          price_list_id: string
+          size_sqft?: number | null
+          status?: string | null
+          unit_code: string
+        }
+        Update: {
+          beds?: number | null
+          created_at?: string | null
+          id?: string
+          price?: number | null
+          price_list_id?: string
+          size_sqft?: number | null
+          status?: string | null
+          unit_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_list_rows_price_list_id_fkey"
+            columns: ["price_list_id"]
+            isOneToOne: false
+            referencedRelation: "price_lists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      price_lists: {
+        Row: {
+          dev_id: string
+          file_path: string
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          parsed_ok: boolean | null
+          published_at: string | null
+          published_by: string | null
+          source: string
+          uploaded_at: string | null
+        }
+        Insert: {
+          dev_id: string
+          file_path: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          parsed_ok?: boolean | null
+          published_at?: string | null
+          published_by?: string | null
+          source?: string
+          uploaded_at?: string | null
+        }
+        Update: {
+          dev_id?: string
+          file_path?: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          parsed_ok?: boolean | null
+          published_at?: string | null
+          published_by?: string | null
+          source?: string
+          uploaded_at?: string | null
+        }
+        Relationships: []
+      }
+      publishes: {
+        Row: {
+          dev_id: string
+          id: string
+          notes: string | null
+          price_list_id: string
+          published_at: string | null
+          published_by: string | null
+          units_added: number | null
+          units_removed: number | null
+          units_updated: number | null
+        }
+        Insert: {
+          dev_id: string
+          id?: string
+          notes?: string | null
+          price_list_id: string
+          published_at?: string | null
+          published_by?: string | null
+          units_added?: number | null
+          units_removed?: number | null
+          units_updated?: number | null
+        }
+        Update: {
+          dev_id?: string
+          id?: string
+          notes?: string | null
+          price_list_id?: string
+          published_at?: string | null
+          published_by?: string | null
+          units_added?: number | null
+          units_removed?: number | null
+          units_updated?: number | null
+        }
+        Relationships: []
+      }
       rag_chunks: {
         Row: {
           content: string

@@ -1,32 +1,70 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Database, Upload } from 'lucide-react';
+import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Upload, AlertCircle, LogOut, Activity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type Booking = {
   id: string;
   name: string;
   email: string;
   phone: string;
-  development_name: string | null;
-  preferred_date: string | null;
-  preferred_time: string | null;
-  message: string | null;
-  status: 'pending' | 'confirmed' | 'cancelled';
-  source: 'ai_chat' | 'booking_modal' | 'website';
+  status: string;
+  source: string;
+  message?: string;
+  preferred_date?: string;
+  preferred_time?: string;
   created_at: string;
+  development_name?: string;
 };
 
-const Admin = () => {
+type DashboardStats = {
+  totalDevelopments: number;
+  totalUnits: number;
+  lastPublishTime: string | null;
+  recentErrors: number;
+  pendingBookings: number;
+};
+
+export default function Admin() {
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [stats, setStats] = useState<DashboardStats>({
+    totalDevelopments: 0,
+    totalUnits: 0,
+    lastPublishTime: null,
+    recentErrors: 0,
+    pendingBookings: 0,
+  });
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const fetchStats = async () => {
+    try {
+      const [devsResult, unitsResult, publishesResult, errorsResult, bookingsResult] = await Promise.all([
+        supabase.from('developments').select('id', { count: 'exact', head: true }),
+        supabase.from('units').select('id', { count: 'exact', head: true }),
+        supabase.from('publishes').select('published_at').order('published_at', { ascending: false }).limit(1).maybeSingle(),
+        supabase.from('error_log').select('id', { count: 'exact', head: true }).eq('resolved', false),
+        supabase.from('bookings').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+      ]);
+
+      setStats({
+        totalDevelopments: devsResult.count || 0,
+        totalUnits: unitsResult.count || 0,
+        lastPublishTime: publishesResult.data?.published_at || null,
+        recentErrors: errorsResult.count || 0,
+        pendingBookings: bookingsResult.count || 0,
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -37,12 +75,12 @@ const Admin = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setBookings((data || []) as Booking[]);
+      setBookings(data || []);
     } catch (error) {
       console.error('Error fetching bookings:', error);
       toast({
         title: "Error",
-        description: "Failed to load bookings",
+        description: "Failed to fetch bookings",
         variant: "destructive",
       });
     } finally {
@@ -51,11 +89,11 @@ const Admin = () => {
   };
 
   useEffect(() => {
+    fetchStats();
     fetchBookings();
 
-    // Subscribe to real-time updates
     const channel = supabase
-      .channel('bookings_changes')
+      .channel('schema-db-changes')
       .on(
         'postgres_changes',
         {
@@ -65,6 +103,7 @@ const Admin = () => {
         },
         () => {
           fetchBookings();
+          fetchStats();
         }
       )
       .subscribe();
@@ -84,54 +123,126 @@ const Admin = () => {
       if (error) throw error;
 
       toast({
-        title: "Status Updated",
-        description: `Booking marked as ${status}`,
+        title: "Success",
+        description: `Booking ${status}`,
       });
     } catch (error) {
-      console.error('Error updating status:', error);
+      console.error('Error updating booking:', error);
       toast({
         title: "Error",
-        description: "Failed to update booking status",
+        description: "Failed to update booking",
         variant: "destructive",
       });
     }
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/auth');
+  };
+
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return new Date(dateString).toLocaleString();
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30';
-      case 'confirmed': return 'bg-green-500/20 text-green-700 border-green-500/30';
-      case 'cancelled': return 'bg-red-500/20 text-red-700 border-red-500/30';
-      default: return 'bg-muted';
+      case 'confirmed':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      default:
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
     }
   };
 
   const getSourceBadge = (source: string) => {
     switch (source) {
-      case 'ai_chat': return <Badge variant="outline" className="bg-primary/10">AI Chat</Badge>;
-      case 'booking_modal': return <Badge variant="outline" className="bg-blue-500/10">Booking Form</Badge>;
-      case 'website': return <Badge variant="outline" className="bg-purple-500/10">Website</Badge>;
-      default: return <Badge variant="outline">{source}</Badge>;
+      case 'ai_chat':
+        return <Badge variant="outline" className="gap-1"><MessageSquare className="h-3 w-3" /> AI Chat</Badge>;
+      default:
+        return <Badge variant="outline">{source}</Badge>;
     }
   };
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Header with Navigation */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
+          <Button variant="outline" onClick={handleLogout} className="gap-2">
+            <LogOut className="h-4 w-4" />
+            Logout
+          </Button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Developments</CardTitle>
+              <Building2 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalDevelopments}</div>
+              <p className="text-xs text-muted-foreground">Total schemes</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Units</CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalUnits}</div>
+              <p className="text-xs text-muted-foreground">In database</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Last Publish</CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {stats.lastPublishTime ? new Date(stats.lastPublishTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Never'}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {stats.lastPublishTime ? new Date(stats.lastPublishTime).toLocaleDateString() : 'No publishes yet'}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending</CardTitle>
+              <AlertCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.pendingBookings}</div>
+              <p className="text-xs text-muted-foreground">Booking requests</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Error Alerts */}
+        {stats.recentErrors > 0 && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Errors Detected</AlertTitle>
+            <AlertDescription>
+              {stats.recentErrors} unresolved error{stats.recentErrors !== 1 ? 's' : ''} in the system. Check error logs for details.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Admin Navigation */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           <Button 
-            variant="outline" 
+            variant="default" 
             onClick={() => navigate('/admin/developments')}
             className="gap-2"
           >
@@ -139,7 +250,7 @@ const Admin = () => {
             Developments
           </Button>
           <Button 
-            variant="outline" 
+            variant="default" 
             onClick={() => navigate('/data-pipeline')}
             className="gap-2"
           >
@@ -148,110 +259,118 @@ const Admin = () => {
           </Button>
         </div>
 
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Booking Requests</h1>
-            <p className="text-muted-foreground mt-1">Manage viewing requests from AI chat and website</p>
+        {/* Bookings Section */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">Booking Requests</h2>
+              <p className="text-muted-foreground">Manage customer inquiries</p>
+            </div>
+            <Button
+              onClick={fetchBookings}
+              variant="outline"
+              size="icon"
+              className="gap-2"
+            >
+              <RefreshCcw className="h-4 w-4" />
+            </Button>
           </div>
-          <Button onClick={fetchBookings} variant="outline" size="icon">
-            <RefreshCcw className="h-4 w-4" />
-          </Button>
-        </div>
 
-        {loading ? (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <p className="text-muted-foreground">Loading bookings...</p>
-            </CardContent>
-          </Card>
-        ) : bookings.length === 0 ? (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <p className="text-muted-foreground">No booking requests yet</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4">
-            {bookings.map((booking) => (
-              <Card key={booking.id} className="hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <CardTitle className="text-xl">{booking.name}</CardTitle>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {getSourceBadge(booking.source)}
-                        <Badge className={getStatusColor(booking.status)}>
-                          {booking.status}
-                        </Badge>
+          {loading ? (
+            <div className="text-center p-8">
+              <RefreshCcw className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+            </div>
+          ) : bookings.length === 0 ? (
+            <Card>
+              <CardContent className="pt-6 text-center text-muted-foreground">
+                No booking requests yet
+              </CardContent>
+            </Card>
+          ) : (
+            <ScrollArea className="h-[600px]">
+              <div className="space-y-4">
+                {bookings.map((booking) => (
+                  <Card key={booking.id}>
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-1">
+                          <CardTitle className="flex items-center gap-2">
+                            {booking.name}
+                            {getSourceBadge(booking.source)}
+                          </CardTitle>
+                          <Badge className={getStatusColor(booking.status)}>
+                            {booking.status}
+                          </Badge>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex gap-2">
-                      {booking.status === 'pending' && (
-                        <>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            onClick={() => updateStatus(booking.id, 'confirmed')}
-                          >
-                            Confirm
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => updateStatus(booking.id, 'cancelled')}
-                          >
-                            Cancel
-                          </Button>
-                        </>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid gap-2 text-sm">
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <a href={`mailto:${booking.email}`} className="hover:underline">
+                            {booking.email}
+                          </a>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-muted-foreground" />
+                          <a href={`tel:${booking.phone}`} className="hover:underline">
+                            {booking.phone}
+                          </a>
+                        </div>
+                        {booking.development_name && (
+                          <div className="flex items-center gap-2">
+                            <Building2 className="h-4 w-4 text-muted-foreground" />
+                            <span>{booking.development_name}</span>
+                          </div>
+                        )}
+                        {booking.preferred_date && (
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                            <span>{booking.preferred_date} {booking.preferred_time && `at ${booking.preferred_time}`}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {booking.message && (
+                        <div className="rounded-lg bg-muted p-3">
+                          <p className="text-sm">{booking.message}</p>
+                        </div>
                       )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <a href={`mailto:${booking.email}`} className="text-primary hover:underline">
-                        {booking.email}
-                      </a>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <a href={`tel:${booking.phone}`} className="text-primary hover:underline">
-                        {booking.phone}
-                      </a>
-                    </div>
-                    {booking.development_name && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Building2 className="h-4 w-4 text-muted-foreground" />
-                        <span>{booking.development_name}</span>
+
+                      <div className="flex items-center justify-between pt-2">
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {formatDate(booking.created_at)}
+                        </span>
+
+                        {booking.status === 'pending' && (
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              onClick={() => updateStatus(booking.id, 'confirmed')}
+                            >
+                              Confirm
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => updateStatus(booking.id, 'cancelled')}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        )}
                       </div>
-                    )}
-                    {booking.preferred_date && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span>{booking.preferred_date} {booking.preferred_time && `at ${booking.preferred_time}`}</span>
-                      </div>
-                    )}
-                  </div>
-                  {booking.message && (
-                    <div className="flex items-start gap-2 text-sm bg-muted p-3 rounded-lg">
-                      <MessageSquare className="h-4 w-4 text-muted-foreground mt-0.5" />
-                      <span>{booking.message}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground pt-2 border-t">
-                    <Clock className="h-3 w-3" />
-                    <span>Received {formatDate(booking.created_at)}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
+        </div>
       </div>
     </div>
   );
-};
-
-export default Admin;
+}
