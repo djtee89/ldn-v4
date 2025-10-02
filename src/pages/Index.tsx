@@ -1,28 +1,20 @@
 import React, { useState, useMemo } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import SecondHero from '@/components/SecondHero';
-import DeveloperBanner from '@/components/DeveloperBanner';
+import SearchExploreSection from '@/components/SearchExploreSection';
+import FeaturedSection from '@/components/FeaturedSection';
 import { FilterState } from '@/components/FilterBar';
-import MapComponent from '@/components/MapComponent';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
-import PropertyOfTheWeek from '@/components/PropertyOfTheWeek';
-import PropertyCard from '@/components/PropertyCard';
-import OffersButton from '@/components/OffersButton';
 import LiveChat from '@/components/LiveChat';
 import ShortlistDrawer from '@/components/ShortlistDrawer';
-import { Button } from '@/components/ui/button';
-import { MapPin } from 'lucide-react';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
 import Contact from './Contact';
-import { propertyOfTheWeek } from '@/data/newDevelopments';
 import { Development } from '@/data/newDevelopments';
 import { AmenityType } from '@/data/amenities';
 import { useShortlist } from '@/hooks/use-shortlist';
 import { useToast } from '@/hooks/use-toast';
-import { translations } from '@/i18n/translations';
 import { useDevelopments } from '@/hooks/use-developments';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
@@ -30,24 +22,13 @@ const Index = () => {
   const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide' | 'contact'>('main');
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [highlightedDeveloper, setHighlightedDeveloper] = useState<string | null>(null);
   const [isShortlistOpen, setIsShortlistOpen] = useState(false);
   const [language, setLanguage] = useState('en');
   
   const { shortlist, toggleShortlist, isInShortlist, removeFromShortlist } = useShortlist();
   const { toast } = useToast();
   const { data: developments = [], isLoading: isDevelopmentsLoading } = useDevelopments();
-  const [activeDirections, setActiveDirections] = useState<{ 
-    developmentId: string;
-    destination: {
-      lat: number;
-      lng: number;
-      name: string;
-      line: string;
-    };
-  } | null>(null);
-  const [lifestyleFilters, setLifestyleFilters] = useState<AmenityType[]>([]);
-  const [showMobileMap, setShowMobileMap] = useState(true);
+  
   const [filters, setFilters] = useState<FilterState>({
     priceFrom: '',
     priceTo: '',
@@ -127,8 +108,6 @@ const Index = () => {
         if (!hasAllAmenities) return false;
       }
 
-      // Note: Completion filters skipped as completionDate is not in data structure
-
       // Keyword search
       if (filters.keyword) {
         const keyword = filters.keyword.toLowerCase();
@@ -136,14 +115,9 @@ const Index = () => {
         if (!searchText.includes(keyword)) return false;
       }
 
-      // Developer filter
-      if (highlightedDeveloper && dev.developer !== highlightedDeveloper) {
-        return false;
-      }
-
       return true;
     });
-  }, [filters, highlightedDeveloper, developments]);
+  }, [filters, developments]);
 
   if (currentView === 'about') {
     return <About onBack={() => setCurrentView('main')} />;
@@ -157,23 +131,14 @@ const Index = () => {
     return <Contact onBack={() => setCurrentView('main')} />;
   }
 
-  const handleDeveloperClick = (developer: string) => {
-    setHighlightedDeveloper(highlightedDeveloper === developer ? null : developer);
-  };
-
-  const handlePropertyOfTheWeekClick = () => {
-    setSelectedDevelopment(propertyOfTheWeek.development);
-  };
-
   const handleDevelopmentClick = (development: Development, nearbyAmenities?: any) => {
     setSelectedDevelopment({ ...development, nearbyAmenities } as any);
   };
 
   const handleToggleShortlist = (development: Development) => {
     const added = toggleShortlist(development);
-    const t = translations[language as 'en' | 'zh'];
     toast({
-      description: added ? t.shortlist.addedToast : t.shortlist.removedToast,
+      description: added ? 'Added to shortlist' : 'Removed from shortlist',
       duration: 2000,
     });
   };
@@ -195,88 +160,27 @@ const Index = () => {
         onShortlistClick={() => setIsShortlistOpen(true)}
         shortlistCount={shortlist.length}
       />
-      <Hero 
-        onDeveloperClick={handleDeveloperClick}
-        highlightedDeveloper={highlightedDeveloper}
-      />
       
-      {/* Search & Explore Section - Unified dark band */}
-      <section className="w-full bg-[hsl(var(--explore-section))]">
-        <SecondHero
-          filters={filters}
-          onFiltersChange={setFilters}
-          resultsCount={filteredDevelopments.length}
-          onSearch={() => setShowMobileMap(true)}
-          lifestyleFilters={lifestyleFilters}
-          onLifestyleFiltersChange={setLifestyleFilters}
-        />
-        
-        {/* Mobile View Toggle */}
-        <div className="md:hidden px-4 pb-4">
-          <div className="flex gap-2">
-            <Button
-              variant={showMobileMap ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowMobileMap(true)}
-              className="flex-1 touch-target"
-            >
-              <MapPin className="h-4 w-4 mr-2" />
-              Map View
-            </Button>
-            <Button
-              variant={!showMobileMap ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowMobileMap(false)}
-              className="flex-1 touch-target"
-            >
-              List View ({filteredDevelopments.length})
-            </Button>
-          </div>
-        </div>
-        
-        {/* Map View with visible gutter/frame */}
-        <div className="px-4 pb-6 md:pb-8">
-          <div className="mx-auto w-full max-w-6xl">
-            <main className={`relative ${showMobileMap ? 'block' : 'hidden md:block'} h-[60vh] md:h-[calc(100vh-300px)] rounded-2xl overflow-hidden border border-white/10 shadow-strong`}>
-              <ErrorBoundary>
-                <MapComponent 
-                  developments={filteredDevelopments}
-                  onDevelopmentClick={handleDevelopmentClick}
-                  highlightedDeveloper={highlightedDeveloper}
-                  className="w-full h-full"
-                  activeDirections={activeDirections}
-                  onDirectionsClose={() => setActiveDirections(null)}
-                  lifestyleFilters={lifestyleFilters}
-                />
-              </ErrorBoundary>
-              <OffersButton />
-            </main>
-          </div>
-        </div>
-      </section>
-
-      {/* List View (Mobile Only) */}
-      <div className={`md:hidden ${!showMobileMap ? 'block' : 'hidden'} px-4 py-6 space-y-4`}>
-        <h2 className="text-lg font-semibold mb-4">
-          {filteredDevelopments.length} Properties Found
-        </h2>
-        {filteredDevelopments.map((dev) => (
-          <PropertyCard
-            key={dev.id}
-            development={dev}
-            onView={() => {
-              const nearbyByType: Record<AmenityType, any[]> = {} as any;
-              handleDevelopmentClick(dev, nearbyByType);
-            }}
-            onBookViewing={() => {
-              setSelectedDevelopment(dev);
-              setIsBookingModalOpen(true);
-            }}
-            onToggleShortlist={() => handleToggleShortlist(dev)}
-            isInShortlist={isInShortlist(dev.name)}
-          />
-        ))}
-      </div>
+      {/* Hero Section */}
+      <Hero />
+      
+      {/* Search & Explore Section */}
+      <SearchExploreSection onFiltersChange={setFilters} />
+      
+      {/* Featured Developments Section */}
+      <FeaturedSection
+        developments={filteredDevelopments}
+        onDevelopmentClick={(dev) => {
+          const nearbyByType: Record<AmenityType, any[]> = {} as any;
+          handleDevelopmentClick(dev, nearbyByType);
+        }}
+        onBookViewing={() => setIsBookingModalOpen(true)}
+        onShortlistToggle={(id) => {
+          const dev = filteredDevelopments.find(d => d.id === id);
+          if (dev) handleToggleShortlist(dev);
+        }}
+        shortlistedIds={shortlist.map(dev => dev.id)}
+      />
 
       {/* Development Popup */}
       {selectedDevelopment && (
