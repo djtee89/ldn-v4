@@ -7,6 +7,7 @@ import DirectionsPanel from './DirectionsPanel';
 import { getDirections, DirectionsData, estimateStationCoordinates } from '@/lib/directions';
 import { AmenityType, getNearbyAmenities, getAmenitiesByTypes, amenityColors, Amenity } from '@/data/amenities';
 import AmenityLegend from './AmenityLegend';
+import { getDeveloperLogo } from '@/data/developers';
 
 interface MapComponentProps {
   developments: Development[];
@@ -175,6 +176,12 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
           const coordinates = [development.coordinates.lng, development.coordinates.lat];
           
+          // Get developer logo
+          const developerLogo = getDeveloperLogo(development.developer);
+          const logoHtml = developerLogo 
+            ? `<img src="${developerLogo}" alt="${development.developer}" style="height: 32px; width: auto; object-fit: contain; border-radius: 4px; margin-bottom: 8px;" />`
+            : '';
+          
           // Build prices string
           let pricesHtml = '<div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">';
           if (development.prices['1']) {
@@ -190,6 +197,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
           const popupContent = `
             <div style="padding: 12px; min-width: 220px;">
+              ${logoHtml}
               <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${development.name}</div>
               <div style="color: #666; font-size: 12px; margin-bottom: 2px;">${development.developer}</div>
               <div style="color: #666; font-size: 11px; margin-bottom: 8px;">${development.location}</div>
