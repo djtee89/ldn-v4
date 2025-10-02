@@ -23,6 +23,9 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({ units, developments }
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  
+  // Use same Mapbox token as main map
+  const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
   // Calculate color based on price per sqft (green = cheap, red = expensive)
   const getPriceColor = (pricePerSqft: number): string => {
@@ -38,8 +41,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({ units, developments }
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoibGRubmV3YnVpbGRzIiwiYSI6ImNtNTV4c2lpbjBhNW0ycXNlZnc0emI2M2oifQ.nk7y0a6XvvGb52xaK_t99w';
-
+    mapboxgl.accessToken = mapboxToken;
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',

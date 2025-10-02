@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Globe, Menu, X, Heart } from 'lucide-react';
+import { Globe, Menu, X, Heart, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface HeaderProps {
@@ -46,7 +46,17 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-2">
-            <Button 
+            <Link to="/map">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="text-sm font-medium"
+              >
+                <MapPin className="h-4 w-4 mr-1" />
+                Map
+              </Button>
+            </Link>
+            <Button
               variant="ghost" 
               size="sm" 
               onClick={onAboutClick}
@@ -119,7 +129,18 @@ const Header: React.FC<HeaderProps> = ({
               <Heart className="h-4 w-4 mr-2" />
               Shortlist ({shortlistCount})
             </Button>
-            <Button 
+            <Link to="/map" className="block">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full justify-start text-sm"
+              >
+                <MapPin className="h-4 w-4 mr-2" />
+                Map
+              </Button>
+            </Link>
+            <Button
               variant="ghost" 
               size="sm" 
               onClick={() => handleNavClick(onAboutClick)} 

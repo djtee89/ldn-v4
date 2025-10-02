@@ -74,6 +74,7 @@ const PriceAnalysisPanel: React.FC<PriceAnalysisPanelProps> = ({
                   size="sm"
                   onClick={() => toggleZone(zone)}
                   className="h-8"
+                  style={selectedZones.includes(zone) ? { backgroundColor: 'black', color: 'white' } : {}}
                 >
                   Zone {zone}
                 </Button>
@@ -90,6 +91,7 @@ const PriceAnalysisPanel: React.FC<PriceAnalysisPanelProps> = ({
                   size="sm"
                   onClick={() => toggleBeds(beds)}
                   className="h-8"
+                  style={selectedBeds.includes(beds) ? { backgroundColor: 'black', color: 'white' } : {}}
                 >
                   {beds === 0 ? 'Studio' : `${beds} bed`}
                 </Button>

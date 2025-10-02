@@ -52,7 +52,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
             <p className="text-xs text-muted-foreground font-light">
               Explore the best of London around your new home.
               {selectedTypes.length > 0 && (
-                <span className="ml-2 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                <span className="ml-2 inline-flex items-center rounded-full bg-black/10 px-2 py-0.5 text-[10px] font-medium text-black">
                   {selectedTypes.length} active
                 </span>
               )}
@@ -74,6 +74,7 @@ const LifestyleFilterBar: React.FC<LifestyleFilterBarProps> = ({
                   size="sm"
                   onClick={() => toggleType(type)}
                   className="h-8 text-xs gap-1.5 whitespace-nowrap rounded-full font-medium hover:shadow-md transition-all"
+                  style={isSelected ? { backgroundColor: 'black', color: 'white' } : {}}
                 >
                   {amenityIcons[type]}
                   <span>{amenityLabels[type]}</span>

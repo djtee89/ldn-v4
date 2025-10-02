@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import FilterBar, { FilterState } from '@/components/FilterBar';
+import LifestyleFilterBar from '@/components/LifestyleFilterBar';
 import MapComponent from '@/components/MapComponent';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
@@ -18,6 +19,7 @@ const Map = () => {
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [language, setLanguage] = useState<'en' | 'zh'>('en');
+  const [lifestyleFilters, setLifestyleFilters] = useState<AmenityType[]>([]);
   const { isInShortlist, toggleShortlist } = useShortlist();
   const { toast } = useToast();
   
@@ -160,7 +162,7 @@ const Map = () => {
 
       {/* Filter Bar */}
       <div className="bg-white border-b border-border p-4 z-40">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto space-y-4">
           <FilterBar
             filters={filters}
             onFiltersChange={(newFilters) => {
@@ -176,6 +178,10 @@ const Map = () => {
             }}
             resultsCount={filteredDevelopments.length}
           />
+          <LifestyleFilterBar
+            selectedTypes={lifestyleFilters}
+            onTypesChange={setLifestyleFilters}
+          />
         </div>
       </div>
 
@@ -185,7 +191,7 @@ const Map = () => {
           developments={filteredDevelopments}
           onDevelopmentClick={setSelectedDevelopment}
           highlightedDeveloper={urlFilters.developer || null}
-          lifestyleFilters={urlFilters.lifestyle || []}
+          lifestyleFilters={lifestyleFilters.length > 0 ? lifestyleFilters : (urlFilters.lifestyle || [])}
           activeDirections={null}
         />
       </div>

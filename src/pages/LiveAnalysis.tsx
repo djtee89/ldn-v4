@@ -148,8 +148,8 @@ const LiveAnalysis = () => {
       />
 
       {/* Page Header */}
-      <div className="bg-gradient-to-r from-black to-gray-900 text-white py-12 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="px-4 sm:px-6 pt-8">
+        <div className="bg-gradient-to-r from-black to-gray-900 text-white py-12 px-6 max-w-7xl mx-auto rounded-3xl shadow-2xl">
           <Button
             onClick={() => navigate('/')}
             variant="ghost"

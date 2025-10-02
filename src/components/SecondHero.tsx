@@ -22,8 +22,8 @@ const SecondHero: React.FC<SecondHeroProps> = ({
   const navigate = useNavigate();
   
   return (
-    <section className="bg-black py-12 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <section className="bg-background py-12 px-4 sm:px-6 mt-8">
+      <div className="max-w-6xl mx-auto bg-black rounded-3xl p-8 shadow-2xl space-y-6">
         {/* Search Filters with white theme */}
         <div className="w-full space-y-4">
           <div className="[&_.bg-white]:!bg-white [&_.text-foreground]:!text-black [&_.text-muted-foreground]:!text-gray-600">

@@ -399,7 +399,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 <Button ref={drawerTriggerRef} variant="outline" size="sm" className="rounded-full shadow-sm h-9 text-xs">
                   <SlidersHorizontal className="h-3.5 w-3.5 mr-1.5" />
                   Filters
-                  {hasActiveFilters && <span className="ml-1.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
+                  {hasActiveFilters && <span className="ml-1.5 h-4 w-4 rounded-full bg-black text-white text-[10px] flex items-center justify-center">
                       {getActiveFilterSummary().length}
                     </span>}
                 </Button>
@@ -415,7 +415,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                   <Button variant="outline" size="sm" onClick={handleReset} className="flex-1" disabled={!hasActiveFilters}>
                     Reset
                   </Button>
-                  <Button size="sm" onClick={handleApply} className="flex-1">
+                  <Button size="sm" onClick={handleApply} className="flex-1 bg-black text-white hover:bg-gray-800">
                     Show {resultsCount}
                   </Button>
                 </DrawerFooter>
@@ -428,14 +428,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
             }
           }} className="flex-1 h-9 px-3 text-xs bg-background border border-input rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
             
-            <Button size="sm" onClick={handleApply} className="h-9 px-4 rounded-full font-medium text-xs">
+            <Button size="sm" onClick={handleApply} className="h-9 px-4 rounded-full font-medium text-xs bg-black text-white hover:bg-gray-800">
               <Search className="h-3.5 w-3.5 md:mr-1.5" />
               <span className="hidden md:inline">Search</span>
             </Button>
           </div>
           
           {hasActiveFilters && <div className="flex flex-wrap gap-1.5 mt-2">
-              {getActiveFilterSummary().map((summary, idx) => <div key={idx} className="flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-medium rounded-full">
+              {getActiveFilterSummary().map((summary, idx) => <div key={idx} className="flex items-center gap-1 px-2 py-0.5 bg-black/10 text-black text-[10px] font-medium rounded-full">
                   {summary}
                 </div>)}
             </div>}
@@ -450,7 +450,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium">
-                  <Coins className="h-3.5 w-3.5 text-primary" />
+                  <Coins className="h-3.5 w-3.5 text-foreground" />
                   <span>
                     {localFilters.priceFrom || localFilters.priceTo ? `${priceSteps.find(s => s.value === localFilters.priceFrom)?.label || 'Any'} - ${priceSteps.find(s => s.value === localFilters.priceTo)?.label || 'Any'}` : 'Price'}
                   </span>
@@ -487,7 +487,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium">
-                  <Home className="h-3.5 w-3.5 text-primary" />
+                  <Home className="h-3.5 w-3.5 text-foreground" />
                   <span>
                     {localFilters.bedroomsMin || localFilters.bedroomsMax ? `${bedroomOptions.find(b => b.value === localFilters.bedroomsMin)?.label || 'Any'} - ${bedroomOptions.find(b => b.value === localFilters.bedroomsMax)?.label || 'Any'}` : 'Bedrooms'}
                   </span>
@@ -524,7 +524,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium">
-                  <MapPin className="h-3.5 w-3.5 text-primary" />
+                  <MapPin className="h-3.5 w-3.5 text-foreground" />
                   <span>
                     {localFilters.zones.length > 0 ? `Zone ${localFilters.zones[0]}` : 'Location'}
                   </span>
@@ -572,7 +572,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 <Button variant="outline" size="sm" className="rounded-full h-9 px-3 gap-1.5 hover:bg-accent transition-all text-xs font-medium">
                   <SlidersHorizontal className="h-3.5 w-3.5" />
                   <span>More</span>
-                  {(localFilters.tenure !== 'any' || localFilters.amenities.length > 0) && <span className="h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
+                  {(localFilters.tenure !== 'any' || localFilters.amenities.length > 0) && <span className="h-4 w-4 rounded-full bg-black text-white text-[10px] flex items-center justify-center">
                       {(localFilters.tenure !== 'any' ? 1 : 0) + localFilters.amenities.length}
                     </span>}
                   <ChevronDown className="h-3 w-3 text-muted-foreground" />
@@ -613,7 +613,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 Clear
               </Button>}
             
-            <Button size="sm" onClick={handleApply} className="h-9 px-5 rounded-full font-semibold text-xs shadow-md hover:shadow-lg transition-all">
+            <Button size="sm" onClick={handleApply} className="h-9 px-5 rounded-full font-semibold text-xs shadow-md hover:shadow-lg transition-all bg-black text-white hover:bg-gray-800">
               <Search className="h-3.5 w-3.5 mr-1.5" />
               Search
             </Button>
