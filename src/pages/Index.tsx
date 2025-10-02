@@ -200,53 +200,60 @@ const Index = () => {
         highlightedDeveloper={highlightedDeveloper}
       />
       
-      <SecondHero
-        filters={filters}
-        onFiltersChange={setFilters}
-        resultsCount={filteredDevelopments.length}
-        onSearch={() => setShowMobileMap(true)}
-        lifestyleFilters={lifestyleFilters}
-        onLifestyleFiltersChange={setLifestyleFilters}
-      />
-      
-      {/* Mobile View Toggle */}
-      <div className="md:hidden sticky top-[60px] z-30 bg-background border-b px-4 py-2">
-        <div className="flex gap-2">
-          <Button
-            variant={showMobileMap ? "default" : "outline"}
-            size="sm"
-            onClick={() => setShowMobileMap(true)}
-            className="flex-1 touch-target"
-          >
-            <MapPin className="h-4 w-4 mr-2" />
-            Map View
-          </Button>
-          <Button
-            variant={!showMobileMap ? "default" : "outline"}
-            size="sm"
-            onClick={() => setShowMobileMap(false)}
-            className="flex-1 touch-target"
-          >
-            List View ({filteredDevelopments.length})
-          </Button>
+      {/* Search & Explore Section - Unified dark band */}
+      <section className="w-full bg-[hsl(var(--explore-section))]">
+        <SecondHero
+          filters={filters}
+          onFiltersChange={setFilters}
+          resultsCount={filteredDevelopments.length}
+          onSearch={() => setShowMobileMap(true)}
+          lifestyleFilters={lifestyleFilters}
+          onLifestyleFiltersChange={setLifestyleFilters}
+        />
+        
+        {/* Mobile View Toggle */}
+        <div className="md:hidden px-4 pb-4">
+          <div className="flex gap-2">
+            <Button
+              variant={showMobileMap ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowMobileMap(true)}
+              className="flex-1 touch-target"
+            >
+              <MapPin className="h-4 w-4 mr-2" />
+              Map View
+            </Button>
+            <Button
+              variant={!showMobileMap ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowMobileMap(false)}
+              className="flex-1 touch-target"
+            >
+              List View ({filteredDevelopments.length})
+            </Button>
+          </div>
         </div>
-      </div>
-      
-      {/* Map View */}
-      <main className={`relative ${showMobileMap ? 'block' : 'hidden md:block'} h-[60vh] md:h-[calc(100vh-300px)]`}>
-        <ErrorBoundary>
-          <MapComponent 
-            developments={filteredDevelopments}
-            onDevelopmentClick={handleDevelopmentClick}
-            highlightedDeveloper={highlightedDeveloper}
-            className="w-full h-full"
-            activeDirections={activeDirections}
-            onDirectionsClose={() => setActiveDirections(null)}
-            lifestyleFilters={lifestyleFilters}
-          />
-        </ErrorBoundary>
-        <OffersButton />
-      </main>
+        
+        {/* Map View with visible gutter/frame */}
+        <div className="px-4 pb-6 md:pb-8">
+          <div className="mx-auto w-full max-w-6xl">
+            <main className={`relative ${showMobileMap ? 'block' : 'hidden md:block'} h-[60vh] md:h-[calc(100vh-300px)] rounded-2xl overflow-hidden border border-white/10 shadow-strong`}>
+              <ErrorBoundary>
+                <MapComponent 
+                  developments={filteredDevelopments}
+                  onDevelopmentClick={handleDevelopmentClick}
+                  highlightedDeveloper={highlightedDeveloper}
+                  className="w-full h-full"
+                  activeDirections={activeDirections}
+                  onDirectionsClose={() => setActiveDirections(null)}
+                  lifestyleFilters={lifestyleFilters}
+                />
+              </ErrorBoundary>
+              <OffersButton />
+            </main>
+          </div>
+        </div>
+      </section>
 
       {/* List View (Mobile Only) */}
       <div className={`md:hidden ${!showMobileMap ? 'block' : 'hidden'} px-4 py-6 space-y-4`}>
