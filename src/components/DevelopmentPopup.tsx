@@ -14,7 +14,6 @@ import { KrpAskBox } from '@/components/KrpAskBox';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { getDeveloperLogo } from '@/data/developers';
 interface Unit {
   id: string;
   unit_number: string;
@@ -101,13 +100,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <h2 className="text-lg md:text-xl font-bold text-foreground truncate">{development.name}</h2>
                 <Badge variant="secondary" className="mt-1 text-xs">{development.developer}</Badge>
               </div>
-              {getDeveloperLogo(development.developer) && (
-                <img 
-                  src={getDeveloperLogo(development.developer)} 
-                  alt={`${development.developer} logo`} 
-                  className="h-12 md:h-16 w-auto object-contain rounded-lg shadow-sm hidden sm:block" 
-                />
-              )}
+              {development.developer === 'Berkeley Homes' && <img src="/logos/berkeley.jpg" alt="Berkeley Homes" className="h-12 md:h-16 w-auto object-contain rounded-lg shadow-sm hidden sm:block" />}
+              {development.developer === 'Barratt Homes' && <img src="/logos/barratt.jpg" alt="Barratt Homes" className="h-12 md:h-16 w-auto object-contain rounded-lg shadow-sm hidden sm:block" />}
             </div>
             <div className="flex items-center gap-1 flex-shrink-0">
               <TooltipProvider>
