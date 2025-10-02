@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Upload, AlertCircle, LogOut, Activity } from 'lucide-react';
+import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Upload, AlertCircle, LogOut, Activity, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -278,6 +278,14 @@ export default function Admin() {
           >
             <Upload className="h-4 w-4" />
             Data Pipeline
+          </Button>
+          <Button 
+            variant="default" 
+            onClick={() => navigate('/admin/discovery')}
+            className="gap-2"
+          >
+            <Search className="h-4 w-4" />
+            Discovery
           </Button>
           <Button 
             variant="outline" 
