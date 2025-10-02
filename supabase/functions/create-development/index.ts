@@ -33,12 +33,136 @@ function generateSlug(name: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+function parseCSVRow(csv: string): { headers: string[]; row: string[] } | null {
+  const lines = csv.split('\n').filter(l => l.trim());
+  if (lines.length < 2) return null;
+  
+  // Parse CSV with basic quote handling
+  const parseCSVLine = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    result.push(current.trim());
+    return result;
+  };
+  
+  const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+  const row = parseCSVLine(lines[1]);
+  
+  console.log('[parseCSVRow] headers:', headers);
+  console.log('[parseCSVRow] row values:', row);
+  
+  return { headers, row };
+}
+
 function extractDevelopmentData(text: string): any {
+  console.log('[extractDevelopmentData] Starting extraction');
+  
+  // Try to parse as structured CSV first
+  const csvData = parseCSVRow(text);
+  
+  if (csvData) {
+    console.log('[extractDevelopmentData] Detected structured CSV data');
+    const { headers, row } = csvData;
+    
+    // Map common column names
+    const getColumn = (names: string[]): string => {
+      for (const name of names) {
+        const idx = headers.findIndex(h => h.includes(name));
+        if (idx !== -1 && row[idx]) return row[idx].trim();
+      }
+      return '';
+    };
+    
+    const data: any = {
+      name: getColumn(['name', 'development']),
+      developer: getColumn(['developer', 'developed by']),
+      location: getColumn(['location', 'area', 'address']),
+      postcode: getColumn(['postcode', 'post code']),
+      zone: getColumn(['zone']),
+      amenities: [],
+      bedrooms: [],
+      prices: {},
+    };
+    
+    console.log('[extractDevelopmentData] Extracted base data:', data);
+    
+    // Parse amenities from Amenities column
+    const amenitiesText = getColumn(['amenities', 'amenity', 'facilities']);
+    if (amenitiesText) {
+      const amenityKeywords = ['gym', 'concierge', 'pool', 'garden', 'terrace', 'parking', 'security', 'cinema', 'spa', 'sauna', 'lounge', 'studio'];
+      for (const keyword of amenityKeywords) {
+        if (amenitiesText.toLowerCase().includes(keyword)) {
+          const capitalized = keyword.charAt(0).toUpperCase() + keyword.slice(1);
+          if (!data.amenities.includes(capitalized)) {
+            data.amenities.push(capitalized);
+          }
+        }
+      }
+      console.log('[extractDevelopmentData] Parsed amenities:', data.amenities);
+    }
+    
+    // Parse prices from Prices column
+    const pricesText = getColumn(['prices', 'price', 'pricing']);
+    if (pricesText) {
+      const priceLines = pricesText.split(/[\n;]/).filter(l => l.trim());
+      for (const line of priceLines) {
+        const match = line.match(/(studio|\d+[\s-]*bed)[:\s]*from\s*£\s*([\d,]+)/i);
+        if (match) {
+          const bedType = match[1].toLowerCase().includes('studio') ? 'studio' : match[1].match(/\d+/)?.[0];
+          const price = `£${match[2]}`;
+          if (bedType) {
+            data.prices[bedType] = price;
+            if (bedType !== 'studio' && !data.bedrooms.includes(bedType)) {
+              data.bedrooms.push(bedType);
+            }
+          }
+        }
+      }
+      data.bedrooms.sort();
+      console.log('[extractDevelopmentData] Parsed prices:', data.prices);
+      console.log('[extractDevelopmentData] Parsed bedrooms:', data.bedrooms);
+    }
+    
+    // Parse area overview
+    const areaOverview = getColumn(['area overview', 'overview', 'description']);
+    if (areaOverview) {
+      data.area_overview = areaOverview;
+    }
+    
+    // Parse tenure
+    const tenure = getColumn(['tenure']);
+    if (tenure) {
+      data.tenure = tenure;
+    }
+    
+    // Parse nearest station/tube
+    const station = getColumn(['nearest tube', 'nearest station', 'tube', 'station', 'nearest tube/station']);
+    if (station) {
+      data.nearest_tube = station;
+    }
+    
+    console.log('[extractDevelopmentData] Final structured data:', JSON.stringify(data, null, 2));
+    return data;
+  }
+  
+  // Fallback to unstructured text parsing
+  console.log('[extractDevelopmentData] Using unstructured text parsing');
   const lines = text.split('\n').filter(l => l.trim());
   
-  console.log('[extractDevelopmentData] Processing lines:', lines.length);
-  
-  // Extract key information using patterns
   const data: any = {
     name: '',
     developer: '',
@@ -48,36 +172,18 @@ function extractDevelopmentData(text: string): any {
     prices: {},
   };
 
-  // Look for name (usually in first few lines or after "Name:" or "Development:")
-  // Try to find the most substantial line in the first 10 lines
-  for (let i = 0; i < Math.min(10, lines.length); i++) {
-    const line = lines[i].trim();
-    // Skip empty lines, headers, and very short lines
-    if (line.length > 5 && line.length < 100 && 
-        !line.toLowerCase().includes('developer') &&
-        !line.toLowerCase().includes('location') &&
-        !line.toLowerCase().includes('price') &&
-        !/^[a-z\s]*$/i.test(line)) { // Skip lines that are all lowercase words
-      data.name = line;
-      console.log('[extractDevelopmentData] Found name:', data.name);
+  // Look for name patterns
+  const namePatterns = [
+    /(?:development|project|name)[:\s]+([^\n]+)/i,
+    /^([A-Z][A-Za-z\s&]+)(?:\s*-\s*|\s+by\s+)/i
+  ];
+  
+  for (const pattern of namePatterns) {
+    const match = text.match(pattern);
+    if (match && match[1]?.trim()) {
+      data.name = match[1].trim();
+      console.log('[extractDevelopmentData] Found name via pattern:', data.name);
       break;
-    }
-  }
-
-  // If no name found in first approach, try looking for patterns
-  if (!data.name) {
-    const namePatterns = [
-      /(?:development|project|name)[:\s]+([^\n]+)/i,
-      /^([A-Z][A-Za-z\s&]+)(?:\s*-\s*|\s+by\s+)/i
-    ];
-    
-    for (const pattern of namePatterns) {
-      const match = text.match(pattern);
-      if (match && match[1]?.trim()) {
-        data.name = match[1].trim();
-        console.log('[extractDevelopmentData] Found name via pattern:', data.name);
-        break;
-      }
     }
   }
 
@@ -85,14 +191,12 @@ function extractDevelopmentData(text: string): any {
   const devMatch = text.match(/(?:developer|developed by|by)[:\s]+([^\n,]+)/i);
   if (devMatch) {
     data.developer = devMatch[1].trim();
-    console.log('[extractDevelopmentData] Found developer:', data.developer);
   }
 
-  // Extract location/address
+  // Extract location
   const locMatch = text.match(/(?:location|address|area)[:\s]+([^\n]+)/i);
   if (locMatch) {
     data.location = locMatch[1].trim();
-    console.log('[extractDevelopmentData] Found location:', data.location);
   }
 
   // Extract amenities
@@ -102,30 +206,24 @@ function extractDevelopmentData(text: string): any {
       data.amenities.push(keyword.charAt(0).toUpperCase() + keyword.slice(1));
     }
   }
-  if (data.amenities.length > 0) {
-    console.log('[extractDevelopmentData] Found amenities:', data.amenities);
-  }
 
-  // Extract bedrooms
+  // Extract bedrooms and prices
   const bedroomMatches = text.match(/(\d+)\s*bed(?:room)?/gi);
   if (bedroomMatches) {
     const bedSet = new Set(bedroomMatches.map(m => m.match(/\d+/)?.[0]).filter(Boolean));
     data.bedrooms = Array.from(bedSet).sort();
-    console.log('[extractDevelopmentData] Found bedrooms:', data.bedrooms);
   }
 
-  // Extract prices
-  const priceMatches = text.match(/£\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/g);
+  const priceMatches = text.match(/£\s*(\d{1,3}(?:,\d{3})*)/g);
   if (priceMatches && data.bedrooms.length > 0) {
     priceMatches.slice(0, data.bedrooms.length).forEach((price, idx) => {
       if (data.bedrooms[idx]) {
         data.prices[data.bedrooms[idx]] = price.replace(/\s/g, '');
       }
     });
-    console.log('[extractDevelopmentData] Found prices:', data.prices);
   }
 
-  console.log('[extractDevelopmentData] Final data:', JSON.stringify(data, null, 2));
+  console.log('[extractDevelopmentData] Final unstructured data:', JSON.stringify(data, null, 2));
   return data;
 }
 
