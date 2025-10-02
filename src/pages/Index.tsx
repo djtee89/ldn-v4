@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import SearchExploreSection from '@/components/SearchExploreSection';
-import FeaturedSection from '@/components/FeaturedSection';
+import BestDealsSection from '@/components/BestDealsSection';
+import ThisWeeksOffers from '@/components/ThisWeeksOffers';
 import { FilterState } from '@/components/FilterBar';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
@@ -42,6 +42,8 @@ const Index = () => {
     completionYear: 'any',
     keyword: ''
   });
+
+  const [lifestyleFilters, setLifestyleFilters] = useState<AmenityType[]>([]);
 
   // Filter developments based on current filters
   const filteredDevelopments = useMemo(() => {
@@ -155,32 +157,27 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header
         onAboutClick={() => setCurrentView('about')}
-        onBookViewingClick={() => setCurrentView('contact')}
         onGuideClick={() => setCurrentView('guide')}
         onShortlistClick={() => setIsShortlistOpen(true)}
         shortlistCount={shortlist.length}
+        language={language}
+        onLanguageChange={setLanguage}
       />
       
-      {/* Hero Section */}
-      <Hero />
-      
-      {/* Search & Explore Section */}
-      <SearchExploreSection onFiltersChange={setFilters} />
-      
-      {/* Featured Developments Section */}
-      <FeaturedSection
-        developments={filteredDevelopments}
-        onDevelopmentClick={(dev) => {
-          const nearbyByType: Record<AmenityType, any[]> = {} as any;
-          handleDevelopmentClick(dev, nearbyByType);
-        }}
-        onBookViewing={() => setIsBookingModalOpen(true)}
-        onShortlistToggle={(id) => {
-          const dev = filteredDevelopments.find(d => d.id === id);
-          if (dev) handleToggleShortlist(dev);
-        }}
-        shortlistedIds={shortlist.map(dev => dev.id)}
+      {/* Hero Section with Search & Filters */}
+      <Hero 
+        filters={filters}
+        onFiltersChange={setFilters}
+        resultsCount={filteredDevelopments.length}
+        lifestyleFilters={lifestyleFilters}
+        onLifestyleFiltersChange={setLifestyleFilters}
       />
+      
+      {/* Best Deals Section */}
+      <BestDealsSection />
+
+      {/* This Week's Offers */}
+      <ThisWeeksOffers />
 
       {/* Development Popup */}
       {selectedDevelopment && (

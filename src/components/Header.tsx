@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Globe, Menu, X, Heart } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
-import logo from '@/assets/logo.png';
-import { translations } from '@/i18n/translations';
+
 interface HeaderProps {
   onAboutClick: () => void;
-  onBookViewingClick: () => void;
   onGuideClick: () => void;
   onShortlistClick: () => void;
   shortlistCount: number;
+  language?: string;
+  onLanguageChange?: (lang: string) => void;
 }
 const Header: React.FC<HeaderProps> = ({
   onAboutClick,
-  onBookViewingClick,
   onGuideClick,
   onShortlistClick,
-  shortlistCount
+  shortlistCount,
+  language = 'en',
+  onLanguageChange
 }) => {
-  const [language, setLanguage] = useState('en');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Close mobile menu when clicking outside
@@ -50,10 +49,27 @@ const Header: React.FC<HeaderProps> = ({
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={onBookViewingClick}
+              onClick={onAboutClick}
               className="text-sm font-medium"
             >
-              Sign in
+              About Us
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={onGuideClick}
+              className="text-sm font-medium"
+            >
+              Property Guide
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onLanguageChange?.(language === 'en' ? 'cn' : 'en')}
+              className="text-sm font-medium"
+            >
+              <Globe className="h-4 w-4 mr-1" />
+              {language === 'en' ? 'EN' : '中文'}
             </Button>
           </nav>
 
@@ -104,10 +120,11 @@ const Header: React.FC<HeaderProps> = ({
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => handleNavClick(onBookViewingClick)} 
+              onClick={() => onLanguageChange?.(language === 'en' ? 'cn' : 'en')} 
               className="w-full justify-start text-sm"
             >
-              Sign in
+              <Globe className="h-4 w-4 mr-2" />
+              {language === 'en' ? 'EN' : '中文'}
             </Button>
           </nav>
         )}

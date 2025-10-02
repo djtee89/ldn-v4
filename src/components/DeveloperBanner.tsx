@@ -58,16 +58,13 @@ const DeveloperBanner: React.FC<DeveloperBannerProps> = ({
                     : 'hover:ring-2 hover:ring-white/60 hover:shadow-md hover:scale-105'
                 }`}
                 style={{
-                  filter: 'grayscale(20%) brightness(1.1) contrast(0.9)',
                   backdropFilter: 'blur(4px)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.filter = 'grayscale(0%) brightness(1.15) contrast(1)';
                   e.currentTarget.style.animationPlayState = 'paused';
                   e.currentTarget.parentElement!.style.animationPlayState = 'paused';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.filter = 'grayscale(20%) brightness(1.1) contrast(0.9)';
                   e.currentTarget.parentElement!.style.animationPlayState = 'running';
                 }}
               >
@@ -76,10 +73,6 @@ const DeveloperBanner: React.FC<DeveloperBannerProps> = ({
                   alt={`${developer.name} logo`} 
                   className="w-full h-full object-cover transition-transform duration-300" 
                   loading="lazy"
-                  style={{
-                    mixBlendMode: 'luminosity',
-                    opacity: 0.85,
-                  }}
                 />
               </button>
             ))}

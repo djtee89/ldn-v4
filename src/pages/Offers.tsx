@@ -64,7 +64,6 @@ const Offers: React.FC = () => {
     <>
       <Header
         onAboutClick={() => navigate('/')}
-        onBookViewingClick={() => navigate('/contact-options')}
         onGuideClick={() => navigate('/')}
         onShortlistClick={() => navigate('/')}
         shortlistCount={shortlist.length}
