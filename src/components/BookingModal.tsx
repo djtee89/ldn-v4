@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import wechatQR from '@/assets/qr_wechat.png';
 import { supabase } from '@/integrations/supabase/client';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -52,6 +53,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const trapRef = useFocusTrap<HTMLDivElement>();
 
   // Body scroll lock
   useEffect(() => {
@@ -217,8 +219,15 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal-panel modal-panel-wide">
+    <div className="modal-backdrop" onClick={onClose}>
+      <div 
+        ref={trapRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Book a viewing — ${developmentName}`}
+        className="modal-panel modal-panel-wide"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="modal-header">
           <div className="flex items-center justify-between">
@@ -226,7 +235,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
               <h2 className="text-xl font-bold text-foreground">Book a Viewing</h2>
               <p className="text-sm text-muted-foreground">{developmentName}</p>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close booking modal">
               <X className="h-4 w-4" />
             </Button>
           </div>

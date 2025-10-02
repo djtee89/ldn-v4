@@ -114,8 +114,9 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
         <div 
           role="dialog" 
           aria-modal="true" 
-          aria-label={`Photo gallery for ${name}`}
-          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          aria-label={`${name} image gallery`}
+          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center"
+          onClick={() => setLightboxOpen(false)}
         >
           <Button
             variant="ghost"

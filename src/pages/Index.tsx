@@ -24,6 +24,7 @@ import { useShortlist } from '@/hooks/use-shortlist';
 import { useToast } from '@/hooks/use-toast';
 import { translations } from '@/i18n/translations';
 import { useDevelopments } from '@/hooks/use-developments';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide' | 'contact'>('main');
@@ -233,15 +234,17 @@ const Index = () => {
       
       {/* Map View */}
       <main className={`relative ${showMobileMap ? 'block' : 'hidden md:block'} h-[60vh] md:h-[calc(100vh-300px)]`}>
-        <MapComponent 
-          developments={filteredDevelopments}
-          onDevelopmentClick={handleDevelopmentClick}
-          highlightedDeveloper={highlightedDeveloper}
-          className="w-full h-full"
-          activeDirections={activeDirections}
-          onDirectionsClose={() => setActiveDirections(null)}
-          lifestyleFilters={lifestyleFilters}
-        />
+        <ErrorBoundary>
+          <MapComponent 
+            developments={filteredDevelopments}
+            onDevelopmentClick={handleDevelopmentClick}
+            highlightedDeveloper={highlightedDeveloper}
+            className="w-full h-full"
+            activeDirections={activeDirections}
+            onDirectionsClose={() => setActiveDirections(null)}
+            lifestyleFilters={lifestyleFilters}
+          />
+        </ErrorBoundary>
         <OffersButton />
       </main>
 
@@ -270,16 +273,18 @@ const Index = () => {
 
       {/* Development Popup */}
       {selectedDevelopment && (
-        <DevelopmentPopup
-          development={selectedDevelopment}
-          onClose={() => setSelectedDevelopment(null)}
-          onBookViewing={() => {
-            setIsBookingModalOpen(true);
-          }}
-          isInShortlist={isInShortlist(selectedDevelopment.name)}
-          onToggleShortlist={() => handleToggleShortlist(selectedDevelopment)}
-          language={language}
-        />
+        <ErrorBoundary>
+          <DevelopmentPopup
+            development={selectedDevelopment}
+            onClose={() => setSelectedDevelopment(null)}
+            onBookViewing={() => {
+              setIsBookingModalOpen(true);
+            }}
+            isInShortlist={isInShortlist(selectedDevelopment.name)}
+            onToggleShortlist={() => handleToggleShortlist(selectedDevelopment)}
+            language={language}
+          />
+        </ErrorBoundary>
       )}
 
       {/* Booking Modal */}

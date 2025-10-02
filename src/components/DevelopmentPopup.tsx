@@ -107,7 +107,14 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" onClick={onToggleShortlist} className="touch-target">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={onToggleShortlist} 
+                      className="touch-target"
+                      aria-pressed={isInShortlist}
+                      aria-label={isInShortlist ? 'Remove from shortlist' : 'Add to shortlist'}
+                    >
                       <Heart className={`h-4 w-4 md:h-5 md:w-5 ${isInShortlist ? 'fill-red-500 text-red-500' : ''}`} />
                     </Button>
                   </TooltipTrigger>

@@ -13,8 +13,10 @@ const Hero: React.FC<HeroProps> = ({
       {/* Hero image with responsive srcset */}
       <div className="relative overflow-hidden rounded-hero">
         <img 
-          src="/battersea-power-station.png" 
-          alt="Battersea Power Station London luxury property development" 
+          src="/hero-london-1280.webp" 
+          srcSet="/hero-london-960.webp 960w, /hero-london-1280.webp 1280w, /hero-london-1920.webp 1920w"
+          sizes="(min-width:1024px) 960px, 100vw"
+          alt="London skyline with Tower Bridge and The Shard" 
           className="h-[clamp(320px,40vh,450px)] w-full object-cover" 
           loading="eager"
           fetchPriority="high"
