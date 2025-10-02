@@ -3,7 +3,11 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import MapComponent from '@/components/MapComponent';
+import DevelopmentPopup from '@/components/DevelopmentPopup';
+import BookingModal from '@/components/BookingModal';
 import { useDevelopments } from '@/hooks/use-developments';
+import { useShortlist } from '@/hooks/use-shortlist';
+import { useToast } from '@/hooks/use-toast';
 import { FilterState } from '@/components/FilterBar';
 import { AmenityType } from '@/data/amenities';
 import { Development } from '@/data/newDevelopments';
@@ -13,6 +17,10 @@ const Map = () => {
   const navigate = useNavigate();
   const { data: developments = [], isLoading } = useDevelopments();
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'zh'>('en');
+  const { isInShortlist, toggleShortlist } = useShortlist();
+  const { toast } = useToast();
 
   // Parse URL parameters to create filters
   const urlFilters = useMemo(() => {
@@ -110,6 +118,20 @@ const Map = () => {
     );
   }
 
+  const handleBookViewing = () => {
+    setIsBookingModalOpen(true);
+  };
+
+  const handleToggleShortlist = (development: Development) => {
+    const isAdded = toggleShortlist(development);
+    toast({
+      title: isAdded ? "Added to shortlist" : "Removed from shortlist",
+      description: isAdded 
+        ? `${development.name} has been added to your shortlist` 
+        : `${development.name} has been removed from your shortlist`,
+    });
+  };
+
   return (
     <div className="relative h-screen w-full">
       {/* Back button */}
@@ -132,6 +154,25 @@ const Map = () => {
         highlightedDeveloper={urlFilters.developer || null}
         lifestyleFilters={urlFilters.lifestyle || []}
         activeDirections={null}
+      />
+
+      {/* Development Popup Modal */}
+      {selectedDevelopment && (
+        <DevelopmentPopup
+          development={selectedDevelopment}
+          onClose={() => setSelectedDevelopment(null)}
+          onBookViewing={handleBookViewing}
+          isInShortlist={isInShortlist(selectedDevelopment.name)}
+          onToggleShortlist={() => handleToggleShortlist(selectedDevelopment)}
+          language={language}
+        />
+      )}
+
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        developmentName={selectedDevelopment?.name || ''}
       />
     </div>
   );
