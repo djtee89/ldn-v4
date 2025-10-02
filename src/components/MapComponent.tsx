@@ -446,7 +446,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
         name: dev.name,
         developer: dev.developer,
         price: (() => {
-          const { extractAllPrices } = require('@/lib/priceParser');
           const priceData = extractAllPrices(dev.prices);
           return priceData.oneBed || priceData.studio || priceData.twoBed || priceData.range || 'POA';
         })(),
