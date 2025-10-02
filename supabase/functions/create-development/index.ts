@@ -36,6 +36,8 @@ function generateSlug(name: string): string {
 function extractDevelopmentData(text: string): any {
   const lines = text.split('\n').filter(l => l.trim());
   
+  console.log('[extractDevelopmentData] Processing lines:', lines.length);
+  
   // Extract key information using patterns
   const data: any = {
     name: '',
@@ -47,27 +49,61 @@ function extractDevelopmentData(text: string): any {
   };
 
   // Look for name (usually in first few lines or after "Name:" or "Development:")
-  for (const line of lines.slice(0, 5)) {
-    if (line.length > 5 && line.length < 100 && !line.includes(':')) {
-      data.name = line.trim();
+  // Try to find the most substantial line in the first 10 lines
+  for (let i = 0; i < Math.min(10, lines.length); i++) {
+    const line = lines[i].trim();
+    // Skip empty lines, headers, and very short lines
+    if (line.length > 5 && line.length < 100 && 
+        !line.toLowerCase().includes('developer') &&
+        !line.toLowerCase().includes('location') &&
+        !line.toLowerCase().includes('price') &&
+        !/^[a-z\s]*$/i.test(line)) { // Skip lines that are all lowercase words
+      data.name = line;
+      console.log('[extractDevelopmentData] Found name:', data.name);
       break;
     }
   }
 
+  // If no name found in first approach, try looking for patterns
+  if (!data.name) {
+    const namePatterns = [
+      /(?:development|project|name)[:\s]+([^\n]+)/i,
+      /^([A-Z][A-Za-z\s&]+)(?:\s*-\s*|\s+by\s+)/i
+    ];
+    
+    for (const pattern of namePatterns) {
+      const match = text.match(pattern);
+      if (match && match[1]?.trim()) {
+        data.name = match[1].trim();
+        console.log('[extractDevelopmentData] Found name via pattern:', data.name);
+        break;
+      }
+    }
+  }
+
   // Extract developer
-  const devMatch = text.match(/(?:developer|developed by)[:\s]+([^\n]+)/i);
-  if (devMatch) data.developer = devMatch[1].trim();
+  const devMatch = text.match(/(?:developer|developed by|by)[:\s]+([^\n,]+)/i);
+  if (devMatch) {
+    data.developer = devMatch[1].trim();
+    console.log('[extractDevelopmentData] Found developer:', data.developer);
+  }
 
   // Extract location/address
-  const locMatch = text.match(/(?:location|address)[:\s]+([^\n]+)/i);
-  if (locMatch) data.location = locMatch[1].trim();
+  const locMatch = text.match(/(?:location|address|area)[:\s]+([^\n]+)/i);
+  if (locMatch) {
+    data.location = locMatch[1].trim();
+    console.log('[extractDevelopmentData] Found location:', data.location);
+  }
 
   // Extract amenities
-  const amenityKeywords = ['gym', 'concierge', 'pool', 'garden', 'terrace', 'parking', 'security', 'cinema'];
+  const amenityKeywords = ['gym', 'concierge', 'pool', 'garden', 'terrace', 'parking', 'security', 'cinema', 'spa'];
   for (const keyword of amenityKeywords) {
     if (text.toLowerCase().includes(keyword)) {
       data.amenities.push(keyword.charAt(0).toUpperCase() + keyword.slice(1));
     }
+  }
+  if (data.amenities.length > 0) {
+    console.log('[extractDevelopmentData] Found amenities:', data.amenities);
   }
 
   // Extract bedrooms
@@ -75,6 +111,7 @@ function extractDevelopmentData(text: string): any {
   if (bedroomMatches) {
     const bedSet = new Set(bedroomMatches.map(m => m.match(/\d+/)?.[0]).filter(Boolean));
     data.bedrooms = Array.from(bedSet).sort();
+    console.log('[extractDevelopmentData] Found bedrooms:', data.bedrooms);
   }
 
   // Extract prices
@@ -85,8 +122,10 @@ function extractDevelopmentData(text: string): any {
         data.prices[data.bedrooms[idx]] = price.replace(/\s/g, '');
       }
     });
+    console.log('[extractDevelopmentData] Found prices:', data.prices);
   }
 
+  console.log('[extractDevelopmentData] Final data:', JSON.stringify(data, null, 2));
   return data;
 }
 
@@ -139,8 +178,13 @@ Deno.serve(async (req) => {
     const devData = extractDevelopmentData(text);
     
     if (!devData.name) {
+      console.error('[create-development] No name found. Text sample:', text.substring(0, 500));
       return new Response(JSON.stringify({ 
-        error: 'Could not extract development name from file. Please ensure the file contains development information.' 
+        error: 'Could not extract development name from file. Please ensure the file contains a clear development name in the first few lines.',
+        debug: {
+          textLength: text.length,
+          textSample: text.substring(0, 200)
+        }
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
