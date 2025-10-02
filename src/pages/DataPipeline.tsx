@@ -10,6 +10,7 @@ import { Upload, RefreshCw, Flame, CheckCircle, AlertCircle } from 'lucide-react
 export default function DataPipeline() {
   const [selectedDev, setSelectedDev] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [newDevFile, setNewDevFile] = useState<File | null>(null);
   const queryClient = useQueryClient();
 
   // Fetch developments
@@ -89,12 +90,45 @@ export default function DataPipeline() {
     },
   });
 
+  // Create development mutation
+  const createDevMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const { data, error } = await supabase.functions.invoke('create-development', {
+        body: formData,
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(
+        `Development "${data.development_name}" created successfully with ID: ${data.dev_id}`
+      );
+      queryClient.invalidateQueries({ queryKey: ['developments-admin'] });
+      setNewDevFile(null);
+    },
+    onError: (error: Error) => {
+      toast.error(`Development creation failed: ${error.message}`);
+    },
+  });
+
   const handleIngest = () => {
     if (!selectedDev || !selectedFile) {
       toast.error('Please select a development and file');
       return;
     }
     ingestMutation.mutate({ devId: selectedDev, file: selectedFile });
+  };
+
+  const handleCreateDev = () => {
+    if (!newDevFile) {
+      toast.error('Please select a file');
+      return;
+    }
+    createDevMutation.mutate(newDevFile);
   };
 
   return (
@@ -128,6 +162,35 @@ export default function DataPipeline() {
                 </option>
               ))}
             </select>
+          </CardContent>
+        </Card>
+
+        {/* Create New Development */}
+        <Card className="border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Upload className="h-5 w-5 text-primary" />
+              Create New Development
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-ink-muted">
+              Upload an Excel or PDF file with development information to create a new entry.
+              The file should include: name, developer, location, amenities, price ranges, etc.
+            </p>
+            <Input
+              type="file"
+              accept=".csv,.xlsx,.pdf"
+              onChange={(e) => setNewDevFile(e.target.files?.[0] || null)}
+            />
+            <Button
+              onClick={handleCreateDev}
+              disabled={!newDevFile || createDevMutation.isPending}
+              className="w-full"
+              variant="default"
+            >
+              {createDevMutation.isPending ? 'Creating Development...' : 'Create Development'}
+            </Button>
           </CardContent>
         </Card>
 
@@ -223,6 +286,22 @@ export default function DataPipeline() {
                 <p className="text-sm text-green-700">
                   {ingestMutation.data.rows_parsed} rows parsed, {ingestMutation.data.diff.new_units}{' '}
                   new, {ingestMutation.data.diff.updated_units} updated
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {createDevMutation.isSuccess && (
+          <Card className="border-green-200 bg-green-50">
+            <CardContent className="flex items-center gap-3 py-4">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <div>
+                <p className="font-medium text-green-900">
+                  Development created successfully
+                </p>
+                <p className="text-sm text-green-700">
+                  {createDevMutation.data.development_name} (ID: {createDevMutation.data.dev_id})
                 </p>
               </div>
             </CardContent>

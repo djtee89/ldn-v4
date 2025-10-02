@@ -20,3 +20,12 @@ verify_jwt = false
 
 [functions.hot-override]
 verify_jwt = false
+
+[functions.create-development]
+verify_jwt = false
+
+[functions.validate-units]
+verify_jwt = false
+
+[functions.krp-ask]
+verify_jwt = false
