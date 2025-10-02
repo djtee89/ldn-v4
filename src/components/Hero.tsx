@@ -11,7 +11,7 @@ const Hero: React.FC<HeroProps> = ({
   return <section className="relative isolate mb-6">
       {/* Banner image */}
       <div className="relative overflow-hidden rounded-[24px]">
-        <img src="/kings-road-park-1.jpeg" alt="London property development" className="h-[clamp(320px,40vh,450px)] w-full object-cover" loading="eager" />
+        <img src="/battersea-power-station.png" alt="Battersea Power Station London luxury property development" className="h-[clamp(320px,40vh,450px)] w-full object-cover" loading="eager" />
         {/* Gradient overlay for text legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/50" />
       </div>
