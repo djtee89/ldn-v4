@@ -119,6 +119,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Log the upload
+    await supabase.from('change_log').insert({
+      dev_id,
+      change_type: 'price_list_upload',
+      changed_at: new Date().toISOString(),
+      details: { file_name: file.name, file_size: file.size },
+      price_list_id: priceList.id,
+    });
+
     console.log('[ingest] price_list created', { id: priceList.id, rowCount: rows.length });
 
     // Insert price_list_rows

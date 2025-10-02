@@ -111,6 +111,20 @@ Deno.serve(async (req) => {
       console.log('[publish] skipping hot-auto (override active)', { dev_id });
     }
 
+    // Log the publish event
+    await supabase.from('change_log').insert({
+      dev_id,
+      change_type: 'publish',
+      changed_at: new Date().toISOString(),
+      details: { units_updated: updated, start_prices: startPrices },
+      price_list_id,
+    });
+
+    // Run validation checks
+    await supabase.functions.invoke('validate-units', {
+      body: { dev_id, price_list_id },
+    });
+
     console.log('[publish] ok', { ms: Date.now() - start, units_updated: updated, start_prices: startPrices });
     return new Response(
       JSON.stringify({

@@ -17,6 +17,11 @@ import { HottestUnitManager } from "@/components/HottestUnitManager";
 import { StationsEditor } from "@/components/StationsEditor";
 import { SchoolsEditor } from "@/components/SchoolsEditor";
 import { CSVValidator } from "@/components/CSVValidator";
+import { HeaderMappingManager } from "@/components/HeaderMappingManager";
+import { TemplateGenerator } from "@/components/TemplateGenerator";
+import { AnomalyDashboard } from "@/components/AnomalyDashboard";
+import { ChangeDiary } from "@/components/ChangeDiary";
+import { MandatoryFieldsGate } from "@/components/MandatoryFieldsGate";
 import { useNavigate } from "react-router-dom";
 
 type PriceList = {
@@ -109,6 +114,9 @@ export default function AdminDevelopments() {
           <TabsTrigger value="pricelists" disabled={!selectedDev}>Price Lists</TabsTrigger>
           <TabsTrigger value="hottest" disabled={!selectedDev}>Hottest Unit</TabsTrigger>
           <TabsTrigger value="locations" disabled={!selectedDev}>Stations & Schools</TabsTrigger>
+          <TabsTrigger value="quality" disabled={!selectedDev}>Quality</TabsTrigger>
+          <TabsTrigger value="history" disabled={!selectedDev}>History</TabsTrigger>
+          <TabsTrigger value="templates" disabled={!selectedDev}>Templates</TabsTrigger>
         </TabsList>
 
         <TabsContent value="developments">
@@ -137,6 +145,28 @@ export default function AdminDevelopments() {
 
         <TabsContent value="locations">
           {selectedDev && <LocationsManager devId={selectedDev} />}
+        </TabsContent>
+
+        <TabsContent value="quality" className="space-y-6">
+          {selectedDev && (
+            <>
+              <MandatoryFieldsGate devId={selectedDev} />
+              <AnomalyDashboard devId={selectedDev} />
+            </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="history">
+          {selectedDev && <ChangeDiary devId={selectedDev} />}
+        </TabsContent>
+
+        <TabsContent value="templates" className="space-y-6">
+          {selectedDev && developments?.find(d => d.id === selectedDev) && (
+            <>
+              <HeaderMappingManager developer={developments.find(d => d.id === selectedDev)?.developer || 'Unknown'} />
+              <TemplateGenerator developer={developments.find(d => d.id === selectedDev)?.developer || 'Unknown'} />
+            </>
+          )}
         </TabsContent>
       </Tabs>
     </div>

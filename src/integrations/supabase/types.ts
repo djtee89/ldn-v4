@@ -59,6 +59,39 @@ export type Database = {
         }
         Relationships: []
       }
+      change_log: {
+        Row: {
+          change_type: string
+          changed_at: string | null
+          changed_by: string | null
+          details: Json | null
+          dev_id: string
+          id: string
+          notes: string | null
+          price_list_id: string | null
+        }
+        Insert: {
+          change_type: string
+          changed_at?: string | null
+          changed_by?: string | null
+          details?: Json | null
+          dev_id: string
+          id?: string
+          notes?: string | null
+          price_list_id?: string | null
+        }
+        Update: {
+          change_type?: string
+          changed_at?: string | null
+          changed_by?: string | null
+          details?: Json | null
+          dev_id?: string
+          id?: string
+          notes?: string | null
+          price_list_id?: string | null
+        }
+        Relationships: []
+      }
       developments: {
         Row: {
           amenities: string[] | null
@@ -84,6 +117,7 @@ export type Database = {
           status: string | null
           tenure: string | null
           updated_at: string | null
+          validation_status: Json | null
           zone: string | null
         }
         Insert: {
@@ -110,6 +144,7 @@ export type Database = {
           status?: string | null
           tenure?: string | null
           updated_at?: string | null
+          validation_status?: Json | null
           zone?: string | null
         }
         Update: {
@@ -136,7 +171,38 @@ export type Database = {
           status?: string | null
           tenure?: string | null
           updated_at?: string | null
+          validation_status?: Json | null
           zone?: string | null
+        }
+        Relationships: []
+      }
+      email_ingests: {
+        Row: {
+          dev_id: string
+          file_path: string | null
+          id: string
+          processed: boolean | null
+          received_at: string | null
+          sender_email: string
+          subject: string | null
+        }
+        Insert: {
+          dev_id: string
+          file_path?: string | null
+          id?: string
+          processed?: boolean | null
+          received_at?: string | null
+          sender_email: string
+          subject?: string | null
+        }
+        Update: {
+          dev_id?: string
+          file_path?: string | null
+          id?: string
+          processed?: boolean | null
+          received_at?: string | null
+          sender_email?: string
+          subject?: string | null
         }
         Relationships: []
       }
@@ -221,6 +287,39 @@ export type Database = {
         }
         Relationships: []
       }
+      image_validation: {
+        Row: {
+          dev_id: string
+          file_size: number | null
+          height: number | null
+          id: string
+          image_url: string
+          issues: Json | null
+          validated_at: string | null
+          width: number | null
+        }
+        Insert: {
+          dev_id: string
+          file_size?: number | null
+          height?: number | null
+          id?: string
+          image_url: string
+          issues?: Json | null
+          validated_at?: string | null
+          width?: number | null
+        }
+        Update: {
+          dev_id?: string
+          file_size?: number | null
+          height?: number | null
+          id?: string
+          image_url?: string
+          issues?: Json | null
+          validated_at?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
       price_list_rows: {
         Row: {
           beds: number | null
@@ -272,6 +371,7 @@ export type Database = {
           parsed_ok: boolean | null
           published_at: string | null
           published_by: string | null
+          received_at: string | null
           source: string
           uploaded_at: string | null
         }
@@ -284,6 +384,7 @@ export type Database = {
           parsed_ok?: boolean | null
           published_at?: string | null
           published_by?: string | null
+          received_at?: string | null
           source?: string
           uploaded_at?: string | null
         }
@@ -296,6 +397,7 @@ export type Database = {
           parsed_ok?: boolean | null
           published_at?: string | null
           published_by?: string | null
+          received_at?: string | null
           source?: string
           uploaded_at?: string | null
         }
@@ -393,6 +495,53 @@ export type Database = {
           task_name?: string
         }
         Relationships: []
+      }
+      unit_anomalies: {
+        Row: {
+          anomaly_type: string
+          details: Json | null
+          detected_at: string | null
+          dev_id: string
+          id: string
+          resolved: boolean | null
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          unit_id: string | null
+        }
+        Insert: {
+          anomaly_type: string
+          details?: Json | null
+          detected_at?: string | null
+          dev_id: string
+          id?: string
+          resolved?: boolean | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          unit_id?: string | null
+        }
+        Update: {
+          anomaly_type?: string
+          details?: Json | null
+          detected_at?: string | null
+          dev_id?: string
+          id?: string
+          resolved?: boolean | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          unit_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "unit_anomalies_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       units: {
         Row: {
