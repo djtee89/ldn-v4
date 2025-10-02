@@ -4,7 +4,6 @@ import { Globe, Menu, X, Heart } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import logo from '@/assets/logo.png';
 import { translations } from '@/i18n/translations';
-
 interface HeaderProps {
   onAboutClick: () => void;
   onBookViewingClick: () => void;
@@ -17,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({
   onBookViewingClick,
   onGuideClick,
   onShortlistClick,
-  shortlistCount,
+  shortlistCount
 }) => {
   const [language, setLanguage] = useState('en');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,44 +48,22 @@ const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
             <div className="hidden md:block h-4 w-px bg-border/60 mx-1" />
-            <p className="hidden md:block text-[11px] text-muted-foreground tracking-tight">
-              London's New Builds All Under One Roof
-            </p>
+            
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1.5">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={onShortlistClick}
-              className="relative text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-            >
+            <Button variant="outline" size="sm" onClick={onShortlistClick} className="relative text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
               <Heart className="h-3 w-3 mr-1" />
               {translations[language as 'en' | 'zh'].shortlist.button} ({shortlistCount})
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={onAboutClick} 
-              className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-            >
+            <Button variant="outline" size="sm" onClick={onAboutClick} className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
               {language === 'en' ? 'About Us' : '关于我们'}
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={onGuideClick} 
-              className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-            >
+            <Button variant="outline" size="sm" onClick={onGuideClick} className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
               {language === 'en' ? 'Property Guide' : '购房指南'}
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={onBookViewingClick} 
-              className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-            >
+            <Button variant="outline" size="sm" onClick={onBookViewingClick} className="text-[11px] h-7 px-2.5 rounded-full font-medium tracking-tight hover:bg-accent hover:shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
               {language === 'en' ? 'Speak to an Expert' : '联系专家'}
             </Button>
             <Select value={language} onValueChange={setLanguage}>
@@ -113,58 +90,31 @@ const Header: React.FC<HeaderProps> = ({
                 <SelectItem value="zh">中文</SelectItem>
               </SelectContent>
             </Select>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={e => {
-                e.stopPropagation();
-                setMobileMenuOpen(!mobileMenuOpen);
-              }} 
-              className="mobile-nav-toggle touch-target h-7 w-7 rounded-full"
-            >
+            <Button variant="ghost" size="icon" onClick={e => {
+            e.stopPropagation();
+            setMobileMenuOpen(!mobileMenuOpen);
+          }} className="mobile-nav-toggle touch-target h-7 w-7 rounded-full">
               {mobileMenuOpen ? <X className="h-3.5 w-3.5" /> : <Menu className="h-3.5 w-3.5" />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Navigation Dropdown */}
-        {mobileMenuOpen && (
-          <nav className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-border/50 shadow-lg py-2 px-4 space-y-1 animate-fade-in md:hidden">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => handleNavClick(onShortlistClick)} 
-              className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent"
-            >
+        {mobileMenuOpen && <nav className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-border/50 shadow-lg py-2 px-4 space-y-1 animate-fade-in md:hidden">
+            <Button variant="ghost" size="sm" onClick={() => handleNavClick(onShortlistClick)} className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent">
               <Heart className="h-3 w-3 mr-2" />
               {translations[language as 'en' | 'zh'].shortlist.button} ({shortlistCount})
             </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => handleNavClick(onAboutClick)} 
-              className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent"
-            >
+            <Button variant="ghost" size="sm" onClick={() => handleNavClick(onAboutClick)} className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent">
               {language === 'en' ? 'About Us' : '关于我们'}
             </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => handleNavClick(onGuideClick)} 
-              className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent"
-            >
+            <Button variant="ghost" size="sm" onClick={() => handleNavClick(onGuideClick)} className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent">
               {language === 'en' ? 'Property Guide' : '购房指南'}
             </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => handleNavClick(onBookViewingClick)} 
-              className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent"
-            >
+            <Button variant="ghost" size="sm" onClick={() => handleNavClick(onBookViewingClick)} className="w-full justify-start text-[11px] h-8 rounded-full hover:bg-accent">
               {language === 'en' ? 'Speak to an Expert' : '联系专家'}
             </Button>
-          </nav>
-        )}
+          </nav>}
       </div>
     </header>;
 };
