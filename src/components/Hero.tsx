@@ -36,9 +36,9 @@ const Hero: React.FC<HeroProps> = ({
             </p>
           </div>
 
-          {/* Developer Banner - Glass panel for better legibility */}
+          {/* Developer Banner */}
           <div className="mt-6">
-            <div className="rounded-2xl bg-panel/90 p-4 shadow-lift ring-1 ring-white/15 backdrop-blur-sm">
+            <div className="rounded-2xl bg-card p-4 shadow-medium border border-border">
               <DeveloperBanner 
                 onDeveloperClick={onDeveloperClick} 
                 highlightedDeveloper={highlightedDeveloper} 
