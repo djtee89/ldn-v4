@@ -902,6 +902,10 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                       <div className="space-y-3">
                         <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Nearby Schools</h5>
                         {development.schools.map((school: any, index: number) => {
+                          // Debug logging
+                          console.log('School object:', school);
+                          console.log('School type:', typeof school);
+                          
                           // Handle different school data structures
                           let schoolName = 'Unknown School';
                           let distance = null;
@@ -910,10 +914,17 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                           if (typeof school === 'string') {
                             schoolName = school;
                           } else if (typeof school === 'object' && school !== null) {
-                            schoolName = school.name || school.tags?.name || 'Unknown School';
+                            // Try different ways to extract the name
+                            schoolName = school.name || school.tags?.name || JSON.stringify(school);
                             distance = school.distance_miles;
                             schoolType = school.type || school.tags?.amenity || 'school';
+                            
+                            console.log('Extracted name:', schoolName);
+                            console.log('Distance:', distance);
                           }
+                          
+                          // Ensure schoolName is always a string
+                          schoolName = String(schoolName);
                           
                           return (
                             <Card key={index}>
