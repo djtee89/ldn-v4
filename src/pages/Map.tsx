@@ -186,7 +186,7 @@ const Map = () => {
       </div>
 
       {/* Map */}
-      <div className="flex-1 relative overflow-hidden">
+      <div className="flex-1 relative overflow-hidden h-full w-full">
         <MapComponent
           developments={filteredDevelopments}
           onDevelopmentClick={setSelectedDevelopment}
