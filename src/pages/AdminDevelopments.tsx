@@ -15,15 +15,8 @@ import { Upload, Plus, FileSpreadsheet, Trash2, Download, GripVertical, Star, Ey
 import { SearchFiltersBar, FilterState } from "@/components/SearchFiltersBar";
 import { RollbackDialog } from "@/components/RollbackDialog";
 import { HottestUnitManager } from "@/components/HottestUnitManager";
-import { StationsEditor } from "@/components/StationsEditor";
-import { SchoolsEditor } from "@/components/SchoolsEditor";
-import { CSVValidator } from "@/components/CSVValidator";
-import { HeaderMappingManager } from "@/components/HeaderMappingManager";
-import { TemplateGenerator } from "@/components/TemplateGenerator";
-import { AnomalyDashboard } from "@/components/AnomalyDashboard";
-import { ChangeDiary } from "@/components/ChangeDiary";
 import { MandatoryFieldsGate } from "@/components/MandatoryFieldsGate";
-import { DataMigrationTool } from "@/components/DataMigrationTool";
+import { BulkImportTool } from "@/components/BulkImportTool";
 import { useNavigate } from "react-router-dom";
 
 type PriceList = {
@@ -99,12 +92,8 @@ export default function AdminDevelopments() {
           <p className="text-muted-foreground">Manage developments, images, price lists, and metadata</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => navigate('/admin/bulk-import')}>
-            <Upload className="h-4 w-4 mr-2" />
-            Bulk Import
-          </Button>
           <Button variant="outline" onClick={() => navigate('/admin')}>
-            Back to Admin
+            Back to Dashboard
           </Button>
         </div>
       </div>
@@ -112,14 +101,11 @@ export default function AdminDevelopments() {
       <Tabs defaultValue="developments" className="space-y-4">
         <TabsList>
           <TabsTrigger value="developments">Developments</TabsTrigger>
-          <TabsTrigger value="migration">Data Migration</TabsTrigger>
+          <TabsTrigger value="bulk-import">Bulk Import</TabsTrigger>
           <TabsTrigger value="images" disabled={!selectedDev}>Images</TabsTrigger>
           <TabsTrigger value="pricelists" disabled={!selectedDev}>Price Lists</TabsTrigger>
           <TabsTrigger value="hottest" disabled={!selectedDev}>Hottest Unit</TabsTrigger>
-          <TabsTrigger value="locations" disabled={!selectedDev}>Stations & Schools</TabsTrigger>
-          <TabsTrigger value="quality" disabled={!selectedDev}>Quality</TabsTrigger>
-          <TabsTrigger value="history" disabled={!selectedDev}>History</TabsTrigger>
-          <TabsTrigger value="templates" disabled={!selectedDev}>Templates</TabsTrigger>
+          <TabsTrigger value="quality" disabled={!selectedDev}>Quality Check</TabsTrigger>
         </TabsList>
 
         <TabsContent value="developments">
@@ -134,8 +120,8 @@ export default function AdminDevelopments() {
           />
         </TabsContent>
 
-        <TabsContent value="migration">
-          <DataMigrationTool />
+        <TabsContent value="bulk-import">
+          <BulkImportTool />
         </TabsContent>
 
         <TabsContent value="images">
@@ -150,29 +136,9 @@ export default function AdminDevelopments() {
           {selectedDev && <HottestUnitManager devId={selectedDev} />}
         </TabsContent>
 
-        <TabsContent value="locations">
-          {selectedDev && <LocationsManager devId={selectedDev} />}
-        </TabsContent>
-
         <TabsContent value="quality" className="space-y-6">
           {selectedDev && (
-            <>
-              <MandatoryFieldsGate devId={selectedDev} />
-              <AnomalyDashboard devId={selectedDev} />
-            </>
-          )}
-        </TabsContent>
-
-        <TabsContent value="history">
-          {selectedDev && <ChangeDiary devId={selectedDev} />}
-        </TabsContent>
-
-        <TabsContent value="templates" className="space-y-6">
-          {selectedDev && developments?.find(d => d.id === selectedDev) && (
-            <>
-              <HeaderMappingManager developer={developments.find(d => d.id === selectedDev)?.developer || 'Unknown'} />
-              <TemplateGenerator developer={developments.find(d => d.id === selectedDev)?.developer || 'Unknown'} />
-            </>
+            <MandatoryFieldsGate devId={selectedDev} />
           )}
         </TabsContent>
       </Tabs>
@@ -869,60 +835,3 @@ function PriceListsManager({ devId }: { devId: string }) {
   );
 }
 
-function LocationsManager({ devId }: { devId: string }) {
-  const queryClient = useQueryClient();
-
-  const { data: development } = useQuery({
-    queryKey: ['development', devId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('developments')
-        .select('*')
-        .eq('id', devId)
-        .single();
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const handleStationsUpdate = async (stations: any[]) => {
-    const { error } = await supabase
-      .from('developments')
-      .update({ stations })
-      .eq('id', devId);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      queryClient.invalidateQueries({ queryKey: ['development', devId] });
-      toast.success('Stations updated');
-    }
-  };
-
-  const handleSchoolsUpdate = async (schools: any[]) => {
-    const { error } = await supabase
-      .from('developments')
-      .update({ schools })
-      .eq('id', devId);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      queryClient.invalidateQueries({ queryKey: ['development', devId] });
-      toast.success('Schools updated');
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <StationsEditor
-        stations={(development?.stations as any) || []}
-        onChange={handleStationsUpdate}
-      />
-      <SchoolsEditor
-        schools={(development?.schools as any) || []}
-        onChange={handleSchoolsUpdate}
-      />
-    </div>
-  );
-}

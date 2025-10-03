@@ -7,16 +7,10 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Map from "./pages/Map";
 import ContactOptions from "./pages/ContactOptions";
-import LiveAnalysis from "./pages/LiveAnalysis";
 import Offers from "./pages/Offers";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import AdminDevelopments from "./pages/AdminDevelopments";
-import DataPipeline from "./pages/DataPipeline";
-import ErrorLog from "./pages/ErrorLog";
-import BulkImport from "./pages/BulkImport";
-import Scheduling from "./pages/Scheduling";
-import Discovery from "./pages/Discovery";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
@@ -33,16 +27,10 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/map" element={<Map />} />
           <Route path="/contact-options" element={<ContactOptions />} />
-          <Route path="/live-analysis" element={<LiveAnalysis />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Admin /></ProtectedRoute>} />
           <Route path="/admin/developments" element={<ProtectedRoute requiredRole="admin"><AdminDevelopments /></ProtectedRoute>} />
-          <Route path="/admin/bulk-import" element={<ProtectedRoute requiredRole="admin"><BulkImport /></ProtectedRoute>} />
-          <Route path="/admin/error-log" element={<ProtectedRoute requiredRole="admin"><ErrorLog /></ProtectedRoute>} />
-          <Route path="/admin/scheduling" element={<ProtectedRoute requiredRole="admin"><Scheduling /></ProtectedRoute>} />
-          <Route path="/admin/discovery" element={<ProtectedRoute requiredRole="admin"><Discovery /></ProtectedRoute>} />
-          <Route path="/data-pipeline" element={<ProtectedRoute requiredRole="admin"><DataPipeline /></ProtectedRoute>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

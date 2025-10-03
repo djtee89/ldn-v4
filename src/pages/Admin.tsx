@@ -68,11 +68,10 @@ export default function Admin() {
 
   const fetchStats = async () => {
     try {
-      const [devsResult, unitsResult, publishesResult, errorsResult, bookingsResult] = await Promise.all([
+      const [devsResult, unitsResult, publishesResult, bookingsResult] = await Promise.all([
         supabase.from('developments').select('id', { count: 'exact', head: true }),
         supabase.from('units').select('id', { count: 'exact', head: true }),
         supabase.from('publishes').select('published_at').order('published_at', { ascending: false }).limit(1).maybeSingle(),
-        supabase.from('error_log').select('id', { count: 'exact', head: true }).eq('resolved', false),
         supabase.from('bookings').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
       ]);
 
@@ -80,7 +79,7 @@ export default function Admin() {
         totalDevelopments: devsResult.count || 0,
         totalUnits: unitsResult.count || 0,
         lastPublishTime: publishesResult.data?.published_at || null,
-        recentErrors: errorsResult.count || 0,
+        recentErrors: 0,
         pendingBookings: bookingsResult.count || 0,
       });
     } catch (error) {
@@ -250,16 +249,6 @@ export default function Admin() {
           </Card>
         </div>
 
-        {/* Error Alerts */}
-        {stats.recentErrors > 0 && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Errors Detected</AlertTitle>
-            <AlertDescription>
-              {stats.recentErrors} unresolved error{stats.recentErrors !== 1 ? 's' : ''} in the system. Check error logs for details.
-            </AlertDescription>
-          </Alert>
-        )}
 
         {/* Admin Navigation */}
         <div className="flex flex-wrap gap-2 mb-6">
@@ -269,52 +258,7 @@ export default function Admin() {
             className="gap-2"
           >
             <Building2 className="h-4 w-4" />
-            Developments
-          </Button>
-          <Button 
-            variant="default" 
-            onClick={() => navigate('/data-pipeline')}
-            className="gap-2"
-          >
-            <Upload className="h-4 w-4" />
-            Data Pipeline
-          </Button>
-          <Button 
-            variant="default" 
-            onClick={() => navigate('/admin/discovery')}
-            className="gap-2"
-          >
-            <Search className="h-4 w-4" />
-            Discovery
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/admin/bulk-import')}
-            className="gap-2"
-          >
-            <Upload className="h-4 w-4" />
-            Bulk Import
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/admin/error-log')}
-            className="gap-2"
-          >
-            <AlertCircle className="h-4 w-4" />
-            Error Log
-            {stats.recentErrors > 0 && (
-              <Badge variant="destructive" className="ml-1">
-                {stats.recentErrors}
-              </Badge>
-            )}
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/admin/scheduling')}
-            className="gap-2"
-          >
-            <Clock className="h-4 w-4" />
-            Scheduling
+            Manage Developments
           </Button>
         </div>
 

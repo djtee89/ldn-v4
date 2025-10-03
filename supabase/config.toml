@@ -1,11 +1,5 @@
 project_id = "ioaalvvkcovbbfxoscxf"
 
-[functions.chat]
-verify_jwt = false
-
-[functions.submit-contact-form]
-verify_jwt = false
-
 [functions.ingest]
 verify_jwt = false
 
@@ -22,13 +16,4 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.create-development]
-verify_jwt = false
-
-[functions.validate-units]
-verify_jwt = false
-
-[functions.krp-ask]
-verify_jwt = false
-
-[functions.migrate-developments]
 verify_jwt = false
