@@ -149,7 +149,13 @@ export default function DataPipeline() {
 
               <div
                 className="border-2 border-dashed rounded-lg p-8 text-center hover:bg-muted/50 transition-colors cursor-pointer"
-                onClick={() => document.getElementById('price-list-upload')?.click()}
+                onClick={() => {
+                  if (!selectedDevId) {
+                    toast({ title: 'Error', description: 'Please select a development first', variant: 'destructive' });
+                    return;
+                  }
+                  document.getElementById('price-list-upload')?.click();
+                }}
               >
                 <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground mb-2">Click to upload price list</p>
