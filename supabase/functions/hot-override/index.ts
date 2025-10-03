@@ -54,12 +54,8 @@ Deno.serve(async (req) => {
         dev_id,
         unit_id,
         score: 100,
-        reason: {
-          total_score: 100,
-          details: [note || 'Manual override'],
-          override_note: note,
-        },
-        override: true,
+        override_reason: note || 'Manual override',
+        manual_override: true,
         updated_at: new Date().toISOString(),
       }, {
         onConflict: 'dev_id',

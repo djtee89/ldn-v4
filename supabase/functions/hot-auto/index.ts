@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
       .from('units')
       .select('*')
       .eq('dev_id', dev_id)
-      .in('status', ['Available', 'Negotiation']);
+      .in('status', ['Available', 'Under Negotiation']);
 
     if (!units || units.length === 0) {
       console.log('[hot-auto] no available units', { dev_id, ms: Date.now() - start });
@@ -159,8 +159,8 @@ Deno.serve(async (req) => {
         dev_id,
         unit_id: winner.unit.id,
         score: winner.reason.total_score,
-        reason: winner.reason,
-        override: false,
+        override_reason: winner.reason.details.join(', '),
+        manual_override: false,
         updated_at: new Date().toISOString(),
       }, {
         onConflict: 'dev_id',
