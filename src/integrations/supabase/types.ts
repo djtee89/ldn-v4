@@ -498,6 +498,63 @@ export type Database = {
         }
         Relationships: []
       }
+      viewing_requests: {
+        Row: {
+          created_at: string | null
+          development_id: string
+          development_name: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          source: string | null
+          status: string | null
+          unit_id: string | null
+          unit_number: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          development_id: string
+          development_name: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          source?: string | null
+          status?: string | null
+          unit_id?: string | null
+          unit_number?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          development_id?: string
+          development_name?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string
+          preferred_date?: string
+          preferred_time?: string
+          source?: string | null
+          status?: string | null
+          unit_id?: string | null
+          unit_number?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       developments_public: {

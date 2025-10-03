@@ -27,6 +27,12 @@ const Index = () => {
   const [currentView, setCurrentView] = useState<'main' | 'about' | 'guide' | 'contact'>('main');
   const [selectedDevelopment, setSelectedDevelopment] = useState<Development | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingContext, setBookingContext] = useState<{
+    developmentName: string;
+    developmentId?: string;
+    unitId?: string;
+    unitNumber?: string;
+  } | null>(null);
   const [isShortlistOpen, setIsShortlistOpen] = useState(false);
   const [language, setLanguage] = useState('en');
   
@@ -194,7 +200,12 @@ const Index = () => {
       </section>
       
       {/* Best Deals Section */}
-      <BestDealsSection onBookViewing={() => setIsBookingModalOpen(true)} />
+      <BestDealsSection 
+        onBookViewing={(unitInfo) => {
+          setBookingContext(unitInfo);
+          setIsBookingModalOpen(true);
+        }} 
+      />
 
       {/* This Week's Offers */}
       <ThisWeeksOffers />
@@ -209,6 +220,10 @@ const Index = () => {
             development={selectedDevelopment}
             onClose={() => setSelectedDevelopment(null)}
             onBookViewing={() => {
+              setBookingContext({
+                developmentName: selectedDevelopment.name,
+                developmentId: selectedDevelopment.name.toLowerCase().replace(/\s+/g, '-')
+              });
               setIsBookingModalOpen(true);
             }}
             isInShortlist={isInShortlist(selectedDevelopment.name)}
@@ -221,8 +236,14 @@ const Index = () => {
       {/* Booking Modal */}
       <BookingModal
         isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-        developmentName={selectedDevelopment?.name || ''}
+        onClose={() => {
+          setIsBookingModalOpen(false);
+          setBookingContext(null);
+        }}
+        developmentName={bookingContext?.developmentName || selectedDevelopment?.name || ''}
+        developmentId={bookingContext?.developmentId}
+        unitId={bookingContext?.unitId}
+        unitNumber={bookingContext?.unitNumber}
       />
 
       {/* Shortlist Drawer */}
@@ -237,6 +258,10 @@ const Index = () => {
         }}
         onBookViewing={(dev) => {
           setSelectedDevelopment(dev);
+          setBookingContext({
+            developmentName: dev.name,
+            developmentId: dev.name.toLowerCase().replace(/\s+/g, '-')
+          });
           setIsBookingModalOpen(true);
           setIsShortlistOpen(false);
         }}

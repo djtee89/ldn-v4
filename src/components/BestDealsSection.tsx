@@ -19,7 +19,12 @@ interface HottestDeal {
 }
 
 interface BestDealsSectionProps {
-  onBookViewing: () => void;
+  onBookViewing: (unitInfo: {
+    developmentName: string;
+    developmentId: string;
+    unitId: string;
+    unitNumber: string;
+  }) => void;
 }
 
 const BestDealsSection: React.FC<BestDealsSectionProps> = ({ onBookViewing }) => {
@@ -197,8 +202,14 @@ const BestDealsSection: React.FC<BestDealsSectionProps> = ({ onBookViewing }) =>
         developer={selectedDeal.developer}
         onClose={() => setSelectedDeal(null)}
         onBookViewing={() => {
+          const unitInfo = {
+            developmentName: selectedDeal.dev_name,
+            developmentId: selectedDeal.dev_id,
+            unitId: selectedDeal.unit_id,
+            unitNumber: selectedDeal.unit_number
+          };
           setSelectedDeal(null);
-          onBookViewing();
+          onBookViewing(unitInfo);
         }}
       />
     )}

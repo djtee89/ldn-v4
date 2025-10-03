@@ -19,9 +19,19 @@ interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   developmentName: string;
+  developmentId?: string;
+  unitId?: string;
+  unitNumber?: string;
 }
 
-const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmentName }) => {
+const BookingModal: React.FC<BookingModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  developmentName,
+  developmentId,
+  unitId,
+  unitNumber
+}) => {
   const [activeTab, setActiveTab] = useState('calendar');
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
@@ -110,34 +120,32 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, developmen
     setIsSubmitting(true);
     
     try {
-      // Get current user session for auth token
+      // Get current user session
       const { data: { session } } = await supabase.auth.getSession();
       
-      // Submit via secure edge function
-      const { data, error } = await supabase.functions.invoke('submit-contact-form', {
-        body: {
-          name: calendarForm.name,
-          email: calendarForm.email,
-          phone: calendarForm.phone,
-          preferredDate: calendarForm.preferredDate,
-          preferredTime: calendarForm.preferredTime || 'Flexible',
-          message: calendarForm.message || '',
-          developmentName: developmentName,
+      // Save viewing request to database
+      const { error: dbError } = await supabase
+        .from('viewing_requests')
+        .insert({
+          development_id: developmentId || developmentName.toLowerCase().replace(/\s+/g, '-'),
+          development_name: developmentName,
+          unit_id: unitId || null,
+          unit_number: unitNumber || null,
+          name: calendarForm.name.trim(),
+          email: calendarForm.email.trim(),
+          phone: calendarForm.phone.trim(),
+          preferred_date: calendarForm.preferredDate,
+          preferred_time: calendarForm.preferredTime || 'Flexible',
+          message: calendarForm.message?.trim() || null,
           source: 'calendar_booking',
-          honeypot: calendarForm.honeypot,
-          consentGiven: calendarForm.consentGiven,
-          captchaToken: captchaToken
-        },
-        headers: session?.access_token ? {
-          Authorization: `Bearer ${session.access_token}`
-        } : {}
-      });
+          user_id: session?.user?.id || null
+        });
 
-      if (error) throw error;
+      if (dbError) throw dbError;
 
       toast({
         title: "Request sent!",
-        description: data?.message || "We've received your viewing request and will contact you soon."
+        description: "We've received your viewing request and will contact you soon."
       });
       
       // Reset form
