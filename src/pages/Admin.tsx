@@ -200,7 +200,7 @@ export default function Admin() {
 
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
-          <Card>
+          <Card className="cursor-pointer hover:bg-muted/50" onClick={() => navigate('/admin/developments')}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Developments</CardTitle>
               <Building2 className="h-4 w-4 text-muted-foreground" />
@@ -211,14 +211,14 @@ export default function Admin() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="cursor-pointer hover:bg-muted/50" onClick={() => navigate('/admin/pipeline')}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Units</CardTitle>
+              <CardTitle className="text-sm font-medium">Data Pipeline</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalUnits}</div>
-              <p className="text-xs text-muted-foreground">In database</p>
+              <p className="text-xs text-muted-foreground">Upload & import</p>
             </CardContent>
           </Card>
 

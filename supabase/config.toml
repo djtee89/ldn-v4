@@ -17,3 +17,15 @@ verify_jwt = false
 
 [functions.create-development]
 verify_jwt = false
+
+[functions.dev-upsert]
+verify_jwt = false
+
+[functions.images-upload]
+verify_jwt = false
+
+[functions.bulk-dev-import]
+verify_jwt = false
+
+[functions.dedupe-developments]
+verify_jwt = false

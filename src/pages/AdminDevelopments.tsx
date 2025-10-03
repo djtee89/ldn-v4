@@ -487,8 +487,6 @@ function ImagesManager({ devId }: { devId: string }) {
   });
 
   const images = development?.images || [];
-  const coverIndex = development?.cover_image_index || 0;
-  const hiddenImages = development?.hidden_images || [];
 
   const handleUpload = async (files: FileList) => {
     setUploading(true);
@@ -519,6 +517,7 @@ function ImagesManager({ devId }: { devId: string }) {
         .from('developments')
         .update({ 
           images: [...images, ...newImages],
+          images_count: images.length + newImages.length,
           updated_at: new Date().toISOString()
         })
         .eq('id', devId);
@@ -538,7 +537,10 @@ function ImagesManager({ devId }: { devId: string }) {
     const newImages = images.filter((_: any, i: number) => i !== index);
     const { error } = await supabase
       .from('developments')
-      .update({ images: newImages })
+      .update({ 
+        images: newImages,
+        images_count: newImages.length
+      })
       .eq('id', devId);
 
     if (error) {
@@ -549,36 +551,21 @@ function ImagesManager({ devId }: { devId: string }) {
     }
   };
 
-  const handleSetCover = async (index: number) => {
+  const handleReorder = async (newImages: any[]) => {
     const { error } = await supabase
       .from('developments')
-      .update({ cover_image_index: index })
+      .update({ 
+        images: newImages,
+        images_count: newImages.length,
+        updated_at: new Date().toISOString()
+      })
       .eq('id', devId);
 
     if (error) {
       toast.error(error.message);
     } else {
       queryClient.invalidateQueries({ queryKey: ['development', devId] });
-      toast.success('Cover image updated');
-    }
-  };
-
-  const handleToggleHidden = async (index: number) => {
-    const isHidden = hiddenImages.includes(index);
-    const newHidden = isHidden
-      ? hiddenImages.filter((i: number) => i !== index)
-      : [...hiddenImages, index];
-
-    const { error } = await supabase
-      .from('developments')
-      .update({ hidden_images: newHidden })
-      .eq('id', devId);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      queryClient.invalidateQueries({ queryKey: ['development', devId] });
-      toast.success(isHidden ? 'Image shown' : 'Image hidden');
+      toast.success('Images reordered');
     }
   };
 
@@ -611,7 +598,7 @@ function ImagesManager({ devId }: { devId: string }) {
     <Card>
       <CardHeader>
         <CardTitle>Images for {development?.name}</CardTitle>
-        <CardDescription>Upload, reorder, set cover, and manage gallery images</CardDescription>
+        <CardDescription>Upload, reorder, and manage gallery images</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div
@@ -639,60 +626,33 @@ function ImagesManager({ devId }: { devId: string }) {
         {uploading && <p className="text-sm text-center">Uploading...</p>}
 
         <div className="grid grid-cols-3 gap-4">
-          {images.map((img: any, idx: number) => {
-            const isHidden = hiddenImages.includes(idx);
-            const isCover = idx === coverIndex;
-
-            return (
-              <div
-                key={idx}
-                draggable
-                onDragStart={() => handleDragStart(idx)}
-                onDragOver={(e) => handleDragOver(e, idx)}
-                className={`relative group cursor-move ${isHidden ? 'opacity-40' : ''}`}
-              >
-                <div className="absolute top-2 left-2 z-10">
-                  <GripVertical className="h-5 w-5 text-white drop-shadow-lg" />
-                </div>
-                {isCover && (
-                  <Badge className="absolute top-2 right-2 z-10 bg-yellow-500">
-                    <Star className="h-3 w-3 mr-1" />
-                    Cover
-                  </Badge>
-                )}
-                <img
-                  src={img.sources[0]?.src}
-                  alt={img.alt}
-                  className="w-full h-48 object-cover rounded-lg"
-                />
-                <div className="absolute bottom-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleSetCover(idx)}
-                    title="Set as cover"
-                  >
-                    <Star className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleToggleHidden(idx)}
-                    title={isHidden ? 'Show' : 'Hide'}
-                  >
-                    {isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(idx)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+          {images.map((img: any, idx: number) => (
+            <div
+              key={idx}
+              draggable
+              onDragStart={() => handleDragStart(idx)}
+              onDragOver={(e) => handleDragOver(e, idx)}
+              className="relative group cursor-move"
+            >
+              <div className="absolute top-2 left-2 z-10">
+                <GripVertical className="h-5 w-5 text-white drop-shadow-lg" />
               </div>
-            );
-          })}
+              <img
+                src={img.sources[0]?.src}
+                alt={img.alt}
+                className="w-full h-48 object-cover rounded-lg"
+              />
+              <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDelete(idx)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

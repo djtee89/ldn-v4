@@ -140,101 +140,77 @@ export type Database = {
       developments: {
         Row: {
           amenities: string[] | null
-          area_overview: string | null
-          bedrooms: string[] | null
+          borough: string | null
           completion_date: string | null
-          cover_image_index: number | null
           created_at: string | null
           developer: string | null
-          distance_to_tube: string | null
-          featured: boolean | null
-          green_spaces: string | null
-          hidden_images: number[] | null
           id: string
           images: string[] | null
+          images_count: number | null
           lat: number | null
           lng: number | null
           location: string | null
           name: string
           nearby_stations: Json | null
-          nearest_tube: string | null
-          nearest_tube_line: string | null
           postcode: string | null
           prices: Json | null
-          raw_details: Json | null
           schools: Json | null
           stations: Json | null
           status: string | null
+          summary: string | null
           tenure: string | null
-          transport_score: string | null
+          units_count: number | null
           updated_at: string | null
-          validation_status: Json | null
           zone: string | null
         }
         Insert: {
           amenities?: string[] | null
-          area_overview?: string | null
-          bedrooms?: string[] | null
+          borough?: string | null
           completion_date?: string | null
-          cover_image_index?: number | null
           created_at?: string | null
           developer?: string | null
-          distance_to_tube?: string | null
-          featured?: boolean | null
-          green_spaces?: string | null
-          hidden_images?: number[] | null
           id: string
           images?: string[] | null
+          images_count?: number | null
           lat?: number | null
           lng?: number | null
           location?: string | null
           name: string
           nearby_stations?: Json | null
-          nearest_tube?: string | null
-          nearest_tube_line?: string | null
           postcode?: string | null
           prices?: Json | null
-          raw_details?: Json | null
           schools?: Json | null
           stations?: Json | null
           status?: string | null
+          summary?: string | null
           tenure?: string | null
-          transport_score?: string | null
+          units_count?: number | null
           updated_at?: string | null
-          validation_status?: Json | null
           zone?: string | null
         }
         Update: {
           amenities?: string[] | null
-          area_overview?: string | null
-          bedrooms?: string[] | null
+          borough?: string | null
           completion_date?: string | null
-          cover_image_index?: number | null
           created_at?: string | null
           developer?: string | null
-          distance_to_tube?: string | null
-          featured?: boolean | null
-          green_spaces?: string | null
-          hidden_images?: number[] | null
           id?: string
           images?: string[] | null
+          images_count?: number | null
           lat?: number | null
           lng?: number | null
           location?: string | null
           name?: string
           nearby_stations?: Json | null
-          nearest_tube?: string | null
-          nearest_tube_line?: string | null
           postcode?: string | null
           prices?: Json | null
-          raw_details?: Json | null
           schools?: Json | null
           stations?: Json | null
           status?: string | null
+          summary?: string | null
           tenure?: string | null
-          transport_score?: string | null
+          units_count?: number | null
           updated_at?: string | null
-          validation_status?: Json | null
           zone?: string | null
         }
         Relationships: []
@@ -468,91 +444,76 @@ export type Database = {
       developments_public: {
         Row: {
           amenities: string[] | null
-          area_overview: string | null
-          bedrooms: string[] | null
+          borough: string | null
           completion_date: string | null
-          cover_image_index: number | null
           created_at: string | null
           developer: string | null
-          distance_to_tube: string | null
-          featured: boolean | null
-          green_spaces: string | null
           id: string | null
           images: string[] | null
+          images_count: number | null
           lat: number | null
           lng: number | null
           location: string | null
           name: string | null
           nearby_stations: Json | null
-          nearest_tube: string | null
-          nearest_tube_line: string | null
           postcode: string | null
           prices: Json | null
           schools: Json | null
           stations: Json | null
           status: string | null
+          summary: string | null
           tenure: string | null
-          transport_score: string | null
+          units_count: number | null
           updated_at: string | null
           zone: string | null
         }
         Insert: {
           amenities?: string[] | null
-          area_overview?: string | null
-          bedrooms?: string[] | null
+          borough?: string | null
           completion_date?: string | null
-          cover_image_index?: number | null
           created_at?: string | null
           developer?: string | null
-          distance_to_tube?: string | null
-          featured?: boolean | null
-          green_spaces?: string | null
           id?: string | null
           images?: string[] | null
+          images_count?: number | null
           lat?: number | null
           lng?: number | null
           location?: string | null
           name?: string | null
           nearby_stations?: Json | null
-          nearest_tube?: string | null
-          nearest_tube_line?: string | null
           postcode?: string | null
-          prices?: never
+          prices?: Json | null
           schools?: Json | null
           stations?: Json | null
           status?: string | null
+          summary?: string | null
           tenure?: string | null
-          transport_score?: string | null
+          units_count?: number | null
           updated_at?: string | null
           zone?: string | null
         }
         Update: {
           amenities?: string[] | null
-          area_overview?: string | null
-          bedrooms?: string[] | null
+          borough?: string | null
           completion_date?: string | null
-          cover_image_index?: number | null
           created_at?: string | null
           developer?: string | null
-          distance_to_tube?: string | null
-          featured?: boolean | null
-          green_spaces?: string | null
           id?: string | null
           images?: string[] | null
+          images_count?: number | null
           lat?: number | null
           lng?: number | null
           location?: string | null
           name?: string | null
           nearby_stations?: Json | null
-          nearest_tube?: string | null
-          nearest_tube_line?: string | null
           postcode?: string | null
-          prices?: never
+          prices?: Json | null
           schools?: Json | null
           stations?: Json | null
           status?: string | null
+          summary?: string | null
           tenure?: string | null
-          transport_score?: string | null
+          units_count?: number | null
           updated_at?: string | null
           zone?: string | null
         }
@@ -563,6 +524,10 @@ export type Database = {
       binary_quantize: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
+      }
+      compute_development_prices: {
+        Args: { dev_id: string }
+        Returns: Json
       }
       halfvec_avg: {
         Args: { "": number[] }
