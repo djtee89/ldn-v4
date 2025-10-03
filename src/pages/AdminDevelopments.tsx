@@ -18,6 +18,7 @@ import { HottestUnitManager } from "@/components/HottestUnitManager";
 import { MandatoryFieldsGate } from "@/components/MandatoryFieldsGate";
 import { BulkImportTool } from "@/components/BulkImportTool";
 import { AvailableUnitsManager } from "@/components/AvailableUnitsManager";
+import { EnrichmentManager } from "@/components/EnrichmentManager";
 import { useNavigate } from "react-router-dom";
 
 type PriceList = {
@@ -107,6 +108,7 @@ export default function AdminDevelopments() {
           <TabsTrigger value="pricelists" disabled={!selectedDev}>Price Lists</TabsTrigger>
           <TabsTrigger value="units" disabled={!selectedDev}>Available Units</TabsTrigger>
           <TabsTrigger value="hottest" disabled={!selectedDev}>Hottest Unit</TabsTrigger>
+          <TabsTrigger value="enrichment" disabled={!selectedDev}>Enrichment</TabsTrigger>
           <TabsTrigger value="quality" disabled={!selectedDev}>Quality Check</TabsTrigger>
         </TabsList>
 
@@ -140,6 +142,10 @@ export default function AdminDevelopments() {
 
         <TabsContent value="hottest">
           {selectedDev && <HottestUnitManager devId={selectedDev} />}
+        </TabsContent>
+
+        <TabsContent value="enrichment">
+          {selectedDev && <EnrichmentManager devId={selectedDev} />}
         </TabsContent>
 
         <TabsContent value="quality" className="space-y-6">
