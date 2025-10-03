@@ -12,6 +12,7 @@ import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
 import LiveChat from '@/components/LiveChat';
 import ShortlistDrawer from '@/components/ShortlistDrawer';
+import MichelinRestaurantsSection from '@/components/MichelinRestaurantsSection';
 import About from './About';
 import PropertyGuide from './PropertyGuide';
 import Contact from './Contact';
@@ -209,6 +210,9 @@ const Index = () => {
 
       {/* This Week's Offers */}
       <ThisWeeksOffers />
+
+      {/* Michelin-Starred Restaurants */}
+      <MichelinRestaurantsSection />
 
       {/* Upcoming Events */}
       <UpcomingEvents />
