@@ -538,6 +538,9 @@ function ImagesManager({ devId }: { devId: string }) {
 
       queryClient.invalidateQueries({ queryKey: ['development', devId] });
       toast.success(`Uploaded ${newImages.length} image(s)`);
+      
+      // Force a hard refresh to ensure images display
+      window.location.reload();
     } catch (error: any) {
       toast.error(error.message);
     } finally {
