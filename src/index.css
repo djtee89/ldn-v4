@@ -183,59 +183,67 @@
 
 /* Modal System - Responsive & Accessible */
 @layer components {
-  /* Backdrop */
+  /* Backdrop - INCREASED Z-INDEX FOR MOBILE */
   .modal-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 50;
-    background: hsl(0 0% 0% / 0.5);
+    z-index: 9999;
+    background: hsl(0 0% 0% / 0.6);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 0.5rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   @media (min-width: 640px) {
     .modal-backdrop {
-      padding: 16px;
+      padding: 1rem;
     }
   }
 
-  /* Panel Container */
+  /* Panel Container - MOBILE OPTIMIZED */
   .modal-panel {
+    position: relative;
     width: 100%;
-    max-height: calc(100dvh - 16px);
-    max-height: calc(100vh - 16px); /* fallback */
+    max-width: 100%;
+    height: auto;
+    max-height: calc(100dvh - 1rem);
+    max-height: calc(100vh - 1rem); /* fallback */
     background: hsl(var(--background));
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 20px 40px hsl(var(--primary) / 0.15);
+    margin: auto;
   }
 
   @media (min-width: 640px) {
     .modal-panel {
       width: min(640px, 100%);
-      max-height: calc(100dvh - 32px);
-      max-height: calc(100vh - 32px);
+      max-height: calc(100dvh - 2rem);
+      max-height: calc(100vh - 2rem);
       border-radius: 16px;
     }
   }
 
-  /* Wide Panel for complex layouts */
+  /* Wide Panel for complex layouts - MOBILE FIRST */
   .modal-panel-wide {
     width: 100%;
-    max-height: calc(100dvh - 16px);
-    max-height: calc(100vh - 16px); /* fallback */
+    max-width: 100%;
+    height: auto;
+    max-height: calc(100dvh - 1rem);
+    max-height: calc(100vh - 1rem); /* fallback */
   }
 
   @media (min-width: 768px) {
     .modal-panel-wide {
       width: min(90vw, 1024px);
-      max-height: calc(100dvh - 32px);
-      max-height: calc(100vh - 32px);
+      max-height: calc(100dvh - 2rem);
+      max-height: calc(100vh - 2rem);
     }
   }
 
@@ -464,13 +472,6 @@
   /* Mobile-optimized text sizing */
   input, select, textarea, button {
     font-size: 14px !important;
-  }
-  
-  /* Better mobile spacing */
-  .modal-panel {
-    margin: 0.5rem;
-    max-height: calc(100vh - 1rem);
-    max-height: calc(100dvh - 1rem);
   }
   
   /* Mobile-friendly cards */

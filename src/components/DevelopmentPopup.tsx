@@ -191,7 +191,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
     });
   };
   return <div className="modal-backdrop">
-      <div className="modal-panel modal-panel-wide overflow-hidden flex flex-col h-[95vh] md:h-[90vh]">
+      <div className="modal-panel modal-panel-wide overflow-hidden flex flex-col max-h-[calc(100vh-1rem)] md:max-h-[calc(100vh-2rem)]">
         {/* Header */}
         <div className="modal-header flex-shrink-0">
           <div className="flex items-center justify-between gap-2">
