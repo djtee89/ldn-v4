@@ -338,22 +338,223 @@ export const amenities: Amenity[] = [
   { id: 'prep-91', name: 'Wetherby School', type: 'prep_schools', coordinates: { lat: 51.5145, lng: -0.2055 }, walkTime: 12 },
   { id: 'prep-92', name: 'Willington School', type: 'prep_schools', coordinates: { lat: 51.4235, lng: -0.2105 }, walkTime: 18 },
 
-  // State Schools (Ofsted Outstanding)
-  { id: 'state-1', name: 'Fox Primary School', type: 'state_schools', coordinates: { lat: 51.5115, lng: -0.1985 }, walkTime: 12 },
-  { id: 'state-2', name: 'Ark Academy', type: 'state_schools', coordinates: { lat: 51.5225, lng: -0.2245 }, walkTime: 14 },
-  { id: 'state-3', name: 'Grey Coat Hospital', type: 'state_schools', coordinates: { lat: 51.4965, lng: -0.1325 }, walkTime: 9 },
-  { id: 'state-4', name: 'Pimlico Academy', type: 'state_schools', coordinates: { lat: 51.4885, lng: -0.1375 }, walkTime: 8 },
-  { id: 'state-5', name: 'Burlington Danes Academy', type: 'state_schools', coordinates: { lat: 51.5085, lng: -0.2425 }, walkTime: 15 },
-  { id: 'state-6', name: 'Mossbourne Community Academy', type: 'state_schools', coordinates: { lat: 51.5445, lng: -0.0545 }, walkTime: 15 },
-  { id: 'state-7', name: 'Harris Academy Battersea', type: 'state_schools', coordinates: { lat: 51.4745, lng: -0.1625 }, walkTime: 13 },
-  { id: 'state-8', name: 'Ark Putney Academy', type: 'state_schools', coordinates: { lat: 51.4605, lng: -0.2165 }, walkTime: 16 },
-  { id: 'state-9', name: 'London Oratory School', type: 'state_schools', coordinates: { lat: 51.4875, lng: -0.2165 }, walkTime: 13 },
-  { id: 'state-10', name: 'Cardinal Vaughan Memorial School', type: 'state_schools', coordinates: { lat: 51.4985, lng: -0.1975 }, walkTime: 12 },
-  { id: 'state-11', name: 'St Marylebone CE School', type: 'state_schools', coordinates: { lat: 51.5235, lng: -0.1565 }, walkTime: 10 },
-  { id: 'state-12', name: 'Parliament Hill School', type: 'state_schools', coordinates: { lat: 51.5535, lng: -0.1585 }, walkTime: 14 },
-  { id: 'state-13', name: 'Camden School for Girls', type: 'state_schools', coordinates: { lat: 51.5445, lng: -0.1415 }, walkTime: 12 },
-  { id: 'state-14', name: 'La Sainte Union Catholic School', type: 'state_schools', coordinates: { lat: 51.5635, lng: -0.1385 }, walkTime: 15 },
-  { id: 'state-15', name: 'Bolingbroke Academy', type: 'state_schools', coordinates: { lat: 51.4655, lng: -0.1725 }, walkTime: 15 },
+  // Outstanding State Primary Schools (By Borough)
+  // Barking and Dagenham
+  { id: 'state-prim-1', name: 'Gascoigne Primary School', type: 'state_schools', coordinates: { lat: 51.5385, lng: 0.1085 }, walkTime: 28 },
+  { id: 'state-prim-2', name: 'George Carey C of E Primary School', type: 'state_schools', coordinates: { lat: 51.5485, lng: 0.1185 }, walkTime: 29 },
+  // Barnet
+  { id: 'state-prim-3', name: 'Akiva School', type: 'state_schools', coordinates: { lat: 51.6085, lng: -0.2185 }, walkTime: 21 },
+  { id: 'state-prim-4', name: 'Garden Suburb Infant School', type: 'state_schools', coordinates: { lat: 51.6015, lng: -0.1885 }, walkTime: 20 },
+  { id: 'state-prim-5', name: 'Holly Park School', type: 'state_schools', coordinates: { lat: 51.5985, lng: -0.2285 }, walkTime: 21 },
+  // Bexley
+  { id: 'state-prim-6', name: 'Birkbeck Primary School', type: 'state_schools', coordinates: { lat: 51.4515, lng: 0.1485 }, walkTime: 37 },
+  { id: 'state-prim-7', name: 'Danson Primary School', type: 'state_schools', coordinates: { lat: 51.4615, lng: 0.1385 }, walkTime: 36 },
+  // Brent
+  { id: 'state-prim-8', name: 'Ark Franklin Primary Academy', type: 'state_schools', coordinates: { lat: 51.5385, lng: -0.2685 }, walkTime: 17 },
+  { id: 'state-prim-9', name: 'Gladstone Park Primary School', type: 'state_schools', coordinates: { lat: 51.5585, lng: -0.2285 }, walkTime: 16 },
+  { id: 'state-prim-10', name: 'Sudbury Primary School', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.3185 }, walkTime: 21 },
+  // Bromley
+  { id: 'state-prim-11', name: 'Oak Lodge Primary School', type: 'state_schools', coordinates: { lat: 51.4015, lng: 0.0185 }, walkTime: 25 },
+  { id: 'state-prim-12', name: 'Parish C of E Primary School', type: 'state_schools', coordinates: { lat: 51.3815, lng: 0.0385 }, walkTime: 27 },
+  // Camden
+  { id: 'state-prim-13', name: 'Christopher Hatton Primary School', type: 'state_schools', coordinates: { lat: 51.5285, lng: -0.1085 }, walkTime: 9 },
+  { id: 'state-prim-14', name: 'Eleanor Palmer Primary School', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.1385 }, walkTime: 12 },
+  { id: 'state-prim-15', name: 'Primrose Hill School', type: 'state_schools', coordinates: { lat: 51.5385, lng: -0.1585 }, walkTime: 12 },
+  { id: 'state-prim-16', name: 'Torriano Primary School', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.1485 }, walkTime: 12 },
+  // Croydon
+  { id: 'state-prim-17', name: 'Heavers Farm Primary School', type: 'state_schools', coordinates: { lat: 51.3815, lng: -0.0985 }, walkTime: 31 },
+  { id: 'state-prim-18', name: 'Harris Primary Academy Benson', type: 'state_schools', coordinates: { lat: 51.3915, lng: -0.0885 }, walkTime: 30 },
+  // Ealing
+  { id: 'state-prim-19', name: 'Ark Priory Primary Academy', type: 'state_schools', coordinates: { lat: 51.5115, lng: -0.3185 }, walkTime: 20 },
+  { id: 'state-prim-20', name: 'Fielding Primary School', type: 'state_schools', coordinates: { lat: 51.5015, lng: -0.3085 }, walkTime: 19 },
+  { id: 'state-prim-21', name: 'Little Ealing Primary School', type: 'state_schools', coordinates: { lat: 51.5115, lng: -0.3385 }, walkTime: 22 },
+  { id: 'state-prim-22', name: 'North Ealing Primary School', type: 'state_schools', coordinates: { lat: 51.5215, lng: -0.2985 }, walkTime: 18 },
+  // Greenwich
+  { id: 'state-prim-23', name: 'Christ Church C of E Primary School', type: 'state_schools', coordinates: { lat: 51.4715, lng: 0.0085 }, walkTime: 18 },
+  { id: 'state-prim-24', name: 'Eltham C of E Primary School', type: 'state_schools', coordinates: { lat: 51.4485, lng: 0.0585 }, walkTime: 21 },
+  // Hackney
+  { id: 'state-prim-25', name: 'Grazebrook Primary School', type: 'state_schools', coordinates: { lat: 51.5685, lng: -0.0785 }, walkTime: 14 },
+  { id: 'state-prim-26', name: 'Jubilee Primary School', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.0685 }, walkTime: 13 },
+  { id: 'state-prim-27', name: 'William Patten Primary School', type: 'state_schools', coordinates: { lat: 51.5585, lng: -0.0585 }, walkTime: 14 },
+  // Hammersmith and Fulham
+  { id: 'state-prim-28', name: 'All Saints C of E Primary School', type: 'state_schools', coordinates: { lat: 51.4915, lng: -0.2085 }, walkTime: 12 },
+  { id: 'state-prim-29', name: 'Good Shepherd RC Primary School', type: 'state_schools', coordinates: { lat: 51.4815, lng: -0.2185 }, walkTime: 13 },
+  // Haringey
+  { id: 'state-prim-30', name: 'Campsbourne School', type: 'state_schools', coordinates: { lat: 51.5785, lng: -0.1085 }, walkTime: 16 },
+  { id: 'state-prim-31', name: 'Coldfall Primary School', type: 'state_schools', coordinates: { lat: 51.5985, lng: -0.1385 }, walkTime: 19 },
+  { id: 'state-prim-32', name: 'Highgate Primary School', type: 'state_schools', coordinates: { lat: 51.5685, lng: -0.1485 }, walkTime: 15 },
+  { id: 'state-prim-33', name: 'Tetherdown Primary School', type: 'state_schools', coordinates: { lat: 51.5885, lng: -0.1285 }, walkTime: 17 },
+  // Harrow
+  { id: 'state-prim-34', name: 'Belmont School', type: 'state_schools', coordinates: { lat: 51.5985, lng: -0.3285 }, walkTime: 25 },
+  { id: 'state-prim-35', name: 'Byron Court Primary School', type: 'state_schools', coordinates: { lat: 51.5685, lng: -0.3685 }, walkTime: 28 },
+  { id: 'state-prim-36', name: 'Grimsdyke School', type: 'state_schools', coordinates: { lat: 51.6085, lng: -0.4085 }, walkTime: 33 },
+  // Havering
+  { id: 'state-prim-37', name: 'Gidea Park Primary School', type: 'state_schools', coordinates: { lat: 51.5885, lng: 0.2085 }, walkTime: 32 },
+  { id: 'state-prim-38', name: 'Hacton Primary School', type: 'state_schools', coordinates: { lat: 51.5585, lng: 0.2185 }, walkTime: 33 },
+  // Islington
+  { id: 'state-prim-39', name: 'Ambler Primary School', type: 'state_schools', coordinates: { lat: 51.5585, lng: -0.0985 }, walkTime: 13 },
+  { id: 'state-prim-40', name: 'William Tyndale Primary School', type: 'state_schools', coordinates: { lat: 51.5685, lng: -0.1185 }, walkTime: 14 },
+  // Kensington and Chelsea
+  { id: 'state-prim-41', name: 'Bousfield Primary School', type: 'state_schools', coordinates: { lat: 51.4985, lng: -0.1885 }, walkTime: 11 },
+  { id: 'state-prim-42', name: 'Fox Primary School', type: 'state_schools', coordinates: { lat: 51.5115, lng: -0.1985 }, walkTime: 12 },
+  { id: 'state-prim-43', name: 'Thomas Jones Primary School', type: 'state_schools', coordinates: { lat: 51.5085, lng: -0.2085 }, walkTime: 13 },
+  // Kingston
+  { id: 'state-prim-44', name: 'Coombe Hill Junior School', type: 'state_schools', coordinates: { lat: 51.4185, lng: -0.2885 }, walkTime: 22 },
+  // Lambeth
+  { id: 'state-prim-45', name: 'Bonneville Primary School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.1185 }, walkTime: 11 },
+  { id: 'state-prim-46', name: 'Clapham Manor Primary School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.1385 }, walkTime: 13 },
+  { id: 'state-prim-47', name: 'Henry Fawcett Primary School', type: 'state_schools', coordinates: { lat: 51.4815, lng: -0.1285 }, walkTime: 10 },
+  { id: 'state-prim-48', name: 'Rosendale Primary School', type: 'state_schools', coordinates: { lat: 51.4515, lng: -0.0985 }, walkTime: 13 },
+  { id: 'state-prim-49', name: 'Sudbourne Primary School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.1085 }, walkTime: 12 },
+  // Lewisham
+  { id: 'state-prim-50', name: 'Fairlawn Primary School', type: 'state_schools', coordinates: { lat: 51.4415, lng: -0.0285 }, walkTime: 16 },
+  { id: 'state-prim-51', name: 'Gordonbrock School', type: 'state_schools', coordinates: { lat: 51.4515, lng: -0.0185 }, walkTime: 17 },
+  // Merton
+  { id: 'state-prim-52', name: 'Dundonald Primary School', type: 'state_schools', coordinates: { lat: 51.4315, lng: -0.1985 }, walkTime: 16 },
+  { id: 'state-prim-53', name: 'Wimbledon Chase Primary School', type: 'state_schools', coordinates: { lat: 51.4215, lng: -0.1985 }, walkTime: 17 },
+  // Newham
+  { id: 'state-prim-54', name: 'Curwen Primary School', type: 'state_schools', coordinates: { lat: 51.5385, lng: 0.0185 }, walkTime: 16 },
+  { id: 'state-prim-55', name: 'Keir Hardie Primary School', type: 'state_schools', coordinates: { lat: 51.5285, lng: 0.0285 }, walkTime: 17 },
+  { id: 'state-prim-56', name: 'Nelson Primary School', type: 'state_schools', coordinates: { lat: 51.5485, lng: 0.0385 }, walkTime: 18 },
+  // Redbridge
+  { id: 'state-prim-57', name: 'Avanti Court Primary School', type: 'state_schools', coordinates: { lat: 51.5685, lng: 0.0585 }, walkTime: 20 },
+  { id: 'state-prim-58', name: 'Gordon Primary School', type: 'state_schools', coordinates: { lat: 51.5585, lng: 0.0485 }, walkTime: 19 },
+  // Richmond
+  { id: 'state-prim-59', name: 'The Russell Primary School', type: 'state_schools', coordinates: { lat: 51.4685, lng: -0.3085 }, walkTime: 20 },
+  // Southwark
+  { id: 'state-prim-60', name: 'Charles Dickens Primary School', type: 'state_schools', coordinates: { lat: 51.4915, lng: -0.0885 }, walkTime: 10 },
+  { id: 'state-prim-61', name: 'Dog Kennel Hill School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.0885 }, walkTime: 12 },
+  { id: 'state-prim-62', name: 'Dulwich Hamlet Junior School', type: 'state_schools', coordinates: { lat: 51.4515, lng: -0.0785 }, walkTime: 12 },
+  { id: 'state-prim-63', name: 'Goose Green Primary School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.0985 }, walkTime: 12 },
+  { id: 'state-prim-64', name: 'Heber Primary School', type: 'state_schools', coordinates: { lat: 51.4515, lng: -0.0885 }, walkTime: 12 },
+  // Sutton
+  { id: 'state-prim-65', name: 'Cheam Fields Primary Academy', type: 'state_schools', coordinates: { lat: 51.3615, lng: -0.2085 }, walkTime: 34 },
+  { id: 'state-prim-66', name: 'Dorchester Primary School', type: 'state_schools', coordinates: { lat: 51.3715, lng: -0.1885 }, walkTime: 33 },
+  // Tower Hamlets
+  { id: 'state-prim-67', name: 'Bigland Green Primary School', type: 'state_schools', coordinates: { lat: 51.5185, lng: -0.0585 }, walkTime: 10 },
+  { id: 'state-prim-68', name: 'Columbia Primary School', type: 'state_schools', coordinates: { lat: 51.5085, lng: -0.0385 }, walkTime: 11 },
+  { id: 'state-prim-69', name: 'Globe Primary School', type: 'state_schools', coordinates: { lat: 51.5185, lng: -0.0485 }, walkTime: 10 },
+  { id: 'state-prim-70', name: 'Virginia Primary School', type: 'state_schools', coordinates: { lat: 51.5085, lng: -0.0285 }, walkTime: 12 },
+  // Waltham Forest
+  { id: 'state-prim-71', name: 'Chingford C of E Primary School', type: 'state_schools', coordinates: { lat: 51.6185, lng: 0.0085 }, walkTime: 24 },
+  { id: 'state-prim-72', name: 'Oakhill Primary School', type: 'state_schools', coordinates: { lat: 51.5885, lng: -0.0185 }, walkTime: 20 },
+  // Wandsworth
+  { id: 'state-prim-73', name: 'Belleville Primary School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.1485 }, walkTime: 14 },
+  { id: 'state-prim-74', name: 'Chesterton Primary School', type: 'state_schools', coordinates: { lat: 51.4715, lng: -0.1685 }, walkTime: 13 },
+  { id: 'state-prim-75', name: 'Earlsfield Primary School', type: 'state_schools', coordinates: { lat: 51.4415, lng: -0.1885 }, walkTime: 15 },
+  { id: 'state-prim-76', name: 'Furzedown Primary School', type: 'state_schools', coordinates: { lat: 51.4315, lng: -0.1785 }, walkTime: 16 },
+  { id: 'state-prim-77', name: 'Honeywell Infant and Junior Schools', type: 'state_schools', coordinates: { lat: 51.4515, lng: -0.1685 }, walkTime: 14 },
+  // Westminster
+  { id: 'state-prim-78', name: 'Ark Atwood Primary Academy', type: 'state_schools', coordinates: { lat: 51.5215, lng: -0.1685 }, walkTime: 11 },
+  { id: 'state-prim-79', name: 'Hallfield Primary School', type: 'state_schools', coordinates: { lat: 51.5185, lng: -0.1885 }, walkTime: 12 },
+  { id: 'state-prim-80', name: 'Millbank Academy', type: 'state_schools', coordinates: { lat: 51.4915, lng: -0.1285 }, walkTime: 8 },
+
+  // Outstanding State Secondary Schools (By Borough)
+  // Barking and Dagenham
+  { id: 'state-sec-1', name: 'Barking Abbey School', type: 'state_schools', coordinates: { lat: 51.5385, lng: 0.0985 }, walkTime: 27 },
+  // Barnet
+  { id: 'state-sec-2', name: 'Ashmole Academy', type: 'state_schools', coordinates: { lat: 51.6285, lng: -0.1885 }, walkTime: 24 },
+  { id: 'state-sec-3', name: 'The Compton School', type: 'state_schools', coordinates: { lat: 51.6185, lng: -0.2185 }, walkTime: 22 },
+  { id: 'state-sec-4', name: 'St James\' Catholic High School', type: 'state_schools', coordinates: { lat: 51.6385, lng: -0.2085 }, walkTime: 25 },
+  // Brent
+  { id: 'state-sec-5', name: 'Ark Academy', type: 'state_schools', coordinates: { lat: 51.5385, lng: -0.2385 }, walkTime: 15 },
+  { id: 'state-sec-6', name: 'JFS', type: 'state_schools', coordinates: { lat: 51.6085, lng: -0.2685 }, walkTime: 24 },
+  { id: 'state-sec-7', name: 'Michaela Community School', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.2585 }, walkTime: 16 },
+  { id: 'state-sec-8', name: 'Preston Manor School', type: 'state_schools', coordinates: { lat: 51.5685, lng: -0.2985 }, walkTime: 18 },
+  // Bromley
+  { id: 'state-sec-9', name: 'Bullers Wood School for Girls', type: 'state_schools', coordinates: { lat: 51.3915, lng: 0.0085 }, walkTime: 26 },
+  { id: 'state-sec-10', name: 'Harris Academy Beckenham', type: 'state_schools', coordinates: { lat: 51.4015, lng: -0.0285 }, walkTime: 25 },
+  // Camden
+  { id: 'state-sec-11', name: 'Camden School for Girls', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.1385 }, walkTime: 12 },
+  { id: 'state-sec-12', name: 'UCL Academy', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.1285 }, walkTime: 12 },
+  // Croydon
+  { id: 'state-sec-13', name: 'Harris City Academy Crystal Palace', type: 'state_schools', coordinates: { lat: 51.4115, lng: -0.0785 }, walkTime: 22 },
+  // Ealing
+  { id: 'state-sec-14', name: 'Ada Lovelace C of E High School', type: 'state_schools', coordinates: { lat: 51.5185, lng: -0.3485 }, walkTime: 23 },
+  { id: 'state-sec-15', name: 'The Cardinal Wiseman Catholic School', type: 'state_schools', coordinates: { lat: 51.5315, lng: -0.4085 }, walkTime: 27 },
+  { id: 'state-sec-16', name: 'Twyford Church of England High School', type: 'state_schools', coordinates: { lat: 51.5115, lng: -0.3285 }, walkTime: 21 },
+  // Enfield
+  { id: 'state-sec-17', name: 'St Anne\'s Catholic High School for Girls', type: 'state_schools', coordinates: { lat: 51.6485, lng: -0.0585 }, walkTime: 26 },
+  // Greenwich
+  { id: 'state-sec-18', name: 'Thomas Tallis School', type: 'state_schools', coordinates: { lat: 51.4715, lng: 0.0185 }, walkTime: 19 },
+  // Hackney
+  { id: 'state-sec-19', name: 'Clapton Girls\' Academy', type: 'state_schools', coordinates: { lat: 51.5685, lng: -0.0585 }, walkTime: 14 },
+  { id: 'state-sec-20', name: 'Mossbourne Community Academy', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.0485 }, walkTime: 13 },
+  { id: 'state-sec-21', name: 'Stoke Newington School', type: 'state_schools', coordinates: { lat: 51.5685, lng: -0.0785 }, walkTime: 14 },
+  // Hammersmith and Fulham
+  { id: 'state-sec-22', name: 'Cardinal Vaughan Memorial RC School', type: 'state_schools', coordinates: { lat: 51.4985, lng: -0.1985 }, walkTime: 12 },
+  { id: 'state-sec-23', name: 'Lady Margaret School', type: 'state_schools', coordinates: { lat: 51.4785, lng: -0.2085 }, walkTime: 13 },
+  { id: 'state-sec-24', name: 'London Oratory School', type: 'state_schools', coordinates: { lat: 51.4815, lng: -0.2285 }, walkTime: 14 },
+  { id: 'state-sec-25', name: 'Sacred Heart High School', type: 'state_schools', coordinates: { lat: 51.4915, lng: -0.2185 }, walkTime: 13 },
+  // Haringey
+  { id: 'state-sec-26', name: 'Alexandra Park School', type: 'state_schools', coordinates: { lat: 51.5885, lng: -0.1185 }, walkTime: 17 },
+  { id: 'state-sec-27', name: 'Fortismere School', type: 'state_schools', coordinates: { lat: 51.5985, lng: -0.1385 }, walkTime: 19 },
+  { id: 'state-sec-28', name: 'Hornsey School for Girls', type: 'state_schools', coordinates: { lat: 51.5885, lng: -0.1085 }, walkTime: 17 },
+  // Harrow
+  { id: 'state-sec-29', name: 'Bentley Wood High School', type: 'state_schools', coordinates: { lat: 51.6085, lng: -0.3585 }, walkTime: 27 },
+  // Hillingdon
+  { id: 'state-sec-30', name: 'Bishopshalt School', type: 'state_schools', coordinates: { lat: 51.5285, lng: -0.4685 }, walkTime: 38 },
+  // Hounslow
+  { id: 'state-sec-31', name: 'The Green School for Girls', type: 'state_schools', coordinates: { lat: 51.4685, lng: -0.3585 }, walkTime: 25 },
+  { id: 'state-sec-32', name: 'Lampton School', type: 'state_schools', coordinates: { lat: 51.4785, lng: -0.3785 }, walkTime: 26 },
+  // Islington
+  { id: 'state-sec-33', name: 'Central Foundation Boys\' School', type: 'state_schools', coordinates: { lat: 51.5385, lng: -0.0885 }, walkTime: 11 },
+  { id: 'state-sec-34', name: 'Elizabeth Garrett Anderson School', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.1185 }, walkTime: 12 },
+  { id: 'state-sec-35', name: 'Highbury Fields School', type: 'state_schools', coordinates: { lat: 51.5485, lng: -0.0985 }, walkTime: 12 },
+  // Kensington and Chelsea
+  { id: 'state-sec-36', name: 'All Saints Catholic College', type: 'state_schools', coordinates: { lat: 51.5085, lng: -0.2285 }, walkTime: 14 },
+  { id: 'state-sec-37', name: 'Chelsea Academy', type: 'state_schools', coordinates: { lat: 51.4815, lng: -0.1885 }, walkTime: 11 },
+  { id: 'state-sec-38', name: 'Holland Park School', type: 'state_schools', coordinates: { lat: 51.5015, lng: -0.2085 }, walkTime: 13 },
+  // Kingston
+  { id: 'state-sec-39', name: 'Coombe Girls\' School', type: 'state_schools', coordinates: { lat: 51.4085, lng: -0.2685 }, walkTime: 21 },
+  { id: 'state-sec-40', name: 'Richard Challoner School', type: 'state_schools', coordinates: { lat: 51.4085, lng: -0.2985 }, walkTime: 24 },
+  // Lambeth
+  { id: 'state-sec-41', name: 'Bishop Thomas Grant School', type: 'state_schools', coordinates: { lat: 51.4315, lng: -0.1185 }, walkTime: 13 },
+  { id: 'state-sec-42', name: 'Dunraven School', type: 'state_schools', coordinates: { lat: 51.4315, lng: -0.1085 }, walkTime: 13 },
+  { id: 'state-sec-43', name: 'Harris Academy Clapham', type: 'state_schools', coordinates: { lat: 51.4515, lng: -0.1285 }, walkTime: 12 },
+  { id: 'state-sec-44', name: 'La Retraite RC Girls\' School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.1385 }, walkTime: 14 },
+  // Lewisham
+  { id: 'state-sec-45', name: 'Haberdashers\' Aske\'s Hatcham College', type: 'state_schools', coordinates: { lat: 51.4715, lng: -0.0385 }, walkTime: 17 },
+  { id: 'state-sec-46', name: 'Prendergast School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.0185 }, walkTime: 17 },
+  // Merton
+  { id: 'state-sec-47', name: 'Ricards Lodge High School', type: 'state_schools', coordinates: { lat: 51.4115, lng: -0.1985 }, walkTime: 17 },
+  { id: 'state-sec-48', name: 'Ursuline High School', type: 'state_schools', coordinates: { lat: 51.4215, lng: -0.2085 }, walkTime: 18 },
+  { id: 'state-sec-49', name: 'Wimbledon College', type: 'state_schools', coordinates: { lat: 51.4285, lng: -0.2185 }, walkTime: 19 },
+  // Newham
+  { id: 'state-sec-50', name: 'Brampton Manor Academy', type: 'state_schools', coordinates: { lat: 51.5385, lng: 0.0085 }, walkTime: 16 },
+  { id: 'state-sec-51', name: 'Forest Gate Community School', type: 'state_schools', coordinates: { lat: 51.5485, lng: 0.0185 }, walkTime: 17 },
+  { id: 'state-sec-52', name: 'London Academy of Excellence', type: 'state_schools', coordinates: { lat: 51.5285, lng: 0.0385 }, walkTime: 18 },
+  // Redbridge
+  { id: 'state-sec-53', name: 'Chadwell Heath Academy', type: 'state_schools', coordinates: { lat: 51.5785, lng: 0.1285 }, walkTime: 26 },
+  { id: 'state-sec-54', name: 'Valentines High School', type: 'state_schools', coordinates: { lat: 51.5685, lng: 0.0785 }, walkTime: 22 },
+  // Richmond
+  { id: 'state-sec-55', name: 'Orleans Park School', type: 'state_schools', coordinates: { lat: 51.4585, lng: -0.3285 }, walkTime: 23 },
+  { id: 'state-sec-56', name: 'Waldegrave School', type: 'state_schools', coordinates: { lat: 51.4385, lng: -0.3385 }, walkTime: 26 },
+  // Southwark
+  { id: 'state-sec-57', name: 'Charter School North Dulwich', type: 'state_schools', coordinates: { lat: 51.4515, lng: -0.0885 }, walkTime: 12 },
+  { id: 'state-sec-58', name: 'Harris Academy Bermondsey', type: 'state_schools', coordinates: { lat: 51.4915, lng: -0.0685 }, walkTime: 10 },
+  { id: 'state-sec-59', name: 'Kingsdale Foundation School', type: 'state_schools', coordinates: { lat: 51.4415, lng: -0.0985 }, walkTime: 13 },
+  { id: 'state-sec-60', name: 'Sacred Heart Catholic School', type: 'state_schools', coordinates: { lat: 51.4715, lng: -0.0885 }, walkTime: 11 },
+  // Sutton
+  { id: 'state-sec-61', name: 'Carshalton High School for Girls', type: 'state_schools', coordinates: { lat: 51.3615, lng: -0.1685 }, walkTime: 33 },
+  { id: 'state-sec-62', name: 'Glenthorne High School', type: 'state_schools', coordinates: { lat: 51.3715, lng: -0.1585 }, walkTime: 33 },
+  // Tower Hamlets
+  { id: 'state-sec-63', name: 'Bishop Challoner Catholic Federation', type: 'state_schools', coordinates: { lat: 51.5285, lng: -0.0385 }, walkTime: 12 },
+  { id: 'state-sec-64', name: 'Morpeth School', type: 'state_schools', coordinates: { lat: 51.5185, lng: -0.0285 }, walkTime: 12 },
+  { id: 'state-sec-65', name: 'Mulberry School for Girls', type: 'state_schools', coordinates: { lat: 51.5185, lng: -0.0585 }, walkTime: 10 },
+  // Waltham Forest
+  { id: 'state-sec-66', name: 'Chingford Foundation School', type: 'state_schools', coordinates: { lat: 51.6185, lng: -0.0085 }, walkTime: 23 },
+  { id: 'state-sec-67', name: 'Highams Park School', type: 'state_schools', coordinates: { lat: 51.6085, lng: -0.0185 }, walkTime: 22 },
+  // Wandsworth
+  { id: 'state-sec-68', name: 'Ashcroft Technology Academy', type: 'state_schools', coordinates: { lat: 51.4715, lng: -0.1785 }, walkTime: 13 },
+  { id: 'state-sec-69', name: 'Graveney School', type: 'state_schools', coordinates: { lat: 51.4515, lng: -0.1685 }, walkTime: 14 },
+  { id: 'state-sec-70', name: 'Harris Academy Battersea', type: 'state_schools', coordinates: { lat: 51.4715, lng: -0.1585 }, walkTime: 13 },
+  { id: 'state-sec-71', name: 'Saint Cecilia\'s C of E School', type: 'state_schools', coordinates: { lat: 51.4615, lng: -0.1785 }, walkTime: 14 },
+  // Westminster
+  { id: 'state-sec-72', name: 'The Grey Coat Hospital', type: 'state_schools', coordinates: { lat: 51.4965, lng: -0.1325 }, walkTime: 9 },
+  { id: 'state-sec-73', name: 'King Solomon Academy', type: 'state_schools', coordinates: { lat: 51.5285, lng: -0.1885 }, walkTime: 12 },
+  { id: 'state-sec-74', name: 'St Marylebone CE School', type: 'state_schools', coordinates: { lat: 51.5235, lng: -0.1565 }, walkTime: 10 },
+  { id: 'state-sec-75', name: 'Westminster City School', type: 'state_schools', coordinates: { lat: 51.4915, lng: -0.1385 }, walkTime: 9 },
 
   // Grammar Schools (London Boroughs - Co-educational, Boys, Girls)
   // Barnet
