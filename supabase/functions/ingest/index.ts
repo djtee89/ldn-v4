@@ -323,8 +323,12 @@ Deno.serve(async (req) => {
     }
 
     // Calculate error rate
-    const totalChanges = diff.new_units + diff.updated_units + diff.removed_units;
-    const totalUnits = Math.max(currentMap.size, 1);
+    // For initial uploads (empty dev), only count updates/removals as errors
+    // New units in an empty dev are expected, not errors
+    const totalChanges = currentMap.size === 0 
+      ? diff.updated_units + diff.removed_units 
+      : diff.new_units + diff.updated_units + diff.removed_units;
+    const totalUnits = Math.max(currentMap.size, newMap.size, 1);
     diff.error_rate = totalChanges / totalUnits;
 
     // Check if auto-publish is safe
