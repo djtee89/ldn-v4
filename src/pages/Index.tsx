@@ -193,7 +193,7 @@ const Index = () => {
       </section>
       
       {/* Best Deals Section */}
-      <BestDealsSection />
+      <BestDealsSection onBookViewing={() => setIsBookingModalOpen(true)} />
 
       {/* This Week's Offers */}
       <ThisWeeksOffers />

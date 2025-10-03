@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Flame, Bed, Maximize } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import HottestDealPopup from './HottestDealPopup';
 
 interface HottestDeal {
   unit_id: string;
@@ -17,9 +18,14 @@ interface HottestDeal {
   override_reason: string;
 }
 
-const BestDealsSection = () => {
+interface BestDealsSectionProps {
+  onBookViewing: () => void;
+}
+
+const BestDealsSection: React.FC<BestDealsSectionProps> = ({ onBookViewing }) => {
   const [hottestDeals, setHottestDeals] = useState<HottestDeal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDeal, setSelectedDeal] = useState<HottestDeal | null>(null);
 
   useEffect(() => {
     loadHottestDeals();
@@ -102,31 +108,33 @@ const BestDealsSection = () => {
   }
 
   return (
-    <section className="w-full py-12 px-4 bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto max-w-7xl">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 bg-destructive/10 text-destructive px-4 py-2 rounded-full mb-4">
-            <Flame className="h-4 w-4" />
-            <span className="text-sm font-semibold">HOT DEALS</span>
+    <>
+      <section className="w-full py-12 px-4 bg-gradient-to-b from-background to-muted/20">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-destructive/10 text-destructive px-4 py-2 rounded-full mb-4">
+              <Flame className="h-4 w-4" />
+              <span className="text-sm font-semibold">HOT DEALS</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              Best Deals in London Right Now
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Hand-picked opportunities from London's leading developers. Limited availability.
+            </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">
-            Best Deals in London Right Now
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Hand-picked opportunities from London's leading developers. Limited availability.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {hottestDeals.map((deal) => {
-            const pricePerSqft = Math.round(deal.price / deal.size_sqft);
-            const firstReason = deal.override_reason.split('\n').find(line => line.trim().length > 0) || '';
-            
-            return (
-              <Card
-                key={deal.unit_id}
-                className="group cursor-pointer overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {hottestDeals.map((deal) => {
+              const pricePerSqft = Math.round(deal.price / deal.size_sqft);
+              const firstReason = deal.override_reason.split('\n').find(line => line.trim().length > 0) || '';
+              
+              return (
+                <Card
+                  key={deal.unit_id}
+                  className="group cursor-pointer overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                  onClick={() => setSelectedDeal(deal)}
+                >
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={deal.image}
@@ -180,6 +188,21 @@ const BestDealsSection = () => {
         </div>
       </div>
     </section>
+
+    {selectedDeal && (
+      <HottestDealPopup
+        unitId={selectedDeal.unit_id}
+        devId={selectedDeal.dev_id}
+        devName={selectedDeal.dev_name}
+        developer={selectedDeal.developer}
+        onClose={() => setSelectedDeal(null)}
+        onBookViewing={() => {
+          setSelectedDeal(null);
+          onBookViewing();
+        }}
+      />
+    )}
+  </>
   );
 };
 
