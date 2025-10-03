@@ -841,21 +841,37 @@ export const amenities: Amenity[] = [
   { id: 'culture-113', name: 'Wilton\'s Music Hall', type: 'culture_landmarks', coordinates: { lat: 51.5131, lng: -0.0616 }, walkTime: 10, description: "The world's oldest surviving grand music hall" },
 
   // Shopping & Lifestyle
-  { id: 'shopping-1', name: 'Harrods', type: 'shopping_lifestyle', coordinates: { lat: 51.4994, lng: -0.1632 }, walkTime: 10 },
-  { id: 'shopping-2', name: 'Selfridges', type: 'shopping_lifestyle', coordinates: { lat: 51.5145, lng: -0.1527 }, walkTime: 10 },
-  { id: 'shopping-3', name: 'Bond Street', type: 'shopping_lifestyle', coordinates: { lat: 51.5134, lng: -0.1448 }, walkTime: 9 },
-  { id: 'shopping-4', name: 'Westfield London', type: 'shopping_lifestyle', coordinates: { lat: 51.5074, lng: -0.2211 }, walkTime: 14 },
-  { id: 'shopping-5', name: 'Westfield Stratford', type: 'shopping_lifestyle', coordinates: { lat: 51.5431, lng: -0.0063 }, walkTime: 18 },
-  { id: 'shopping-6', name: 'Brent Cross', type: 'shopping_lifestyle', coordinates: { lat: 51.5765, lng: -0.2232 }, walkTime: 20 },
-  { id: 'shopping-7', name: 'Covent Garden', type: 'shopping_lifestyle', coordinates: { lat: 51.5118, lng: -0.1226 }, walkTime: 6 },
-  { id: 'shopping-8', name: 'Liberty London', type: 'shopping_lifestyle', coordinates: { lat: 51.5141, lng: -0.1399 }, walkTime: 8 },
-  { id: 'shopping-9', name: 'Fortnum & Mason', type: 'shopping_lifestyle', coordinates: { lat: 51.5076, lng: -0.1373 }, walkTime: 8 },
-  { id: 'shopping-10', name: 'Harvey Nichols', type: 'shopping_lifestyle', coordinates: { lat: 51.4992, lng: -0.1608 }, walkTime: 10 },
-  { id: 'shopping-11', name: 'Peter Jones', type: 'shopping_lifestyle', coordinates: { lat: 51.4917, lng: -0.1579 }, walkTime: 9 },
-  { id: 'shopping-12', name: 'Burlington Arcade', type: 'shopping_lifestyle', coordinates: { lat: 51.5083, lng: -0.1398 }, walkTime: 8 },
-  { id: 'shopping-13', name: 'King\'s Road', type: 'shopping_lifestyle', coordinates: { lat: 51.4877, lng: -0.1688 }, walkTime: 10 },
-  { id: 'shopping-14', name: 'Sloane Street', type: 'shopping_lifestyle', coordinates: { lat: 51.4962, lng: -0.1595 }, walkTime: 9 },
-  { id: 'shopping-15', name: 'Carnaby Street', type: 'shopping_lifestyle', coordinates: { lat: 51.5133, lng: -0.1389 }, walkTime: 8 },
+  // Iconic Department Stores
+  { id: 'shopping-1', name: 'Harrods', type: 'shopping_lifestyle', coordinates: { lat: 51.4994, lng: -0.1632 }, walkTime: 10, description: 'World-famous for its luxury brands, magnificent food halls, and opulent decor in Knightsbridge' },
+  { id: 'shopping-2', name: 'Selfridges & Co.', type: 'shopping_lifestyle', coordinates: { lat: 51.5145, lng: -0.1527 }, walkTime: 10, description: "A huge, trend-setting store on Oxford Street, known for its creative window displays and vast beauty hall" },
+  { id: 'shopping-3', name: 'Liberty London', type: 'shopping_lifestyle', coordinates: { lat: 51.5141, lng: -0.1399 }, walkTime: 8, description: "Instantly recognizable for its Tudor-revival building, famous for its own fabric prints, designer goods, and unique gifts" },
+  { id: 'shopping-4', name: 'Fortnum & Mason', type: 'shopping_lifestyle', coordinates: { lat: 51.5076, lng: -0.1373 }, walkTime: 8, description: 'An upscale department store in Piccadilly since 1707, renowned for its luxury food hampers, teas, and preserves' },
+  { id: 'shopping-5', name: 'John Lewis & Partners', type: 'shopping_lifestyle', coordinates: { lat: 51.5154, lng: -0.1419 }, walkTime: 9, description: 'A hugely popular, employee-owned store on Oxford Street, known for its wide range of quality home goods, fashion, and electronics' },
+  { id: 'shopping-6', name: 'Harvey Nichols', type: 'shopping_lifestyle', coordinates: { lat: 51.4992, lng: -0.1608 }, walkTime: 10, description: 'A chic and high-fashion department store in Knightsbridge, offering a curated selection of designer brands' },
+  
+  // Major Shopping Centres
+  { id: 'shopping-7', name: 'Westfield London (Shepherd\'s Bush)', type: 'shopping_lifestyle', coordinates: { lat: 51.5074, lng: -0.2211 }, walkTime: 14, description: 'A massive shopping centre with a dedicated luxury wing ("The Village"), a huge range of high-street stores, a cinema, and numerous restaurants' },
+  { id: 'shopping-8', name: 'Westfield Stratford City', type: 'shopping_lifestyle', coordinates: { lat: 51.5431, lng: -0.0063 }, walkTime: 18, description: "Located next to the Olympic Park, this is one of Europe's largest urban shopping centres, with hundreds of shops and leisure facilities" },
+  { id: 'shopping-9', name: 'Brent Cross', type: 'shopping_lifestyle', coordinates: { lat: 51.5765, lng: -0.2232 }, walkTime: 20, description: "The UK's first standalone shopping mall, located in North London, with a wide range of popular high-street brands" },
+  { id: 'shopping-10', name: 'Battersea Power Station', type: 'shopping_lifestyle', coordinates: { lat: 51.4818, lng: -0.1453 }, walkTime: 12, description: 'A recently redeveloped iconic landmark now home to a wide array of shops, restaurants, and entertainment venues within its historic turbine halls' },
+  { id: 'shopping-11', name: 'Canary Wharf Shopping Centre', type: 'shopping_lifestyle', coordinates: { lat: 51.5051, lng: -0.0193 }, walkTime: 13, description: 'A modern, largely underground shopping mall with a mix of high-end and high-street stores, popular with city workers' },
+  { id: 'shopping-12', name: 'ICON Outlet at The O2', type: 'shopping_lifestyle', coordinates: { lat: 51.5030, lng: 0.0030 }, walkTime: 16, description: 'An outlet shopping centre in Greenwich, offering discounts on well-known brands' },
+  
+  // Famous Shopping Streets & Areas
+  { id: 'shopping-13', name: 'Oxford Street', type: 'shopping_lifestyle', coordinates: { lat: 51.5154, lng: -0.1419 }, walkTime: 9, description: "Europe's busiest shopping street, famous for its flagship high-street brands like Zara, H&M, and Primark, as well as major department stores" },
+  { id: 'shopping-14', name: 'Regent Street', type: 'shopping_lifestyle', coordinates: { lat: 51.5117, lng: -0.1373 }, walkTime: 8, description: 'An elegant, curved street connecting Oxford Circus to Piccadilly Circus, home to flagship stores like Apple and Hamleys' },
+  { id: 'shopping-15', name: 'Bond Street (New & Old)', type: 'shopping_lifestyle', coordinates: { lat: 51.5134, lng: -0.1448 }, walkTime: 9, description: "The go-to destination for pure luxury, with flagship stores of the world's most prestigious designers, such as Chanel, Dior, and Tiffany & Co." },
+  { id: 'shopping-16', name: 'Carnaby Street', type: 'shopping_lifestyle', coordinates: { lat: 51.5133, lng: -0.1389 }, walkTime: 8, description: 'The birthplace of "Swinging London" in the 1960s, now known for its independent boutiques, quirky brands, and vibrant atmosphere' },
+  { id: 'shopping-17', name: 'Covent Garden', type: 'shopping_lifestyle', coordinates: { lat: 51.5118, lng: -0.1226 }, walkTime: 6, description: 'A lively area with a beautiful central market, numerous boutiques, craft stalls, street performers, and restaurants' },
+  { id: 'shopping-18', name: 'King\'s Road', type: 'shopping_lifestyle', coordinates: { lat: 51.4877, lng: -0.1688 }, walkTime: 10, description: 'A famous street in Chelsea known for its chic boutiques, interior design shops, and fashionable vibe' },
+  { id: 'shopping-19', name: 'Savile Row', type: 'shopping_lifestyle', coordinates: { lat: 51.5106, lng: -0.1413 }, walkTime: 8, description: "The world's most famous destination for men's bespoke tailoring" },
+  
+  // Specialist Markets
+  { id: 'shopping-20', name: 'Portobello Road Market', type: 'shopping_lifestyle', coordinates: { lat: 51.5163, lng: -0.2060 }, walkTime: 13, description: 'Famous for its antiques on Saturdays, but also offers fashion, food, and bric-a-brac throughout the week in Notting Hill' },
+  { id: 'shopping-21', name: 'Camden Market', type: 'shopping_lifestyle', coordinates: { lat: 51.5415, lng: -0.1460 }, walkTime: 12, description: 'A collection of markets known for alternative fashion, unique crafts, street food, and a rebellious, creative energy' },
+  { id: 'shopping-22', name: 'Borough Market', type: 'shopping_lifestyle', coordinates: { lat: 51.5055, lng: -0.0910 }, walkTime: 7, description: "A food lover's paradise near London Bridge, offering exceptional British and international produce, artisanal foods, and delicious street food" },
+  { id: 'shopping-23', name: 'Old Spitalfields Market', type: 'shopping_lifestyle', coordinates: { lat: 51.5199, lng: -0.0761 }, walkTime: 8, description: 'A covered market in East London that blends high-end brands with independent stalls, art, and food trucks' },
+  { id: 'shopping-24', name: 'Columbia Road Flower Market', type: 'shopping_lifestyle', coordinates: { lat: 51.5311, lng: -0.0683 }, walkTime: 10, description: 'A vibrant and fragrant market in East London, packed with plants and flowers every Sunday' },
 
   // Hospitals & Clinics
   { id: 'hospital-1', name: 'The Harley Street Clinic', type: 'hospitals_clinics', coordinates: { lat: 51.5211, lng: -0.1489 }, walkTime: 10 },
