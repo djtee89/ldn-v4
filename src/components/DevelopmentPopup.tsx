@@ -932,10 +932,12 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                           
                           if (typeof school === 'string') {
                             schoolName = school;
-                          } else if (school?.tags?.name) {
+                          } else if (school?.tags?.name && typeof school.tags.name === 'string') {
                             schoolName = school.tags.name;
-                          } else if (school?.name) {
+                          } else if (school?.name && typeof school.name === 'string') {
                             schoolName = school.name;
+                          } else if (school?.properties?.name && typeof school.properties.name === 'string') {
+                            schoolName = school.properties.name;
                           }
                           
                           const distance = school?.distance_miles || null;
