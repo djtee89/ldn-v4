@@ -498,7 +498,9 @@ function ImagesManager({ devId }: { devId: string }) {
     },
   });
 
-  const images = development?.images || [];
+  const images = development?.images?.map((img: any) => 
+    typeof img === 'string' ? JSON.parse(img) : img
+  ) || [];
 
   const handleUpload = async (files: FileList) => {
     setUploading(true);
