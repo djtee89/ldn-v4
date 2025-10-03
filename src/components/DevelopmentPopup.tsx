@@ -901,29 +901,36 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                     <>
                       <div className="space-y-3">
                         <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Nearby Schools</h5>
-                        {development.schools.map((school, index) => (
-                          <Card key={index}>
-                            <CardContent className="p-4">
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="flex items-start gap-3 flex-1">
-                                  <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                                  <div>
-                                    <p className="font-semibold">{school.replace(/\s*\((Good|Outstanding)\)/, '')}</p>
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                      {school.toLowerCase().includes('primary') ? 'Primary School' : 
-                                       school.toLowerCase().includes('secondary') || school.toLowerCase().includes('academy') || school.toLowerCase().includes('high school') ? 'Secondary School' : 
-                                       school.toLowerCase().includes('college') ? 'College' : 
-                                       school.toLowerCase().includes('prep') ? 'Preparatory School' : 'School'}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground mt-0.5">Walking distance from development</p>
+                        {development.schools.map((school: any, index: number) => {
+                          const schoolName = typeof school === 'string' ? school : school.name;
+                          const distance = typeof school === 'object' && school.distance_miles ? school.distance_miles : null;
+                          
+                          return (
+                            <Card key={index}>
+                              <CardContent className="p-4">
+                                <div className="flex items-start justify-between gap-3">
+                                  <div className="flex items-start gap-3 flex-1">
+                                    <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                    <div>
+                                      <p className="font-semibold">{schoolName.replace(/\s*\((Good|Outstanding)\)/, '')}</p>
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        {schoolName.toLowerCase().includes('primary') ? 'Primary School' : 
+                                         schoolName.toLowerCase().includes('secondary') || schoolName.toLowerCase().includes('academy') || schoolName.toLowerCase().includes('high school') ? 'Secondary School' : 
+                                         schoolName.toLowerCase().includes('college') ? 'College' : 
+                                         schoolName.toLowerCase().includes('prep') ? 'Preparatory School' : 'School'}
+                                      </p>
+                                      <p className="text-xs text-muted-foreground mt-0.5">
+                                        {distance ? `${distance} miles away` : 'Walking distance from development'}
+                                      </p>
+                                    </div>
                                   </div>
+                                  {schoolName.toLowerCase().includes('outstanding') && <Badge className="bg-green-600 flex-shrink-0">Outstanding</Badge>}
+                                  {schoolName.toLowerCase().includes('good') && !schoolName.toLowerCase().includes('outstanding') && <Badge variant="secondary" className="flex-shrink-0">Good</Badge>}
                                 </div>
-                                {school.toLowerCase().includes('outstanding') && <Badge className="bg-green-600 flex-shrink-0">Outstanding</Badge>}
-                                {school.toLowerCase().includes('good') && !school.toLowerCase().includes('outstanding') && <Badge variant="secondary" className="flex-shrink-0">Good</Badge>}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
                       </div>
 
                       <div className="space-y-3 pt-4">
