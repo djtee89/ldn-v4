@@ -59,6 +59,7 @@ Deno.serve(async (req) => {
           beds: row.beds,
           size_sqft: row.size_sqft,
           price: row.price,
+          service_charge: row.service_charge,
           status: row.status,
           updated_at: new Date().toISOString(),
         }, {
