@@ -650,7 +650,7 @@ function ImagesManager({ devId }: { devId: string }) {
                 <GripVertical className="h-5 w-5 text-white drop-shadow-lg" />
               </div>
               <img
-                src={img.sources[0]?.src}
+                src={img.sources?.[0]?.src || img.src || ''}
                 alt={img.alt}
                 className="w-full h-48 object-cover rounded-lg"
               />
