@@ -651,8 +651,13 @@ function ImagesManager({ devId }: { devId: string }) {
               </div>
               <img
                 src={img.sources?.[0]?.src || img.src || ''}
-                alt={img.alt}
-                className="w-full h-48 object-cover rounded-lg"
+                alt={img.alt || 'Development image'}
+                className="w-full h-48 object-cover rounded-lg bg-muted"
+                onError={(e) => {
+                  console.error('Image failed to load:', img);
+                  e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage failed to load%3C/text%3E%3C/svg%3E';
+                }}
+                onLoad={() => console.log('Image loaded:', img.sources?.[0]?.src || img.src)}
               />
               <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button
