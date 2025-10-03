@@ -447,7 +447,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
         developer: dev.developer,
         price: (() => {
           const priceData = extractAllPrices(dev.prices);
-          return priceData.oneBed || priceData.studio || priceData.twoBed || priceData.range || 'POA';
+          const firstPrice = priceData.studio || priceData.oneBed || priceData.twoBed || priceData.threeBed || priceData.fourBed;
+          return firstPrice ? `From ${firstPrice}` : (priceData.range || 'POA');
         })(),
         highlighted: highlightedDeveloper ? dev.developer === highlightedDeveloper : false
       }
