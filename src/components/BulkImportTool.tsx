@@ -82,7 +82,9 @@ export function BulkImportTool() {
       // Helper to find column value with flexible matching
       const findColumnValue = (row: any, ...columnNames: string[]) => {
         for (const name of columnNames) {
-          const key = Object.keys(row).find(k => k.toLowerCase() === name.toLowerCase());
+          const key = Object.keys(row).find(k => 
+            k.toLowerCase().replace(/\s+/g, '') === name.toLowerCase().replace(/\s+/g, '')
+          );
           if (key && row[key]) return row[key];
         }
         return null;
@@ -138,14 +140,19 @@ export function BulkImportTool() {
             }
           }
 
+          // Flexible field parsing
+          const postcodeValue = findColumnValue(row, 'postcode', 'post code', 'postal code');
+          const boroughValue = findColumnValue(row, 'borough');
+          const zoneValue = findColumnValue(row, 'zone');
+
           const devData: any = {
             id: row.id?.trim(),
             name: row.name?.trim(),
             developer: row.developer?.trim(),
             location: row.location?.trim() || null,
-            postcode: row.postcode?.trim() || null,
-            borough: row.borough?.trim() || null,
-            zone: row.zone?.trim() || null,
+            postcode: postcodeValue?.trim() || null,
+            borough: boroughValue?.trim() || null,
+            zone: zoneValue?.trim() || null,
             lat,
             lng,
             status: row.status?.trim() || 'Available',
