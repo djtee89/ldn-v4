@@ -6,6 +6,7 @@ import SecondHero from '@/components/SecondHero';
 import DeveloperBanner from '@/components/DeveloperBanner';
 import BestDealsSection from '@/components/BestDealsSection';
 import ThisWeeksOffers from '@/components/ThisWeeksOffers';
+import { UpcomingEvents } from '@/components/UpcomingEvents';
 import { FilterState } from '@/components/FilterBar';
 import DevelopmentPopup from '@/components/DevelopmentPopup';
 import BookingModal from '@/components/BookingModal';
@@ -197,6 +198,9 @@ const Index = () => {
 
       {/* This Week's Offers */}
       <ThisWeeksOffers />
+
+      {/* Upcoming Events */}
+      <UpcomingEvents />
 
       {/* Development Popup */}
       {selectedDevelopment && (
