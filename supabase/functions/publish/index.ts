@@ -98,11 +98,11 @@ Deno.serve(async (req) => {
     // Check if we should recompute hottest unit
     const { data: hottest } = await supabase
       .from('hottest_unit')
-      .select('override')
+      .select('manual_override')
       .eq('dev_id', dev_id)
-      .single();
+      .maybeSingle();
 
-    if (!hottest || !hottest.override) {
+    if (!hottest || !hottest.manual_override) {
       console.log('[publish] triggering hot-auto', { dev_id });
       await supabase.functions.invoke('hot-auto', {
         body: { dev_id },

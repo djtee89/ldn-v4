@@ -46,6 +46,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 }) => {
   const [units, setUnits] = useState<Unit[]>([]);
   const [loadingUnits, setLoadingUnits] = useState(false);
+  const [hottestUnit, setHottestUnit] = useState<Unit | null>(null);
+  const [loadingHottest, setLoadingHottest] = useState(false);
   const {
     toast
   } = useToast();
@@ -64,7 +66,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
     if (isKRP) {
       loadUnits();
     }
-  }, [isKRP]);
+    loadHottestUnit();
+  }, [isKRP, development.id]);
   const loadUnits = async () => {
     setLoadingUnits(true);
     try {
@@ -82,6 +85,35 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
       console.error('Error loading units:', error);
     } finally {
       setLoadingUnits(false);
+    }
+  };
+
+  const loadHottestUnit = async () => {
+    setLoadingHottest(true);
+    try {
+      const { data: hottest, error: hottestError } = await supabase
+        .from('hottest_unit')
+        .select('unit_id')
+        .eq('dev_id', development.id)
+        .maybeSingle();
+
+      if (hottestError) throw hottestError;
+
+      if (hottest?.unit_id) {
+        const { data: unit, error: unitError } = await supabase
+          .from('units')
+          .select('*')
+          .eq('id', hottest.unit_id)
+          .single();
+
+        if (!unitError && unit) {
+          setHottestUnit(unit);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading hottest unit:', error);
+    } finally {
+      setLoadingHottest(false);
     }
   };
   const handleShare = () => {
@@ -155,6 +187,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             <TabsList className="w-full justify-start overflow-x-auto flex-nowrap min-w-max">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="about">About</TabsTrigger>
+              <TabsTrigger value="hottest">🔥 Hottest Unit</TabsTrigger>
               <TabsTrigger value="availability">Availability</TabsTrigger>
               <TabsTrigger value="amenities">Amenities</TabsTrigger>
               <TabsTrigger value="transport">Transport</TabsTrigger>
@@ -360,6 +393,90 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               {isKRP && <div className="pt-4">
                   <KrpAskBox />
                 </div>}
+            </TabsContent>
+
+            {/* Hottest Unit Tab */}
+            <TabsContent value="hottest" className="mt-0">
+              {loadingHottest ? (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <p className="text-muted-foreground">Loading hottest unit...</p>
+                  </CardContent>
+                </Card>
+              ) : hottestUnit ? (
+                <Card className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-500/20">
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-3xl">🔥</span>
+                      <h3 className="text-2xl font-bold">Hottest Deal Right Now</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="bg-background/80 backdrop-blur-sm p-4 rounded-lg border">
+                        <p className="text-sm text-muted-foreground mb-1">Unit</p>
+                        <p className="text-xl font-bold">{hottestUnit.unit_number}</p>
+                      </div>
+                      <div className="bg-background/80 backdrop-blur-sm p-4 rounded-lg border">
+                        <p className="text-sm text-muted-foreground mb-1">Bedrooms</p>
+                        <p className="text-xl font-bold">{hottestUnit.beds}</p>
+                      </div>
+                      <div className="bg-background/80 backdrop-blur-sm p-4 rounded-lg border">
+                        <p className="text-sm text-muted-foreground mb-1">Size</p>
+                        <p className="text-xl font-bold">{hottestUnit.size_sqft.toLocaleString()} sq ft</p>
+                      </div>
+                      <div className="bg-background/80 backdrop-blur-sm p-4 rounded-lg border">
+                        <p className="text-sm text-muted-foreground mb-1">Price</p>
+                        <p className="text-xl font-bold text-primary">£{hottestUnit.price.toLocaleString()}</p>
+                      </div>
+                    </div>
+
+                    {(hottestUnit.building || hottestUnit.floor || hottestUnit.aspect) && (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        {hottestUnit.building && (
+                          <div className="bg-background/60 p-3 rounded-lg">
+                            <p className="text-xs text-muted-foreground">Building</p>
+                            <p className="font-medium">{hottestUnit.building}</p>
+                          </div>
+                        )}
+                        {hottestUnit.floor !== null && hottestUnit.floor !== undefined && (
+                          <div className="bg-background/60 p-3 rounded-lg">
+                            <p className="text-xs text-muted-foreground">Floor</p>
+                            <p className="font-medium">{hottestUnit.floor}</p>
+                          </div>
+                        )}
+                        {hottestUnit.aspect && (
+                          <div className="bg-background/60 p-3 rounded-lg">
+                            <p className="text-xs text-muted-foreground">Aspect</p>
+                            <p className="font-medium">{hottestUnit.aspect}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="pt-4 flex gap-3">
+                      <Button onClick={onBookViewing} className="flex-1" size="lg">
+                        Book Viewing
+                      </Button>
+                      <Button variant="outline" onClick={onBookViewing} className="flex-1" size="lg">
+                        Request Info
+                      </Button>
+                    </div>
+
+                    <p className="text-xs text-center text-muted-foreground mt-4">
+                      This unit offers exceptional value based on price, size, and location within the development
+                    </p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <p className="text-muted-foreground">No hottest unit designated for this development yet.</p>
+                    <Button onClick={onBookViewing} className="mt-4">
+                      View All Available Units
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
 
             {/* Availability Tab */}
