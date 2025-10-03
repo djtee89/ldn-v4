@@ -54,14 +54,6 @@ const MichelinRestaurantsSection = () => {
         {restaurants.map((restaurant, idx) => <RestaurantCard key={idx} restaurant={restaurant} />)}
       </div>
     </div>;
-  return <div className="py-8 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
-      <SectionHeader title="Michelin-Starred Restaurants in London" subtitle="Discover the finest dining experiences in the capital" className="mb-8" />
-      
-      <RestaurantGrid restaurants={threeStars} title="Three Michelin Stars" subtitle="Exceptional cuisine, worth a special journey" />
-      
-      <RestaurantGrid restaurants={twoStars} title="Two Michelin Stars" subtitle="Excellent cooking, worth a detour" />
-      
-      <RestaurantGrid restaurants={oneStars} title="One Michelin Star" subtitle="High quality cooking, worth a stop" />
-    </div>;
+  return;
 };
 export default MichelinRestaurantsSection;
