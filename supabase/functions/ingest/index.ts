@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
     
     const fileBuffer = await file.arrayBuffer();
     const { error: uploadError } = await supabase.storage
-      .from('price-lists')
+      .from('ingest')
       .upload(storagePath, fileBuffer, {
         contentType: file.type,
         upsert: false,
