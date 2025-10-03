@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
-import { Upload, RefreshCw, FileText } from 'lucide-react';
+import { Upload, RefreshCw, FileText, ArrowLeft } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BulkImportTool } from '@/components/BulkImportTool';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -112,6 +113,12 @@ export default function DataPipeline() {
   return (
     <div className="container mx-auto py-8">
       <div className="mb-8">
+        <Button variant="ghost" asChild className="mb-4">
+          <Link to="/admin">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Link>
+        </Button>
         <h1 className="text-3xl font-bold mb-2">Data Pipeline</h1>
         <p className="text-muted-foreground">Upload price lists, bulk import developments, and manage history</p>
       </div>
