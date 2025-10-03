@@ -403,7 +403,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           });
           
           tooltip.setLngLat(coordinates)
-            .setHTML(`<div style="padding: 4px 8px; font-size: 11px;"><strong>${name}</strong></div>`)
+            .setHTML(`<div style="padding: 4px 8px; font-size: 11px;"><strong>${name}</strong>${feature.properties?.description ? `<br/><span style="color: #666; font-size: 10px;">${feature.properties.description}</span>` : ''}</div>`)
             .addTo(map.current!);
             
           map.current!.on('mouseleave', 'amenity-pins', () => {

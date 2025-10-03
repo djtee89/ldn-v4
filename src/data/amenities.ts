@@ -10,6 +10,7 @@ export interface Amenity {
     lng: number;
   };
   walkTime: number; // minutes
+  description?: string; // optional tagline/description
 }
 
 // Color scheme for each amenity type
@@ -700,22 +701,144 @@ export const amenities: Amenity[] = [
   { id: 'michelin-78', name: 'Veeraswamy', type: 'michelin_restaurants', coordinates: { lat: 51.5095, lng: -0.1325 }, walkTime: 7 },
   { id: 'michelin-79', name: 'Wild Honey St James', type: 'michelin_restaurants', coordinates: { lat: 51.5075, lng: -0.1365 }, walkTime: 8 },
 
-  // Culture & Landmarks
-  { id: 'culture-1', name: 'Tate Modern', type: 'culture_landmarks', coordinates: { lat: 51.5076, lng: -0.0994 }, walkTime: 7 },
-  { id: 'culture-2', name: 'Victoria & Albert Museum', type: 'culture_landmarks', coordinates: { lat: 51.4966, lng: -0.1722 }, walkTime: 10 },
-  { id: 'culture-3', name: 'Royal Opera House', type: 'culture_landmarks', coordinates: { lat: 51.5129, lng: -0.1220 }, walkTime: 6 },
-  { id: 'culture-4', name: 'Tower of London', type: 'culture_landmarks', coordinates: { lat: 51.5081, lng: -0.0759 }, walkTime: 9 },
-  { id: 'culture-5', name: 'The Shard', type: 'culture_landmarks', coordinates: { lat: 51.5045, lng: -0.0865 }, walkTime: 8 },
-  { id: 'culture-6', name: 'British Museum', type: 'culture_landmarks', coordinates: { lat: 51.5194, lng: -0.1270 }, walkTime: 7 },
-  { id: 'culture-7', name: 'National Gallery', type: 'culture_landmarks', coordinates: { lat: 51.5089, lng: -0.1283 }, walkTime: 6 },
-  { id: 'culture-8', name: 'Natural History Museum', type: 'culture_landmarks', coordinates: { lat: 51.4967, lng: -0.1764 }, walkTime: 11 },
-  { id: 'culture-9', name: 'Science Museum', type: 'culture_landmarks', coordinates: { lat: 51.4978, lng: -0.1746 }, walkTime: 11 },
-  { id: 'culture-10', name: 'Tate Britain', type: 'culture_landmarks', coordinates: { lat: 51.4910, lng: -0.1278 }, walkTime: 8 },
-  { id: 'culture-11', name: 'The National Theatre', type: 'culture_landmarks', coordinates: { lat: 51.5068, lng: -0.1136 }, walkTime: 7 },
-  { id: 'culture-12', name: 'Shakespeare\'s Globe', type: 'culture_landmarks', coordinates: { lat: 51.5081, lng: -0.0972 }, walkTime: 7 },
-  { id: 'culture-13', name: 'Barbican Centre', type: 'culture_landmarks', coordinates: { lat: 51.5200, lng: -0.0936 }, walkTime: 8 },
-  { id: 'culture-14', name: 'Royal Albert Hall', type: 'culture_landmarks', coordinates: { lat: 51.5009, lng: -0.1773 }, walkTime: 11 },
-  { id: 'culture-15', name: 'Buckingham Palace', type: 'culture_landmarks', coordinates: { lat: 51.5014, lng: -0.1419 }, walkTime: 8 },
+  // Culture & Landmarks (Comprehensive London Attractions)
+  
+  // Royal Palaces & Historic Royal Sites
+  { id: 'culture-1', name: 'Buckingham Palace', type: 'culture_landmarks', coordinates: { lat: 51.5014, lng: -0.1419 }, walkTime: 8, description: "The Queen's official London residence" },
+  { id: 'culture-2', name: 'Tower of London', type: 'culture_landmarks', coordinates: { lat: 51.5081, lng: -0.0759 }, walkTime: 9, description: 'Historic castle and home to the Crown Jewels' },
+  { id: 'culture-3', name: 'Kensington Palace', type: 'culture_landmarks', coordinates: { lat: 51.5055, lng: -0.1877 }, walkTime: 12, description: 'Royal residence and birthplace of Queen Victoria' },
+  { id: 'culture-4', name: 'Hampton Court Palace', type: 'culture_landmarks', coordinates: { lat: 51.4034, lng: -0.3379 }, walkTime: 26, description: "King Henry VIII's grand Tudor palace" },
+  { id: 'culture-5', name: 'Banqueting House', type: 'culture_landmarks', coordinates: { lat: 51.5041, lng: -0.1261 }, walkTime: 7, description: 'Survivor of the Palace of Whitehall fire, with a Rubens ceiling' },
+  { id: 'culture-6', name: 'St. James\'s Palace', type: 'culture_landmarks', coordinates: { lat: 51.5045, lng: -0.1387 }, walkTime: 8, description: 'The most senior royal palace in the UK' },
+  
+  // Government & Law
+  { id: 'culture-7', name: 'Houses of Parliament', type: 'culture_landmarks', coordinates: { lat: 51.4995, lng: -0.1248 }, walkTime: 7, description: 'The seat of the UK Parliament' },
+  { id: 'culture-8', name: 'Elizabeth Tower (Big Ben)', type: 'culture_landmarks', coordinates: { lat: 51.5007, lng: -0.1246 }, walkTime: 7, description: 'The iconic clock tower' },
+  { id: 'culture-9', name: '10 Downing Street', type: 'culture_landmarks', coordinates: { lat: 51.5034, lng: -0.1276 }, walkTime: 7, description: "The Prime Minister's residence" },
+  { id: 'culture-10', name: 'Royal Courts of Justice', type: 'culture_landmarks', coordinates: { lat: 51.5133, lng: -0.1131 }, walkTime: 6, description: 'The High Court and Court of Appeal of England and Wales' },
+  { id: 'culture-11', name: 'The Old Bailey', type: 'culture_landmarks', coordinates: { lat: 51.5153, lng: -0.1024 }, walkTime: 7, description: "England's principal criminal court" },
+  { id: 'culture-12', name: 'City Hall', type: 'culture_landmarks', coordinates: { lat: 51.5053, lng: -0.0787 }, walkTime: 9, description: 'The home of the Greater London Authority' },
+  { id: 'culture-13', name: 'The Supreme Court', type: 'culture_landmarks', coordinates: { lat: 51.5064, lng: -0.1278 }, walkTime: 7, description: 'The final court of appeal in the UK' },
+  
+  // Churches, Cathedrals & Abbeys
+  { id: 'culture-14', name: 'Westminster Abbey', type: 'culture_landmarks', coordinates: { lat: 51.4993, lng: -0.1273 }, walkTime: 7, description: 'Royal church, coronation site, and burial place of monarchs' },
+  { id: 'culture-15', name: 'St. Paul\'s Cathedral', type: 'culture_landmarks', coordinates: { lat: 51.5138, lng: -0.0984 }, walkTime: 7, description: "Sir Christopher Wren's masterpiece with its iconic dome" },
+  { id: 'culture-16', name: 'Southwark Cathedral', type: 'culture_landmarks', coordinates: { lat: 51.5062, lng: -0.0905 }, walkTime: 8, description: "London's oldest Gothic church" },
+  { id: 'culture-17', name: 'St Martin-in-the-Fields', type: 'culture_landmarks', coordinates: { lat: 51.5089, lng: -0.1263 }, walkTime: 6, description: 'Famous church and classical music venue on Trafalgar Square' },
+  { id: 'culture-18', name: 'Temple Church', type: 'culture_landmarks', coordinates: { lat: 51.5125, lng: -0.1101 }, walkTime: 6, description: 'Historic round church of the Knights Templar' },
+  { id: 'culture-19', name: 'Westminster Cathedral', type: 'culture_landmarks', coordinates: { lat: 51.4956, lng: -0.1395 }, walkTime: 8, description: 'The mother church of the Catholic Church in England and Wales' },
+  { id: 'culture-20', name: 'Brompton Oratory', type: 'culture_landmarks', coordinates: { lat: 51.4947, lng: -0.1669 }, walkTime: 10, description: 'Large Neo-classical Roman Catholic church' },
+  { id: 'culture-21', name: 'Neasden Temple', type: 'culture_landmarks', coordinates: { lat: 51.5611, lng: -0.2595 }, walkTime: 17, description: 'Intricately carved Hindu temple' },
+  
+  // Museums
+  { id: 'culture-22', name: 'British Museum', type: 'culture_landmarks', coordinates: { lat: 51.5194, lng: -0.1270 }, walkTime: 7, description: 'World-famous museum of human history and culture' },
+  { id: 'culture-23', name: 'Natural History Museum', type: 'culture_landmarks', coordinates: { lat: 51.4967, lng: -0.1764 }, walkTime: 11, description: 'Home to life and earth science specimens' },
+  { id: 'culture-24', name: 'Victoria and Albert Museum', type: 'culture_landmarks', coordinates: { lat: 51.4966, lng: -0.1722 }, walkTime: 10, description: "The world's leading museum of art, design, and performance" },
+  { id: 'culture-25', name: 'Science Museum', type: 'culture_landmarks', coordinates: { lat: 51.4978, lng: -0.1746 }, walkTime: 11, description: 'Museum dedicated to science and technology' },
+  { id: 'culture-26', name: 'Tate Modern', type: 'culture_landmarks', coordinates: { lat: 51.5076, lng: -0.0994 }, walkTime: 7, description: "Britain's national gallery of international modern art" },
+  { id: 'culture-27', name: 'Tate Britain', type: 'culture_landmarks', coordinates: { lat: 51.4910, lng: -0.1278 }, walkTime: 8, description: 'Home of British art from 1500 to the present day' },
+  { id: 'culture-28', name: 'National Gallery', type: 'culture_landmarks', coordinates: { lat: 51.5089, lng: -0.1283 }, walkTime: 6, description: 'Houses a collection of over 2,300 paintings from the mid-13th century' },
+  { id: 'culture-29', name: 'Imperial War Museum', type: 'culture_landmarks', coordinates: { lat: 51.4960, lng: -0.1087 }, walkTime: 9, description: 'Museum of modern warfare and conflict' },
+  { id: 'culture-30', name: 'National Maritime Museum', type: 'culture_landmarks', coordinates: { lat: 51.4808, lng: -0.0057 }, walkTime: 18, description: 'The leading maritime museum of the UK' },
+  { id: 'culture-31', name: 'Churchill War Rooms', type: 'culture_landmarks', coordinates: { lat: 51.5022, lng: -0.1293 }, walkTime: 7, description: 'Historic underground complex that housed a British government command centre during WWII' },
+  { id: 'culture-32', name: 'Museum of London', type: 'culture_landmarks', coordinates: { lat: 51.5177, lng: -0.0968 }, walkTime: 8, description: 'Documents the history of London from prehistoric to modern times' },
+  { id: 'culture-33', name: 'Sir John Soane\'s Museum', type: 'culture_landmarks', coordinates: { lat: 51.5172, lng: -0.1174 }, walkTime: 6, description: 'Historic house, museum, and library of neo-classical architect Sir John Soane' },
+  { id: 'culture-34', name: 'Wallace Collection', type: 'culture_landmarks', coordinates: { lat: 51.5176, lng: -0.1535 }, walkTime: 10, description: 'National museum in a historic townhouse with a world-class art collection' },
+  { id: 'culture-35', name: 'Design Museum', type: 'culture_landmarks', coordinates: { lat: 51.4995, lng: -0.2029 }, walkTime: 12, description: 'Museum devoted to contemporary design' },
+  { id: 'culture-36', name: 'London Transport Museum', type: 'culture_landmarks', coordinates: { lat: 51.5120, lng: -0.1212 }, walkTime: 6, description: 'Explores the story of London and its transport system' },
+  { id: 'culture-37', name: 'National Portrait Gallery', type: 'culture_landmarks', coordinates: { lat: 51.5095, lng: -0.1284 }, walkTime: 6, description: 'Houses portraits of historically important and famous British people' },
+  { id: 'culture-38', name: 'British Library', type: 'culture_landmarks', coordinates: { lat: 51.5298, lng: -0.1270 }, walkTime: 9, description: 'The national library of the United Kingdom' },
+  { id: 'culture-39', name: 'Wellcome Collection', type: 'culture_landmarks', coordinates: { lat: 51.5259, lng: -0.1338 }, walkTime: 9, description: 'A museum exploring health and the human experience' },
+  { id: 'culture-40', name: 'Sherlock Holmes Museum', type: 'culture_landmarks', coordinates: { lat: 51.5238, lng: -0.1586 }, walkTime: 10, description: 'Museum dedicated to the famous fictional detective at 221B Baker Street' },
+  { id: 'culture-41', name: 'Charles Dickens Museum', type: 'culture_landmarks', coordinates: { lat: 51.5249, lng: -0.1178 }, walkTime: 8, description: "Author's former London home" },
+  
+  // Iconic Buildings & Structures
+  { id: 'culture-42', name: 'The Shard', type: 'culture_landmarks', coordinates: { lat: 51.5045, lng: -0.0865 }, walkTime: 8, description: "London's tallest building with viewing platforms" },
+  { id: 'culture-43', name: 'The Gherkin', type: 'culture_landmarks', coordinates: { lat: 51.5144, lng: -0.0803 }, walkTime: 9, description: 'Distinctive contemporary skyscraper' },
+  { id: 'culture-44', name: 'The Walkie-Talkie', type: 'culture_landmarks', coordinates: { lat: 51.5112, lng: -0.0833 }, walkTime: 9, description: 'Skyscraper with the Sky Garden at its top' },
+  { id: 'culture-45', name: 'Leadenhall Market', type: 'culture_landmarks', coordinates: { lat: 51.5129, lng: -0.0828 }, walkTime: 9, description: 'Ornate Victorian covered market' },
+  { id: 'culture-46', name: 'Lloyd\'s Building', type: 'culture_landmarks', coordinates: { lat: 51.5132, lng: -0.0813 }, walkTime: 9, description: 'Innovative "inside-out" architectural design' },
+  { id: 'culture-47', name: 'St Pancras Station', type: 'culture_landmarks', coordinates: { lat: 51.5308, lng: -0.1263 }, walkTime: 9, description: 'Victorian Gothic railway station and hotel' },
+  { id: 'culture-48', name: 'King\'s Cross Station', type: 'culture_landmarks', coordinates: { lat: 51.5309, lng: -0.1238 }, walkTime: 9, description: 'Famous for its modern concourse and Platform 9¾' },
+  { id: 'culture-49', name: 'Battersea Power Station', type: 'culture_landmarks', coordinates: { lat: 51.4817, lng: -0.1447 }, walkTime: 12, description: 'Iconic Art Deco former power station, now a retail and leisure complex' },
+  { id: 'culture-50', name: 'Barbican Centre', type: 'culture_landmarks', coordinates: { lat: 51.5200, lng: -0.0936 }, walkTime: 8, description: 'Brutalist performing arts centre and estate' },
+  { id: 'culture-51', name: 'Tower Bridge', type: 'culture_landmarks', coordinates: { lat: 51.5055, lng: -0.0754 }, walkTime: 9, description: 'Famous Victorian bascule and suspension bridge' },
+  { id: 'culture-52', name: 'Millennium Bridge', type: 'culture_landmarks', coordinates: { lat: 51.5096, lng: -0.0987 }, walkTime: 7, description: 'Steel suspension bridge for pedestrians' },
+  { id: 'culture-53', name: 'Westminster Bridge', type: 'culture_landmarks', coordinates: { lat: 51.5007, lng: -0.1219 }, walkTime: 7, description: 'Provides classic views of the Houses of Parliament' },
+  { id: 'culture-54', name: 'London Eye', type: 'culture_landmarks', coordinates: { lat: 51.5033, lng: -0.1195 }, walkTime: 7, description: 'Cantilevered observation wheel on the South Bank' },
+  { id: 'culture-55', name: 'Somerset House', type: 'culture_landmarks', coordinates: { lat: 51.5111, lng: -0.1172 }, walkTime: 6, description: 'Large Neoclassical building with a central courtyard hosting events' },
+  
+  // Parks, Gardens & Open Spaces
+  { id: 'culture-56', name: 'Hyde Park', type: 'culture_landmarks', coordinates: { lat: 51.5074, lng: -0.1657 }, walkTime: 10, description: "One of London's largest Royal Parks" },
+  { id: 'culture-57', name: 'Regent\'s Park', type: 'culture_landmarks', coordinates: { lat: 51.5311, lng: -0.1571 }, walkTime: 11, description: 'Royal Park with gardens and London Zoo' },
+  { id: 'culture-58', name: 'St. James\'s Park', type: 'culture_landmarks', coordinates: { lat: 51.5033, lng: -0.1347 }, walkTime: 8, description: 'Park with a lake and views of Buckingham Palace' },
+  { id: 'culture-59', name: 'Kew Gardens', type: 'culture_landmarks', coordinates: { lat: 51.4777, lng: -0.2929 }, walkTime: 19, description: 'World-famous botanical gardens' },
+  { id: 'culture-60', name: 'Richmond Park', type: 'culture_landmarks', coordinates: { lat: 51.4509, lng: -0.2856 }, walkTime: 22, description: 'The largest Royal Park, known for its deer' },
+  { id: 'culture-61', name: 'Greenwich Park', type: 'culture_landmarks', coordinates: { lat: 51.4769, lng: 0.0005 }, walkTime: 18, description: 'Royal Park with incredible views over London' },
+  { id: 'culture-62', name: 'Hampstead Heath', type: 'culture_landmarks', coordinates: { lat: 51.5570, lng: -0.1582 }, walkTime: 14, description: 'Large, ancient heath with swimming ponds' },
+  { id: 'culture-63', name: 'Holland Park', type: 'culture_landmarks', coordinates: { lat: 51.5026, lng: -0.2030 }, walkTime: 12, description: 'Park with the Kyoto Garden' },
+  
+  // Squares & Famous Streets
+  { id: 'culture-64', name: 'Trafalgar Square', type: 'culture_landmarks', coordinates: { lat: 51.5080, lng: -0.1280 }, walkTime: 6, description: "Public square with Nelson's Column and fountains" },
+  { id: 'culture-65', name: 'Piccadilly Circus', type: 'culture_landmarks', coordinates: { lat: 51.5101, lng: -0.1340 }, walkTime: 7, description: 'Famous for its video display and neon signs' },
+  { id: 'culture-66', name: 'Leicester Square', type: 'culture_landmarks', coordinates: { lat: 51.5103, lng: -0.1301 }, walkTime: 7, description: "The heart of London's cinema land" },
+  { id: 'culture-67', name: 'Covent Garden Piazza', type: 'culture_landmarks', coordinates: { lat: 51.5120, lng: -0.1225 }, walkTime: 6, description: 'Shopping and entertainment hub' },
+  { id: 'culture-68', name: 'Abbey Road', type: 'culture_landmarks', coordinates: { lat: 51.5319, lng: -0.1776 }, walkTime: 12, description: "Famous for the Beatles' album cover and zebra crossing" },
+  { id: 'culture-69', name: 'Carnaby Street', type: 'culture_landmarks', coordinates: { lat: 51.5135, lng: -0.1398 }, walkTime: 8, description: 'Iconic shopping street of 1960s "Swinging London"' },
+  { id: 'culture-70', name: 'The Mall', type: 'culture_landmarks', coordinates: { lat: 51.5045, lng: -0.1363 }, walkTime: 8, description: 'Ceremonial route leading to Buckingham Palace' },
+  { id: 'culture-71', name: 'Brick Lane', type: 'culture_landmarks', coordinates: { lat: 51.5219, lng: -0.0714 }, walkTime: 10, description: 'Known for its curry houses, street art, and markets' },
+  { id: 'culture-72', name: 'Portobello Road', type: 'culture_landmarks', coordinates: { lat: 51.5171, lng: -0.2058 }, walkTime: 13, description: 'Famous for its antiques market' },
+  
+  // Monuments & Statues
+  { id: 'culture-73', name: 'Nelson\'s Column', type: 'culture_landmarks', coordinates: { lat: 51.5080, lng: -0.1280 }, walkTime: 6, description: 'Monument in Trafalgar Square' },
+  { id: 'culture-74', name: 'Wellington Arch', type: 'culture_landmarks', coordinates: { lat: 51.5025, lng: -0.1515 }, walkTime: 9, description: 'Triumphal arch at Hyde Park Corner' },
+  { id: 'culture-75', name: 'Marble Arch', type: 'culture_landmarks', coordinates: { lat: 51.5131, lng: -0.1589 }, walkTime: 10, description: '19th-century white marble triumphal arch' },
+  { id: 'culture-76', name: 'The Cenotaph', type: 'culture_landmarks', coordinates: { lat: 51.5033, lng: -0.1268 }, walkTime: 7, description: "The UK's primary national war memorial" },
+  { id: 'culture-77', name: 'Victoria Memorial', type: 'culture_landmarks', coordinates: { lat: 51.5015, lng: -0.1408 }, walkTime: 8, description: 'Large monument to Queen Victoria outside Buckingham Palace' },
+  { id: 'culture-78', name: 'Albert Memorial', type: 'culture_landmarks', coordinates: { lat: 51.5028, lng: -0.1774 }, walkTime: 11, description: 'Ornate monument to Prince Albert in Kensington Gardens' },
+  { id: 'culture-79', name: 'The Monument', type: 'culture_landmarks', coordinates: { lat: 51.5102, lng: -0.0859 }, walkTime: 9, description: 'Doric column commemorating the Great Fire of London' },
+  { id: 'culture-80', name: 'Cleopatra\'s Needle', type: 'culture_landmarks', coordinates: { lat: 51.5087, lng: -0.1203 }, walkTime: 6, description: 'Ancient Egyptian obelisk on the Victoria Embankment' },
+  
+  // Theatres & Performance Venues
+  { id: 'culture-81', name: 'Shakespeare\'s Globe', type: 'culture_landmarks', coordinates: { lat: 51.5081, lng: -0.0972 }, walkTime: 7, description: 'Reconstruction of the original Globe Theatre' },
+  { id: 'culture-82', name: 'Royal Opera House', type: 'culture_landmarks', coordinates: { lat: 51.5129, lng: -0.1220 }, walkTime: 6, description: 'Major performing arts venue in Covent Garden' },
+  { id: 'culture-83', name: 'Royal Albert Hall', type: 'culture_landmarks', coordinates: { lat: 51.5009, lng: -0.1773 }, walkTime: 11, description: 'Iconic concert hall in South Kensington' },
+  { id: 'culture-84', name: 'The Old Vic', type: 'culture_landmarks', coordinates: { lat: 51.5013, lng: -0.1087 }, walkTime: 8, description: 'Historic theatre near Waterloo Station' },
+  { id: 'culture-85', name: 'Sadler\'s Wells', type: 'culture_landmarks', coordinates: { lat: 51.5292, lng: -0.1063 }, walkTime: 10, description: 'World-leading dance venue' },
+  { id: 'culture-86', name: 'National Theatre', type: 'culture_landmarks', coordinates: { lat: 51.5068, lng: -0.1136 }, walkTime: 7, description: 'Major publicly funded performing arts venue on the South Bank' },
+  { id: 'culture-87', name: 'London Palladium', type: 'culture_landmarks', coordinates: { lat: 51.5148, lng: -0.1405 }, walkTime: 8, description: 'World-famous variety theatre' },
+  { id: 'culture-88', name: 'Theatre Royal, Drury Lane', type: 'culture_landmarks', coordinates: { lat: 51.5132, lng: -0.1208 }, walkTime: 6, description: 'The oldest theatre site in London in continuous use' },
+  { id: 'culture-89', name: 'Ronnie Scott\'s Jazz Club', type: 'culture_landmarks', coordinates: { lat: 51.5132, lng: -0.1319 }, walkTime: 7, description: 'Famous jazz club in Soho' },
+  { id: 'culture-90', name: 'Wigmore Hall', type: 'culture_landmarks', coordinates: { lat: 51.5178, lng: -0.1493 }, walkTime: 9, description: 'Leading international recital venue' },
+  
+  // Markets
+  { id: 'culture-91', name: 'Borough Market', type: 'culture_landmarks', coordinates: { lat: 51.5055, lng: -0.0910 }, walkTime: 8, description: "London's most renowned food market" },
+  { id: 'culture-92', name: 'Camden Market', type: 'culture_landmarks', coordinates: { lat: 51.5415, lng: -0.1467 }, walkTime: 12, description: 'Famous for its alternative fashion and diverse stalls' },
+  { id: 'culture-93', name: 'Portobello Market', type: 'culture_landmarks', coordinates: { lat: 51.5171, lng: -0.2058 }, walkTime: 13, description: "World's largest antiques market" },
+  { id: 'culture-94', name: 'Covent Garden Market', type: 'culture_landmarks', coordinates: { lat: 51.5120, lng: -0.1225 }, walkTime: 6, description: 'Historic market building with shops and stalls' },
+  { id: 'culture-95', name: 'Greenwich Market', type: 'culture_landmarks', coordinates: { lat: 51.4816, lng: -0.0098 }, walkTime: 18, description: 'Covered market with arts, crafts, and food' },
+  { id: 'culture-96', name: 'Old Spitalfields Market', type: 'culture_landmarks', coordinates: { lat: 51.5197, lng: -0.0747 }, walkTime: 10, description: 'Covered market with fashion, food, and art' },
+  { id: 'culture-97', name: 'Columbia Road Flower Market', type: 'culture_landmarks', coordinates: { lat: 51.5305, lng: -0.0688 }, walkTime: 11, description: 'Vibrant street market open on Sundays' },
+  
+  // Maritime, Science & Education
+  { id: 'culture-98', name: 'Cutty Sark', type: 'culture_landmarks', coordinates: { lat: 51.4826, lng: -0.0096 }, walkTime: 18, description: 'Historic sailing ship in Greenwich' },
+  { id: 'culture-99', name: 'HMS Belfast', type: 'culture_landmarks', coordinates: { lat: 51.5065, lng: -0.0814 }, walkTime: 9, description: 'Museum ship, formerly a Royal Navy light cruiser' },
+  { id: 'culture-100', name: 'Royal Observatory Greenwich', type: 'culture_landmarks', coordinates: { lat: 51.4769, lng: -0.0005 }, walkTime: 18, description: 'Location of the Prime Meridian Line' },
+  { id: 'culture-101', name: 'London Zoo', type: 'culture_landmarks', coordinates: { lat: 51.5353, lng: -0.1536 }, walkTime: 12, description: "The world's oldest scientific zoo" },
+  { id: 'culture-102', name: 'Sea Life London Aquarium', type: 'culture_landmarks', coordinates: { lat: 51.5014, lng: -0.1195 }, walkTime: 7, description: 'On the South Bank' },
+  { id: 'culture-103', name: 'Royal Academy of Arts', type: 'culture_landmarks', coordinates: { lat: 51.5095, lng: -0.1394 }, walkTime: 8, description: 'Art institution based in Burlington House' },
+  
+  // Other Notable Landmarks
+  { id: 'culture-104', name: 'Chinatown', type: 'culture_landmarks', coordinates: { lat: 51.5113, lng: -0.1309 }, walkTime: 7, description: 'Area with Chinese restaurants, shops, and gates' },
+  { id: 'culture-105', name: 'Little Venice', type: 'culture_landmarks', coordinates: { lat: 51.5230, lng: -0.1835 }, walkTime: 12, description: 'Picturesque canal area in Maida Vale' },
+  { id: 'culture-106', name: 'Highgate Cemetery', type: 'culture_landmarks', coordinates: { lat: 51.5671, lng: -0.1461 }, walkTime: 15, description: 'Historic cemetery and nature reserve, burial place of Karl Marx' },
+  { id: 'culture-107', name: 'Harrods', type: 'culture_landmarks', coordinates: { lat: 51.4994, lng: -0.1632 }, walkTime: 10, description: 'World-famous luxury department store' },
+  { id: 'culture-108', name: 'Fortnum & Mason', type: 'culture_landmarks', coordinates: { lat: 51.5076, lng: -0.1377 }, walkTime: 8, description: 'Upscale department store in Piccadilly' },
+  { id: 'culture-109', name: 'Wimbledon', type: 'culture_landmarks', coordinates: { lat: 51.4342, lng: -0.2141 }, walkTime: 18, description: 'Home of the Wimbledon Championships' },
+  { id: 'culture-110', name: 'Lord\'s Cricket Ground', type: 'culture_landmarks', coordinates: { lat: 51.5295, lng: -0.1728 }, walkTime: 12, description: 'The "Home of Cricket"' },
+  { id: 'culture-111', name: 'Wembley Stadium', type: 'culture_landmarks', coordinates: { lat: 51.5560, lng: -0.2795 }, walkTime: 18, description: 'National football stadium' },
+  { id: 'culture-112', name: 'Canary Wharf', type: 'culture_landmarks', coordinates: { lat: 51.5051, lng: -0.0193 }, walkTime: 13, description: 'Major business district with modern skyscrapers' },
+  { id: 'culture-113', name: 'Wilton\'s Music Hall', type: 'culture_landmarks', coordinates: { lat: 51.5131, lng: -0.0616 }, walkTime: 10, description: "The world's oldest surviving grand music hall" },
 
   // Shopping & Lifestyle
   { id: 'shopping-1', name: 'Harrods', type: 'shopping_lifestyle', coordinates: { lat: 51.4994, lng: -0.1632 }, walkTime: 10 },
