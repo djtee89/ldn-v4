@@ -14,20 +14,33 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
 
   const fallbackImage = "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&h=800&fit=crop";
   
+  // Parse images if they're JSON strings
+  const parsedImages = images?.map((img: any) => {
+    if (typeof img === 'string') {
+      try {
+        const parsed = JSON.parse(img);
+        return parsed.sources?.[0]?.src || parsed.src || img;
+      } catch {
+        return img;
+      }
+    }
+    return img.sources?.[0]?.src || img.src || img;
+  }) || [];
+  
   const handleImageError = (index: number) => {
     setImageErrors(prev => new Set(prev).add(index));
   };
   
   const getImageSrc = (index: number) => {
-    return imageErrors.has(index) ? fallbackImage : images[index];
+    return imageErrors.has(index) ? fallbackImage : parsedImages[index];
   };
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? parsedImages.length - 1 : prev - 1));
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === parsedImages.length - 1 ? 0 : prev + 1));
   };
 
   useEffect(() => {
@@ -42,7 +55,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
   }, [lightboxOpen, currentIndex]);
 
   const visibleThumbs = 8;
-  const startThumb = Math.max(0, Math.min(currentIndex - Math.floor(visibleThumbs / 2), images.length - visibleThumbs));
+  const startThumb = Math.max(0, Math.min(currentIndex - Math.floor(visibleThumbs / 2), parsedImages.length - visibleThumbs));
 
   return (
     <>
@@ -78,13 +91,13 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
 
           {/* Image Counter */}
           <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-            Image {currentIndex + 1} of {images.length}
+            Image {currentIndex + 1} of {parsedImages.length}
           </div>
         </div>
 
         {/* Thumbnail Strip */}
         <div className="flex gap-1.5 overflow-x-auto snap-x snap-mandatory pb-1">
-          {images.slice(startThumb, startThumb + visibleThumbs).map((img, idx) => {
+          {parsedImages.slice(startThumb, startThumb + visibleThumbs).map((img, idx) => {
             const actualIndex = startThumb + idx;
             return (
               <button
@@ -156,7 +169,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images, name }) => {
           </Button>
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white text-sm px-3 py-1.5 rounded">
-            {currentIndex + 1} / {images.length}
+            {currentIndex + 1} / {parsedImages.length}
           </div>
         </div>
       )}
