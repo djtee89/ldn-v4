@@ -23,7 +23,6 @@ export default function DataPipeline() {
       const { data, error } = await supabase
         .from('developments')
         .select('id, name, developer')
-        .eq('status', 'active')
         .order('name');
       if (error) throw error;
       return data;
