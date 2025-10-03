@@ -4,10 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Upload, AlertCircle, LogOut, Activity, Search } from 'lucide-react';
+import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Upload, AlertCircle, LogOut, Activity, Search, Database, FileText, Edit } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { DedupeDialog } from '@/components/DedupeDialog';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 
 type Booking = {
   id: string;
@@ -31,6 +32,21 @@ type DashboardStats = {
   pendingBookings: number;
 };
 
+type RecentActivity = {
+  id: string;
+  dev_id: string;
+  received_at: string;
+  notes: string | null;
+};
+
+type RecentChange = {
+  id: string;
+  dev_id: string;
+  change_type: string;
+  changed_at: string;
+  notes: string | null;
+};
+
 export default function Admin() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
@@ -42,6 +58,9 @@ export default function Admin() {
   });
   const [loading, setLoading] = useState(true);
   const [visiblePII, setVisiblePII] = useState<Set<string>>(new Set());
+  const [dedupeOpen, setDedupeOpen] = useState(false);
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
+  const [recentChanges, setRecentChanges] = useState<RecentChange[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -109,9 +128,32 @@ export default function Admin() {
     }
   };
 
+  const fetchRecentActivity = async () => {
+    try {
+      const [priceListsResult, changesResult] = await Promise.all([
+        supabase
+          .from('price_lists')
+          .select('id, dev_id, received_at, notes')
+          .order('received_at', { ascending: false })
+          .limit(5),
+        supabase
+          .from('change_log')
+          .select('id, dev_id, change_type, changed_at, notes')
+          .order('changed_at', { ascending: false })
+          .limit(5),
+      ]);
+
+      if (priceListsResult.data) setRecentActivities(priceListsResult.data);
+      if (changesResult.data) setRecentChanges(changesResult.data);
+    } catch (error) {
+      console.error('Error fetching recent activity:', error);
+    }
+  };
+
   useEffect(() => {
     fetchStats();
     fetchBookings();
+    fetchRecentActivity();
 
     const channel = supabase
       .channel('schema-db-changes')
@@ -250,16 +292,110 @@ export default function Admin() {
         </div>
 
 
-        {/* Admin Navigation */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          <Button 
-            variant="default" 
-            onClick={() => navigate('/admin/developments')}
-            className="gap-2"
-          >
-            <Building2 className="h-4 w-4" />
-            Manage Developments
-          </Button>
+        {/* Tools & Utilities Section */}
+        <div className="mb-6">
+          <SectionHeader 
+            title="Tools & Utilities"
+            subtitle="Data management and backend access"
+            className="mb-4"
+          />
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="cursor-pointer hover:bg-muted/50" onClick={() => setDedupeOpen(true)}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Search className="h-5 w-5" />
+                  Find Duplicates
+                </CardTitle>
+                <CardDescription>Detect and merge duplicate developments</CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="cursor-pointer hover:bg-muted/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Database className="h-5 w-5" />
+                  View Backend
+                </CardTitle>
+                <CardDescription>Access database and storage directly</CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="opacity-50 cursor-not-allowed">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Edit className="h-5 w-5" />
+                  User Permissions
+                </CardTitle>
+                <CardDescription>Manage admin & manager roles (coming soon)</CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+
+        {/* Recent Activity Section */}
+        <div className="mb-6">
+          <SectionHeader 
+            title="Recent Activity"
+            subtitle="Latest price lists and changes"
+            className="mb-4"
+          />
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Upload className="h-4 w-4" />
+                  Recent Price Lists
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {recentActivities.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No recent uploads</p>
+                ) : (
+                  <div className="space-y-3">
+                    {recentActivities.map((activity) => (
+                      <div key={activity.id} className="flex items-start justify-between text-sm">
+                        <div>
+                          <div className="font-medium">{activity.dev_id}</div>
+                          {activity.notes && <div className="text-xs text-muted-foreground">{activity.notes}</div>}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(activity.received_at).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  Recent Changes
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {recentChanges.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No recent changes</p>
+                ) : (
+                  <div className="space-y-3">
+                    {recentChanges.map((change) => (
+                      <div key={change.id} className="flex items-start justify-between text-sm">
+                        <div>
+                          <div className="font-medium">{change.dev_id}</div>
+                          <div className="text-xs text-muted-foreground">{change.change_type}</div>
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(change.changed_at).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Bookings Section */}
@@ -380,6 +516,8 @@ export default function Admin() {
           )}
         </div>
       </div>
+
+      <DedupeDialog open={dedupeOpen} onOpenChange={setDedupeOpen} />
     </div>
   );
 }
