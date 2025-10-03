@@ -323,7 +323,22 @@ export type Database = {
           source?: string
           uploaded_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "price_lists_dev_id_fkey"
+            columns: ["dev_id"]
+            isOneToOne: false
+            referencedRelation: "developments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "price_lists_dev_id_fkey"
+            columns: ["dev_id"]
+            isOneToOne: false
+            referencedRelation: "developments_public"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       publishes: {
         Row: {

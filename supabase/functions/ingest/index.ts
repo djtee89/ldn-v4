@@ -35,9 +35,10 @@ interface IngestRequest {
 }
 
 interface DiffResult {
-  new_units: number;
-  updated_units: number;
-  removed_units: number;
+  added: number;
+  updated: number;
+  removed: number;
+  errors: number;
   price_changes: Array<{ unit_code: string; old_price: number; new_price: number }>;
   status_changes: Array<{ unit_code: string; old_status: string; new_status: string }>;
   error_rate: number;
@@ -283,20 +284,27 @@ Deno.serve(async (req) => {
     const newMap = new Map(rows.map(r => [r.unit_code, r]));
 
     const diff: DiffResult = {
-      new_units: 0,
-      updated_units: 0,
-      removed_units: 0,
+      added: 0,
+      updated: 0,
+      removed: 0,
+      errors: 0,
       price_changes: [],
       status_changes: [],
       error_rate: 0,
       auto_publish: false,
     };
 
-    // Calculate diff
+    // Calculate diff and track errors
     for (const [code, newUnit] of newMap) {
+      // Track parsing errors (missing required fields)
+      if (!code || !newUnit.price || newUnit.beds === 0) {
+        diff.errors++;
+        continue;
+      }
+
       const current = currentMap.get(code);
       if (!current) {
-        diff.new_units++;
+        diff.added++;
       } else {
         if (current.price !== newUnit.price) {
           diff.price_changes.push({
@@ -304,7 +312,7 @@ Deno.serve(async (req) => {
             old_price: current.price,
             new_price: newUnit.price,
           });
-          diff.updated_units++;
+          diff.updated++;
         }
         if (current.status !== newUnit.status) {
           diff.status_changes.push({
@@ -318,18 +326,13 @@ Deno.serve(async (req) => {
 
     for (const code of currentMap.keys()) {
       if (!newMap.has(code)) {
-        diff.removed_units++;
+        diff.removed++;
       }
     }
 
-    // Calculate error rate
-    // For initial uploads (empty dev), only count updates/removals as errors
-    // New units in an empty dev are expected, not errors
-    const totalChanges = currentMap.size === 0 
-      ? diff.updated_units + diff.removed_units 
-      : diff.new_units + diff.updated_units + diff.removed_units;
+    // Calculate error rate (parsing errors + unexpected removals)
     const totalUnits = Math.max(currentMap.size, newMap.size, 1);
-    diff.error_rate = totalChanges / totalUnits;
+    diff.error_rate = (diff.errors + (currentMap.size > 0 ? diff.removed : 0)) / totalUnits;
 
     // Check if auto-publish is safe
     const largePriceChanges = diff.price_changes.filter(pc => {
@@ -361,7 +364,13 @@ Deno.serve(async (req) => {
         success: true,
         price_list_id: priceList.id,
         rows_parsed: rows.length,
-        diff,
+        auto_published: diff.auto_publish,
+        diff: {
+          added: diff.added,
+          updated: diff.updated,
+          removed: diff.removed,
+          errors: diff.errors,
+        },
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
