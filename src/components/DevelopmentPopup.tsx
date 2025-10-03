@@ -261,7 +261,14 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               {/* Zone & Tenure */}
               <div className="flex flex-wrap gap-3">
                 <Badge className="px-4 py-2 text-base">Zone {development.zone}</Badge>
-                <Badge variant="secondary" className="px-4 py-2 text-base">{development.tenure}</Badge>
+                <Badge variant="secondary" className="px-4 py-2 text-base">
+                  {development.tenure}
+                  {units && units.length > 0 && units.some(u => u.service_charge) && (
+                    <span className="ml-2 text-xs opacity-80">
+                      (Service Charge: from £{Math.min(...units.filter(u => u.service_charge).map(u => u.service_charge!)).toLocaleString()}/yr)
+                    </span>
+                  )}
+                </Badge>
                 {isKRP && <Badge variant="secondary" className="px-4 py-2 text-base flex items-center gap-1">
                     <Car className="h-4 w-4" />
                     Underground Parking (2-bed+) • EV Charging
