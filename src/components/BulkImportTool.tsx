@@ -15,6 +15,7 @@ export function BulkImportTool() {
   const [results, setResults] = useState<{
     success: number;
     errors: string[];
+    warnings?: string[];
     enriched?: number;
   } | null>(null);
 
@@ -25,6 +26,8 @@ export function BulkImportTool() {
         name: "Example Development",
         developer: "Example Developer",
         postcode: "SW1A 1AA",
+        lat: "51.5074",
+        lng: "-0.1278",
         borough: "Westminster",
         zone: "1",
         tenure: "Leasehold",
@@ -72,8 +75,18 @@ export function BulkImportTool() {
       }
 
       const errors: string[] = [];
+      const warnings: string[] = [];
       let successCount = 0;
       const importedIds: string[] = [];
+
+      // Helper to find column value with flexible matching
+      const findColumnValue = (row: any, ...columnNames: string[]) => {
+        for (const name of columnNames) {
+          const key = Object.keys(row).find(k => k.toLowerCase() === name.toLowerCase());
+          if (key && row[key]) return row[key];
+        }
+        return null;
+      };
 
       for (const [index, row] of (parsed.data as any[]).entries()) {
         try {
@@ -100,6 +113,31 @@ export function BulkImportTool() {
             if (parsed) prices["4bed"] = parsed;
           }
 
+          // Flexible lat/lng parsing
+          const latValue = findColumnValue(row, 'lat', 'latitude');
+          const lngValue = findColumnValue(row, 'lng', 'longitude', 'long', 'lon');
+          
+          let lat: number | null = null;
+          let lng: number | null = null;
+          
+          if (latValue) {
+            const parsed = parseFloat(latValue);
+            if (!isNaN(parsed) && parsed >= -90 && parsed <= 90) {
+              lat = parsed;
+            } else {
+              warnings.push(`Row ${index + 1} (${row.name}): Invalid latitude "${latValue}" - will use auto-geocoding`);
+            }
+          }
+          
+          if (lngValue) {
+            const parsed = parseFloat(lngValue);
+            if (!isNaN(parsed) && parsed >= -180 && parsed <= 180) {
+              lng = parsed;
+            } else {
+              warnings.push(`Row ${index + 1} (${row.name}): Invalid longitude "${lngValue}" - will use auto-geocoding`);
+            }
+          }
+
           const devData: any = {
             id: row.id?.trim(),
             name: row.name?.trim(),
@@ -108,8 +146,8 @@ export function BulkImportTool() {
             postcode: row.postcode?.trim() || null,
             borough: row.borough?.trim() || null,
             zone: row.zone?.trim() || null,
-            lat: row.lat ? parseFloat(row.lat) : null,
-            lng: row.lng ? parseFloat(row.lng) : null,
+            lat,
+            lng,
             status: row.status?.trim() || 'Available',
             completion_date: row.completion_date?.trim() || null,
             tenure: row.tenure?.trim() || null,
@@ -154,10 +192,13 @@ export function BulkImportTool() {
         }
       }
 
-      setResults({ success: successCount, errors, enriched: enrichedCount });
+      setResults({ success: successCount, errors, enriched: enrichedCount, warnings });
 
       if (successCount > 0) {
         toast.success(`Successfully imported ${successCount} development${successCount > 1 ? 's' : ''}`);
+      }
+      if (warnings.length > 0) {
+        toast.info(`${warnings.length} warning${warnings.length > 1 ? 's' : ''} - check results below`);
       }
       if (errors.length > 0) {
         toast.error(`${errors.length} error${errors.length > 1 ? 's' : ''} occurred during import`);
@@ -186,6 +227,8 @@ export function BulkImportTool() {
           </Button>
           <p className="text-sm text-muted-foreground mt-2">
             Required: <span className="font-medium">id, name, developer, postcode</span>
+            <br />
+            Optional coordinates: <span className="font-medium">lat, lng</span> (or latitude/longitude - auto-geocoded if missing)
             <br />
             Optional prices: <span className="font-medium">studio_from, 1_bed_from, 2_bed_from, 3_bed_from, 4_bed_from</span>
           </p>
@@ -238,6 +281,16 @@ export function BulkImportTool() {
               <p>✓ Successfully imported: {results.success}</p>
               {results.enriched !== undefined && results.enriched > 0 && (
                 <p>✨ Auto-enriched: {results.enriched}</p>
+              )}
+              {results.warnings && results.warnings.length > 0 && (
+                <div>
+                  <p className="text-amber-600 font-semibold mt-2">⚠ Warnings ({results.warnings.length}):</p>
+                  <ul className="list-disc list-inside space-y-1 mt-1">
+                    {results.warnings.map((warning, i) => (
+                      <li key={i} className="text-sm text-amber-600">{warning}</li>
+                    ))}
+                  </ul>
+                </div>
               )}
               {results.errors.length > 0 && (
                 <div>
