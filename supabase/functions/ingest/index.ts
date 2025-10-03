@@ -124,6 +124,7 @@ Deno.serve(async (req) => {
               price: parseFloat(priceMatch[1].replace(/,/g, '')),
               size_sqft: sqftMatch ? parseInt(sqftMatch[1]) : 0,
               status: line.toLowerCase().includes('sold') ? 'Sold' : 'Available',
+              service_charge: null,
             });
           }
         }
@@ -148,6 +149,7 @@ Deno.serve(async (req) => {
                 beds: parseInt(cols[bedsIdx] || '0'),
                 size_sqft: parseInt(cols[sizeIdx] || '0'),
                 status: cols[statusIdx] || 'Available',
+                service_charge: null,
               });
             }
           }
@@ -190,6 +192,9 @@ Deno.serve(async (req) => {
       const statusIdx = headers.findIndex(h => 
         h.includes('status') || h.includes('availability')
       );
+      const serviceChargeIdx = headers.findIndex(h => 
+        h.includes('service') && h.includes('charge')
+      );
 
       for (let i = 1; i < lines.length; i++) {
         const cols = lines[i].split(',').map(c => c.trim());
@@ -214,6 +219,7 @@ Deno.serve(async (req) => {
           beds: bedsValue,
           size_sqft: parseInt(cols[sizeIdx] || '0'),
           status: statusValue,
+          service_charge: serviceChargeIdx >= 0 ? parseFloat(cols[serviceChargeIdx]?.replace(/[£,]/g, '') || '0') : null,
         });
       }
     }
@@ -258,6 +264,7 @@ Deno.serve(async (req) => {
       size_sqft: row.size_sqft,
       price: row.price,
       status: row.status,
+      service_charge: row.service_charge,
     }));
 
     const { error: rowsError } = await supabase
