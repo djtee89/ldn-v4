@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, Eye, Calendar } from 'lucide-react';
 import { Development } from '@/data/newDevelopments';
 import { cn } from '@/lib/utils';
+import { extractAllPrices } from '@/lib/priceParser';
 
 interface PropertyCardProps {
   development: Development;
@@ -25,26 +26,28 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 }) => {
   // Get lowest price
   const getLowestPrice = () => {
+    const extracted = extractAllPrices(development.prices);
     const prices = [
-      development.prices.studio,
-      development.prices.oneBed,
-      development.prices.twoBed,
-      development.prices.threeBed,
-      development.prices.fourBed,
+      extracted.studio,
+      extracted.oneBed,
+      extracted.twoBed,
+      extracted.threeBed,
+      extracted.fourBed,
     ].filter(Boolean);
     
-    if (prices.length > 0) return prices[0];
-    return development.prices.range || 'POA';
+    if (prices.length > 0) return `From ${prices[0]}`;
+    return extracted.range || 'POA';
   };
 
   // Get bedroom types
   const getBedroomInfo = () => {
+    const extracted = extractAllPrices(development.prices);
     const types = [];
-    if (development.prices.studio) types.push('Studio');
-    if (development.prices.oneBed) types.push('1 bed');
-    if (development.prices.twoBed) types.push('2 bed');
-    if (development.prices.threeBed) types.push('3 bed');
-    if (development.prices.fourBed) types.push('4 bed');
+    if (extracted.studio) types.push('Studio');
+    if (extracted.oneBed) types.push('1 bed');
+    if (extracted.twoBed) types.push('2 bed');
+    if (extracted.threeBed) types.push('3 bed');
+    if (extracted.fourBed) types.push('4 bed');
     
     if (types.length === 0) return null;
     if (types.length === 1) return types[0];
