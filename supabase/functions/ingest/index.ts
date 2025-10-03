@@ -123,7 +123,6 @@ Deno.serve(async (req) => {
               price: parseFloat(priceMatch[1].replace(/,/g, '')),
               size_sqft: sqftMatch ? parseInt(sqftMatch[1]) : 0,
               status: line.toLowerCase().includes('sold') ? 'Sold' : 'Available',
-              raw: [line],
             });
           }
         }
@@ -148,7 +147,6 @@ Deno.serve(async (req) => {
                 beds: parseInt(cols[bedsIdx] || '0'),
                 size_sqft: parseInt(cols[sizeIdx] || '0'),
                 status: cols[statusIdx] || 'Available',
-                raw: cols,
               });
             }
           }
@@ -175,23 +173,46 @@ Deno.serve(async (req) => {
       const lines = text.split('\n').filter(l => l.trim());
       const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
       
-      const unitCodeIdx = headers.findIndex(h => h.includes('unit') || h.includes('apt'));
-      const priceIdx = headers.findIndex(h => h.includes('price') || h.includes('asking'));
-      const bedsIdx = headers.findIndex(h => h.includes('bed'));
-      const sizeIdx = headers.findIndex(h => h.includes('sqft') || h.includes('size'));
-      const statusIdx = headers.findIndex(h => h.includes('status'));
+      // Flexible header detection
+      const unitCodeIdx = headers.findIndex(h => 
+        h.includes('unit') || h.includes('apt') || h.includes('home') || h.includes('plot')
+      );
+      const priceIdx = headers.findIndex(h => 
+        h.includes('price') || h.includes('asking')
+      );
+      const bedsIdx = headers.findIndex(h => 
+        h.includes('bed') || h.includes('type')
+      );
+      const sizeIdx = headers.findIndex(h => 
+        h.includes('sqft') || h.includes('size')
+      );
+      const statusIdx = headers.findIndex(h => 
+        h.includes('status') || h.includes('availability')
+      );
 
       for (let i = 1; i < lines.length; i++) {
         const cols = lines[i].split(',').map(c => c.trim());
         if (cols.length < 2) continue;
 
+        // Extract beds from Type column (e.g., "2 Bed" → 2)
+        let bedsValue = 0;
+        if (bedsIdx >= 0 && cols[bedsIdx]) {
+          const bedsMatch = cols[bedsIdx].match(/(\d+)/);
+          bedsValue = bedsMatch ? parseInt(bedsMatch[1]) : 0;
+        }
+
+        // Map "Completed" status to "Available"
+        let statusValue = cols[statusIdx] || 'Available';
+        if (statusValue.toLowerCase() === 'completed') {
+          statusValue = 'Available';
+        }
+
         rows.push({
           unit_code: cols[unitCodeIdx] || '',
           price: parseFloat(cols[priceIdx]?.replace(/[£,]/g, '') || '0'),
-          beds: parseInt(cols[bedsIdx] || '0'),
+          beds: bedsValue,
           size_sqft: parseInt(cols[sizeIdx] || '0'),
-          status: cols[statusIdx] || 'Available',
-          raw: cols,
+          status: statusValue,
         });
       }
     }
@@ -229,15 +250,13 @@ Deno.serve(async (req) => {
     console.log('[ingest] price_list created', { id: priceList.id, rowCount: rows.length });
 
     // Insert price_list_rows
-    const priceListRows = rows.map((row, idx) => ({
+    const priceListRows = rows.map((row) => ({
       price_list_id: priceList.id,
-      row_no: idx + 1,
       unit_code: row.unit_code,
       beds: row.beds,
       size_sqft: row.size_sqft,
       price: row.price,
       status: row.status,
-      raw: row.raw,
     }));
 
     const { error: rowsError } = await supabase
@@ -245,7 +264,11 @@ Deno.serve(async (req) => {
       .insert(priceListRows);
 
     if (rowsError) {
-      console.error('[ingest] rows insert error', { error: String(rowsError) });
+      console.error('[ingest] rows insert error', { 
+        error: rowsError.message || String(rowsError),
+        details: JSON.stringify(rowsError),
+        sampleRow: priceListRows[0] 
+      });
     } else {
       console.log('[ingest] price_list_rows inserted', { count: priceListRows.length });
     }
