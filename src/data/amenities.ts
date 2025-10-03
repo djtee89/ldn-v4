@@ -287,17 +287,40 @@ export const amenities: Amenity[] = [
   { id: 'state-14', name: 'La Sainte Union Catholic School', type: 'state_schools', coordinates: { lat: 51.5635, lng: -0.1385 }, walkTime: 15 },
   { id: 'state-15', name: 'Bolingbroke Academy', type: 'state_schools', coordinates: { lat: 51.4655, lng: -0.1725 }, walkTime: 15 },
 
-  // Grammar Schools
+  // Grammar Schools (London Boroughs - Co-educational, Boys, Girls)
+  // Barnet
   { id: 'grammar-1', name: 'Queen Elizabeth\'s School', type: 'grammar_schools', coordinates: { lat: 51.5785, lng: -0.3365 }, walkTime: 28 },
-  { id: 'grammar-2', name: 'Henrietta Barnett School', type: 'grammar_schools', coordinates: { lat: 51.6145, lng: -0.2025 }, walkTime: 22 },
-  { id: 'grammar-3', name: 'St Olave\'s Grammar School', type: 'grammar_schools', coordinates: { lat: 51.4245, lng: 0.1095 }, walkTime: 35 },
-  { id: 'grammar-4', name: 'Newstead Wood School', type: 'grammar_schools', coordinates: { lat: 51.4115, lng: 0.0985 }, walkTime: 33 },
-  { id: 'grammar-5', name: 'Tiffin School', type: 'grammar_schools', coordinates: { lat: 51.4105, lng: -0.3035 }, walkTime: 25 },
-  { id: 'grammar-6', name: 'Tiffin Girls\' School', type: 'grammar_schools', coordinates: { lat: 51.4095, lng: -0.3025 }, walkTime: 25 },
-  { id: 'grammar-7', name: 'Nonsuch High School', type: 'grammar_schools', coordinates: { lat: 51.3575, lng: -0.2305 }, walkTime: 35 },
-  { id: 'grammar-8', name: 'Wilson\'s School', type: 'grammar_schools', coordinates: { lat: 51.3925, lng: -0.2885 }, walkTime: 28 },
-  { id: 'grammar-9', name: 'Wallington High School for Girls', type: 'grammar_schools', coordinates: { lat: 51.3645, lng: -0.1425 }, walkTime: 32 },
-  { id: 'grammar-10', name: 'Sutton Grammar School', type: 'grammar_schools', coordinates: { lat: 51.3615, lng: -0.1925 }, walkTime: 33 },
+  { id: 'grammar-2', name: 'St. Michael\'s Catholic Grammar School', type: 'grammar_schools', coordinates: { lat: 51.6285, lng: -0.2115 }, walkTime: 25 },
+  { id: 'grammar-3', name: 'The Henrietta Barnett School', type: 'grammar_schools', coordinates: { lat: 51.6145, lng: -0.2025 }, walkTime: 22 },
+  
+  // Bexley
+  { id: 'grammar-4', name: 'Beths Grammar School', type: 'grammar_schools', coordinates: { lat: 51.4415, lng: 0.1185 }, walkTime: 35 },
+  { id: 'grammar-5', name: 'Bexley Grammar School', type: 'grammar_schools', coordinates: { lat: 51.4515, lng: 0.1385 }, walkTime: 37 },
+  { id: 'grammar-6', name: 'Chislehurst and Sidcup Grammar School', type: 'grammar_schools', coordinates: { lat: 51.4245, lng: 0.1085 }, walkTime: 34 },
+  { id: 'grammar-7', name: 'Townley Grammar School', type: 'grammar_schools', coordinates: { lat: 51.4415, lng: 0.1285 }, walkTime: 36 },
+  
+  // Bromley
+  { id: 'grammar-8', name: 'Newstead Wood School', type: 'grammar_schools', coordinates: { lat: 51.4115, lng: 0.0985 }, walkTime: 33 },
+  { id: 'grammar-9', name: 'St Olave\'s and St Saviour\'s Grammar School', type: 'grammar_schools', coordinates: { lat: 51.4245, lng: 0.1095 }, walkTime: 35 },
+  
+  // Enfield
+  { id: 'grammar-10', name: 'The Latymer School', type: 'grammar_schools', coordinates: { lat: 51.6535, lng: -0.0685 }, walkTime: 27 },
+  
+  // Kingston upon Thames
+  { id: 'grammar-11', name: 'Tiffin School', type: 'grammar_schools', coordinates: { lat: 51.4105, lng: -0.3035 }, walkTime: 25 },
+  { id: 'grammar-12', name: 'The Tiffin Girls\' School', type: 'grammar_schools', coordinates: { lat: 51.4095, lng: -0.3025 }, walkTime: 25 },
+  
+  // Redbridge
+  { id: 'grammar-13', name: 'Ilford County High School', type: 'grammar_schools', coordinates: { lat: 51.5615, lng: 0.0685 }, walkTime: 22 },
+  { id: 'grammar-14', name: 'Woodford County High School', type: 'grammar_schools', coordinates: { lat: 51.6015, lng: 0.0285 }, walkTime: 24 },
+  
+  // Sutton
+  { id: 'grammar-15', name: 'Greenshaw High School', type: 'grammar_schools', coordinates: { lat: 51.3515, lng: -0.1685 }, walkTime: 34 },
+  { id: 'grammar-16', name: 'Nonsuch High School for Girls', type: 'grammar_schools', coordinates: { lat: 51.3575, lng: -0.2305 }, walkTime: 35 },
+  { id: 'grammar-17', name: 'Sutton Grammar School', type: 'grammar_schools', coordinates: { lat: 51.3615, lng: -0.1925 }, walkTime: 33 },
+  { id: 'grammar-18', name: 'Wallington County Grammar School', type: 'grammar_schools', coordinates: { lat: 51.3615, lng: -0.1485 }, walkTime: 32 },
+  { id: 'grammar-19', name: 'Wallington High School for Girls', type: 'grammar_schools', coordinates: { lat: 51.3645, lng: -0.1425 }, walkTime: 32 },
+  { id: 'grammar-20', name: 'Wilson\'s School', type: 'grammar_schools', coordinates: { lat: 51.3925, lng: -0.2885 }, walkTime: 28 },
 
   // Universities
   { id: 'uni-1', name: 'Imperial College London', type: 'universities', coordinates: { lat: 51.4988, lng: -0.1749 }, walkTime: 11 },
