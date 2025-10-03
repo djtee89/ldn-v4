@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Calendar, Clock, MapPin, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Event {
   id: string;
@@ -41,18 +42,36 @@ export function EventPopup({ event, isOpen, onClose }: EventPopupProps) {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate submission
-    setTimeout(() => {
+    try {
+      const { error } = await supabase
+        .from('event_registrations')
+        .insert({
+          event_id: event.id,
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Registration Successful!",
         description: `You've signed up for ${event.title} at ${event.development}. We'll send you a confirmation email shortly.`,
       });
-      setIsSubmitting(false);
+      
       setName('');
       setEmail('');
       setPhone('');
       onClose();
-    }, 1000);
+    } catch (error) {
+      toast({
+        title: "Registration Failed",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
