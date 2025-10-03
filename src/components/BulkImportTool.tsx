@@ -30,10 +30,10 @@ export function BulkImportTool() {
         tenure: "Leasehold",
         status: "Available",
         studio_from: "",
-        "1bed_from": "450000",
-        "2bed_from": "550000",
-        "3bed_from": "750000",
-        "4bed_from": "",
+        "1_bed_from": "450000",
+        "2_bed_from": "550000",
+        "3_bed_from": "750000",
+        "4_bed_from": "",
       },
     ];
 
@@ -83,20 +83,20 @@ export function BulkImportTool() {
             const parsed = parsePrice(row.studio_from);
             if (parsed) prices.studio = parsed;
           }
-          if (row["1bed_from"]) {
-            const parsed = parsePrice(row["1bed_from"]);
+          if (row["1_bed_from"]) {
+            const parsed = parsePrice(row["1_bed_from"]);
             if (parsed) prices["1bed"] = parsed;
           }
-          if (row["2bed_from"]) {
-            const parsed = parsePrice(row["2bed_from"]);
+          if (row["2_bed_from"]) {
+            const parsed = parsePrice(row["2_bed_from"]);
             if (parsed) prices["2bed"] = parsed;
           }
-          if (row["3bed_from"]) {
-            const parsed = parsePrice(row["3bed_from"]);
+          if (row["3_bed_from"]) {
+            const parsed = parsePrice(row["3_bed_from"]);
             if (parsed) prices["3bed"] = parsed;
           }
-          if (row["4bed_from"]) {
-            const parsed = parsePrice(row["4bed_from"]);
+          if (row["4_bed_from"]) {
+            const parsed = parsePrice(row["4_bed_from"]);
             if (parsed) prices["4bed"] = parsed;
           }
 
@@ -187,7 +187,7 @@ export function BulkImportTool() {
           <p className="text-sm text-muted-foreground mt-2">
             Required: <span className="font-medium">id, name, developer, postcode</span>
             <br />
-            Optional prices: <span className="font-medium">studio_from, 1bed_from, 2bed_from, 3bed_from, 4bed_from</span>
+            Optional prices: <span className="font-medium">studio_from, 1_bed_from, 2_bed_from, 3_bed_from, 4_bed_from</span>
           </p>
         </CardContent>
       </Card>
