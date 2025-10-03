@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Flame, Zap, RotateCcw } from 'lucide-react';
+import { Flame, Zap, RotateCcw, Upload, X } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -26,6 +26,8 @@ export function HottestUnitManager({ devId }: HottestUnitManagerProps) {
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [overrideReason, setOverrideReason] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [floorplanFile, setFloorplanFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -133,6 +135,86 @@ export function HottestUnitManager({ devId }: HottestUnitManagerProps) {
     }
   };
 
+  const handleFloorplanUpload = async () => {
+    if (!floorplanFile || !currentHottest) {
+      toast({
+        title: 'Error',
+        description: 'Please select a floorplan file',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      // Upload to storage
+      const fileExt = floorplanFile.name.split('.').pop();
+      const fileName = `${devId}_hottest_floorplan.${fileExt}`;
+      const filePath = `floorplans/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('developments')
+        .upload(filePath, floorplanFile, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('developments')
+        .getPublicUrl(filePath);
+
+      // Update hottest_unit record
+      const { error: updateError } = await supabase
+        .from('hottest_unit')
+        .update({ floorplan_url: publicUrl })
+        .eq('dev_id', devId);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: 'Success',
+        description: 'Floorplan uploaded successfully',
+      });
+
+      setFloorplanFile(null);
+      fetchCurrentHottest();
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveFloorplan = async () => {
+    if (!currentHottest) return;
+
+    try {
+      const { error } = await supabase
+        .from('hottest_unit')
+        .update({ floorplan_url: null })
+        .eq('dev_id', devId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'Floorplan removed',
+      });
+
+      fetchCurrentHottest();
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -171,15 +253,56 @@ export function HottestUnitManager({ devId }: HottestUnitManagerProps) {
               </div>
             </div>
             {currentHottest.override_reason && (
-              <p className="text-sm text-muted-foreground">
-                <strong>Reason:</strong> {currentHottest.override_reason}
-              </p>
+              <div className="text-sm text-muted-foreground whitespace-pre-line bg-background/50 p-3 rounded border">
+                {currentHottest.override_reason}
+              </div>
             )}
             {currentHottest.units && (
               <div className="text-sm text-muted-foreground">
                 £{currentHottest.units.price?.toLocaleString()} • {currentHottest.units.beds} bed • {currentHottest.units.size_sqft} sqft
               </div>
             )}
+            
+            {/* Floorplan section */}
+            <div className="mt-4 pt-4 border-t">
+              <Label className="text-sm font-medium">Floorplan</Label>
+              {currentHottest.floorplan_url ? (
+                <div className="mt-2 space-y-2">
+                  <div className="relative">
+                    <img 
+                      src={currentHottest.floorplan_url} 
+                      alt="Floorplan" 
+                      className="w-full max-w-md rounded border"
+                    />
+                    <Button
+                      size="icon"
+                      variant="destructive"
+                      className="absolute top-2 right-2"
+                      onClick={handleRemoveFloorplan}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-2 space-y-2">
+                  <Input
+                    type="file"
+                    accept="image/*,.pdf"
+                    onChange={(e) => setFloorplanFile(e.target.files?.[0] || null)}
+                  />
+                  <Button
+                    onClick={handleFloorplanUpload}
+                    disabled={uploading || !floorplanFile}
+                    size="sm"
+                    className="gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    {uploading ? 'Uploading...' : 'Upload Floorplan'}
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

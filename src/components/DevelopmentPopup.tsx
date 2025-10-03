@@ -48,6 +48,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   const [units, setUnits] = useState<Unit[]>([]);
   const [loadingUnits, setLoadingUnits] = useState(false);
   const [hottestUnit, setHottestUnit] = useState<Unit | null>(null);
+  const [hottestReason, setHottestReason] = useState<string>('');
+  const [hottestFloorplan, setHottestFloorplan] = useState<string>('');
   const [loadingHottest, setLoadingHottest] = useState(false);
   const {
     toast
@@ -94,7 +96,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
     try {
       const { data: hottest, error: hottestError } = await supabase
         .from('hottest_unit')
-        .select('unit_id')
+        .select('unit_id, override_reason, floorplan_url')
         .eq('dev_id', development.id)
         .maybeSingle();
 
@@ -109,6 +111,8 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
         if (!unitError && unit) {
           setHottestUnit(unit);
+          setHottestReason(hottest.override_reason || '');
+          setHottestFloorplan(hottest.floorplan_url || '');
         }
       }
     } catch (error) {
@@ -461,6 +465,26 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                       </div>
                     )}
 
+                    {hottestReason && (
+                      <div className="mt-4 p-4 bg-background/60 rounded-lg border">
+                        <h4 className="font-semibold mb-2">Why This Is The Best Deal</h4>
+                        <div className="text-sm text-muted-foreground whitespace-pre-line">
+                          {hottestReason}
+                        </div>
+                      </div>
+                    )}
+
+                    {hottestFloorplan && (
+                      <div className="mt-4">
+                        <h4 className="font-semibold mb-2">Floorplan</h4>
+                        <img 
+                          src={hottestFloorplan} 
+                          alt="Unit floorplan" 
+                          className="w-full rounded border"
+                        />
+                      </div>
+                    )}
+
                     <div className="pt-4 flex gap-3">
                       <Button onClick={onBookViewing} className="flex-1" size="lg">
                         Book Viewing
@@ -469,10 +493,6 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                         Request Info
                       </Button>
                     </div>
-
-                    <p className="text-xs text-center text-muted-foreground mt-4">
-                      This unit offers exceptional value based on price, size, and location within the development
-                    </p>
                   </CardContent>
                 </Card>
               ) : (

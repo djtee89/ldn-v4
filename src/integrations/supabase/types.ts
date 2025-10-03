@@ -218,6 +218,7 @@ export type Database = {
       hottest_unit: {
         Row: {
           dev_id: string
+          floorplan_url: string | null
           manual_override: boolean | null
           override_reason: string | null
           score: number | null
@@ -226,6 +227,7 @@ export type Database = {
         }
         Insert: {
           dev_id: string
+          floorplan_url?: string | null
           manual_override?: boolean | null
           override_reason?: string | null
           score?: number | null
@@ -234,6 +236,7 @@ export type Database = {
         }
         Update: {
           dev_id?: string
+          floorplan_url?: string | null
           manual_override?: boolean | null
           override_reason?: string | null
           score?: number | null

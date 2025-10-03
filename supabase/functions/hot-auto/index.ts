@@ -15,6 +15,35 @@ interface ScoringReason {
   details: string[];
 }
 
+function createSalesPitch(unit: any, reason: ScoringReason): string {
+  const highlights = reason.details.slice(0, 4);
+  
+  let pitch = `🔥 **HOTTEST DEAL ALERT** - Unit ${unit.unit_number} is your best opportunity right now!\n\n`;
+  
+  if (reason.discount_score > 20) {
+    pitch += `💰 **Outstanding Value**: This ${unit.beds}-bedroom apartment offers exceptional market value at just £${unit.price.toLocaleString()}. `;
+  }
+  
+  if (highlights.length > 0) {
+    pitch += `\n\n✨ **Why This Unit Stands Out**:\n`;
+    highlights.forEach((detail, idx) => {
+      pitch += `${idx + 1}. ${detail}\n`;
+    });
+  }
+  
+  pitch += `\n📊 **The Numbers**: ${unit.size_sqft} sq ft of premium living space`;
+  if (unit.floor) pitch += ` on floor ${unit.floor}`;
+  pitch += `. At £${(unit.price / unit.size_sqft).toFixed(0)}/sqft, this represents genuine value in today's market.`;
+  
+  if (reason.scarcity_score >= 5) {
+    pitch += `\n\n⏰ **Act Fast**: With limited ${unit.beds}-bedroom units remaining, properties like this don't stay available for long.`;
+  }
+  
+  pitch += `\n\n📞 **Don't miss out** - Book a viewing today to secure this exceptional opportunity!`;
+  
+  return pitch;
+}
+
 Deno.serve(async (req) => {
   const start = Date.now();
   
@@ -91,46 +120,64 @@ Deno.serve(async (req) => {
 
       // 1. Discount vs comps (0-40 points)
       const avgPpsqft = avgPpsqftByBeds.get(unit.beds) || unit.ppsqft;
+      const ppsqft = unit.ppsqft;
       if (avgPpsqft > 0) {
         const discount = (avgPpsqft - unit.ppsqft) / avgPpsqft;
         if (discount > 0) {
           reason.discount_score = Math.min(40, discount * 200);
-          reason.details.push(`${(discount * 100).toFixed(1)}% below average £/sqft`);
+          const discountPercent = (discount * 100).toFixed(1);
+          reason.details.push(`Exceptional value at £${ppsqft.toFixed(0)}/sqft - ${discountPercent}% below market average for ${unit.beds}-bed units`);
         }
       }
 
       // 2. View bonuses (0-15 points)
       if (unit.view_park) {
         reason.view_score += 8;
-        reason.details.push('Park view');
+        reason.details.push('Stunning park views offering tranquil green vistas');
       }
       if (unit.view_river) {
         reason.view_score += 7;
-        reason.details.push('River view');
+        reason.details.push('Premium river views - a rare find in this development');
       }
 
       // 3. Floor bonus (higher floor = better)
       if (unit.floor && unit.floor >= 10) {
         reason.view_score += 5;
-        reason.details.push(`High floor (${unit.floor})`);
+        reason.details.push(`High floor living on level ${unit.floor} with elevated panoramic views`);
+      } else if (unit.floor && unit.floor >= 5) {
+        reason.view_score += 3;
+        reason.details.push(`Mid-level floor ${unit.floor} offering excellent light and privacy`);
       }
 
       // 4. Scarcity (0-10 points)
       const similarUnits = unitsWithPpsqft.filter(u => u.beds === unit.beds);
       if (similarUnits.length <= 3) {
         reason.scarcity_score = 10;
-        reason.details.push(`Only ${similarUnits.length} ${unit.beds}-bed units left`);
+        reason.details.push(`Extremely limited availability - only ${similarUnits.length} ${unit.beds}-bed ${similarUnits.length === 1 ? 'unit' : 'units'} remaining in the entire development!`);
       } else if (similarUnits.length <= 5) {
         reason.scarcity_score = 5;
+        reason.details.push(`High demand - just ${similarUnits.length} ${unit.beds}-bed units left`);
       }
 
-      // 5. Completion proximity (0-10 points) - simplified
+      // 5. Completion proximity (0-10 points)
       if (unit.completion_date) {
         const completionYear = parseInt(unit.completion_date);
         const currentYear = new Date().getFullYear();
-        if (completionYear <= currentYear + 1) {
+        if (completionYear <= currentYear) {
           reason.completion_score = 10;
-          reason.details.push('Ready soon');
+          reason.details.push('Ready to move in NOW - immediate completion available');
+        } else if (completionYear <= currentYear + 1) {
+          reason.completion_score = 8;
+          reason.details.push(`Completing ${unit.completion_date} - secure your home with minimal wait time`);
+        }
+      }
+
+      // 6. Size value bonus
+      if (unit.size_sqft > 0) {
+        const avgSize = unitsWithPpsqft.filter(u => u.beds === unit.beds).reduce((sum, u) => sum + u.size_sqft, 0) / similarUnits.length;
+        if (unit.size_sqft > avgSize * 1.1) {
+          reason.view_score += 3;
+          reason.details.push(`Spacious ${unit.size_sqft} sqft - larger than average for a ${unit.beds}-bed unit`);
         }
       }
 
@@ -146,6 +193,10 @@ Deno.serve(async (req) => {
     // Pick highest scoring unit
     scoredUnits.sort((a, b) => b.reason.total_score - a.reason.total_score);
     const winner = scoredUnits[0];
+    
+    // Create compelling sales pitch
+    const pitch = createSalesPitch(winner.unit, winner.reason);
+    
     console.log('[hot-auto] winner selected', { 
       unit_number: winner.unit.unit_number, 
       score: winner.reason.total_score,
@@ -159,7 +210,7 @@ Deno.serve(async (req) => {
         dev_id,
         unit_id: winner.unit.id,
         score: winner.reason.total_score,
-        override_reason: winner.reason.details.join(', '),
+        override_reason: pitch,
         manual_override: false,
         updated_at: new Date().toISOString(),
       }, {
