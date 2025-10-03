@@ -257,6 +257,7 @@ export type Database = {
           id: string
           price: number | null
           price_list_id: string
+          service_charge: number | null
           size_sqft: number | null
           status: string | null
           unit_code: string
@@ -267,6 +268,7 @@ export type Database = {
           id?: string
           price?: number | null
           price_list_id: string
+          service_charge?: number | null
           size_sqft?: number | null
           status?: string | null
           unit_code: string
@@ -277,6 +279,7 @@ export type Database = {
           id?: string
           price?: number | null
           price_list_id?: string
+          service_charge?: number | null
           size_sqft?: number | null
           status?: string | null
           unit_code?: string
@@ -396,6 +399,7 @@ export type Database = {
           has_balcony: boolean | null
           id: string
           price: number
+          service_charge: number | null
           size_sqft: number
           status: string
           unit_number: string
@@ -414,6 +418,7 @@ export type Database = {
           has_balcony?: boolean | null
           id?: string
           price: number
+          service_charge?: number | null
           size_sqft: number
           status?: string
           unit_number: string
@@ -432,6 +437,7 @@ export type Database = {
           has_balcony?: boolean | null
           id?: string
           price?: number
+          service_charge?: number | null
           size_sqft?: number
           status?: string
           unit_number?: string

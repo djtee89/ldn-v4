@@ -27,6 +27,7 @@ interface Unit {
   completion_date?: string;
   aspect?: string;
   floor?: number;
+  service_charge?: number;
 }
 interface DevelopmentPopupProps {
   development: Development;
@@ -490,6 +491,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                             <TableHead>Beds</TableHead>
                             <TableHead>Size (sq ft)</TableHead>
                             <TableHead>Price</TableHead>
+                            <TableHead>Service Charge</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Building</TableHead>
                             <TableHead>Completion</TableHead>
@@ -503,6 +505,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                               <TableCell>{unit.size_sqft.toLocaleString()}</TableCell>
                               <TableCell className="font-semibold text-primary">
                                 £{unit.price.toLocaleString()}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {unit.service_charge ? `£${unit.service_charge.toLocaleString()}/yr` : '—'}
                               </TableCell>
                               <TableCell>
                                 <Badge variant={unit.status === 'Available' ? 'default' : 'secondary'}>
@@ -539,10 +544,30 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
 
             {/* Amenities Tab */}
             <TabsContent value="amenities" className="mt-0">
-              <div className="flex flex-wrap gap-2">
-                {development.amenities.map((amenity, index) => <Badge key={index} variant="secondary" className="text-sm px-3 py-1.5">
-                    {amenity}
-                  </Badge>)}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-base mb-2">Development Amenities</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Exclusive facilities and features available to residents at this development.
+                  </p>
+                </div>
+                {development.amenities && development.amenities.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {development.amenities.map((amenity, index) => (
+                      <Badge key={index} variant="secondary" className="text-sm px-3 py-1.5">
+                        {amenity}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="p-6">
+                      <p className="text-muted-foreground text-center">
+                        Amenity information will be added soon. Contact us for details about this development's facilities.
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </TabsContent>
 
@@ -902,10 +927,17 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                       <div className="space-y-3">
                         <h5 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Nearby Schools</h5>
                         {development.schools.map((school: any, index: number) => {
-                          // Safely extract school data
-                          const schoolName = typeof school === 'string' 
-                            ? school 
-                            : (school?.name || 'Unknown School');
+                          // Safely extract school data - handle various data structures
+                          let schoolName = 'Unknown School';
+                          
+                          if (typeof school === 'string') {
+                            schoolName = school;
+                          } else if (school?.tags?.name) {
+                            schoolName = school.tags.name;
+                          } else if (school?.name) {
+                            schoolName = school.name;
+                          }
+                          
                           const distance = school?.distance_miles || null;
                           const schoolType = school?.type || school?.tags?.amenity || 'school';
                           
@@ -916,23 +948,23 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                                   <div className="flex items-start gap-3 flex-1">
                                     <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                                     <div>
-                                      <p className="font-semibold">{schoolName.replace(/\s*\((Good|Outstanding)\)/, '')}</p>
+                                      <p className="font-semibold">{String(schoolName).replace(/\s*\((Good|Outstanding)\)/, '')}</p>
                                       <p className="text-xs text-muted-foreground mt-1">
                                         {schoolType === 'kindergarten' ? 'Kindergarten' :
                                          schoolType === 'university' ? 'University' :
                                          schoolType === 'college' ? 'College' :
-                                         schoolName.toLowerCase().includes('primary') ? 'Primary School' : 
-                                         schoolName.toLowerCase().includes('secondary') || schoolName.toLowerCase().includes('academy') || schoolName.toLowerCase().includes('high school') ? 'Secondary School' : 
-                                         schoolName.toLowerCase().includes('college') ? 'College' : 
-                                         schoolName.toLowerCase().includes('prep') ? 'Preparatory School' : 'School'}
+                                         String(schoolName).toLowerCase().includes('primary') ? 'Primary School' : 
+                                         String(schoolName).toLowerCase().includes('secondary') || String(schoolName).toLowerCase().includes('academy') || String(schoolName).toLowerCase().includes('high school') ? 'Secondary School' : 
+                                         String(schoolName).toLowerCase().includes('college') ? 'College' : 
+                                         String(schoolName).toLowerCase().includes('prep') ? 'Preparatory School' : 'School'}
                                       </p>
                                       <p className="text-xs text-muted-foreground mt-0.5">
                                         {distance ? `${distance} miles away` : 'Walking distance from development'}
                                       </p>
                                     </div>
                                   </div>
-                                  {schoolName.toLowerCase().includes('outstanding') && <Badge className="bg-green-600 flex-shrink-0">Outstanding</Badge>}
-                                  {schoolName.toLowerCase().includes('good') && !schoolName.toLowerCase().includes('outstanding') && <Badge variant="secondary" className="flex-shrink-0">Good</Badge>}
+                                  {String(schoolName).toLowerCase().includes('outstanding') && <Badge className="bg-green-600 flex-shrink-0">Outstanding</Badge>}
+                                  {String(schoolName).toLowerCase().includes('good') && !String(schoolName).toLowerCase().includes('outstanding') && <Badge variant="secondary" className="flex-shrink-0">Good</Badge>}
                                 </div>
                               </CardContent>
                             </Card>
