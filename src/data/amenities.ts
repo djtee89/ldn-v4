@@ -593,26 +593,39 @@ export const amenities: Amenity[] = [
   { id: 'grammar-20', name: 'Wilson\'s School', type: 'grammar_schools', coordinates: { lat: 51.3925, lng: -0.2885 }, walkTime: 28 },
 
   // Universities
-  { id: 'uni-1', name: 'Imperial College London', type: 'universities', coordinates: { lat: 51.4988, lng: -0.1749 }, walkTime: 11 },
-  { id: 'uni-2', name: 'University College London (UCL)', type: 'universities', coordinates: { lat: 51.5246, lng: -0.1340 }, walkTime: 8 },
-  { id: 'uni-3', name: 'King\'s College London (Strand)', type: 'universities', coordinates: { lat: 51.5115, lng: -0.1160 }, walkTime: 6 },
-  { id: 'uni-4', name: 'London School of Economics (LSE)', type: 'universities', coordinates: { lat: 51.5145, lng: -0.1167 }, walkTime: 7 },
-  { id: 'uni-5', name: 'Queen Mary University', type: 'universities', coordinates: { lat: 51.5242, lng: -0.0402 }, walkTime: 16 },
-  { id: 'uni-6', name: 'City, University of London', type: 'universities', coordinates: { lat: 51.5277, lng: -0.1026 }, walkTime: 8 },
-  { id: 'uni-7', name: 'Royal Holloway', type: 'universities', coordinates: { lat: 51.4256, lng: -0.5641 }, walkTime: 45 },
-  { id: 'uni-8', name: 'Brunel University London', type: 'universities', coordinates: { lat: 51.5328, lng: -0.4735 }, walkTime: 40 },
-  { id: 'uni-9', name: 'University of Westminster', type: 'universities', coordinates: { lat: 51.5185, lng: -0.1400 }, walkTime: 8 },
-  { id: 'uni-10', name: 'SOAS University of London', type: 'universities', coordinates: { lat: 51.5226, lng: -0.1297 }, walkTime: 7 },
-  { id: 'uni-11', name: 'Goldsmiths, University of London', type: 'universities', coordinates: { lat: 51.4743, lng: -0.0351 }, walkTime: 20 },
-  { id: 'uni-12', name: 'Birkbeck, University of London', type: 'universities', coordinates: { lat: 51.5218, lng: -0.1308 }, walkTime: 7 },
-  { id: 'uni-13', name: 'Royal Academy of Music', type: 'universities', coordinates: { lat: 51.5238, lng: -0.1570 }, walkTime: 10 },
-  { id: 'uni-14', name: 'Royal College of Art', type: 'universities', coordinates: { lat: 51.5017, lng: -0.1776 }, walkTime: 11 },
-  { id: 'uni-15', name: 'Royal College of Music', type: 'universities', coordinates: { lat: 51.4993, lng: -0.1774 }, walkTime: 11 },
-  { id: 'uni-16', name: 'London Business School', type: 'universities', coordinates: { lat: 51.5229, lng: -0.1581 }, walkTime: 10 },
-  { id: 'uni-17', name: 'University of the Arts London', type: 'universities', coordinates: { lat: 51.5167, lng: -0.1167 }, walkTime: 7 },
-  { id: 'uni-18', name: 'Regent\'s University London', type: 'universities', coordinates: { lat: 51.5261, lng: -0.1588 }, walkTime: 10 },
-  { id: 'uni-19', name: 'University of Greenwich', type: 'universities', coordinates: { lat: 51.4826, lng: 0.0077 }, walkTime: 22 },
-  { id: 'uni-20', name: 'Kingston University', type: 'universities', coordinates: { lat: 51.4105, lng: -0.3004 }, walkTime: 25 },
+  // World-Leading, Research-Intensive Universities (Russell Group)
+  { id: 'uni-1', name: 'Imperial College London', type: 'universities', coordinates: { lat: 51.4988, lng: -0.1749 }, walkTime: 11, description: 'A world top-ten university specialising in science, engineering, medicine, and business' },
+  { id: 'uni-2', name: 'University College London (UCL)', type: 'universities', coordinates: { lat: 51.5246, lng: -0.1340 }, walkTime: 8, description: 'Consistently ranked among the world\'s best, a huge, multi-disciplinary university known for excellence across a vast range of subjects' },
+  { id: 'uni-3', name: 'London School of Economics and Political Science (LSE)', type: 'universities', coordinates: { lat: 51.5145, lng: -0.1167 }, walkTime: 7, description: 'A world-leading specialist university focused on social sciences, economics, politics, law, and international relations' },
+  { id: 'uni-4', name: 'King\'s College London (KCL)', type: 'universities', coordinates: { lat: 51.5115, lng: -0.1160 }, walkTime: 6, description: 'A large, highly-regarded university with a strong reputation in the humanities, law, sciences, and particularly health sciences' },
+  { id: 'uni-5', name: 'Queen Mary University of London (QMUL)', type: 'universities', coordinates: { lat: 51.5242, lng: -0.0402 }, walkTime: 16, description: 'A leading research university based in East London, with notable strengths in medicine, dentistry, law, and engineering' },
+  
+  // The University of London Federation
+  { id: 'uni-6', name: 'SOAS University of London', type: 'universities', coordinates: { lat: 51.5226, lng: -0.1297 }, walkTime: 7, description: 'The world\'s leading institution for the study of Asia, Africa, and the Middle East' },
+  { id: 'uni-7', name: 'Birkbeck, University of London', type: 'universities', coordinates: { lat: 51.5218, lng: -0.1308 }, walkTime: 7, description: 'A specialist provider of evening higher education, allowing students to study while working' },
+  { id: 'uni-8', name: 'City, University of London', type: 'universities', coordinates: { lat: 51.5277, lng: -0.1026 }, walkTime: 8, description: 'Known for its strong links to business and the professions, particularly through its Bayes Business School and City Law School' },
+  { id: 'uni-9', name: 'Goldsmiths, University of London', type: 'universities', coordinates: { lat: 51.4743, lng: -0.0351 }, walkTime: 20, description: 'Famous for its creative and innovative approach to the arts, humanities, and social sciences' },
+  { id: 'uni-10', name: 'Royal Holloway, University of London', type: 'universities', coordinates: { lat: 51.4256, lng: -0.5641 }, walkTime: 45, description: 'Located just outside central London in Egham, known for its beautiful campus and strong arts and sciences departments' },
+  
+  // Other Major London Universities
+  { id: 'uni-11', name: 'Brunel University London', type: 'universities', coordinates: { lat: 51.5328, lng: -0.4735 }, walkTime: 40, description: 'A campus-based university in West London with a strong reputation for engineering, technology, and health sciences' },
+  { id: 'uni-12', name: 'University of the Arts London (UAL)', type: 'universities', coordinates: { lat: 51.5167, lng: -0.1167 }, walkTime: 7, description: 'A world-leading university for art, design, fashion, and communication, composed of six renowned colleges' },
+  { id: 'uni-13', name: 'University of Westminster', type: 'universities', coordinates: { lat: 51.5185, lng: -0.1400 }, walkTime: 8, description: 'Known for its strong vocational focus, particularly in media, art and design, and business, with several campuses across central London' },
+  { id: 'uni-14', name: 'University of Greenwich', type: 'universities', coordinates: { lat: 51.4826, lng: 0.0077 }, walkTime: 22, description: 'A large university with historic campuses in Greenwich and Avery Hill, offering a wide range of subjects' },
+  { id: 'uni-15', name: 'Kingston University', type: 'universities', coordinates: { lat: 51.4105, lng: -0.3004 }, walkTime: 25, description: 'A popular university in South West London, particularly well-regarded for art, design, and fashion' },
+  { id: 'uni-16', name: 'Middlesex University', type: 'universities', coordinates: { lat: 51.5891, lng: -0.2283 }, walkTime: 22, description: 'A large, modern university in North London with a diverse student body and a focus on professional skills' },
+  { id: 'uni-17', name: 'London South Bank University (LSBU)', type: 'universities', coordinates: { lat: 51.4991, lng: -0.1031 }, walkTime: 7, description: 'A modern university with a strong focus on vocational skills and employability' },
+  { id: 'uni-18', name: 'University of East London (UEL)', type: 'universities', coordinates: { lat: 51.5078, lng: 0.0606 }, walkTime: 18, description: 'Known for its focus on social mobility and a diverse range of courses' },
+  { id: 'uni-19', name: 'University of Roehampton', type: 'universities', coordinates: { lat: 51.4563, lng: -0.2483 }, walkTime: 18, description: 'A campus-based university in South West London with strengths in education, humanities, and social sciences' },
+  
+  // Specialist Institutions
+  { id: 'uni-20', name: 'London Business School', type: 'universities', coordinates: { lat: 51.5229, lng: -0.1581 }, walkTime: 10, description: 'A world-leading graduate business school' },
+  { id: 'uni-21', name: 'Royal College of Music (RCM)', type: 'universities', coordinates: { lat: 51.4993, lng: -0.1774 }, walkTime: 11, description: 'A world-class conservatoire for music' },
+  { id: 'uni-22', name: 'Royal Academy of Music (RAM)', type: 'universities', coordinates: { lat: 51.5238, lng: -0.1570 }, walkTime: 10, description: 'Another world-leading music conservatoire' },
+  { id: 'uni-23', name: 'Royal Academy of Dramatic Art (RADA)', type: 'universities', coordinates: { lat: 51.5247, lng: -0.1301 }, walkTime: 7, description: 'One of the most famous and prestigious drama schools in the world' },
+  { id: 'uni-24', name: 'London Academy of Music and Dramatic Art (LAMDA)', type: 'universities', coordinates: { lat: 51.5195, lng: -0.1895 }, walkTime: 11, description: 'A leading drama and performing arts school' },
+  { id: 'uni-25', name: 'The Courtauld Institute of Art', type: 'universities', coordinates: { lat: 51.5115, lng: -0.1167 }, walkTime: 7, description: 'One of the world\'s foremost institutions for studying art history' },
+  { id: 'uni-26', name: 'St George\'s, University of London', type: 'universities', coordinates: { lat: 51.4272, lng: -0.1741 }, walkTime: 18, description: 'A specialist medical and health sciences university' },
 
   // Michelin Star Restaurants (Three Stars)
   { id: 'michelin-1', name: 'Alain Ducasse at The Dorchester', type: 'michelin_restaurants', coordinates: { lat: 51.5075, lng: -0.1515 }, walkTime: 9 },
