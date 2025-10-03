@@ -68,7 +68,8 @@ export function AvailableUnitsManager({ devId }: AvailableUnitsManagerProps) {
                   <TableHead>Size (sqft)</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>£/sqft</TableHead>
-                  <TableHead>Service Charge</TableHead>
+                  <TableHead>Service Charge (£/sqft)</TableHead>
+                  <TableHead>Annual Service Charge</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Building</TableHead>
                   <TableHead>Floor</TableHead>
@@ -91,7 +92,12 @@ export function AvailableUnitsManager({ devId }: AvailableUnitsManagerProps) {
                     </TableCell>
                     <TableCell>
                       {unit.service_charge
-                        ? `£${unit.service_charge.toLocaleString()}/yr`
+                        ? `£${unit.service_charge.toLocaleString()}`
+                        : '-'}
+                    </TableCell>
+                    <TableCell className="font-semibold">
+                      {unit.service_charge && unit.size_sqft
+                        ? `£${(unit.service_charge * unit.size_sqft).toLocaleString()}/yr`
                         : '-'}
                     </TableCell>
                     <TableCell>
