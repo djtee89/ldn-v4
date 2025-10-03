@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.dedupe-developments]
 verify_jwt = false
+
+[functions.enrich-development]
+verify_jwt = false

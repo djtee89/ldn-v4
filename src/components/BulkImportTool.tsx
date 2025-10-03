@@ -10,9 +10,11 @@ import Papa from "papaparse";
 export function BulkImportTool() {
   const [file, setFile] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
+  const [autoEnrich, setAutoEnrich] = useState(true);
   const [results, setResults] = useState<{
     success: number;
     errors: string[];
+    enriched?: number;
   } | null>(null);
 
   const downloadTemplate = () => {
@@ -21,14 +23,11 @@ export function BulkImportTool() {
         id: "example-dev",
         name: "Example Development",
         developer: "Example Developer",
-        location: "London",
         postcode: "SW1A 1AA",
+        borough: "Westminster",
         zone: "1",
-        lat: "51.5074",
-        lng: "-0.1278",
-        status: "Available",
-        completion_date: "Q4 2024",
         tenure: "Leasehold",
+        status: "Available",
       },
     ];
 
@@ -68,6 +67,7 @@ export function BulkImportTool() {
 
       const errors: string[] = [];
       let successCount = 0;
+      const importedIds: string[] = [];
 
       for (const [index, row] of (parsed.data as any[]).entries()) {
         try {
@@ -77,7 +77,8 @@ export function BulkImportTool() {
             developer: row.developer?.trim(),
             location: row.location?.trim() || null,
             postcode: row.postcode?.trim() || null,
-            zone: row.zone ? parseInt(row.zone) : null,
+            borough: row.borough?.trim() || null,
+            zone: row.zone?.trim() || null,
             lat: row.lat ? parseFloat(row.lat) : null,
             lng: row.lng ? parseFloat(row.lng) : null,
             status: row.status?.trim() || 'Available',
@@ -96,12 +97,34 @@ export function BulkImportTool() {
 
           if (error) throw error;
           successCount++;
+          importedIds.push(devData.id);
         } catch (error: any) {
           errors.push(`Row ${index + 1} (${row.name || 'Unknown'}): ${error.message}`);
         }
       }
 
-      setResults({ success: successCount, errors });
+      // Auto-enrich if enabled
+      let enrichedCount = 0;
+      if (autoEnrich && importedIds.length > 0) {
+        toast.info(`⚡ Enriching ${importedIds.length} developments with transport & amenities...`);
+        
+        for (const devId of importedIds) {
+          try {
+            await supabase.functions.invoke('enrich-development', {
+              body: { dev_id: devId },
+            });
+            enrichedCount++;
+          } catch (err) {
+            console.error(`Failed to enrich ${devId}:`, err);
+          }
+        }
+        
+        if (enrichedCount > 0) {
+          toast.success(`✨ Enriched ${enrichedCount} developments`);
+        }
+      }
+
+      setResults({ success: successCount, errors, enriched: enrichedCount });
 
       if (successCount > 0) {
         toast.success(`Successfully imported ${successCount} development${successCount > 1 ? 's' : ''}`);
@@ -123,14 +146,17 @@ export function BulkImportTool() {
         <CardHeader>
           <CardTitle>Download Template</CardTitle>
           <CardDescription>
-            Get a CSV template with the correct format for bulk import
+            Simple CSV template - just basic info needed! Auto-enrichment will add coordinates, transport, amenities & AI summaries.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button onClick={downloadTemplate} variant="outline" className="w-full">
             <Download className="mr-2 h-4 w-4" />
-            Download CSV Template
+            Download Simplified CSV Template
           </Button>
+          <p className="text-sm text-muted-foreground mt-2">
+            Required: <span className="font-medium">id, name, developer, postcode</span>
+          </p>
         </CardContent>
       </Card>
 
@@ -142,6 +168,18 @@ export function BulkImportTool() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex items-center space-x-2 mb-4">
+            <input
+              type="checkbox"
+              id="autoEnrich"
+              checked={autoEnrich}
+              onChange={(e) => setAutoEnrich(e.target.checked)}
+              className="h-4 w-4 rounded border-input"
+            />
+            <label htmlFor="autoEnrich" className="text-sm font-medium">
+              ✨ Auto-enrich with coordinates, transport, amenities & AI summaries (recommended)
+            </label>
+          </div>
           <div className="flex items-center gap-4">
             <input
               type="file"
@@ -166,6 +204,9 @@ export function BulkImportTool() {
             <div className="space-y-2">
               <p className="font-semibold">Import Results:</p>
               <p>✓ Successfully imported: {results.success}</p>
+              {results.enriched !== undefined && results.enriched > 0 && (
+                <p>✨ Auto-enriched: {results.enriched}</p>
+              )}
               {results.errors.length > 0 && (
                 <div>
                   <p className="text-destructive font-semibold mt-2">✗ Errors ({results.errors.length}):</p>
