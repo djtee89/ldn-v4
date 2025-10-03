@@ -69,6 +69,13 @@ const ThisWeeksOffers = () => {
                     {offer.description}
                   </p>
 
+                  {offer.voucherCode && (
+                    <div className="mb-3 flex items-center gap-2 bg-primary/10 border border-primary/20 rounded px-2 py-1.5">
+                      <span className="text-xs text-muted-foreground">Voucher:</span>
+                      <span className="font-mono font-bold text-sm text-primary">{offer.voucherCode}</span>
+                    </div>
+                  )}
+
                   <div className="pt-3 border-t">
                     <div className="text-xs font-medium text-primary group-hover:underline">
                       View Offer Details →

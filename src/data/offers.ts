@@ -13,6 +13,7 @@ export interface Offer {
   image: string;
   featured: boolean;
   savingsAmount: string;
+  voucherCode?: string;
 }
 
 export const offers: Offer[] = [
@@ -23,6 +24,7 @@ export const offers: Offer[] = [
     developmentId: 'woodberry-down',
     developer: 'Berkeley',
     savingsAmount: '£10,000',
+    voucherCode: 'WOOD10K',
     description: 'Save £10,000 on your new home at Woodberry Down with free legal fees and stamp duty contribution.',
     terms: [
       'Free legal fees worth up to £2,500',
@@ -48,6 +50,7 @@ export const offers: Offer[] = [
     developmentId: 'kings-road-park',
     developer: 'Barratt London',
     savingsAmount: '£10,000',
+    voucherCode: 'KRP10K',
     description: 'Receive a £10,000 furniture package voucher to furnish your new home in style at Kings Road Park.',
     terms: [
       '£10,000 John Lewis voucher',
@@ -73,6 +76,7 @@ export const offers: Offer[] = [
     developmentId: 'trent-park',
     developer: 'Berkeley',
     savingsAmount: 'Bespoke',
+    voucherCode: 'TRENT2025',
     description: 'Berkeley will purchase your current home, allowing you to pay only the difference for your new property at Trent Park.',
     terms: [
       'Berkeley purchases your existing home at market value',
@@ -100,6 +104,7 @@ export const offers: Offer[] = [
     developmentId: 'acton-gardens',
     developer: 'Countryside',
     savingsAmount: 'Up to £20,000',
+    voucherCode: 'ACTON20K',
     description: 'Countryside will pay your stamp duty on selected homes at Acton Gardens, saving you up to £20,000.',
     terms: [
       'Stamp duty paid on properties up to £1m',
@@ -125,6 +130,7 @@ export const offers: Offer[] = [
     developmentId: 'meridian-water',
     developer: 'Bellway',
     savingsAmount: 'From £19,250',
+    voucherCode: 'MERID5PCT',
     description: 'Own a new home with just 5% deposit through Help to Buy at Meridian Water.',
     terms: [
       'Government Help to Buy scheme',
@@ -152,6 +158,7 @@ export const offers: Offer[] = [
     developmentId: 'greenwich-peninsula',
     developer: 'Taylor Wimpey',
     savingsAmount: 'No fees',
+    voucherCode: 'GRNWCH2025',
     description: 'Part exchange your current home and move to Greenwich Peninsula with no estate agent fees or chain delays.',
     terms: [
       'Free independent valuation',

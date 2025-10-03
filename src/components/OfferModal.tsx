@@ -8,8 +8,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Offer } from '@/data/offers';
-import { Gift, Clock, Check, Phone, Mail, Calendar, Info } from 'lucide-react';
+import { Gift, Clock, Check, Phone, Mail, Calendar, Info, Copy } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
 
 interface OfferModalProps {
   offer: Offer;
@@ -18,12 +19,24 @@ interface OfferModalProps {
 }
 
 const OfferModal: React.FC<OfferModalProps> = ({ offer, isOpen, onClose }) => {
+  const { toast } = useToast();
+  
   const handleClaimOffer = () => {
     window.open(`/contact-options?development=${encodeURIComponent(offer.development)}&offer=${encodeURIComponent(offer.title)}`, '_blank');
   };
 
   const handleContactDeveloper = () => {
     window.open(`/contact-options?developer=${encodeURIComponent(offer.developer)}`, '_blank');
+  };
+
+  const copyVoucherCode = () => {
+    if (offer.voucherCode) {
+      navigator.clipboard.writeText(offer.voucherCode);
+      toast({
+        title: 'Voucher Code Copied',
+        description: `${offer.voucherCode} has been copied to your clipboard`,
+      });
+    }
   };
 
   return (
@@ -72,6 +85,26 @@ const OfferModal: React.FC<OfferModalProps> = ({ offer, isOpen, onClose }) => {
               {offer.description}
             </p>
           </div>
+
+          {/* Voucher Code */}
+          {offer.voucherCode && (
+            <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Quote this voucher code when booking:</p>
+                  <p className="font-mono font-bold text-2xl text-primary">{offer.voucherCode}</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={copyVoucherCode}
+                  className="shrink-0"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
 
           <Separator />
 

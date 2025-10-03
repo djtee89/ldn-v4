@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { X, MapPin, Train, GraduationCap, Download, Heart, Share2, Car, Calendar } from 'lucide-react';
+import { X, MapPin, Train, GraduationCap, Download, Heart, Share2, Car, Calendar, Gift, Copy } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { translations } from '@/i18n/translations';
 import { PhotoGallery } from '@/components/PhotoGallery';
@@ -29,6 +29,16 @@ interface Unit {
   floor?: number;
   service_charge?: number;
 }
+
+interface DevelopmentOffer {
+  id: string;
+  offer_title: string;
+  offer_description: string;
+  voucher_code: string;
+  savings_amount: string;
+  expiry_date: string;
+  terms: any;
+}
 interface DevelopmentPopupProps {
   development: Development;
   onClose: () => void;
@@ -51,10 +61,32 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
   const [hottestReason, setHottestReason] = useState<string>('');
   const [hottestFloorplan, setHottestFloorplan] = useState<string>('');
   const [loadingHottest, setLoadingHottest] = useState(false);
+  const [developmentOffers, setDevelopmentOffers] = useState<DevelopmentOffer[]>([]);
+  const [loadingOffers, setLoadingOffers] = useState(false);
   const {
     toast
   } = useToast();
   const isKRP = development.id === 'kings-road-park-berkeley';
+
+  // Map developer names to logo paths
+  const developerLogos: Record<string, string> = {
+    'Berkeley Homes': '/logos/berkeley.jpg',
+    'Berkeley': '/logos/berkeley.jpg',
+    'Barratt Homes': '/logos/barratt.jpg',
+    'Barratt London': '/logos/barratt.jpg',
+    'Bellway': '/logos/bellway.jpg',
+    'Taylor Wimpey': '/logos/taylor-wimpey.jpg',
+    'Countryside': '/logos/countryside.jpg',
+    'Ballymore': '/logos/ballymore.jpeg',
+    'Canary Wharf Group': '/logos/canary-wharf.jpg',
+    'Hill': '/logos/hill.jpg',
+    'Lendlease': '/logos/lendlease.jpg',
+    'London Square': '/logos/london-square.png',
+    'Mount Anvil': '/logos/mount-anvil.jpg',
+    'Regal London': '/logos/regal.png',
+  };
+
+  const developerLogo = development.developer ? developerLogos[development.developer] : null;
 
   // Body scroll lock
   useEffect(() => {
@@ -70,6 +102,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
       loadUnits();
     }
     loadHottestUnit();
+    loadDevelopmentOffers();
   }, [isKRP, development.id]);
   const loadUnits = async () => {
     setLoadingUnits(true);
@@ -121,6 +154,33 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
       setLoadingHottest(false);
     }
   };
+
+  const loadDevelopmentOffers = async () => {
+    setLoadingOffers(true);
+    try {
+      const { data, error } = await supabase
+        .from('development_offers')
+        .select('*')
+        .eq('dev_id', development.id)
+        .eq('active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setDevelopmentOffers(data || []);
+    } catch (error) {
+      console.error('Error loading development offers:', error);
+    } finally {
+      setLoadingOffers(false);
+    }
+  };
+
+  const copyVoucherCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    toast({
+      title: 'Voucher Code Copied',
+      description: `${code} has been copied to your clipboard`,
+    });
+  };
   const handleShare = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
@@ -139,8 +199,13 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <h2 className="text-lg md:text-xl font-bold text-foreground truncate">{development.name}</h2>
                 <Badge variant="secondary" className="mt-1 text-xs">{development.developer}</Badge>
               </div>
-              {development.developer === 'Berkeley Homes' && <img src="/logos/berkeley.jpg" alt="Berkeley Homes" className="h-12 md:h-16 w-auto object-contain rounded-lg shadow-sm hidden sm:block" />}
-              {development.developer === 'Barratt Homes' && <img src="/logos/barratt.jpg" alt="Barratt Homes" className="h-12 md:h-16 w-auto object-contain rounded-lg shadow-sm hidden sm:block" />}
+              {developerLogo && (
+                <img 
+                  src={developerLogo} 
+                  alt={development.developer} 
+                  className="h-12 md:h-16 w-auto object-contain rounded-lg shadow-sm hidden sm:block" 
+                />
+              )}
             </div>
             <div className="flex items-center gap-1 flex-shrink-0">
               <TooltipProvider>
@@ -193,6 +258,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="hottest">🔥 Hottest Unit</TabsTrigger>
+              <TabsTrigger value="offers">🎁 Special Offers</TabsTrigger>
               <TabsTrigger value="availability">Availability</TabsTrigger>
               <TabsTrigger value="amenities">Amenities</TabsTrigger>
               <TabsTrigger value="transport">Transport</TabsTrigger>
@@ -502,6 +568,62 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                     <Button onClick={onBookViewing} className="mt-4">
                       View All Available Units
                     </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            {/* Special Offers Tab */}
+            <TabsContent value="offers" className="mt-0">
+              {loadingOffers ? (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <p className="text-muted-foreground">Loading offers...</p>
+                  </CardContent>
+                </Card>
+              ) : developmentOffers.length > 0 ? (
+                <div className="space-y-4">
+                  {developmentOffers.map((offer) => (
+                    <Card key={offer.id} className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between gap-4 mb-4">
+                          <div className="flex items-center gap-2">
+                            <Gift className="h-6 w-6 text-primary" />
+                            <h3 className="text-xl font-bold">{offer.offer_title}</h3>
+                          </div>
+                          <Badge className="bg-primary text-white font-bold">
+                            Save {offer.savings_amount}
+                          </Badge>
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground mb-4">{offer.offer_description}</p>
+                        
+                        <div className="p-4 bg-background/80 rounded-lg border mb-4">
+                          <div className="flex items-center justify-between gap-4">
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">Quote this code when booking:</p>
+                              <p className="font-mono font-bold text-xl text-primary">{offer.voucher_code}</p>
+                            </div>
+                            <Button variant="outline" size="icon" onClick={() => copyVoucherCode(offer.voucher_code)}>
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+
+                        <Button onClick={onBookViewing} className="w-full" size="lg">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Book Viewing with This Offer
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <Gift className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground mb-4">No special offers available for this development at the moment.</p>
+                    <Button onClick={onBookViewing}>Book Viewing</Button>
                   </CardContent>
                 </Card>
               )}

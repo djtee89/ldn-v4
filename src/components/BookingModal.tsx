@@ -44,6 +44,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
     preferredDate: '',
     preferredTime: '',
     message: '',
+    voucherCode: '',
     honeypot: '', // Hidden field for bot detection
     consentGiven: false // GDPR consent
   });
@@ -137,6 +138,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
           preferred_date: calendarForm.preferredDate,
           preferred_time: calendarForm.preferredTime || 'Flexible',
           message: calendarForm.message?.trim() || null,
+          voucher_code: calendarForm.voucherCode?.trim() || null,
           source: 'calendar_booking',
           user_id: session?.user?.id || null
         });
@@ -156,6 +158,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
         preferredDate: '',
         preferredTime: '',
         message: '',
+        voucherCode: '',
         honeypot: '',
         consentGiven: false
       });
@@ -249,11 +252,14 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
   const handleAgentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const message = `Hi, I'm interested in ${developmentName}. Can you help me?`;
+    const whatsappUrl = `https://wa.me/447365472552?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    onClose(); // Close modal after opening WhatsApp
     toast({
-      title: "Agent callback requested",
-      description: "One of our expert agents will call you back within 2 hours."
+      title: "Opening WhatsApp",
+      description: "Our agent will respond shortly."
     });
-    onClose();
   };
 
   return (
@@ -349,13 +355,23 @@ const BookingModal: React.FC<BookingModalProps> = ({
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="cal-time">Preferred Time</Label>
-                      <Input
+                      <Label htmlFor="cal-time">Preferred Time *</Label>
+                      <select
                         id="cal-time"
-                        type="time"
                         value={calendarForm.preferredTime}
                         onChange={(e) => setCalendarForm({...calendarForm, preferredTime: e.target.value})}
-                      />
+                        required
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      >
+                        <option value="">Select a time</option>
+                        {Array.from({ length: 29 }, (_, i) => {
+                          const hour = Math.floor(i / 4) + 10;
+                          const minute = (i % 4) * 15;
+                          if (hour >= 17 && minute > 0) return null;
+                          const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                          return <option key={timeStr} value={timeStr}>{timeStr}</option>;
+                        }).filter(Boolean)}
+                      </select>
                     </div>
                     <div>
                       <Label htmlFor="cal-message">Message</Label>
@@ -364,6 +380,17 @@ const BookingModal: React.FC<BookingModalProps> = ({
                         placeholder="Any specific requirements or questions?"
                         value={calendarForm.message}
                         onChange={(e) => setCalendarForm({...calendarForm, message: e.target.value})}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="cal-voucher">Voucher Code (Optional)</Label>
+                      <Input
+                        id="cal-voucher"
+                        type="text"
+                        placeholder="e.g., WOOD10K, KRP10K"
+                        value={calendarForm.voucherCode}
+                        onChange={(e) => setCalendarForm({...calendarForm, voucherCode: e.target.value.toUpperCase()})}
                       />
                     </div>
                     

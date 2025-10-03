@@ -137,6 +137,63 @@ export type Database = {
         }
         Relationships: []
       }
+      development_offers: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          dev_id: string
+          expiry_date: string | null
+          id: string
+          offer_description: string | null
+          offer_title: string
+          savings_amount: string | null
+          terms: Json | null
+          updated_at: string | null
+          voucher_code: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          dev_id: string
+          expiry_date?: string | null
+          id?: string
+          offer_description?: string | null
+          offer_title: string
+          savings_amount?: string | null
+          terms?: Json | null
+          updated_at?: string | null
+          voucher_code: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          dev_id?: string
+          expiry_date?: string | null
+          id?: string
+          offer_description?: string | null
+          offer_title?: string
+          savings_amount?: string | null
+          terms?: Json | null
+          updated_at?: string | null
+          voucher_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_development"
+            columns: ["dev_id"]
+            isOneToOne: false
+            referencedRelation: "developments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_development"
+            columns: ["dev_id"]
+            isOneToOne: false
+            referencedRelation: "developments_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       developments: {
         Row: {
           amenities: string[] | null
@@ -516,6 +573,7 @@ export type Database = {
           unit_number: string | null
           updated_at: string | null
           user_id: string | null
+          voucher_code: string | null
         }
         Insert: {
           created_at?: string | null
@@ -534,6 +592,7 @@ export type Database = {
           unit_number?: string | null
           updated_at?: string | null
           user_id?: string | null
+          voucher_code?: string | null
         }
         Update: {
           created_at?: string | null
@@ -552,6 +611,7 @@ export type Database = {
           unit_number?: string | null
           updated_at?: string | null
           user_id?: string | null
+          voucher_code?: string | null
         }
         Relationships: []
       }
