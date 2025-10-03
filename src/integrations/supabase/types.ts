@@ -16,7 +16,6 @@ export type Database = {
     Tables: {
       bookings: {
         Row: {
-          booking_token: string | null
           created_at: string
           development_name: string | null
           email: string
@@ -28,13 +27,9 @@ export type Database = {
           preferred_time: string | null
           source: string | null
           status: string | null
-          token_access_count: number | null
-          token_expires_at: string | null
-          token_last_accessed_at: string | null
           user_id: string | null
         }
         Insert: {
-          booking_token?: string | null
           created_at?: string
           development_name?: string | null
           email: string
@@ -46,13 +41,9 @@ export type Database = {
           preferred_time?: string | null
           source?: string | null
           status?: string | null
-          token_access_count?: number | null
-          token_expires_at?: string | null
-          token_last_accessed_at?: string | null
           user_id?: string | null
         }
         Update: {
-          booking_token?: string | null
           created_at?: string
           development_name?: string | null
           email?: string
@@ -64,9 +55,6 @@ export type Database = {
           preferred_time?: string | null
           source?: string | null
           status?: string | null
-          token_access_count?: number | null
-          token_expires_at?: string | null
-          token_last_accessed_at?: string | null
           user_id?: string | null
         }
         Relationships: []
@@ -743,10 +731,6 @@ export type Database = {
       hnswhandler: {
         Args: { "": unknown }
         Returns: unknown
-      }
-      is_valid_booking_token: {
-        Args: { token: string }
-        Returns: boolean
       }
       ivfflat_bit_support: {
         Args: { "": unknown }
