@@ -300,6 +300,16 @@ export default function Admin() {
             className="mb-4"
           />
           <div className="grid gap-4 md:grid-cols-3">
+            <Card className="cursor-pointer hover:bg-muted/50" onClick={() => navigate('/admin/nearby')}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Search className="h-5 w-5" />
+                  Nearby Settings
+                </CardTitle>
+                <CardDescription>Configure amenity categories and search radii</CardDescription>
+              </CardHeader>
+            </Card>
+
             <Card className="cursor-pointer hover:bg-muted/50" onClick={() => setDedupeOpen(true)}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">

@@ -325,6 +325,72 @@ export type Database = {
           },
         ]
       }
+      nearby_cache: {
+        Row: {
+          category: string
+          created_at: string | null
+          dev_id: string
+          fetched_at: string | null
+          id: string
+          results: Json
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          dev_id: string
+          fetched_at?: string | null
+          id?: string
+          results: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          dev_id?: string
+          fetched_at?: string | null
+          id?: string
+          results?: Json
+        }
+        Relationships: []
+      }
+      nearby_categories: {
+        Row: {
+          created_at: string | null
+          default_visible: boolean | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          label: string
+          name: string
+          overpass_query: string | null
+          radius_meters: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          default_visible?: boolean | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          label: string
+          name: string
+          overpass_query?: string | null
+          radius_meters?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          default_visible?: boolean | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          label?: string
+          name?: string
+          overpass_query?: string | null
+          radius_meters?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       price_list_rows: {
         Row: {
           beds: number | null

@@ -12,6 +12,7 @@ import { PhotoGallery } from '@/components/PhotoGallery';
 import { MortgageCalculator } from '@/components/MortgageCalculator';
 import { YieldCalculator } from '@/components/YieldCalculator';
 import { KrpAskBox } from '@/components/KrpAskBox';
+import { NearbyTab } from '@/components/NearbyTab';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -257,6 +258,7 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
             <TabsList className="w-full justify-start overflow-x-auto flex-nowrap min-w-max">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="about">About</TabsTrigger>
+              <TabsTrigger value="nearby">📍 Nearby</TabsTrigger>
               <TabsTrigger value="hottest">🔥 Hottest Unit</TabsTrigger>
               <TabsTrigger value="offers">🎁 Special Offers</TabsTrigger>
               <TabsTrigger value="availability">Availability</TabsTrigger>
@@ -471,6 +473,17 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
               {isKRP && <div className="pt-4">
                   <KrpAskBox />
                 </div>}
+            </TabsContent>
+
+            {/* Nearby Tab */}
+            <TabsContent value="nearby" className="mt-0">
+              {development.coordinates && (
+                <NearbyTab 
+                  developmentId={development.id}
+                  lat={development.coordinates.lat}
+                  lng={development.coordinates.lng}
+                />
+              )}
             </TabsContent>
 
             {/* Hottest Unit Tab */}

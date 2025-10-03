@@ -11,6 +11,7 @@ import Offers from "./pages/Offers";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import AdminDevelopments from "./pages/AdminDevelopments";
+import AdminNearby from "./pages/AdminNearby";
 import DataPipeline from "./pages/DataPipeline";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Admin /></ProtectedRoute>} />
           <Route path="/admin/developments" element={<ProtectedRoute requiredRole="admin"><AdminDevelopments /></ProtectedRoute>} />
+          <Route path="/admin/nearby" element={<ProtectedRoute requiredRole="admin"><AdminNearby /></ProtectedRoute>} />
           <Route path="/admin/pipeline" element={<ProtectedRoute requiredRole="admin"><DataPipeline /></ProtectedRoute>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
