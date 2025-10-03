@@ -36,13 +36,13 @@ Deno.serve(async (req) => {
       const fileName = `${devId}/${crypto.randomUUID()}.${fileExt}`;
       
       const { error: uploadError } = await supabase.storage
-        .from('dev-images')
+        .from('development-images')
         .upload(fileName, file);
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('dev-images')
+        .from('development-images')
         .getPublicUrl(fileName);
 
       uploadedImages.push({
