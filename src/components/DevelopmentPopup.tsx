@@ -263,9 +263,9 @@ const DevelopmentPopup: React.FC<DevelopmentPopupProps> = ({
                 <Badge className="px-4 py-2 text-base">Zone {development.zone}</Badge>
                 <Badge variant="secondary" className="px-4 py-2 text-base">
                   {development.tenure}
-                  {units && units.length > 0 && units.some(u => u.service_charge) && (
+                  {units && units.length > 0 && units.some(u => u.service_charge && u.size_sqft) && (
                     <span className="ml-2 text-xs opacity-80">
-                      (Service Charge: from £{Math.min(...units.filter(u => u.service_charge).map(u => u.service_charge!)).toLocaleString()}/yr)
+                      (Service Charge: from £{Math.min(...units.filter(u => u.service_charge && u.size_sqft).map(u => u.service_charge! * u.size_sqft)).toLocaleString()}/yr)
                     </span>
                   )}
                 </Badge>
