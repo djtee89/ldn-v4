@@ -134,16 +134,23 @@ Deno.serve(async (req) => {
     if (enrich_amenities && lat && lng) {
       console.log(`[enrich-development] Finding nearby amenities and schools`);
       try {
-        // Use Overpass API to find schools and parks
+        // Use Overpass API to find schools and parks - expanded search
         const overpassQuery = `
-          [out:json][timeout:10];
+          [out:json][timeout:15];
           (
-            node["amenity"="school"](around:1000,${lat},${lng});
-            way["amenity"="school"](around:1000,${lat},${lng});
-            node["leisure"="park"](around:800,${lat},${lng});
-            way["leisure"="park"](around:800,${lat},${lng});
+            node["amenity"="school"](around:2000,${lat},${lng});
+            way["amenity"="school"](around:2000,${lat},${lng});
+            relation["amenity"="school"](around:2000,${lat},${lng});
+            node["amenity"="kindergarten"](around:2000,${lat},${lng});
+            way["amenity"="kindergarten"](around:2000,${lat},${lng});
+            node["amenity"="college"](around:2000,${lat},${lng});
+            way["amenity"="college"](around:2000,${lat},${lng});
+            node["amenity"="university"](around:2000,${lat},${lng});
+            way["amenity"="university"](around:2000,${lat},${lng});
+            node["leisure"="park"](around:1000,${lat},${lng});
+            way["leisure"="park"](around:1000,${lat},${lng});
           );
-          out body;
+          out center;
         `;
 
         const overpassUrl = 'https://overpass-api.de/api/interpreter';
@@ -161,7 +168,12 @@ Deno.serve(async (req) => {
           let hasParks = false;
 
           for (const elem of overpassData.elements) {
-            if (elem.tags?.amenity === 'school' && elem.tags?.name) {
+            const isSchool = elem.tags?.amenity === 'school' || 
+                           elem.tags?.amenity === 'kindergarten' || 
+                           elem.tags?.amenity === 'college' || 
+                           elem.tags?.amenity === 'university';
+            
+            if (isSchool && elem.tags?.name) {
               const schoolLat = elem.lat || elem.center?.lat;
               const schoolLng = elem.lon || elem.center?.lon;
               
