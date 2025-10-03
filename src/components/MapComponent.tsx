@@ -359,7 +359,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           const popupContent = `
             <div style="padding: 8px; font-size: 13px; min-width: 180px;">
               <div style="font-weight: 600; margin-bottom: 4px;">${name}</div>
-              <div style="color: #666; font-size: 12px; margin-bottom: 8px;">${walkTime} min walk</div>
+              
               <a 
                 href="https://www.google.com/search?q=${encodeURIComponent(name + ' London')}"
                 target="_blank"
@@ -403,7 +403,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           });
           
           tooltip.setLngLat(coordinates)
-            .setHTML(`<div style="padding: 4px 8px; font-size: 11px;"><strong>${name}</strong><br/>${walkTime} min walk</div>`)
+            .setHTML(`<div style="padding: 4px 8px; font-size: 11px;"><strong>${name}</strong></div>`)
             .addTo(map.current!);
             
           map.current!.on('mouseleave', 'amenity-pins', () => {
