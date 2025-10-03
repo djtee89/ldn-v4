@@ -6,6 +6,7 @@ import { Download, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import Papa from "papaparse";
+import { parsePrice } from "@/lib/priceParser";
 
 export function BulkImportTool() {
   const [file, setFile] = useState<File | null>(null);
@@ -28,6 +29,11 @@ export function BulkImportTool() {
         zone: "1",
         tenure: "Leasehold",
         status: "Available",
+        studio_from: "",
+        "1bed_from": "450000",
+        "2bed_from": "550000",
+        "3bed_from": "750000",
+        "4bed_from": "",
       },
     ];
 
@@ -71,6 +77,29 @@ export function BulkImportTool() {
 
       for (const [index, row] of (parsed.data as any[]).entries()) {
         try {
+          // Build prices object from price columns
+          const prices: any = {};
+          if (row.studio_from) {
+            const parsed = parsePrice(row.studio_from);
+            if (parsed) prices.studio = parsed;
+          }
+          if (row["1bed_from"]) {
+            const parsed = parsePrice(row["1bed_from"]);
+            if (parsed) prices["1bed"] = parsed;
+          }
+          if (row["2bed_from"]) {
+            const parsed = parsePrice(row["2bed_from"]);
+            if (parsed) prices["2bed"] = parsed;
+          }
+          if (row["3bed_from"]) {
+            const parsed = parsePrice(row["3bed_from"]);
+            if (parsed) prices["3bed"] = parsed;
+          }
+          if (row["4bed_from"]) {
+            const parsed = parsePrice(row["4bed_from"]);
+            if (parsed) prices["4bed"] = parsed;
+          }
+
           const devData: any = {
             id: row.id?.trim(),
             name: row.name?.trim(),
@@ -84,6 +113,7 @@ export function BulkImportTool() {
             status: row.status?.trim() || 'Available',
             completion_date: row.completion_date?.trim() || null,
             tenure: row.tenure?.trim() || null,
+            prices: Object.keys(prices).length > 0 ? prices : null,
           };
 
           if (!devData.id || !devData.name) {
@@ -146,16 +176,18 @@ export function BulkImportTool() {
         <CardHeader>
           <CardTitle>Download Template</CardTitle>
           <CardDescription>
-            Simple CSV template - just basic info needed! Auto-enrichment will add coordinates, transport, amenities & AI summaries.
+            CSV template with basic info + optional starting prices. Auto-enrichment will add coordinates, transport, amenities & AI summaries.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button onClick={downloadTemplate} variant="outline" className="w-full">
             <Download className="mr-2 h-4 w-4" />
-            Download Simplified CSV Template
+            Download CSV Template
           </Button>
           <p className="text-sm text-muted-foreground mt-2">
             Required: <span className="font-medium">id, name, developer, postcode</span>
+            <br />
+            Optional prices: <span className="font-medium">studio_from, 1bed_from, 2bed_from, 3bed_from, 4bed_from</span>
           </p>
         </CardContent>
       </Card>
