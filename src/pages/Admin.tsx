@@ -4,11 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Upload, AlertCircle, LogOut, Activity, Search, Database, FileText, Edit } from 'lucide-react';
+import { Calendar, Mail, Phone, MessageSquare, Building2, Clock, RefreshCcw, Upload, AlertCircle, LogOut, Activity, Search, Database, FileText, Edit, Flame } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { DedupeDialog } from '@/components/DedupeDialog';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { BestDealsManager } from '@/components/BestDealsManager';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type Booking = {
   id: string;
@@ -329,17 +331,17 @@ export default function Admin() {
                 <CardDescription>Access database and storage directly</CardDescription>
               </CardHeader>
             </Card>
-
-            <Card className="opacity-50 cursor-not-allowed">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Edit className="h-5 w-5" />
-                  User Permissions
-                </CardTitle>
-                <CardDescription>Manage admin & manager roles (coming soon)</CardDescription>
-              </CardHeader>
-            </Card>
           </div>
+        </div>
+
+        {/* Best Deals Management */}
+        <div className="mb-6">
+          <SectionHeader 
+            title="Best Deals Management"
+            subtitle="Manage featured deals on homepage"
+            className="mb-4"
+          />
+          <BestDealsManager />
         </div>
 
         {/* Recent Activity Section */}

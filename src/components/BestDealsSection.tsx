@@ -39,11 +39,11 @@ const BestDealsSection: React.FC<BestDealsSectionProps> = ({ onBookViewing }) =>
   const loadHottestDeals = async () => {
     setLoading(true);
     try {
-      const { data: hottestUnits, error } = await supabase
-        .from('hottest_unit')
+      // Fetch from best_deals table
+      const { data: bestDeals, error } = await supabase
+        .from('best_deals')
         .select(`
           unit_id,
-          override_reason,
           units (
             id,
             unit_number,
@@ -51,46 +51,40 @@ const BestDealsSection: React.FC<BestDealsSectionProps> = ({ onBookViewing }) =>
             price,
             size_sqft,
             dev_id
+          ),
+          developments (
+            id,
+            name,
+            developer,
+            images
           )
         `)
-        .order('score', { ascending: false })
+        .eq('active', true)
+        .order('display_order')
         .limit(12);
 
       if (error) throw error;
 
-      if (hottestUnits) {
-        const dealsWithDevInfo = await Promise.all(
-          hottestUnits.map(async (hot: any) => {
-            const unit = hot.units;
-            if (!unit) return null;
+      if (bestDeals) {
+        const formattedDeals = bestDeals
+          .filter((deal: any) => deal.units && deal.developments)
+          .map((deal: any) => ({
+            unit_id: deal.units.id,
+            unit_number: deal.units.unit_number,
+            beds: deal.units.beds,
+            price: deal.units.price,
+            size_sqft: deal.units.size_sqft,
+            dev_id: deal.developments.id,
+            dev_name: deal.developments.name,
+            developer: deal.developments.developer,
+            image: deal.developments.images?.[0] || '/placeholder.svg',
+            override_reason: 'Featured Deal'
+          }));
 
-            const { data: dev } = await supabase
-              .from('developments')
-              .select('name, developer, images')
-              .eq('id', unit.dev_id)
-              .single();
-
-            if (!dev) return null;
-
-            return {
-              unit_id: unit.id,
-              unit_number: unit.unit_number,
-              beds: unit.beds,
-              price: unit.price,
-              size_sqft: unit.size_sqft,
-              dev_id: unit.dev_id,
-              dev_name: dev.name,
-              developer: dev.developer,
-              image: dev.images?.[0] || '/placeholder.svg',
-              override_reason: hot.override_reason || ''
-            };
-          })
-        );
-
-        setHottestDeals(dealsWithDevInfo.filter(Boolean) as HottestDeal[]);
+        setHottestDeals(formattedDeals);
       }
     } catch (error) {
-      console.error('Error loading hottest deals:', error);
+      console.error('Error loading best deals:', error);
     } finally {
       setLoading(false);
     }

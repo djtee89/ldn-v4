@@ -14,6 +14,64 @@ export type Database = {
   }
   public: {
     Tables: {
+      best_deals: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          dev_id: string
+          display_order: number | null
+          id: string
+          published_at: string | null
+          published_by: string | null
+          unit_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          dev_id: string
+          display_order?: number | null
+          id?: string
+          published_at?: string | null
+          published_by?: string | null
+          unit_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          dev_id?: string
+          display_order?: number | null
+          id?: string
+          published_at?: string | null
+          published_by?: string | null
+          unit_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "best_deals_dev_id_fkey"
+            columns: ["dev_id"]
+            isOneToOne: false
+            referencedRelation: "developments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "best_deals_dev_id_fkey"
+            columns: ["dev_id"]
+            isOneToOne: false
+            referencedRelation: "developments_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "best_deals_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           created_at: string
