@@ -30,41 +30,41 @@ Deno.serve(async (req) => {
     // Real implementation: aggregate ONS/LR price + EPC floor area by Borough
     const updates = [];
     
-    // Borough price map (realistic Central → Outer gradient)
+    // Borough price map by area_code (realistic Central → Outer gradient)
     const boroughPrices: Record<string, number> = {
-      'City of London': 1450,
-      'Westminster': 1400,
-      'Kensington and Chelsea': 1380,
-      'Camden': 1100,
-      'Islington': 950,
-      'Hackney': 850,
-      'Tower Hamlets': 900,
-      'Southwark': 920,
-      'Lambeth': 780,
-      'Wandsworth': 850,
-      'Hammersmith and Fulham': 980,
-      'Greenwich': 650,
-      'Lewisham': 620,
-      'Newham': 600,
-      'Brent': 700,
-      'Ealing': 720,
-      'Hounslow': 650,
-      'Richmond upon Thames': 880,
-      'Kingston upon Thames': 800,
-      'Merton': 750,
-      'Sutton': 620,
-      'Croydon': 580,
-      'Bromley': 650,
-      'Barnet': 750,
-      'Haringey': 780,
-      'Enfield': 620,
-      'Waltham Forest': 680,
-      'Redbridge': 650,
-      'Havering': 600,
-      'Barking and Dagenham': 550,
-      'Bexley': 600,
-      'Harrow': 700,
-      'Hillingdon': 650,
+      'E09000001': 1850, // City of London
+      'E09000002': 520,  // Barking and Dagenham
+      'E09000003': 680,  // Barnet
+      'E09000004': 580,  // Bexley
+      'E09000005': 720,  // Brent
+      'E09000006': 590,  // Bromley
+      'E09000007': 1250, // Camden
+      'E09000008': 550,  // Croydon
+      'E09000009': 670,  // Ealing
+      'E09000010': 560,  // Enfield
+      'E09000011': 680,  // Greenwich
+      'E09000012': 850,  // Hackney
+      'E09000013': 1100, // Hammersmith and Fulham
+      'E09000014': 750,  // Haringey
+      'E09000015': 620,  // Harrow
+      'E09000016': 530,  // Havering
+      'E09000017': 580,  // Hillingdon
+      'E09000018': 650,  // Hounslow
+      'E09000019': 950,  // Islington
+      'E09000020': 1600, // Kensington and Chelsea
+      'E09000021': 680,  // Kingston upon Thames
+      'E09000022': 780,  // Lambeth
+      'E09000023': 670,  // Lewisham
+      'E09000024': 720,  // Merton
+      'E09000025': 650,  // Newham
+      'E09000026': 600,  // Redbridge
+      'E09000027': 820,  // Richmond upon Thames
+      'E09000028': 850,  // Southwark
+      'E09000029': 590,  // Sutton
+      'E09000030': 820,  // Tower Hamlets
+      'E09000031': 620,  // Waltham Forest
+      'E09000032': 880,  // Wandsworth
+      'E09000033': 1400, // Westminster
     };
     
     for (const poly of polygons) {
@@ -72,12 +72,11 @@ Deno.serve(async (req) => {
         ? calculateCenter(poly.geometry)
         : calculateMultiPolygonCenter(poly.geometry);
       
-      // Use borough name to lookup price, or calculate from center
-      const basePrice = boroughPrices[poly.area_name] || 700;
+      // Use borough code for reliable lookup
+      const basePrice = boroughPrices[poly.area_code] || 700;
       
-      // Add small variation (±5%)
-      const variation = basePrice * 0.05 * (Math.random() - 0.5) * 2;
-      const price_per_sqft_overall = Math.round(basePrice + variation);
+      // No variation - use exact price for clarity
+      const price_per_sqft_overall = basePrice;
       
       // Mock sample sizes
       const sample_size_price = Math.floor(200 + Math.random() * 500);
