@@ -2,10 +2,13 @@ import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Info, MapPin, Building2 } from 'lucide-react';
+import { Info, MapPin, Building2, Share2, Mail } from 'lucide-react';
 import { AnalysisMode, SelectionType } from '@/pages/Analysis';
 import { Development } from '@/data/newDevelopments';
 import { AreaMetric } from '@/hooks/use-area-metrics';
+import MethodNoteDialog from './MethodNoteDialog';
+import PriceSparkline from './PriceSparkline';
+import { useToast } from '@/hooks/use-toast';
 
 interface AnalysisInsightPanelProps {
   mode: AnalysisMode;
@@ -20,6 +23,23 @@ const AnalysisInsightPanel: React.FC<AnalysisInsightPanelProps> = ({
   developments,
   selectedItem,
 }) => {
+  const { toast } = useToast();
+
+  const handleShare = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    toast({
+      title: "Link copied!",
+      description: "Share this URL to show this view",
+    });
+  };
+
+  const handleEmail = () => {
+    toast({
+      title: "Email feature coming soon",
+      description: "We'll notify you when this is ready",
+    });
+  };
   // Calculate statistics based on current mode
   const stats = useMemo(() => {
     if (mode === 'price-per-sqft' && units.length > 0) {
@@ -101,9 +121,7 @@ const AnalysisInsightPanel: React.FC<AnalysisInsightPanelProps> = ({
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold">Price per sqft</CardTitle>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <Info className="h-3 w-3" />
-              </Button>
+              <MethodNoteDialog mode={mode} />
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -125,10 +143,15 @@ const AnalysisInsightPanel: React.FC<AnalysisInsightPanelProps> = ({
               </div>
             ))}
             
-            <div className="pt-2 border-t">
+            <div className="pt-2 border-t space-y-2">
               <p className="text-xs text-muted-foreground">
                 Based on {stats.totalUnits} available units across {developments.length} developments
               </p>
+              {/* 12-month trend sparkline */}
+              <div className="space-y-1">
+                <p className="text-xs font-medium">12-month trend</p>
+                <PriceSparkline />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -140,9 +163,7 @@ const AnalysisInsightPanel: React.FC<AnalysisInsightPanelProps> = ({
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-semibold">Estimated Yield</CardTitle>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <Info className="h-3 w-3" />
-              </Button>
+              <MethodNoteDialog mode={mode} />
             </div>
           </CardHeader>
           <CardContent>
@@ -171,11 +192,17 @@ const AnalysisInsightPanel: React.FC<AnalysisInsightPanelProps> = ({
 
       {/* Action Buttons */}
       <div className="space-y-2 pt-2">
-        <Button variant="outline" className="w-full text-sm">
+        <Button variant="default" className="w-full text-sm">
+          <MapPin className="h-4 w-4 mr-2" />
           Show developments here
         </Button>
-        <Button variant="outline" className="w-full text-sm">
+        <Button variant="outline" className="w-full text-sm" onClick={handleEmail}>
+          <Mail className="h-4 w-4 mr-2" />
           Email me this area
+        </Button>
+        <Button variant="outline" className="w-full text-sm" onClick={handleShare}>
+          <Share2 className="h-4 w-4 mr-2" />
+          Share this view
         </Button>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-react';
@@ -14,11 +14,21 @@ import AnalysisLegend, { BracketFilter } from '@/components/AnalysisLegend';
 import AnalysisSearchFilter, { FilterState } from '@/components/AnalysisSearchFilter';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { useSearchParams } from 'react-router-dom';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 export type AnalysisMode = 'price-per-sqft' | 'yield' | 'growth' | 'schools' | 'green' | 'noise-air' | 'crime';
 export type SelectionType = 'development' | 'area' | null;
 
 const Analysis = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeMode, setActiveMode] = useState<AnalysisMode>('price-per-sqft');
   const [selectedBrackets, setSelectedBrackets] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,6 +40,21 @@ const Analysis = () => {
   const { data: developments = [], isLoading: devsLoading } = useDevelopments();
   const { data: areaMetrics = [], isLoading: metricsLoading } = useAreaMetrics();
   const { data: areaPolygons = [], isLoading: polygonsLoading } = useAreaPolygons();
+
+  // Initialize from URL params
+  useEffect(() => {
+    const mode = searchParams.get('mode') as AnalysisMode;
+    if (mode && ['price-per-sqft', 'yield', 'growth', 'schools', 'green', 'noise-air', 'crime'].includes(mode)) {
+      setActiveMode(mode);
+    }
+  }, []);
+
+  // Update URL when mode changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set('mode', activeMode);
+    setSearchParams(params, { replace: true });
+  }, [activeMode]);
 
   // Fetch units for price analysis
   const { data: units = [], isLoading: unitsLoading } = useQuery({
@@ -122,9 +147,35 @@ const Analysis = () => {
           <Badge variant="secondary" className="text-xs">
             Data updated: 08 Oct 2025
           </Badge>
-          <Button variant="ghost" size="icon" className="h-6 w-6">
-            <Info className="h-4 w-4" />
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-6 w-6">
+                <Info className="h-4 w-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle>How We Calculate</DialogTitle>
+                <DialogDescription className="space-y-3 pt-2">
+                  <p className="text-sm">
+                    Our Live Analysis combines multiple data sources to give you real-time market insights:
+                  </p>
+                  <ul className="text-sm space-y-2 list-disc pl-5">
+                    <li><strong>Price/sqft:</strong> Based on available units in our database with Land Registry validation</li>
+                    <li><strong>Yield:</strong> Estimated from current rental data and typical service charges</li>
+                    <li><strong>Growth:</strong> 12-month price trends from Land Registry Price Paid Data</li>
+                    <li><strong>Schools:</strong> Ofsted ratings and proximity analysis</li>
+                    <li><strong>Green Space:</strong> OpenStreetMap and GLA green infrastructure data</li>
+                    <li><strong>Noise/Air:</strong> DEFRA monitoring stations and traffic data</li>
+                    <li><strong>Crime:</strong> Metropolitan Police recorded crime statistics</li>
+                  </ul>
+                  <p className="text-xs text-muted-foreground">
+                    Data is updated nightly. All calculations use industry-standard methodologies.
+                  </p>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </header>
 
@@ -178,7 +229,8 @@ const Analysis = () => {
           {/* Footer Stripe */}
           <div className="absolute bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm border-t border-border px-4 py-2">
             <p className="text-xs text-muted-foreground">
-              Pins loaded: {developments.length} • Units in view: {enrichedUnits.length} • Mode: {activeMode}
+              Pins loaded: {developments.length} • Units in view: {enrichedUnits.length} • Mode: {activeMode.replace('-', ' ')}
+              {selectedBrackets.length > 0 && ` • Filters: ${selectedBrackets.length} bracket${selectedBrackets.length !== 1 ? 's' : ''}`}
             </p>
           </div>
         </div>
