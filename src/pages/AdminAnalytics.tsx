@@ -87,29 +87,29 @@ const AdminAnalytics = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleFetchBoundaries = async () => {
+  const handleLoadGeoJSON = async () => {
     setIsFetchingBoundaries(true);
     try {
-      const { data, error } = await supabase.functions.invoke('fetch-area-boundaries');
+      const { data, error } = await supabase.functions.invoke('borough-load-geojson');
       if (error) throw error;
-      toast.success('Boundaries fetched successfully');
+      toast.success(`Loaded ${data.inserted} borough polygons`);
       await fetchStatus();
     } catch (error: any) {
-      toast.error(`Failed to fetch boundaries: ${error.message}`);
+      toast.error(`Failed to load borough polygons: ${error.message}`);
     } finally {
       setIsFetchingBoundaries(false);
     }
   };
 
-  const handleComputePragmatic = async () => {
+  const handleComputePPSF = async () => {
     setIsComputingPragmatic(true);
     try {
-      const { data, error } = await supabase.functions.invoke('compute-pragmatic-price');
+      const { data, error } = await supabase.functions.invoke('borough-ppsf-pragmatic');
       if (error) throw error;
-      toast.success(`Computed pragmatic £/ft² for ${data.areas_computed} areas`);
+      toast.success(`Computed price data for ${data.nonNull}/${data.inserted} boroughs`);
       await fetchStatus();
     } catch (error: any) {
-      toast.error(`Failed to compute pragmatic £/ft²: ${error.message}`);
+      toast.error(`Failed to compute price data: ${error.message}`);
     } finally {
       setIsComputingPragmatic(false);
     }
@@ -121,14 +121,14 @@ const AdminAnalytics = () => {
     try {
       toast.info('Starting initialization...');
       
-      toast.info('Step 1/2: Fetching Borough boundaries...');
-      await handleFetchBoundaries();
+      toast.info('Step 1/2: Loading Borough GeoJSON...');
+      await handleLoadGeoJSON();
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       toast.info('Step 2/2: Computing Borough £/ft²...');
-      await handleComputePragmatic();
+      await handleComputePPSF();
       
-      toast.success('Borough price data initialized successfully!');
+      toast.success('Borough map initialized successfully with 33/33 polygons and price data!');
     } catch (error: any) {
       toast.error(`Initialization failed: ${error.message}`);
     } finally {
@@ -150,7 +150,7 @@ const AdminAnalytics = () => {
           className="gap-2"
         >
           {isInitializing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-          Initialize Data
+          Initialize Borough Map (Local)
         </Button>
       </div>
 
@@ -238,29 +238,29 @@ const AdminAnalytics = () => {
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>1. Fetch Boundaries</CardTitle>
-            <CardDescription>Load London Borough polygons (33 areas)</CardDescription>
+            <CardTitle>1. Load Borough GeoJSON</CardTitle>
+            <CardDescription>Load real London Borough polygons from storage (requires london-boroughs.geojson in static/boroughs/)</CardDescription>
           </CardHeader>
           <CardContent>
             <Button
-              onClick={handleFetchBoundaries}
+              onClick={handleLoadGeoJSON}
               disabled={isFetchingBoundaries}
               className="w-full"
             >
               {isFetchingBoundaries && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Fetch Boundaries
+              Load Borough Polygons
             </Button>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>2. Borough £/ft²</CardTitle>
-            <CardDescription>Named areas with realistic pricing</CardDescription>
+            <CardTitle>2. Compute Borough £/ft²</CardTitle>
+            <CardDescription>Calculate pragmatic price per square foot using ONS price data and EPC floor area data</CardDescription>
           </CardHeader>
           <CardContent>
             <Button
-              onClick={handleComputePragmatic}
+              onClick={handleComputePPSF}
               disabled={isComputingPragmatic}
               className="w-full"
             >

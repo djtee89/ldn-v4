@@ -1,5 +1,11 @@
 project_id = "ioaalvvkcovbbfxoscxf"
 
+[functions.borough-load-geojson]
+verify_jwt = false
+
+[functions.borough-ppsf-pragmatic]
+verify_jwt = false
+
 [functions.ingest]
 verify_jwt = false
 

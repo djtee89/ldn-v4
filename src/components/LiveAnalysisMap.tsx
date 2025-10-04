@@ -81,75 +81,82 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   }, []);
 
 
-  // Add Borough polygons layer with smooth color gradient
+  // Add Borough polygons layer with proper fill (no rectangles)
   useEffect(() => {
-    if (!map.current || !isMapLoaded || areaPolygons.length === 0) return;
+    if (!map.current || !isMapLoaded || areaPolygons.length === 0 || areaMetrics.length === 0) return;
 
-    // Wide color scale for smooth blend - starting from <£600
-    const getColorFromPrice = (ppsf: number): string => {
-      if (!ppsf || ppsf <= 0) return '#e5e7eb';
-      
-      // Smooth gradient: Green (<£600) → Yellow (£900) → Orange (£1100) → Red (£1400+)
-      if (ppsf < 600) return '#10b981'; // Green - great value
-      if (ppsf < 700) return '#34d399'; // Light green
-      if (ppsf < 800) return '#84cc16'; // Yellow-green
-      if (ppsf < 900) return '#fbbf24'; // Yellow
-      if (ppsf < 1000) return '#fb923c'; // Orange
-      if (ppsf < 1100) return '#f97316'; // Dark orange
-      if (ppsf < 1200) return '#ef4444'; // Red
-      if (ppsf < 1400) return '#dc2626'; // Dark red
-      return '#991b1b'; // Very dark red - premium
-    };
-
-    // Create GeoJSON for polygons - join with metrics by area_code
-    const features = areaPolygons.map(poly => {
-      const metric = areaMetrics.find(m => m.area_code === poly.area_code);
-      const ppsf = metric?.price_per_sqft_overall || null;
-      
+    // Join polygons with metrics to get price data
+    const features = areaPolygons.map(polygon => {
+      const metric = areaMetrics.find(m => m.area_code === polygon.area_code);
       return {
         type: 'Feature' as const,
-        geometry: poly.geometry,
         properties: {
-          area_code: poly.area_code,
-          area_name: poly.area_name,
-          area_ppsf: ppsf,
-          color: ppsf ? getColorFromPrice(ppsf) : '#e5e7eb'
-        }
+          area_code: polygon.area_code,
+          area_name: polygon.area_name,
+          ppsf: metric?.price_per_sqft_overall || null,
+        },
+        geometry: polygon.geometry,
       };
     });
 
     const geojson: GeoJSON.FeatureCollection = {
       type: 'FeatureCollection',
-      features
+      features,
     };
 
-    // Remove existing layers
-    if (map.current!.getLayer('area-fills')) map.current!.removeLayer('area-fills');
-    if (map.current!.getSource('area-polygons')) map.current!.removeSource('area-polygons');
+    // Remove existing layers and source
+    if (map.current!.getLayer('borough-outline')) map.current!.removeLayer('borough-outline');
+    if (map.current!.getLayer('borough-fill')) map.current!.removeLayer('borough-fill');
+    if (map.current!.getSource('boroughs')) map.current!.removeSource('boroughs');
 
-    // Add source and layers
-    map.current!.addSource('area-polygons', {
+    // Add source
+    map.current!.addSource('boroughs', {
       type: 'geojson',
-      data: geojson
+      data: geojson,
     });
 
-    // Fill layer - smooth gradient blend with no borders
+    // Add fill layer with 6 fixed bins
     map.current!.addLayer({
-      id: 'area-fills',
+      id: 'borough-fill',
       type: 'fill',
-      source: 'area-polygons',
+      source: 'boroughs',
       paint: {
-        'fill-color': ['get', 'color'],
+        'fill-color': [
+          'step',
+          ['get', 'ppsf'],
+          '#2E7D32',          // < 600
+          600, '#66BB6A',     // 600–800
+          800, '#FDD835',     // 800–1000
+          1000, '#FB8C00',    // 1000–1200
+          1200, '#E53935',    // 1200–1400
+          1400, '#B71C1C'     // > 1400
+        ],
         'fill-opacity': [
           'case',
-          ['==', ['get', 'area_ppsf'], null],
-          0,
-          0.45
+          ['==', ['get', 'ppsf'], null], 0,
+          0.3
         ],
-        'fill-antialias': true
-      }
+      },
     });
 
+    // Add thin hairline outline
+    map.current!.addLayer({
+      id: 'borough-outline',
+      type: 'line',
+      source: 'boroughs',
+      paint: {
+        'line-color': '#000',
+        'line-opacity': 0.1,
+        'line-width': 0.5,
+      },
+    });
+
+    return () => {
+      if (!map.current) return;
+      if (map.current.getLayer('borough-outline')) map.current.removeLayer('borough-outline');
+      if (map.current.getLayer('borough-fill')) map.current.removeLayer('borough-fill');
+      if (map.current.getSource('boroughs')) map.current.removeSource('boroughs');
+    };
   }, [isMapLoaded, areaPolygons, areaMetrics]);
 
   // Update dev markers when units change
@@ -182,18 +189,23 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
     // Create GeoJSON with discount calculation
     const features = Object.entries(devStats).map(([devId, stats]) => {
       const dev = stats.development;
-      const devPpsf = stats.avgPricePerSqft;
+      const avgPrice = stats.avgPricePerSqft;
       
-      // Find the area metric for this development's location
-      const areaMetric = areaMetrics.find(metric => {
-        if (!metric.bounds) return false;
+      // Find the borough by checking which polygon contains this development
+      const areaMetric = areaPolygons.find(polygon => {
+        // Check if dev coordinates are within this borough polygon
+        // For now, find by matching area_metrics bounds
+        const metric = areaMetrics.find(m => m.area_code === polygon.area_code);
+        if (!metric || !metric.bounds) return false;
         const { lat, lng } = dev.coordinates;
         return lat >= metric.bounds.south && lat <= metric.bounds.north &&
                lng >= metric.bounds.west && lng <= metric.bounds.east;
       });
       
-      const areaPpsf = areaMetric?.price_per_sqft_overall || null;
-      const discount = areaPpsf ? ((devPpsf - areaPpsf) / areaPpsf * 100) : null;
+      const boroughName = areaMetric?.area_name || 'Unknown';
+      const metric = areaMetrics.find(m => m.area_code === areaMetric?.area_code);
+      const areaPrice = metric?.price_per_sqft_overall;
+      const discount = (areaPrice && avgPrice) ? (1 - (avgPrice / areaPrice)) : null;
       
       return {
         type: 'Feature' as const,
@@ -203,13 +215,14 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
         },
         properties: {
           devId,
-          name: dev.name,
-          avgPricePerSqft: Math.round(devPpsf),
-          areaPricePerSqft: areaPpsf ? Math.round(areaPpsf) : null,
-          discount: discount ? Math.round(discount) : null,
+          devName: dev.name,
+          avgPrice: Math.round(avgPrice),
+          areaPrice: areaPrice ? Math.round(areaPrice) : null,
+          discount: discount !== null ? Math.round(discount * 100) : null,
+          borough: boroughName,
           unitCount: stats.count,
-          color: getPriceColor(devPpsf),
-          haloColor: discount !== null ? getHaloColor(discount) : '#9ca3af',
+          color: getPriceColor(avgPrice),
+          haloColor: discount !== null ? getHaloColor(discount * 100) : '#9ca3af',
         },
       };
     });
@@ -268,7 +281,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       type: 'symbol',
       source: 'price-analysis',
       layout: {
-        'text-field': ['concat', '£', ['get', 'avgPricePerSqft']],
+        'text-field': ['concat', '£', ['get', 'avgPrice']],
         'text-size': 10,
         'text-offset': [0, 0],
         'text-anchor': 'center',
@@ -286,20 +299,20 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       closeOnClick: false,
     });
 
-    // Hover on MSOA areas
-    map.current!.on('mouseenter', 'area-fills', (e) => {
+    // Hover on borough polygons
+    map.current!.on('mouseenter', 'borough-fill', (e) => {
       if (!e.features || e.features.length === 0) return;
       const feature = e.features[0];
       const props = feature.properties;
       
-      if (props.area_ppsf) {
-        map.current!.setPaintProperty('area-fills', 'fill-opacity', [
+      if (props.ppsf) {
+        map.current!.setPaintProperty('borough-fill', 'fill-opacity', [
           'case',
           ['==', ['get', 'area_code'], props.area_code],
-          0.65,
-          ['==', ['get', 'area_ppsf'], null],
+          0.5,
+          ['==', ['get', 'ppsf'], null],
           0,
-          0.45
+          0.3
         ]);
         
         popup
@@ -307,19 +320,19 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
           .setHTML(`
             <div class="p-2">
               <h3 class="font-bold text-sm mb-1">${props.area_name}</h3>
-              <p class="text-xs"><strong>Borough £/ft²:</strong> £${props.area_ppsf.toLocaleString()}</p>
+              <p class="text-xs"><strong>Borough £/ft²:</strong> £${props.ppsf.toLocaleString()}</p>
             </div>
           `)
           .addTo(map.current!);
       }
     });
 
-    map.current!.on('mouseleave', 'area-fills', () => {
-      map.current!.setPaintProperty('area-fills', 'fill-opacity', [
+    map.current!.on('mouseleave', 'borough-fill', () => {
+      map.current!.setPaintProperty('borough-fill', 'fill-opacity', [
         'case',
-        ['==', ['get', 'area_ppsf'], null],
+        ['==', ['get', 'ppsf'], null],
         0,
-        0.45
+        0.3
       ]);
       popup.remove();
     });
@@ -330,27 +343,17 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       map.current!.getCanvas().style.cursor = 'pointer';
 
       const feature = e.features[0];
-      const props = feature.properties;
-      
-      const discountText = props.discount !== null 
-        ? `<p class="text-xs ${props.discount < 0 ? 'text-green-600 font-semibold' : 'text-gray-500'}">
-             ${props.discount < 0 ? '' : '+'}${props.discount}% vs area
-           </p>`
-        : '';
-      
-      const areaText = props.areaPricePerSqft !== null
-        ? `<p class="text-xs"><strong>Area £/ft²:</strong> £${props.areaPricePerSqft.toLocaleString()}</p>`
-        : '';
+      const properties = feature.properties;
       
       popup
         .setLngLat(e.lngLat)
         .setHTML(`
           <div class="p-2">
-            <h3 class="font-bold text-sm mb-1">${props.name}</h3>
-            <p class="text-xs"><strong>Dev £/ft²:</strong> £${props.avgPricePerSqft.toLocaleString()}</p>
-            ${areaText}
-            ${discountText}
-            <p class="text-xs text-muted-foreground mt-1"><strong>Units:</strong> ${props.unitCount}</p>
+            <div class="font-semibold">${properties.devName}</div>
+            <div class="text-sm">£${properties.avgPrice}/ft²</div>
+            <div class="text-xs text-gray-500">${properties.borough}</div>
+            ${properties.areaPrice ? `<div class="text-sm text-gray-600">${properties.borough} avg: £${properties.areaPrice}/ft²</div>` : ''}
+            ${properties.discount !== null ? `<div class="text-sm font-semibold ${properties.discount > 0 ? 'text-green-600' : properties.discount < -5 ? 'text-red-600' : 'text-gray-600'}">${properties.discount > 0 ? '−' : '+'}${Math.abs(properties.discount)}% vs borough</div>` : ''}
           </div>
         `)
         .addTo(map.current!);
