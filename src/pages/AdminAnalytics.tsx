@@ -11,6 +11,7 @@ export default function AdminAnalytics() {
   const [isFetchingBoundaries, setIsFetchingBoundaries] = useState(false);
   const [isComputingPragmatic, setIsComputingPragmatic] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
+  const [isMappingNeighbourhoods, setIsMappingNeighbourhoods] = useState(false);
   
   const [status, setStatus] = useState({
     polygonCount: 0,
@@ -111,13 +112,29 @@ export default function AdminAnalytics() {
     }
   };
 
+  const handleMapNeighbourhoods = async () => {
+    setIsMappingNeighbourhoods(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('map-neighbourhoods');
+      if (error) throw error;
+      toast.success(`Mapped ${data.neighbourhoods_mapped} neighbourhoods`);
+      await fetchStatus();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsMappingNeighbourhoods(false);
+    }
+  };
+
   const handleInitializeAll = async () => {
     setIsInitializing(true);
     try {
       await handleFetchBoundaries();
       await new Promise(resolve => setTimeout(resolve, 2000));
       await handleComputePragmatic();
-      toast.success('Initialized!');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await handleMapNeighbourhoods();
+      toast.success('All initialized!');
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -163,6 +180,15 @@ export default function AdminAnalytics() {
             <h3 className="font-semibold mb-2">Neighbourhoods</h3>
             <p className="text-sm">Total: {status.neighbourhoodCount}</p>
             <p className="text-sm">Mapped: {status.neighbourhoodMappedCount}</p>
+            <Button 
+              onClick={handleMapNeighbourhoods} 
+              disabled={isMappingNeighbourhoods}
+              size="sm"
+              className="mt-2"
+            >
+              {isMappingNeighbourhoods && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Auto-Map Neighbourhoods
+            </Button>
           </div>
         </CardContent>
       </Card>

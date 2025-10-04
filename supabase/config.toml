@@ -56,3 +56,12 @@ verify_jwt = false
 
 [functions.fetch-area-boundaries]
 verify_jwt = false
+
+[functions.compute-pragmatic-price]
+verify_jwt = false
+
+[functions.map-neighbourhoods]
+verify_jwt = false
+
+[functions.fetch-nearby]
+verify_jwt = false
