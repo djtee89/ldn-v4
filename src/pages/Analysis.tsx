@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Info } from 'lucide-react';
+import { Info, Database } from 'lucide-react';
 import LiveAnalysisMap from '@/components/LiveAnalysisMap';
 import { useDevelopments } from '@/hooks/use-developments';
 import { useAreaMetrics, useAreaPolygons, AreaMetric } from '@/hooks/use-area-metrics';
@@ -259,6 +259,25 @@ const Analysis = () => {
           {isLoading ? (
             <div className="w-full h-full flex items-center justify-center bg-muted">
               <p className="text-muted-foreground">Loading map data...</p>
+            </div>
+          ) : areaPolygons.length === 0 ? (
+            <div className="w-full h-full flex items-center justify-center bg-muted/50">
+              <div className="text-center max-w-md p-8 bg-background rounded-lg border-2 border-destructive shadow-lg">
+                <Database className="w-16 h-16 mx-auto mb-4 text-destructive" />
+                <h3 className="text-xl font-bold mb-4 text-destructive">No Map Data Available</h3>
+                <p className="text-muted-foreground mb-6">
+                  The map requires London MSOA boundary data and metrics to display. 
+                  Click below to initialize ~983 London areas.
+                </p>
+                <Button 
+                  onClick={() => window.location.href = '/admin/analytics'}
+                  size="lg"
+                  className="gap-2"
+                >
+                  <Database className="w-4 h-4" />
+                  Go to Admin Analytics
+                </Button>
+              </div>
             </div>
           ) : (
             <LiveAnalysisMap
