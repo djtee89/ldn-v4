@@ -24,21 +24,31 @@ Deno.serve(async (req) => {
 
     console.log('Computing area metrics...', { area_codes, force_refresh });
 
-    // Fetch all units with their developments
+    // Fetch all units
     const { data: units, error: unitsError } = await supabase
       .from('units')
-      .select('*, developments!inner(id, lat, lng, borough, postcode)')
+      .select('*')
       .eq('status', 'Available');
 
     if (unitsError) throw unitsError;
 
     console.log(`Fetched ${units?.length || 0} units`);
 
+    // Fetch all developments
+    const { data: developments, error: devsError } = await supabase
+      .from('developments')
+      .select('id, lat, lng, borough, postcode');
+
+    if (devsError) throw devsError;
+
+    // Create a map for quick development lookup
+    const devMap = new Map(developments?.map(dev => [dev.id, dev]) || []);
+
     // Group units by postcode sector (first 4-5 chars of postcode)
     const areaGroups = new Map<string, any[]>();
 
     units?.forEach(unit => {
-      const dev = unit.developments;
+      const dev = devMap.get(unit.dev_id);
       if (!dev || !dev.postcode) return;
 
       // Extract postcode sector (e.g., "SW1A 1" from "SW1A 1AA")
