@@ -44,3 +44,12 @@ verify_jwt = false
 
 [functions.fetch-air-quality-data]
 verify_jwt = false
+
+[functions.fetch-schools-data]
+verify_jwt = false
+
+[functions.fetch-yield-data]
+verify_jwt = false
+
+[functions.fetch-greenspace-data]
+verify_jwt = false
