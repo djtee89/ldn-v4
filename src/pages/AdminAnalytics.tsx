@@ -14,33 +14,71 @@ const AdminAnalytics = () => {
   const [isInitializing, setIsInitializing] = useState(false);
   
   // Status state
-  const [polygonCount, setPolygonCount] = useState(0);
-  const [priceMetricCount, setPriceMetricCount] = useState(0);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [status, setStatus] = useState<{
+    polygonCount: number;
+    priceMetricCount: number;
+    lastUpdated: string | null;
+    missingCount: number;
+    missingAreaCodes: string[];
+  }>({
+    polygonCount: 0,
+    priceMetricCount: 0,
+    lastUpdated: null,
+    missingCount: 0,
+    missingAreaCodes: [],
+  });
 
   // Fetch status
   const fetchStatus = async () => {
     try {
-      // Get polygon count
+      // Count polygons
       const { count: polyCount } = await supabase
         .from('area_polygons')
         .select('*', { count: 'exact', head: true })
         .eq('area_type', 'MSOA');
-      
-      setPolygonCount(polyCount || 0);
 
-      // Get price metric count
-      const { data: metrics } = await supabase
+      // Count metrics with price data
+      const { count: metricCount } = await supabase
         .from('area_metrics')
-        .select('price_per_sqft_overall, last_updated')
+        .select('*', { count: 'exact', head: true })
+        .eq('area_type', 'MSOA')
+        .not('price_per_sqft_overall', 'is', null);
+
+      // Get last updated timestamp
+      const { data: latestMetric } = await supabase
+        .from('area_metrics')
+        .select('last_updated')
+        .eq('area_type', 'MSOA')
+        .not('price_per_sqft_overall', 'is', null)
+        .order('last_updated', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      // Get missing area codes (polygons without metrics)
+      const { data: allPolygons } = await supabase
+        .from('area_polygons')
+        .select('area_code')
         .eq('area_type', 'MSOA');
 
-      if (metrics) {
-        setPriceMetricCount(metrics.filter(m => m.price_per_sqft_overall !== null).length);
-        setLastUpdated(metrics[0]?.last_updated || null);
-      }
+      const { data: metricsWithData } = await supabase
+        .from('area_metrics')
+        .select('area_code')
+        .eq('area_type', 'MSOA')
+        .not('price_per_sqft_overall', 'is', null);
+
+      const metricCodes = new Set(metricsWithData?.map(m => m.area_code) || []);
+      const missingCodes = allPolygons?.filter(p => !metricCodes.has(p.area_code)) || [];
+
+      setStatus({
+        polygonCount: polyCount || 0,
+        priceMetricCount: metricCount || 0,
+        lastUpdated: latestMetric?.last_updated || null,
+        missingCount: missingCodes.length,
+        missingAreaCodes: missingCodes.slice(0, 5).map(p => p.area_code),
+      });
     } catch (error) {
       console.error('Error fetching status:', error);
+      toast.error('Failed to fetch status');
     }
   };
 
@@ -119,7 +157,7 @@ const AdminAnalytics = () => {
     }
   };
 
-  const hasWarnings = polygonCount === 0 || priceMetricCount === 0;
+  const hasWarnings = status.polygonCount === 0 || status.priceMetricCount === 0;
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -153,24 +191,40 @@ const AdminAnalytics = () => {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">MSOA Polygons</p>
-              <p className="text-2xl font-bold">{polygonCount} / 983</p>
+              <p className="text-2xl font-bold">{status.polygonCount} / 983</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Price Metrics</p>
-              <p className="text-2xl font-bold">{priceMetricCount}</p>
+              <p className="text-sm text-muted-foreground">£/ft² Rows (non-null)</p>
+              <p className={`text-2xl font-bold ${status.priceMetricCount === status.polygonCount && status.polygonCount > 0 ? 'text-green-600' : ''}`}>
+                {status.priceMetricCount} / {status.polygonCount}
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Last Updated</p>
-              <p className="text-sm">{lastUpdated ? new Date(lastUpdated).toLocaleString() : 'Never'}</p>
+              <p className="text-sm">{status.lastUpdated ? new Date(status.lastUpdated).toLocaleDateString() : 'Never'}</p>
             </div>
           </div>
 
           {hasWarnings && (
             <Alert variant="destructive">
               <AlertDescription>
-                {polygonCount === 0 && 'No MSOA polygons loaded. '}
-                {priceMetricCount === 0 && 'No price/sqft metrics computed. '}
+                {status.polygonCount === 0 && '⚠️ No MSOA polygons loaded. Run "Fetch Boundaries" first. '}
+                {status.polygonCount > 0 && status.priceMetricCount === 0 && '⚠️ No price metrics computed. Run "Compute Pragmatic £/ft²" to populate. '}
                 Please run the functions below to initialize the data.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {status.missingCount > 0 && (
+            <Alert>
+              <AlertDescription>
+                <p className="font-semibold mb-1">⚠️ {status.missingCount} MSOAs missing price data</p>
+                {status.missingAreaCodes.length > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Top 5 missing: {status.missingAreaCodes.join(', ')}
+                    {status.missingCount > 5 && ` +${status.missingCount - 5} more`}
+                  </p>
+                )}
               </AlertDescription>
             </Alert>
           )}

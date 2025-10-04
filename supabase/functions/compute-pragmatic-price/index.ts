@@ -12,6 +12,10 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     console.log('Starting pragmatic £/ft² computation...');
+    console.log('NOTE: This is currently using MOCK data. For production, integrate:');
+    console.log('  1. ONS/Land Registry median price per MSOA');
+    console.log('  2. EPC (Energy Performance Certificate) median floor area per MSOA');
+    console.log('  Formula: £/ft² = median_price ÷ (median_floor_area_m² × 10.7639)');
 
     // Fetch all MSOA polygons
     const { data: polygons, error: polyError } = await supabase
@@ -22,20 +26,29 @@ Deno.serve(async (req) => {
     if (polyError) throw polyError;
     console.log(`Fetched ${polygons.length} MSOA polygons`);
 
-    // Mock pragmatic computation (in real scenario, fetch from ONS/LR API and EPC data)
-    // For now, generate realistic London £/ft² values (£700-£1500) based on location
+    // MOCK COMPUTATION - Replace with real ONS/LR + EPC API calls
+    // Real implementation needs:
+    // - ONS/Land Registry API for median house prices by MSOA
+    // - EPC API for median floor area by MSOA
+    // - Convert m² to ft² (multiply by 10.7639)
     const updates = [];
     
     for (const poly of polygons) {
-      // Generate pragmatic estimate based on area_code (inner London = higher)
-      const codeNum = parseInt(poly.area_code.substring(7));
-      const isInnerLondon = codeNum <= 400; // Rough approximation
+      // Generate realistic mock estimate based on area_code pattern
+      // Inner London (E09000001-E09000014) = £1100-£1600/ft²
+      // Outer London (E09000015-E09000033) = £800-£1200/ft²
+      const areaCode = poly.area_code;
+      const isInnerLondon = areaCode.includes('E09000001') || 
+                           areaCode.includes('E09000007') || 
+                           areaCode.includes('E09000033');
       
-      // Base price: inner London £1000-£1500, outer £700-£1000
-      const basePrice = isInnerLondon ? 1000 + (Math.random() * 500) : 700 + (Math.random() * 300);
+      // Base price distribution
+      const basePrice = isInnerLondon 
+        ? 1100 + (Math.random() * 500)  // Inner: £1100-£1600
+        : 800 + (Math.random() * 400);  // Outer: £800-£1200
       const price_per_sqft_overall = Math.round(basePrice);
       
-      // Mock sample sizes
+      // Mock sample sizes (realistic ranges)
       const sample_size_price = Math.floor(50 + Math.random() * 200);
       const sample_size_epc = Math.floor(30 + Math.random() * 150);
 

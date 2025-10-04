@@ -114,26 +114,31 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       data: geojson
     });
 
-    // Fill layer
+    // Fill layer - choropleth with dynamic opacity
     map.current!.addLayer({
       id: 'area-fills',
       type: 'fill',
       source: 'area-polygons',
       paint: {
         'fill-color': ['get', 'color'],
-        'fill-opacity': 0.3
+        'fill-opacity': [
+          'case',
+          ['==', ['get', 'area_ppsf'], null],
+          0, // Fully transparent if no data
+          0.28 // 0.25-0.35 range, using middle value
+        ]
       }
     });
 
-    // Border layer
+    // Subtle border layer (optional hairline)
     map.current!.addLayer({
       id: 'area-borders',
       type: 'line',
       source: 'area-polygons',
       paint: {
-        'line-color': '#94a3b8',
-        'line-width': 1,
-        'line-opacity': 0.5
+        'line-color': '#000000',
+        'line-width': 0.5,
+        'line-opacity': 0.08
       }
     });
 
@@ -223,15 +228,15 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       data: geojson,
     });
 
-    // Halo layer (outer circle for discount indication)
+    // Halo layer (outer circle for discount indication) - stronger for visibility
     map.current!.addLayer({
       id: 'price-analysis-halos',
       type: 'circle',
       source: 'price-analysis',
       paint: {
-        'circle-radius': 16,
+        'circle-radius': 18,
         'circle-color': ['get', 'haloColor'],
-        'circle-opacity': 0.3,
+        'circle-opacity': 0.4,
       },
     });
 
@@ -273,6 +278,46 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       closeOnClick: false,
     });
 
+    // Hover on MSOA areas
+    map.current!.on('mouseenter', 'area-fills', (e) => {
+      if (!e.features || e.features.length === 0) return;
+      const feature = e.features[0];
+      const props = feature.properties;
+      
+      if (props.area_ppsf) {
+        map.current!.setPaintProperty('area-fills', 'fill-opacity', [
+          'case',
+          ['==', ['get', 'area_code'], props.area_code],
+          0.45,
+          ['==', ['get', 'area_ppsf'], null],
+          0,
+          0.28
+        ]);
+        
+        popup
+          .setLngLat(e.lngLat)
+          .setHTML(`
+            <div class="p-2">
+              <h3 class="font-bold text-sm mb-1">${props.area_name}</h3>
+              <p class="text-xs"><strong>Area £/ft²:</strong> £${props.area_ppsf.toLocaleString()}</p>
+              <p class="text-xs text-muted-foreground">MSOA: ${props.area_code}</p>
+            </div>
+          `)
+          .addTo(map.current!);
+      }
+    });
+
+    map.current!.on('mouseleave', 'area-fills', () => {
+      map.current!.setPaintProperty('area-fills', 'fill-opacity', [
+        'case',
+        ['==', ['get', 'area_ppsf'], null],
+        0,
+        0.28
+      ]);
+      popup.remove();
+    });
+
+    // Hover on dev pins
     map.current!.on('mouseenter', 'price-analysis-circles', (e) => {
       if (!e.features || e.features.length === 0) return;
       map.current!.getCanvas().style.cursor = 'pointer';
