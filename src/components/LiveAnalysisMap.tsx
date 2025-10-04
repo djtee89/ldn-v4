@@ -2,9 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Development } from '@/data/newDevelopments';
-import { AreaMetric, AreaPolygon } from '@/hooks/use-area-metrics';
-import { AnalysisMode } from '@/pages/Analysis';
-import { BracketFilter } from './AnalysisLegend';
 
 interface Unit {
   id: string;
@@ -20,25 +17,13 @@ interface Unit {
 interface LiveAnalysisMapProps {
   units: Unit[];
   developments: Development[];
-  areaMetrics: AreaMetric[];
-  areaPolygons: AreaPolygon[];
-  mode: AnalysisMode;
-  brackets: BracketFilter[];
-  selectedBrackets: number[];
   onDevelopmentClick: (dev: Development) => void;
-  onAreaClick: (area: AreaMetric) => void;
 }
 
 const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({ 
   units, 
   developments, 
-  areaMetrics, 
-  areaPolygons,
-  mode,
-  brackets,
-  selectedBrackets,
-  onDevelopmentClick,
-  onAreaClick 
+  onDevelopmentClick
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -80,114 +65,6 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
     };
   }, []);
 
-  // Helper to get color for a metric value
-  const getColorForValue = (value: number | null): string => {
-    if (value === null) return '#999999';
-    
-    for (const bracket of brackets) {
-      if (value >= bracket.min && value < bracket.max) {
-        return bracket.color;
-      }
-    }
-    return brackets[brackets.length - 1]?.color || '#999999';
-  };
-
-  // Update area polygons when data changes
-  useEffect(() => {
-    if (!map.current || !isMapLoaded) return;
-    if (areaPolygons.length === 0) return;
-    
-    // Show neutral color if no brackets (no data for this mode yet)
-    const hasData = brackets.length > 0;
-
-    // Remove existing layers
-    if (map.current.getLayer('area-polygons-fill')) {
-      map.current.removeLayer('area-polygons-fill');
-    }
-    if (map.current.getLayer('area-polygons-outline')) {
-      map.current.removeLayer('area-polygons-outline');
-    }
-    if (map.current.getSource('area-polygons')) {
-      map.current.removeSource('area-polygons');
-    }
-
-    // Create features with colors based on metrics
-    const features = areaPolygons.map(polygon => {
-      const metric = areaMetrics.find(m => m.area_code === polygon.area_code);
-      let value: number | null = null;
-
-      if (mode === 'price-per-sqft') {
-        value = metric?.price_per_sqft_overall ?? null;
-      }
-
-      const color = hasData ? getColorForValue(value) : '#cccccc'; // Neutral gray if no data
-
-      return {
-        type: 'Feature' as const,
-        geometry: polygon.geometry,
-        properties: {
-          area_code: polygon.area_code,
-          area_name: polygon.area_name,
-          value,
-          color,
-        },
-      };
-    });
-
-    const geojson: GeoJSON.FeatureCollection = {
-      type: 'FeatureCollection',
-      features,
-    };
-
-    // Add source
-    map.current.addSource('area-polygons', {
-      type: 'geojson',
-      data: geojson,
-    });
-
-    // Add fill layer
-    map.current.addLayer({
-      id: 'area-polygons-fill',
-      type: 'fill',
-      source: 'area-polygons',
-      paint: {
-        'fill-color': ['get', 'color'],
-        'fill-opacity': 0.3,
-      },
-    }, 'price-analysis-circles'); // Add below pins
-
-    // Add outline layer
-    map.current.addLayer({
-      id: 'area-polygons-outline',
-      type: 'line',
-      source: 'area-polygons',
-      paint: {
-        'line-color': ['get', 'color'],
-        'line-width': 1,
-        'line-opacity': 0.6,
-      },
-    }, 'price-analysis-circles');
-
-    // Click on area polygons
-    map.current.on('click', 'area-polygons-fill', (e) => {
-      if (!e.features || e.features.length === 0) return;
-      const areaCode = e.features[0].properties.area_code;
-      const area = areaMetrics.find(a => a.area_code === areaCode);
-      if (area) {
-        onAreaClick(area);
-      }
-    });
-
-    // Change cursor on hover
-    map.current.on('mouseenter', 'area-polygons-fill', () => {
-      map.current!.getCanvas().style.cursor = 'pointer';
-    });
-
-    map.current.on('mouseleave', 'area-polygons-fill', () => {
-      map.current!.getCanvas().style.cursor = '';
-    });
-
-  }, [areaMetrics, areaPolygons, mode, brackets, isMapLoaded, onAreaClick]);
 
   // Update markers when units change
   useEffect(() => {
