@@ -8,7 +8,7 @@ import { Development } from '@/data/newDevelopments';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAreaMetrics, useAreaPolygons } from '@/hooks/use-area-metrics';
+
 
 export type SelectionType = 'development' | null;
 
@@ -18,8 +18,6 @@ const Analysis = () => {
   
   const isMobile = useIsMobile();
   const { data: developments = [], isLoading: devsLoading } = useDevelopments();
-  const { data: areaMetrics = [], isLoading: metricsLoading } = useAreaMetrics();
-  const { data: areaPolygons = [], isLoading: polygonsLoading } = useAreaPolygons();
 
   // Fetch units for price analysis
   const { data: units = [], isLoading: unitsLoading } = useQuery({
@@ -49,7 +47,7 @@ const Analysis = () => {
     if (isMobile) setMobileSheetOpen(true);
   };
 
-  const isLoading = devsLoading || unitsLoading || metricsLoading || polygonsLoading;
+  const isLoading = devsLoading || unitsLoading;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -73,8 +71,6 @@ const Analysis = () => {
             <LiveAnalysisMap
               units={enrichedUnits}
               developments={developments}
-              areaMetrics={areaMetrics}
-              areaPolygons={areaPolygons}
               onDevelopmentClick={handleDevelopmentClick}
             />
           )}

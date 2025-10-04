@@ -653,6 +653,71 @@ export type Database = {
         }
         Relationships: []
       }
+      neighbourhood_polygons: {
+        Row: {
+          area_type: string
+          created_at: string | null
+          id: string
+          neighbourhood_id: string
+          polygon_ids: Json
+          union_geometry: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          area_type?: string
+          created_at?: string | null
+          id?: string
+          neighbourhood_id: string
+          polygon_ids?: Json
+          union_geometry?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          area_type?: string
+          created_at?: string | null
+          id?: string
+          neighbourhood_id?: string
+          polygon_ids?: Json
+          union_geometry?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neighbourhood_polygons_neighbourhood_id_fkey"
+            columns: ["neighbourhood_id"]
+            isOneToOne: true
+            referencedRelation: "neighbourhoods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neighbourhoods: {
+        Row: {
+          borough: string
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          borough: string
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          borough?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       price_list_rows: {
         Row: {
           beds: number | null
