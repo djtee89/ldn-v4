@@ -1,47 +1,49 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Loader2, AlertTriangle, CheckCircle2, Play } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Loader2, AlertCircle, AlertTriangle, CheckCircle2, Play } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Link } from 'react-router-dom';
 
-export default function AdminAnalytics() {
+const AdminAnalytics = () => {
   const [isFetchingBoundaries, setIsFetchingBoundaries] = useState(false);
-  const [isFetchingWards, setIsFetchingWards] = useState(false);
   const [isComputingPragmatic, setIsComputingPragmatic] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
-  const [isMappingNeighbourhoods, setIsMappingNeighbourhoods] = useState(false);
   
-  const [status, setStatus] = useState({
+  // Status state
+  const [status, setStatus] = useState<{
+    polygonCount: number;
+    priceMetricCount: number;
+    lastUpdated: string | null;
+    missingCount: number;
+    missingAreaCodes: string[];
+  }>({
     polygonCount: 0,
-    wardCount: 0,
     priceMetricCount: 0,
-    lastUpdated: null as string | null,
-    missingAreaCodes: [] as string[],
-    neighbourhoodCount: 0,
-    neighbourhoodMappedCount: 0,
+    lastUpdated: null,
+    missingCount: 0,
+    missingAreaCodes: [],
   });
 
+  // Fetch status
   const fetchStatus = async () => {
     try {
+      // Count Borough polygons
       const { count: polyCount } = await supabase
         .from('area_polygons')
         .select('*', { count: 'exact', head: true })
         .eq('area_type', 'Borough');
 
-      const { count: wardCount } = await supabase
-        .from('area_polygons')
-        .select('*', { count: 'exact', head: true })
-        .eq('area_type', 'Ward');
-
+      // Count metrics with price data
       const { count: metricCount } = await supabase
         .from('area_metrics')
         .select('*', { count: 'exact', head: true })
         .eq('area_type', 'Borough')
         .not('price_per_sqft_overall', 'is', null);
 
+      // Get last updated timestamp
       const { data: latestMetric } = await supabase
         .from('area_metrics')
         .select('last_updated')
@@ -51,9 +53,10 @@ export default function AdminAnalytics() {
         .limit(1)
         .maybeSingle();
 
+      // Get missing area codes
       const { data: allPolygons } = await supabase
         .from('area_polygons')
-        .select('area_code')
+        .select('area_code, area_name')
         .eq('area_type', 'Borough');
 
       const { data: metricsWithData } = await supabase
@@ -63,45 +66,36 @@ export default function AdminAnalytics() {
         .not('price_per_sqft_overall', 'is', null);
 
       const metricCodes = new Set(metricsWithData?.map(m => m.area_code) || []);
-      const missingCodes = allPolygons?.filter(p => !metricCodes.has(p.area_code)).map(p => p.area_code) || [];
-
-      const { count: neighbourhoodCount } = await supabase
-        .from('neighbourhoods')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: neighbourhoodMappedCount } = await supabase
-        .from('neighbourhood_polygons')
-        .select('*', { count: 'exact', head: true })
-        .not('union_geometry', 'is', null);
+      const missingPolys = allPolygons?.filter(p => !metricCodes.has(p.area_code)) || [];
 
       setStatus({
         polygonCount: polyCount || 0,
-        wardCount: wardCount || 0,
         priceMetricCount: metricCount || 0,
         lastUpdated: latestMetric?.last_updated || null,
-        missingAreaCodes: missingCodes.slice(0, 5),
-        neighbourhoodCount: neighbourhoodCount || 0,
-        neighbourhoodMappedCount: neighbourhoodMappedCount || 0,
+        missingCount: missingPolys.length,
+        missingAreaCodes: missingPolys.slice(0, 5).map(p => p.area_name || p.area_code),
       });
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error fetching status:', error);
+      toast.error('Failed to fetch status');
     }
   };
 
   useEffect(() => {
     fetchStatus();
-    const interval = setInterval(fetchStatus, 5000);
+    const interval = setInterval(fetchStatus, 5000); // Refresh every 5s
     return () => clearInterval(interval);
   }, []);
 
   const handleFetchBoundaries = async () => {
     setIsFetchingBoundaries(true);
     try {
-      await supabase.functions.invoke('fetch-area-boundaries');
-      toast.success('Boundaries fetched');
+      const { data, error } = await supabase.functions.invoke('fetch-area-boundaries');
+      if (error) throw error;
+      toast.success('Boundaries fetched successfully');
       await fetchStatus();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(`Failed to fetch boundaries: ${error.message}`);
     } finally {
       setIsFetchingBoundaries(false);
     }
@@ -110,168 +104,174 @@ export default function AdminAnalytics() {
   const handleComputePragmatic = async () => {
     setIsComputingPragmatic(true);
     try {
-      await supabase.functions.invoke('compute-pragmatic-price');
-      toast.success('Computed £/ft²');
+      const { data, error } = await supabase.functions.invoke('compute-pragmatic-price');
+      if (error) throw error;
+      toast.success(`Computed pragmatic £/ft² for ${data.areas_computed} areas`);
       await fetchStatus();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(`Failed to compute pragmatic £/ft²: ${error.message}`);
     } finally {
       setIsComputingPragmatic(false);
     }
   };
 
-  const handleMapNeighbourhoods = async () => {
-    setIsMappingNeighbourhoods(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('map-neighbourhoods');
-      if (error) throw error;
-      toast.success(`Mapped ${data.neighbourhoods_mapped} neighbourhoods`);
-      await fetchStatus();
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsMappingNeighbourhoods(false);
-    }
-  };
 
-  const handleFetchWards = async () => {
-    setIsFetchingWards(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('fetch-ward-boundaries');
-      if (error) throw error;
-      toast.success(`Fetched ${data.wards_fetched} ward boundaries`);
-      await fetchStatus();
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsFetchingWards(false);
-    }
-  };
-
-    const handleInitializeAll = async () => {
+  const handleInitializeAll = async () => {
     setIsInitializing(true);
     try {
-      toast.info('Step 1/3: Fetching boroughs...');
+      toast.info('Starting initialization...');
+      
+      toast.info('Step 1/2: Fetching Borough boundaries...');
       await handleFetchBoundaries();
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      toast.info('Step 2/3: Computing prices...');
+      toast.info('Step 2/2: Computing Borough £/ft²...');
       await handleComputePragmatic();
-      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      toast.info('Step 3/3: Mapping neighbourhoods...');
-      await handleMapNeighbourhoods();
-      
-      toast.success('Initialized with local data!');
+      toast.success('Borough price data initialized successfully!');
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(`Initialization failed: ${error.message}`);
     } finally {
       setIsInitializing(false);
     }
   };
 
+  const hasWarnings = status.polygonCount === 0 || status.priceMetricCount === 0;
+  const expectedCount = 33; // 33 London Boroughs
+
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <Alert className="border-blue-500 bg-blue-50 dark:bg-blue-950">
-        <AlertCircle className="h-4 w-4 text-blue-600" />
-        <AlertDescription className="text-sm">
-          Using local boundaries; cloud fetch disabled to save tokens. Ward data will be loaded from local files.
-        </AlertDescription>
-      </Alert>
-
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Admin Analytics</h1>
-          <p className="text-muted-foreground">Borough & Neighbourhood data (Local Mode)</p>
-        </div>
-        <div className="flex gap-2">
-          <Link to="/admin/neighbourhoods">
-            <Button variant="outline">Manage Neighbourhoods</Button>
-          </Link>
-          <Button onClick={handleInitializeAll} disabled={isInitializing}>
-            {isInitializing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
-            Initialize (Local)
-          </Button>
-        </div>
+        <h1 className="text-3xl font-bold">Borough £/ft² Analytics</h1>
+        <Button
+          onClick={handleInitializeAll}
+          disabled={isInitializing}
+          size="lg"
+          className="gap-2"
+        >
+          {isInitializing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+          Initialize Data
+        </Button>
       </div>
 
-      <Card>
+      {/* Status Overview */}
+      <Card className={hasWarnings ? 'border-destructive' : 'border-green-500'}>
         <CardHeader>
-          <CardTitle>Status</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            {hasWarnings ? (
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+            ) : (
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+            )}
+            Data Status
+          </CardTitle>
+          <CardDescription>Current state of London Borough boundaries and price metrics</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Borough Polygons</p>
-              <p className="text-2xl font-bold">{status.polygonCount}/33</p>
+              <p className={`text-2xl font-bold ${status.polygonCount === expectedCount ? 'text-green-600' : ''}`}>
+                {status.polygonCount}/{expectedCount}
+              </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Ward Polygons</p>
-              <p className="text-2xl font-bold">{status.wardCount}</p>
+              <p className="text-sm text-muted-foreground">£/ft² Rows (non-null)</p>
+              <p className={`text-2xl font-bold ${status.priceMetricCount === expectedCount ? 'text-green-600' : ''}`}>
+                {status.priceMetricCount}/{expectedCount}
+              </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">£/ft² Metrics</p>
-              <p className="text-2xl font-bold">{status.priceMetricCount}/33</p>
+              <p className="text-sm text-muted-foreground">Last Updated</p>
+              <p className="text-sm">{status.lastUpdated ? new Date(status.lastUpdated).toLocaleDateString() : 'Never'}</p>
             </div>
           </div>
 
-          <div className="pt-4 border-t">
-            <h3 className="font-semibold mb-2">Neighbourhoods</h3>
-            <p className="text-sm">Total: {status.neighbourhoodCount}</p>
-            <p className="text-sm">Mapped: {status.neighbourhoodMappedCount}</p>
-            <Button 
-              onClick={handleMapNeighbourhoods} 
-              disabled={isMappingNeighbourhoods}
-              size="sm"
-              className="mt-2"
-            >
-              {isMappingNeighbourhoods && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Auto-Map Neighbourhoods
-            </Button>
-          </div>
+          {hasWarnings && (
+            <Alert variant="destructive">
+              <AlertDescription>
+                {status.polygonCount === 0 && '⚠️ No Borough polygons loaded. Run "Fetch Boundaries" first. '}
+                {status.polygonCount > 0 && status.priceMetricCount === 0 && '⚠️ No price metrics computed. Run "Compute Pragmatic £/ft²" to populate. '}
+                Please run the functions below to initialize the data.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {status.missingCount > 0 && status.polygonCount === expectedCount && (
+            <Alert>
+              <AlertDescription>
+                <p className="font-semibold mb-1">⚠️ {status.missingCount} Boroughs missing price data</p>
+                {status.missingAreaCodes.length > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Missing: {status.missingAreaCodes.join(', ')}
+                    {status.missingCount > 5 && ` +${status.missingCount - 5} more`}
+                  </p>
+                )}
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          {status.priceMetricCount === expectedCount && status.polygonCount === expectedCount && (
+            <Alert className="bg-green-50 dark:bg-green-950/20 border-green-500">
+              <AlertDescription className="text-green-800 dark:text-green-200">
+                ✓ All {expectedCount} London Boroughs have £/ft² data — map ready
+              </AlertDescription>
+            </Alert>
+          )}
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* Instructions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>How It Works</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <p>1. <strong>Fetch Boundaries:</strong> Load 33 London Borough polygons from the ONS API</p>
+          <p>2. <strong>Compute Pragmatic £/ft²:</strong> Generate Borough-level £/ft² estimates (Westminster, Camden, Hackney, etc.)</p>
+          <p>3. View the results on the <strong>Live Analysis</strong> page with smooth color-coded map and discount percentages</p>
+          <p className="text-muted-foreground pt-2">Click "Initialize Data" above to run all steps automatically.</p>
+        </CardContent>
+      </Card>
+
+      {/* Action Cards */}
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Fetch Boroughs</CardTitle>
-            <CardDescription>Load from local file</CardDescription>
+            <CardTitle>1. Fetch Boundaries</CardTitle>
+            <CardDescription>Load London Borough polygons (33 areas)</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={handleFetchBoundaries} disabled={isFetchingBoundaries} className="w-full">
+            <Button
+              onClick={handleFetchBoundaries}
+              disabled={isFetchingBoundaries}
+              className="w-full"
+            >
               {isFetchingBoundaries && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Load Local (33)
+              Fetch Boundaries
             </Button>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Load Wards</CardTitle>
-            <CardDescription>From local GeoJSON</CardDescription>
+            <CardTitle>2. Borough £/ft²</CardTitle>
+            <CardDescription>Named areas with realistic pricing</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={handleFetchWards} disabled={true} className="w-full" title="Disabled - awaiting local ward file">
-              Load Local (~600)
-            </Button>
-            <p className="text-xs text-muted-foreground mt-2">Local file pending</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Compute £/ft²</CardTitle>
-            <CardDescription>From development data</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={handleComputePragmatic} disabled={isComputingPragmatic} className="w-full">
+            <Button
+              onClick={handleComputePragmatic}
+              disabled={isComputingPragmatic}
+              className="w-full"
+            >
               {isComputingPragmatic && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Compute
+              Compute Borough £/ft²
             </Button>
           </CardContent>
         </Card>
       </div>
     </div>
   );
-}
+};
+
+export default AdminAnalytics;
