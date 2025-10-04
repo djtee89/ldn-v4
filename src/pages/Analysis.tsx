@@ -55,10 +55,24 @@ const Analysis = () => {
     <div className="flex flex-col h-screen overflow-hidden">
       {/* Header */}
       <header className="bg-background border-b border-border px-4 py-3 flex items-center justify-between flex-shrink-0">
-        <h1 className="text-2xl font-bold">Price Per Sqft Analysis</h1>
-        <p className="text-sm text-muted-foreground">
-          {developments.length} developments • {enrichedUnits.length} available units
-        </p>
+        <div>
+          <h1 className="text-2xl font-bold">Price Per Sqft Analysis</h1>
+          <p className="text-sm text-muted-foreground">
+            {developments.length} developments • {enrichedUnits.length} available units • {areaPolygons.length} boroughs mapped
+          </p>
+        </div>
+        <Button 
+          onClick={async () => {
+            const { error } = await supabase.functions.invoke('fetch-area-boundaries');
+            if (!error) {
+              window.location.reload();
+            }
+          }}
+          variant="outline"
+          size="sm"
+        >
+          Fetch Real Boundaries
+        </Button>
       </header>
 
       {/* Main Content */}
@@ -89,24 +103,36 @@ const Analysis = () => {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#22c55e' }} />
-                  <span className="text-sm">&lt;£900/sqft - Great Value</span>
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#10b981' }} />
+                  <span className="text-sm">&lt;£600/sqft - Excellent Value</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#34d399' }} />
+                  <span className="text-sm">£600-£700/sqft - Great Value</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#84cc16' }} />
-                  <span className="text-sm">£900-£1,100/sqft - Good Value</span>
+                  <span className="text-sm">£700-£900/sqft - Good Value</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#eab308' }} />
-                  <span className="text-sm">£1,100-£1,300/sqft - Average</span>
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#fbbf24' }} />
+                  <span className="text-sm">£900-£1,000/sqft - Fair Value</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#fb923c' }} />
+                  <span className="text-sm">£1,000-£1,100/sqft - Average</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#f97316' }} />
-                  <span className="text-sm">£1,300-£1,500/sqft - Above Average</span>
+                  <span className="text-sm">£1,100-£1,200/sqft - Above Average</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#ef4444' }} />
-                  <span className="text-sm">&gt;£1,500/sqft - Premium</span>
+                  <span className="text-sm">£1,200-£1,400/sqft - Expensive</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#dc2626' }} />
+                  <span className="text-sm">£1,400+/sqft - Premium</span>
                 </div>
               </CardContent>
             </Card>
