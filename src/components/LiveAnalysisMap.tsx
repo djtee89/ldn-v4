@@ -120,7 +120,6 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
 
     // Remove existing layers
     if (map.current!.getLayer('area-fills')) map.current!.removeLayer('area-fills');
-    if (map.current!.getLayer('area-borders')) map.current!.removeLayer('area-borders');
     if (map.current!.getSource('area-polygons')) map.current!.removeSource('area-polygons');
 
     // Add source and layers
@@ -129,7 +128,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       data: geojson
     });
 
-    // Fill layer - smooth gradient blend
+    // Fill layer - smooth gradient blend with no borders
     map.current!.addLayer({
       id: 'area-fills',
       type: 'fill',
@@ -139,21 +138,10 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
         'fill-opacity': [
           'case',
           ['==', ['get', 'area_ppsf'], null],
-          0, // Fully transparent if no data
-          0.40 // Higher opacity for clearer boroughs
-        ]
-      }
-    });
-
-    // Visible border for clarity
-    map.current!.addLayer({
-      id: 'area-borders',
-      type: 'line',
-      source: 'area-polygons',
-      paint: {
-        'line-color': '#ffffff',
-        'line-width': 1.5,
-        'line-opacity': 0.6
+          0,
+          0.45
+        ],
+        'fill-antialias': true
       }
     });
 
@@ -303,10 +291,10 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
         map.current!.setPaintProperty('area-fills', 'fill-opacity', [
           'case',
           ['==', ['get', 'area_code'], props.area_code],
-          0.45,
+          0.65,
           ['==', ['get', 'area_ppsf'], null],
           0,
-          0.28
+          0.45
         ]);
         
         popup
@@ -326,7 +314,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
         'case',
         ['==', ['get', 'area_ppsf'], null],
         0,
-        0.28
+        0.45
       ]);
       popup.remove();
     });
