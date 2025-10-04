@@ -5,42 +5,48 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// London Borough data with simplified polygons (fallback)
-const LONDON_BOROUGHS = [
-  { code: 'E09000001', name: 'City of London', lat: 51.5155, lng: -0.0922 },
-  { code: 'E09000002', name: 'Barking and Dagenham', lat: 51.5464, lng: 0.1293 },
-  { code: 'E09000003', name: 'Barnet', lat: 51.6252, lng: -0.1517 },
-  { code: 'E09000004', name: 'Bexley', lat: 51.4549, lng: 0.1505 },
-  { code: 'E09000005', name: 'Brent', lat: 51.5588, lng: -0.2817 },
-  { code: 'E09000006', name: 'Bromley', lat: 51.4039, lng: 0.0198 },
-  { code: 'E09000007', name: 'Camden', lat: 51.5290, lng: -0.1255 },
-  { code: 'E09000008', name: 'Croydon', lat: 51.3714, lng: -0.0977 },
-  { code: 'E09000009', name: 'Ealing', lat: 51.5130, lng: -0.3089 },
-  { code: 'E09000010', name: 'Enfield', lat: 51.6538, lng: -0.0799 },
-  { code: 'E09000011', name: 'Greenwich', lat: 51.4892, lng: 0.0648 },
-  { code: 'E09000012', name: 'Hackney', lat: 51.5450, lng: -0.0553 },
-  { code: 'E09000013', name: 'Hammersmith and Fulham', lat: 51.4990, lng: -0.2291 },
-  { code: 'E09000014', name: 'Haringey', lat: 51.5906, lng: -0.1110 },
-  { code: 'E09000015', name: 'Harrow', lat: 51.5898, lng: -0.3346 },
-  { code: 'E09000016', name: 'Havering', lat: 51.5779, lng: 0.2120 },
-  { code: 'E09000017', name: 'Hillingdon', lat: 51.5441, lng: -0.4760 },
-  { code: 'E09000018', name: 'Hounslow', lat: 51.4746, lng: -0.3677 },
-  { code: 'E09000019', name: 'Islington', lat: 51.5416, lng: -0.1022 },
-  { code: 'E09000020', name: 'Kensington and Chelsea', lat: 51.4991, lng: -0.1938 },
-  { code: 'E09000021', name: 'Kingston upon Thames', lat: 51.4085, lng: -0.3064 },
-  { code: 'E09000022', name: 'Lambeth', lat: 51.4607, lng: -0.1163 },
-  { code: 'E09000023', name: 'Lewisham', lat: 51.4452, lng: -0.0209 },
-  { code: 'E09000024', name: 'Merton', lat: 51.4098, lng: -0.2108 },
-  { code: 'E09000025', name: 'Newham', lat: 51.5077, lng: 0.0469 },
-  { code: 'E09000026', name: 'Redbridge', lat: 51.5590, lng: 0.0741 },
-  { code: 'E09000027', name: 'Richmond upon Thames', lat: 51.4613, lng: -0.3037 },
-  { code: 'E09000028', name: 'Southwark', lat: 51.5035, lng: -0.0804 },
-  { code: 'E09000029', name: 'Sutton', lat: 51.3618, lng: -0.1945 },
-  { code: 'E09000030', name: 'Tower Hamlets', lat: 51.5099, lng: -0.0059 },
-  { code: 'E09000031', name: 'Waltham Forest', lat: 51.5886, lng: -0.0117 },
-  { code: 'E09000032', name: 'Wandsworth', lat: 51.4571, lng: -0.1818 },
-  { code: 'E09000033', name: 'Westminster', lat: 51.4975, lng: -0.1357 },
-];
+// London Borough GeoJSON - Real boundaries
+const LONDON_BOROUGHS_GEOJSON = {
+  "type": "FeatureCollection",
+  "features": [] // Will be populated from external source or fallback
+};
+
+// Borough name to code mapping
+const BOROUGH_CODES: Record<string, string> = {
+  'Barking and Dagenham': 'E09000002',
+  'Barnet': 'E09000003',
+  'Bexley': 'E09000004',
+  'Brent': 'E09000005',
+  'Bromley': 'E09000006',
+  'Camden': 'E09000007',
+  'City of London': 'E09000001',
+  'Croydon': 'E09000008',
+  'Ealing': 'E09000009',
+  'Enfield': 'E09000010',
+  'Greenwich': 'E09000011',
+  'Hackney': 'E09000012',
+  'Hammersmith and Fulham': 'E09000013',
+  'Haringey': 'E09000014',
+  'Harrow': 'E09000015',
+  'Havering': 'E09000016',
+  'Hillingdon': 'E09000017',
+  'Hounslow': 'E09000018',
+  'Islington': 'E09000019',
+  'Kensington and Chelsea': 'E09000020',
+  'Kingston upon Thames': 'E09000021',
+  'Lambeth': 'E09000022',
+  'Lewisham': 'E09000023',
+  'Merton': 'E09000024',
+  'Newham': 'E09000025',
+  'Redbridge': 'E09000026',
+  'Richmond upon Thames': 'E09000027',
+  'Southwark': 'E09000028',
+  'Sutton': 'E09000029',
+  'Tower Hamlets': 'E09000030',
+  'Waltham Forest': 'E09000031',
+  'Wandsworth': 'E09000032',
+  'Westminster': 'E09000033',
+};
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -52,20 +58,34 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    console.log(`Creating ${LONDON_BOROUGHS.length} London Borough polygons`);
+    console.log('Fetching real London Borough boundaries from ONS Open Geography Portal');
+
+    // Fetch real GeoJSON from ONS (Office for National Statistics) - authoritative source
+    const geojsonUrl = 'https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Local_Authority_Districts_December_2023_Boundaries_UK_BFC_2022/FeatureServer/0/query?where=1%3D1&outFields=*&geometry=-0.510%2C51.286%2C0.335%2C51.692&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson&returnGeometry=true';
+    const response = await fetch(geojsonUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch GeoJSON: ${response.statusText}`);
+    }
+
+    const geojson = await response.json();
+    console.log(`Loaded ${geojson.features.length} borough polygons from GeoJSON`);
 
     const results = [];
 
-    // Use built-in fallback polygons for all boroughs (reliable)
-    for (const borough of LONDON_BOROUGHS) {
+    // Process each borough feature
+    for (const feature of geojson.features) {
+      const boroughName: string = feature.properties?.LAD23NM || feature.properties?.name || feature.properties?.NAME || 'Unknown';
+      const boroughCode: string = feature.properties?.LAD23CD || BOROUGH_CODES[boroughName] || `E09${String(results.length).padStart(6, '0')}`;
+      
       results.push({
-        area_code: borough.code,
-        area_name: borough.name,
+        area_code: boroughCode,
+        area_name: boroughName,
         area_type: 'Borough',
-        geometry: createBoroughPolygon(borough.lat, borough.lng)
+        geometry: feature.geometry
       });
       
-      console.log(`Created Borough ${borough.code}: ${borough.name}`);
+      console.log(`Loaded Borough ${boroughCode}: ${boroughName}`);
     }
 
     // Delete existing Borough polygons
@@ -110,18 +130,3 @@ Deno.serve(async (req) => {
     );
   }
 });
-
-// Helper function to create a realistic borough-sized polygon around a point
-function createBoroughPolygon(lat: number, lng: number) {
-  const offset = 0.05; // roughly 5km for borough size
-  return {
-    type: 'Polygon',
-    coordinates: [[
-      [lng - offset, lat - offset],
-      [lng + offset, lat - offset],
-      [lng + offset, lat + offset],
-      [lng - offset, lat + offset],
-      [lng - offset, lat - offset],
-    ]],
-  };
-}

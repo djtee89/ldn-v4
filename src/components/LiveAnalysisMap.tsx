@@ -37,13 +37,17 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   // Use same Mapbox token as main map
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
-  // Calculate color based on price per sqft
+  // Calculate color based on price per sqft - wider range starting from <£600
   const getPriceColor = (pricePerSqft: number): string => {
-    if (pricePerSqft < 900) return '#22c55e';
-    if (pricePerSqft < 1100) return '#84cc16';
-    if (pricePerSqft < 1300) return '#eab308';
-    if (pricePerSqft < 1500) return '#f97316';
-    return '#ef4444';
+    if (pricePerSqft < 600) return '#10b981'; // Green - great value
+    if (pricePerSqft < 700) return '#34d399'; // Light green
+    if (pricePerSqft < 800) return '#84cc16'; // Yellow-green
+    if (pricePerSqft < 900) return '#fbbf24'; // Yellow
+    if (pricePerSqft < 1000) return '#fb923c'; // Orange
+    if (pricePerSqft < 1100) return '#f97316'; // Dark orange
+    if (pricePerSqft < 1200) return '#ef4444'; // Red
+    if (pricePerSqft < 1400) return '#dc2626'; // Dark red
+    return '#991b1b'; // Very dark red - premium
   };
 
   const getHaloColor = (discount: number): string => {
@@ -81,19 +85,20 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   useEffect(() => {
     if (!map.current || !isMapLoaded || areaPolygons.length === 0) return;
 
-    // Simple continuous color scale for smooth blend
+    // Wide color scale for smooth blend - starting from <£600
     const getColorFromPrice = (ppsf: number): string => {
       if (!ppsf || ppsf <= 0) return '#e5e7eb';
       
-      // Smooth gradient: Green (£500) → Yellow (£900) → Orange (£1100) → Red (£1500+)
-      if (ppsf < 600) return '#10b981'; // Green
+      // Smooth gradient: Green (<£600) → Yellow (£900) → Orange (£1100) → Red (£1400+)
+      if (ppsf < 600) return '#10b981'; // Green - great value
       if (ppsf < 700) return '#34d399'; // Light green
       if (ppsf < 800) return '#84cc16'; // Yellow-green
       if (ppsf < 900) return '#fbbf24'; // Yellow
       if (ppsf < 1000) return '#fb923c'; // Orange
       if (ppsf < 1100) return '#f97316'; // Dark orange
       if (ppsf < 1200) return '#ef4444'; // Red
-      return '#dc2626'; // Dark red
+      if (ppsf < 1400) return '#dc2626'; // Dark red
+      return '#991b1b'; // Very dark red - premium
     };
 
     // Create GeoJSON for polygons - join with metrics by area_code
