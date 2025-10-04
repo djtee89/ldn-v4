@@ -76,48 +76,48 @@ export function EventPopup({ event, isOpen, onClose }: EventPopupProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <div className="relative w-full h-48 -mx-6 -mt-6 mb-4">
+      <DialogContent className="max-w-2xl p-0 overflow-hidden">
+        <DialogHeader className="p-0">
+          <div className="relative w-full h-40 sm:h-48 mb-4">
             <img
               src={event.image}
               alt={event.development}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <Badge className="absolute top-4 right-4 bg-primary text-primary-foreground">
+            <Badge className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-primary text-primary-foreground">
               {event.type}
             </Badge>
           </div>
-          <DialogTitle className="text-2xl">{event.title}</DialogTitle>
+          <DialogTitle className="text-xl sm:text-2xl px-4 sm:px-6">{event.title}</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
           <div className="space-y-3">
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <MapPin className="h-5 w-5" />
+            <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground text-sm sm:text-base">
+              <MapPin className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
               <span className="font-medium">{event.development}</span>
             </div>
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <Calendar className="h-5 w-5" />
+            <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground text-sm sm:text-base">
+              <Calendar className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
               <span>{event.date}</span>
             </div>
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <Clock className="h-5 w-5" />
+            <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground text-sm sm:text-base">
+              <Clock className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
               <span>{event.time}</span>
             </div>
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-2">About This Event</h3>
-            <p className="text-muted-foreground leading-relaxed">
+            <h3 className="font-semibold text-base sm:text-lg mb-2">About This Event</h3>
+            <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
               {event.details}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-4 border-t">
-            <h3 className="font-semibold text-lg flex items-center gap-2">
-              <Users className="h-5 w-5" />
+            <h3 className="font-semibold text-base sm:text-lg flex items-center gap-2">
+              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
               Sign Up for This Event
             </h3>
 
@@ -156,11 +156,11 @@ export function EventPopup({ event, isOpen, onClose }: EventPopupProps) {
               />
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1"
+                className="flex-1 w-full"
               >
                 {isSubmitting ? 'Signing Up...' : 'Sign Up Now'}
               </Button>
@@ -168,6 +168,7 @@ export function EventPopup({ event, isOpen, onClose }: EventPopupProps) {
                 type="button"
                 variant="outline"
                 onClick={onClose}
+                className="w-full sm:w-auto"
               >
                 Cancel
               </Button>
