@@ -30,31 +30,30 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    console.log("Fetching GeoJSON from storage...");
-    const { data, error } = await supabase.storage
-      .from("static")
-      .download("boroughs/london-boroughs.geojson");
+    console.log("Fetching real borough boundaries from ONS ArcGIS...");
     
-    if (error) {
-      console.error("Storage error:", error);
-      throw error;
+    // Fetch from ONS ArcGIS REST API
+    const url = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Local_Authority_Districts_May_2023_UK_BUC_2022_7434381422178325433/FeatureServer/0/query";
+    const params = new URLSearchParams({
+      where: "LAD23CD LIKE 'E09%'", // London boroughs start with E09
+      outFields: "LAD23CD,LAD23NM",
+      outSR: "4326", // WGS84
+      f: "geojson"
+    });
+    
+    const response = await fetch(`${url}?${params}`);
+    if (!response.ok) {
+      throw new Error(`ONS API error: ${response.status} ${response.statusText}`);
     }
-
-    const text = await data.text();
-    const fc: FC = JSON.parse(text);
-    console.log(`Loaded ${fc.features.length} features from GeoJSON`);
+    
+    const fc: FC = await response.json();
+    console.log(`Fetched ${fc.features.length} features from ONS API`);
 
     const toWrite: Array<{ area_code: string; area_name: string; geometry: any }> = [];
     for (const f of fc.features) {
       const props = f.properties || {};
-      const code = cleanCode(
-        props.lad21cd || props.lad22cd || props.lad19cd || 
-        props.lad_code || props.GSS_CODE || props.LAD_CODE
-      );
-      const name = (
-        props.lad21nm || props.lad22nm || props.lad19nm || 
-        props.lad_name || props.LAD_NAME || props.NAME || ""
-      ).trim();
+      const code = cleanCode(props.LAD23CD || props.lad23cd);
+      const name = (props.LAD23NM || props.lad23nm || "").trim();
       
       if (!code || !name || !f.geometry) continue;
       if (!code.startsWith("E090")) continue;
