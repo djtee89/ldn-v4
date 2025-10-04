@@ -4,18 +4,29 @@ import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-react';
 import LiveAnalysisMap from '@/components/LiveAnalysisMap';
 import { useDevelopments } from '@/hooks/use-developments';
-import { useAreaMetrics, useAreaPolygons } from '@/hooks/use-area-metrics';
+import { useAreaMetrics, useAreaPolygons, AreaMetric } from '@/hooks/use-area-metrics';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { Development } from '@/data/newDevelopments';
 import AnalysisModeSelector from '@/components/AnalysisModeSelector';
 import AnalysisInsightPanel from '@/components/AnalysisInsightPanel';
 import AnalysisLegend, { BracketFilter } from '@/components/AnalysisLegend';
+import AnalysisSearchFilter, { FilterState } from '@/components/AnalysisSearchFilter';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 
 export type AnalysisMode = 'price-per-sqft' | 'yield' | 'growth' | 'schools' | 'green' | 'noise-air' | 'crime';
+export type SelectionType = 'development' | 'area' | null;
 
 const Analysis = () => {
   const [activeMode, setActiveMode] = useState<AnalysisMode>('price-per-sqft');
   const [selectedBrackets, setSelectedBrackets] = useState<number[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<FilterState>({ beds: [], zones: [], completionWindow: [] });
+  const [selectedItem, setSelectedItem] = useState<{ type: SelectionType; data: Development | AreaMetric | null }>({ type: null, data: null });
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  
+  const isMobile = useIsMobile();
   const { data: developments = [], isLoading: devsLoading } = useDevelopments();
   const { data: areaMetrics = [], isLoading: metricsLoading } = useAreaMetrics();
   const { data: areaPolygons = [], isLoading: polygonsLoading } = useAreaPolygons();
@@ -82,6 +93,24 @@ const Analysis = () => {
     setSelectedBrackets([]);
   };
 
+  const handleDevelopmentClick = (dev: Development) => {
+    setSelectedItem({ type: 'development', data: dev });
+    if (isMobile) setMobileSheetOpen(true);
+  };
+
+  const handleAreaClick = (area: AreaMetric) => {
+    setSelectedItem({ type: 'area', data: area });
+    if (isMobile) setMobileSheetOpen(true);
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleFilterChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
+  };
+
   const isLoading = devsLoading || unitsLoading || metricsLoading || polygonsLoading;
 
   return (
@@ -109,7 +138,7 @@ const Analysis = () => {
           </div>
 
           {/* Legend */}
-          {brackets.length > 0 && (
+          {brackets.length > 0 && !isMobile && (
             <AnalysisLegend
               mode={activeMode}
               brackets={brackets}
@@ -118,6 +147,14 @@ const Analysis = () => {
               onReset={handleResetBrackets}
             />
           )}
+
+          {/* Search & Filter */}
+          <div className="absolute top-4 right-4 z-10 w-80">
+            <AnalysisSearchFilter
+              onSearch={handleSearch}
+              onFilterChange={handleFilterChange}
+            />
+          </div>
 
           {/* Map */}
           {isLoading ? (
@@ -133,6 +170,8 @@ const Analysis = () => {
               mode={activeMode}
               brackets={brackets}
               selectedBrackets={selectedBrackets}
+              onDevelopmentClick={handleDevelopmentClick}
+              onAreaClick={handleAreaClick}
             />
           )}
 
@@ -144,14 +183,31 @@ const Analysis = () => {
           </div>
         </div>
 
-        {/* Insight Panel (Right 30-35%) */}
-        <div className="w-[30%] h-full overflow-y-auto border-l border-border bg-background">
-          <AnalysisInsightPanel
-            mode={activeMode}
-            units={enrichedUnits}
-            developments={developments}
-          />
-        </div>
+        {/* Insight Panel (Right 30-35%) - Desktop Only */}
+        {!isMobile && (
+          <div className="w-[30%] h-full overflow-y-auto border-l border-border bg-background">
+            <AnalysisInsightPanel
+              mode={activeMode}
+              units={enrichedUnits}
+              developments={developments}
+              selectedItem={selectedItem}
+            />
+          </div>
+        )}
+
+        {/* Mobile Bottom Sheet */}
+        {isMobile && (
+          <Sheet open={mobileSheetOpen} onOpenChange={setMobileSheetOpen}>
+            <SheetContent side="bottom" className="h-[70vh] overflow-y-auto">
+              <AnalysisInsightPanel
+                mode={activeMode}
+                units={enrichedUnits}
+                developments={developments}
+                selectedItem={selectedItem}
+              />
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
     </div>
   );

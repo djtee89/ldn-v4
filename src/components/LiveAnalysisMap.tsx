@@ -25,6 +25,8 @@ interface LiveAnalysisMapProps {
   mode: AnalysisMode;
   brackets: BracketFilter[];
   selectedBrackets: number[];
+  onDevelopmentClick: (dev: Development) => void;
+  onAreaClick: (area: AreaMetric) => void;
 }
 
 const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({ 
@@ -34,7 +36,9 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   areaPolygons,
   mode,
   brackets,
-  selectedBrackets 
+  selectedBrackets,
+  onDevelopmentClick,
+  onAreaClick 
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -161,7 +165,26 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       },
     }, 'price-analysis-circles');
 
-  }, [areaMetrics, areaPolygons, mode, brackets, isMapLoaded]);
+    // Click on area polygons
+    map.current.on('click', 'area-polygons-fill', (e) => {
+      if (!e.features || e.features.length === 0) return;
+      const areaCode = e.features[0].properties.area_code;
+      const area = areaMetrics.find(a => a.area_code === areaCode);
+      if (area) {
+        onAreaClick(area);
+      }
+    });
+
+    // Change cursor on hover
+    map.current.on('mouseenter', 'area-polygons-fill', () => {
+      map.current!.getCanvas().style.cursor = 'pointer';
+    });
+
+    map.current.on('mouseleave', 'area-polygons-fill', () => {
+      map.current!.getCanvas().style.cursor = '';
+    });
+
+  }, [areaMetrics, areaPolygons, mode, brackets, isMapLoaded, onAreaClick]);
 
   // Update markers when units change
   useEffect(() => {
@@ -293,7 +316,17 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       popup.remove();
     });
 
-  }, [units, isMapLoaded]);
+    // Click on development pins
+    map.current!.on('click', 'price-analysis-circles', (e) => {
+      if (!e.features || e.features.length === 0) return;
+      const devId = e.features[0].properties.devId;
+      const dev = developments.find(d => d.id === devId);
+      if (dev) {
+        onDevelopmentClick(dev);
+      }
+    });
+
+  }, [units, isMapLoaded, developments, onDevelopmentClick]);
 
   return <div ref={mapContainer} className="w-full h-full" />;
 };

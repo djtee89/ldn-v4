@@ -2,20 +2,23 @@ import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Info, TrendingUp, TrendingDown } from 'lucide-react';
-import { AnalysisMode } from '@/pages/Analysis';
+import { Info, MapPin, Building2 } from 'lucide-react';
+import { AnalysisMode, SelectionType } from '@/pages/Analysis';
 import { Development } from '@/data/newDevelopments';
+import { AreaMetric } from '@/hooks/use-area-metrics';
 
 interface AnalysisInsightPanelProps {
   mode: AnalysisMode;
   units: any[];
   developments: Development[];
+  selectedItem?: { type: SelectionType; data: Development | AreaMetric | null };
 }
 
 const AnalysisInsightPanel: React.FC<AnalysisInsightPanelProps> = ({
   mode,
   units,
   developments,
+  selectedItem,
 }) => {
   // Calculate statistics based on current mode
   const stats = useMemo(() => {
@@ -52,15 +55,43 @@ const AnalysisInsightPanel: React.FC<AnalysisInsightPanelProps> = ({
     return null;
   }, [mode, units]);
 
+  // Determine what to show based on selection
+  const showDevelopment = selectedItem?.type === 'development' && selectedItem.data;
+  const showArea = selectedItem?.type === 'area' && selectedItem.data;
+
   return (
     <div className="p-4 space-y-4">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-bold mb-1">In View</h2>
-        {stats && (
-          <p className="text-sm text-muted-foreground">
-            Median £/ft² (1–3 bed): £{Math.round(stats.overallMedian).toLocaleString()}
-          </p>
+        {showDevelopment ? (
+          <>
+            <div className="flex items-center gap-2 mb-2">
+              <Building2 className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-bold">{(selectedItem.data as Development).name}</h2>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {(selectedItem.data as Development).location}
+            </p>
+          </>
+        ) : showArea ? (
+          <>
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-bold">{(selectedItem.data as AreaMetric).area_name}</h2>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {(selectedItem.data as AreaMetric).area_type.replace('_', ' ')}
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 className="text-lg font-bold mb-1">In View</h2>
+            {stats && (
+              <p className="text-sm text-muted-foreground">
+                Median £/ft² (1–3 bed): £{Math.round(stats.overallMedian).toLocaleString()}
+              </p>
+            )}
+          </>
         )}
       </div>
 
