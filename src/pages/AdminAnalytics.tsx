@@ -8,7 +8,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const AdminAnalytics = () => {
-  const [isComputingMetrics, setIsComputingMetrics] = useState(false);
   const [isFetchingBoundaries, setIsFetchingBoundaries] = useState(false);
   const [isComputingPragmatic, setIsComputingPragmatic] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
@@ -31,50 +30,50 @@ const AdminAnalytics = () => {
   // Fetch status
   const fetchStatus = async () => {
     try {
-      // Count polygons
+      // Count Borough polygons
       const { count: polyCount } = await supabase
         .from('area_polygons')
         .select('*', { count: 'exact', head: true })
-        .eq('area_type', 'MSOA');
+        .eq('area_type', 'Borough');
 
       // Count metrics with price data
       const { count: metricCount } = await supabase
         .from('area_metrics')
         .select('*', { count: 'exact', head: true })
-        .eq('area_type', 'MSOA')
+        .eq('area_type', 'Borough')
         .not('price_per_sqft_overall', 'is', null);
 
       // Get last updated timestamp
       const { data: latestMetric } = await supabase
         .from('area_metrics')
         .select('last_updated')
-        .eq('area_type', 'MSOA')
+        .eq('area_type', 'Borough')
         .not('price_per_sqft_overall', 'is', null)
         .order('last_updated', { ascending: false })
         .limit(1)
         .maybeSingle();
 
-      // Get missing area codes (polygons without metrics)
+      // Get missing area codes
       const { data: allPolygons } = await supabase
         .from('area_polygons')
-        .select('area_code')
-        .eq('area_type', 'MSOA');
+        .select('area_code, area_name')
+        .eq('area_type', 'Borough');
 
       const { data: metricsWithData } = await supabase
         .from('area_metrics')
         .select('area_code')
-        .eq('area_type', 'MSOA')
+        .eq('area_type', 'Borough')
         .not('price_per_sqft_overall', 'is', null);
 
       const metricCodes = new Set(metricsWithData?.map(m => m.area_code) || []);
-      const missingCodes = allPolygons?.filter(p => !metricCodes.has(p.area_code)) || [];
+      const missingPolys = allPolygons?.filter(p => !metricCodes.has(p.area_code)) || [];
 
       setStatus({
         polygonCount: polyCount || 0,
         priceMetricCount: metricCount || 0,
         lastUpdated: latestMetric?.last_updated || null,
-        missingCount: missingCodes.length,
-        missingAreaCodes: missingCodes.slice(0, 5).map(p => p.area_code),
+        missingCount: missingPolys.length,
+        missingAreaCodes: missingPolys.slice(0, 5).map(p => p.area_name || p.area_code),
       });
     } catch (error) {
       console.error('Error fetching status:', error);
@@ -102,22 +101,6 @@ const AdminAnalytics = () => {
     }
   };
 
-  const handleComputeMetrics = async () => {
-    setIsComputingMetrics(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('compute-area-metrics', {
-        body: { force_refresh: true }
-      });
-      if (error) throw error;
-      toast.success(`Computed metrics for ${data.areas_computed} areas`);
-      await fetchStatus();
-    } catch (error: any) {
-      toast.error(`Failed to compute metrics: ${error.message}`);
-    } finally {
-      setIsComputingMetrics(false);
-    }
-  };
-
   const handleComputePragmatic = async () => {
     setIsComputingPragmatic(true);
     try {
@@ -138,18 +121,14 @@ const AdminAnalytics = () => {
     try {
       toast.info('Starting initialization...');
       
-      toast.info('Step 1/3: Fetching MSOA boundaries...');
+      toast.info('Step 1/2: Fetching Borough boundaries...');
       await handleFetchBoundaries();
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      toast.info('Step 2/3: Computing price per sqft...');
-      await handleComputeMetrics();
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast.info('Step 3/3: Computing pragmatic £/ft²...');
+      toast.info('Step 2/2: Computing Borough £/ft²...');
       await handleComputePragmatic();
       
-      toast.success('Price analysis data initialized successfully!');
+      toast.success('Borough price data initialized successfully!');
     } catch (error: any) {
       toast.error(`Initialization failed: ${error.message}`);
     } finally {
@@ -158,11 +137,12 @@ const AdminAnalytics = () => {
   };
 
   const hasWarnings = status.polygonCount === 0 || status.priceMetricCount === 0;
+  const expectedCount = 33; // 33 London Boroughs
 
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Price Per Sqft Analytics</h1>
+        <h1 className="text-3xl font-bold">Borough £/ft² Analytics</h1>
         <Button
           onClick={handleInitializeAll}
           disabled={isInitializing}
@@ -185,20 +165,20 @@ const AdminAnalytics = () => {
             )}
             Data Status
           </CardTitle>
-          <CardDescription>Current state of MSOA boundaries and price metrics</CardDescription>
+          <CardDescription>Current state of London Borough boundaries and price metrics</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground">MSOA Polygons</p>
-              <p className={`text-2xl font-bold ${status.polygonCount === 983 ? 'text-green-600' : ''}`}>
-                {status.polygonCount}/983
+              <p className="text-sm text-muted-foreground">Borough Polygons</p>
+              <p className={`text-2xl font-bold ${status.polygonCount === expectedCount ? 'text-green-600' : ''}`}>
+                {status.polygonCount}/{expectedCount}
               </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">£/ft² Rows (non-null)</p>
-              <p className={`text-2xl font-bold ${status.priceMetricCount === 983 ? 'text-green-600' : ''}`}>
-                {status.priceMetricCount}/983
+              <p className={`text-2xl font-bold ${status.priceMetricCount === expectedCount ? 'text-green-600' : ''}`}>
+                {status.priceMetricCount}/{expectedCount}
               </p>
             </div>
             <div>
@@ -210,20 +190,20 @@ const AdminAnalytics = () => {
           {hasWarnings && (
             <Alert variant="destructive">
               <AlertDescription>
-                {status.polygonCount === 0 && '⚠️ No MSOA polygons loaded. Run "Fetch Boundaries" first. '}
+                {status.polygonCount === 0 && '⚠️ No Borough polygons loaded. Run "Fetch Boundaries" first. '}
                 {status.polygonCount > 0 && status.priceMetricCount === 0 && '⚠️ No price metrics computed. Run "Compute Pragmatic £/ft²" to populate. '}
                 Please run the functions below to initialize the data.
               </AlertDescription>
             </Alert>
           )}
 
-          {status.missingCount > 0 && status.polygonCount === 983 && (
+          {status.missingCount > 0 && status.polygonCount === expectedCount && (
             <Alert>
               <AlertDescription>
-                <p className="font-semibold mb-1">⚠️ {status.missingCount} MSOAs missing price data</p>
+                <p className="font-semibold mb-1">⚠️ {status.missingCount} Boroughs missing price data</p>
                 {status.missingAreaCodes.length > 0 && (
                   <p className="text-xs text-muted-foreground">
-                    Top 5 missing: {status.missingAreaCodes.join(', ')}
+                    Missing: {status.missingAreaCodes.join(', ')}
                     {status.missingCount > 5 && ` +${status.missingCount - 5} more`}
                   </p>
                 )}
@@ -231,10 +211,10 @@ const AdminAnalytics = () => {
             </Alert>
           )}
           
-          {status.priceMetricCount === 983 && status.polygonCount === 983 && (
+          {status.priceMetricCount === expectedCount && status.polygonCount === expectedCount && (
             <Alert className="bg-green-50 dark:bg-green-950/20 border-green-500">
               <AlertDescription className="text-green-800 dark:text-green-200">
-                ✓ All 983 MSOAs have £/ft² data — choropleth layer ready
+                ✓ All {expectedCount} London Boroughs have £/ft² data — map ready
               </AlertDescription>
             </Alert>
           )}
@@ -247,20 +227,19 @@ const AdminAnalytics = () => {
           <CardTitle>How It Works</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
-          <p>1. <strong>Fetch Boundaries:</strong> Load ~983 London MSOA (Middle Layer Super Output Area) polygons from the ONS API</p>
-          <p>2. <strong>Compute Metrics:</strong> Calculate median price per square foot for each MSOA based on available units in your developments database</p>
-          <p>3. <strong>Compute Pragmatic £/ft²:</strong> Generate London-wide £/ft² estimates from ONS/LR median price ÷ EPC median floor area</p>
-          <p>4. View the results on the <strong>Live Analysis</strong> page with color-coded heat layer and discount percentages</p>
+          <p>1. <strong>Fetch Boundaries:</strong> Load 33 London Borough polygons from the ONS API</p>
+          <p>2. <strong>Compute Pragmatic £/ft²:</strong> Generate Borough-level £/ft² estimates (Westminster, Camden, Hackney, etc.)</p>
+          <p>3. View the results on the <strong>Live Analysis</strong> page with smooth color-coded map and discount percentages</p>
           <p className="text-muted-foreground pt-2">Click "Initialize Data" above to run all steps automatically.</p>
         </CardContent>
       </Card>
 
       {/* Action Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>1. Fetch Boundaries</CardTitle>
-            <CardDescription>Load London MSOA polygons (~983 areas)</CardDescription>
+            <CardDescription>Load London Borough polygons (33 areas)</CardDescription>
           </CardHeader>
           <CardContent>
             <Button
@@ -276,25 +255,8 @@ const AdminAnalytics = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>2. Compute Price/sqft</CardTitle>
-            <CardDescription>Calculate metrics from available units</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              onClick={handleComputeMetrics}
-              disabled={isComputingMetrics}
-              className="w-full"
-            >
-              {isComputingMetrics && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Run Computation
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>3. Pragmatic £/ft²</CardTitle>
-            <CardDescription>ONS/LR price ÷ EPC floor area</CardDescription>
+            <CardTitle>2. Borough £/ft²</CardTitle>
+            <CardDescription>Named areas with realistic pricing</CardDescription>
           </CardHeader>
           <CardContent>
             <Button
@@ -303,7 +265,7 @@ const AdminAnalytics = () => {
               className="w-full"
             >
               {isComputingPragmatic && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Compute Pragmatic
+              Compute Borough £/ft²
             </Button>
           </CardContent>
         </Card>

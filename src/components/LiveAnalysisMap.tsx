@@ -77,33 +77,23 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   }, []);
 
 
-  // Add area polygons layer with 7-class quantile choropleth
+  // Add Borough polygons layer with smooth color gradient
   useEffect(() => {
     if (!map.current || !isMapLoaded || areaPolygons.length === 0) return;
 
-    // Calculate quantile breaks (7 classes) from non-null metrics
-    const validPpsf = areaMetrics
-      .filter(m => m.price_per_sqft_overall && m.price_per_sqft_overall > 0)
-      .map(m => m.price_per_sqft_overall!)
-      .sort((a, b) => a - b);
-
-    const getQuantileColor = (ppsf: number): string => {
-      if (!ppsf || validPpsf.length === 0) return '#e5e7eb';
+    // Simple continuous color scale for smooth blend
+    const getColorFromPrice = (ppsf: number): string => {
+      if (!ppsf || ppsf <= 0) return '#e5e7eb';
       
-      const q1 = validPpsf[Math.floor(validPpsf.length * 1/7)];
-      const q2 = validPpsf[Math.floor(validPpsf.length * 2/7)];
-      const q3 = validPpsf[Math.floor(validPpsf.length * 3/7)];
-      const q4 = validPpsf[Math.floor(validPpsf.length * 4/7)];
-      const q5 = validPpsf[Math.floor(validPpsf.length * 5/7)];
-      const q6 = validPpsf[Math.floor(validPpsf.length * 6/7)];
-      
-      if (ppsf <= q1) return '#22c55e'; // Green
-      if (ppsf <= q2) return '#65a30d'; // Green-yellow
-      if (ppsf <= q3) return '#84cc16'; // Yellow-green
-      if (ppsf <= q4) return '#eab308'; // Yellow
-      if (ppsf <= q5) return '#f59e0b'; // Orange-yellow
-      if (ppsf <= q6) return '#f97316'; // Orange
-      return '#ef4444'; // Red
+      // Smooth gradient: Green (£500) → Yellow (£900) → Orange (£1100) → Red (£1500+)
+      if (ppsf < 600) return '#10b981'; // Green
+      if (ppsf < 700) return '#34d399'; // Light green
+      if (ppsf < 800) return '#84cc16'; // Yellow-green
+      if (ppsf < 900) return '#fbbf24'; // Yellow
+      if (ppsf < 1000) return '#fb923c'; // Orange
+      if (ppsf < 1100) return '#f97316'; // Dark orange
+      if (ppsf < 1200) return '#ef4444'; // Red
+      return '#dc2626'; // Dark red
     };
 
     // Create GeoJSON for polygons - join with metrics by area_code
@@ -118,7 +108,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
           area_code: poly.area_code,
           area_name: poly.area_name,
           area_ppsf: ppsf,
-          color: ppsf ? getQuantileColor(ppsf) : '#e5e7eb'
+          color: ppsf ? getColorFromPrice(ppsf) : '#e5e7eb'
         }
       };
     });
@@ -139,7 +129,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       data: geojson
     });
 
-    // Fill layer - smooth choropleth with 7 quantile classes
+    // Fill layer - smooth gradient blend
     map.current!.addLayer({
       id: 'area-fills',
       type: 'fill',
@@ -150,20 +140,20 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
           'case',
           ['==', ['get', 'area_ppsf'], null],
           0, // Fully transparent if no data
-          0.30 // 0.25-0.35 range
+          0.40 // Higher opacity for clearer boroughs
         ]
       }
     });
 
-    // No border or very subtle hairline
+    // Visible border for clarity
     map.current!.addLayer({
       id: 'area-borders',
       type: 'line',
       source: 'area-polygons',
       paint: {
-        'line-color': '#000000',
-        'line-width': 0.5,
-        'line-opacity': 0.08
+        'line-color': '#ffffff',
+        'line-width': 1.5,
+        'line-opacity': 0.6
       }
     });
 
@@ -324,8 +314,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
           .setHTML(`
             <div class="p-2">
               <h3 class="font-bold text-sm mb-1">${props.area_name}</h3>
-              <p class="text-xs"><strong>Area £/ft²:</strong> £${props.area_ppsf.toLocaleString()}</p>
-              <p class="text-xs text-muted-foreground">MSOA: ${props.area_code}</p>
+              <p class="text-xs"><strong>Borough £/ft²:</strong> £${props.area_ppsf.toLocaleString()}</p>
             </div>
           `)
           .addTo(map.current!);

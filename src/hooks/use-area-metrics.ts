@@ -45,11 +45,12 @@ export interface AreaPolygon {
 
 export const useAreaMetrics = () => {
   return useQuery({
-    queryKey: ['area-metrics'],
+    queryKey: ['area-metrics-borough'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('area_metrics')
         .select('*')
+        .eq('area_type', 'Borough')
         .order('area_code');
       
       if (error) throw error;
@@ -61,11 +62,12 @@ export const useAreaMetrics = () => {
 
 export const useAreaPolygons = () => {
   return useQuery({
-    queryKey: ['area-polygons'],
+    queryKey: ['area-polygons-borough'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('area_polygons')
         .select('*')
+        .eq('area_type', 'Borough')
         .order('area_code');
       
       if (error) throw error;
