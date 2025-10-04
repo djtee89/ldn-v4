@@ -219,12 +219,39 @@ export const OffersManager = () => {
             </div>
 
             <div>
-              <Label>Image URL</Label>
+              <Label>Offer Image</Label>
               <Input
-                placeholder="https://example.com/image.jpg"
-                value={newOffer.image_url}
-                onChange={(e) => setNewOffer({ ...newOffer, image_url: e.target.value })}
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  
+                  const fileExt = file.name.split('.').pop();
+                  const fileName = `offer-${Date.now()}.${fileExt}`;
+                  
+                  const { data, error } = await supabase.storage
+                    .from('development-images')
+                    .upload(fileName, file);
+                  
+                  if (error) {
+                    toast.error('Failed to upload image');
+                    return;
+                  }
+                  
+                  const { data: { publicUrl } } = supabase.storage
+                    .from('development-images')
+                    .getPublicUrl(fileName);
+                  
+                  setNewOffer({ ...newOffer, image_url: publicUrl });
+                  toast.success('Image uploaded');
+                }}
               />
+              {newOffer.image_url && (
+                <div className="mt-2">
+                  <img src={newOffer.image_url} alt="Preview" className="h-20 w-20 object-cover rounded" />
+                </div>
+              )}
             </div>
 
             <div>

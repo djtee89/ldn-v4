@@ -30,7 +30,7 @@ export const BestDealsManager = () => {
   const [selectedDevId, setSelectedDevId] = useState<string>('');
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [dealDescription, setDealDescription] = useState('');
-  const [imageUrls, setImageUrls] = useState('');
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [floorplanUrl, setFloorplanUrl] = useState('');
   const queryClient = useQueryClient();
 
@@ -89,7 +89,6 @@ export const BestDealsManager = () => {
       }
 
       const { data: user } = await supabase.auth.getUser();
-      const images = imageUrls.split('\n').map(url => url.trim()).filter(url => url);
       
       const { error } = await supabase
         .from('best_deals')
@@ -97,7 +96,7 @@ export const BestDealsManager = () => {
           dev_id: selectedDevId,
           unit_id: selectedUnitId,
           deal_description: dealDescription || null,
-          images: images.length > 0 ? images : null,
+          images: uploadedImages.length > 0 ? uploadedImages : null,
           floorplan_url: floorplanUrl || null,
           published_by: user.user?.id,
           active: true,
@@ -112,7 +111,7 @@ export const BestDealsManager = () => {
       setSelectedDevId('');
       setSelectedUnitId('');
       setDealDescription('');
-      setImageUrls('');
+      setUploadedImages([]);
       setFloorplanUrl('');
       toast.success('Best deal published successfully');
     },
@@ -207,24 +206,86 @@ export const BestDealsManager = () => {
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Image URLs (one per line)</label>
-            <textarea
-              className="w-full min-h-[80px] px-3 py-2 text-sm rounded-md border border-input bg-background font-mono text-xs"
-              placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
-              value={imageUrls}
-              onChange={(e) => setImageUrls(e.target.value)}
+            <label className="text-sm font-medium mb-2 block">Deal Images</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background"
+              onChange={async (e) => {
+                const files = Array.from(e.target.files || []);
+                if (files.length === 0) return;
+                
+                const newUrls: string[] = [];
+                
+                for (const file of files) {
+                  const fileExt = file.name.split('.').pop();
+                  const fileName = `deal-${Date.now()}-${Math.random()}.${fileExt}`;
+                  
+                  const { error } = await supabase.storage
+                    .from('development-images')
+                    .upload(fileName, file);
+                  
+                  if (error) {
+                    toast.error(`Failed to upload ${file.name}`);
+                    continue;
+                  }
+                  
+                  const { data: { publicUrl } } = supabase.storage
+                    .from('development-images')
+                    .getPublicUrl(fileName);
+                  
+                  newUrls.push(publicUrl);
+                }
+                
+                setUploadedImages([...uploadedImages, ...newUrls]);
+                toast.success(`${newUrls.length} image(s) uploaded`);
+              }}
             />
+            {uploadedImages.length > 0 && (
+              <div className="mt-2 flex gap-2 flex-wrap">
+                {uploadedImages.map((url, idx) => (
+                  <img key={idx} src={url} alt={`Preview ${idx + 1}`} className="h-20 w-20 object-cover rounded" />
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Floorplan URL</label>
+            <label className="text-sm font-medium mb-2 block">Floorplan</label>
             <input
-              type="text"
+              type="file"
+              accept="image/*"
               className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background"
-              placeholder="https://example.com/floorplan.jpg"
-              value={floorplanUrl}
-              onChange={(e) => setFloorplanUrl(e.target.value)}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                
+                const fileExt = file.name.split('.').pop();
+                const fileName = `floorplan-${Date.now()}.${fileExt}`;
+                
+                const { error } = await supabase.storage
+                  .from('development-images')
+                  .upload(fileName, file);
+                
+                if (error) {
+                  toast.error('Failed to upload floorplan');
+                  return;
+                }
+                
+                const { data: { publicUrl } } = supabase.storage
+                  .from('development-images')
+                  .getPublicUrl(fileName);
+                
+                setFloorplanUrl(publicUrl);
+                toast.success('Floorplan uploaded');
+              }}
             />
+            {floorplanUrl && (
+              <div className="mt-2">
+                <img src={floorplanUrl} alt="Floorplan preview" className="h-20 w-auto object-contain rounded" />
+              </div>
+            )}
           </div>
 
           <Button

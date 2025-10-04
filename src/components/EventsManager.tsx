@@ -202,12 +202,39 @@ export const EventsManager = () => {
             </div>
 
             <div>
-              <Label>Image URL</Label>
+              <Label>Event Image</Label>
               <Input
-                placeholder="https://example.com/event-image.jpg"
-                value={newEvent.image_url}
-                onChange={(e) => setNewEvent({ ...newEvent, image_url: e.target.value })}
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  
+                  const fileExt = file.name.split('.').pop();
+                  const fileName = `event-${Date.now()}.${fileExt}`;
+                  
+                  const { error } = await supabase.storage
+                    .from('development-images')
+                    .upload(fileName, file);
+                  
+                  if (error) {
+                    toast.error('Failed to upload image');
+                    return;
+                  }
+                  
+                  const { data: { publicUrl } } = supabase.storage
+                    .from('development-images')
+                    .getPublicUrl(fileName);
+                  
+                  setNewEvent({ ...newEvent, image_url: publicUrl });
+                  toast.success('Image uploaded');
+                }}
               />
+              {newEvent.image_url && (
+                <div className="mt-2">
+                  <img src={newEvent.image_url} alt="Preview" className="h-20 w-20 object-cover rounded" />
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
