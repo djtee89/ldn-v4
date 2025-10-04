@@ -54,6 +54,38 @@ const MichelinRestaurantsSection = () => {
         {restaurants.map((restaurant, idx) => <RestaurantCard key={idx} restaurant={restaurant} />)}
       </div>
     </div>;
-  return;
+  return (
+    <div className="container mx-auto px-4 py-16">
+      <SectionHeader 
+        title="Michelin-Starred Restaurants in London" 
+        subtitle="Discover the finest dining experiences near your future home"
+        className="mb-12"
+      />
+      
+      {threeStars.length > 0 && (
+        <RestaurantGrid
+          restaurants={threeStars}
+          title="Three Star Excellence"
+          subtitle="The pinnacle of culinary achievement"
+        />
+      )}
+      
+      {twoStars.length > 0 && (
+        <RestaurantGrid
+          restaurants={twoStars}
+          title="Two Star Dining"
+          subtitle="Exceptional cuisine worth a detour"
+        />
+      )}
+      
+      {oneStars.length > 0 && (
+        <RestaurantGrid
+          restaurants={oneStars}
+          title="One Star Quality"
+          subtitle="High quality cooking, worth a stop"
+        />
+      )}
+    </div>
+  );
 };
 export default MichelinRestaurantsSection;
