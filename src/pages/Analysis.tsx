@@ -138,19 +138,66 @@ const Analysis = () => {
 
   const isLoading = devsLoading || unitsLoading || metricsLoading || polygonsLoading;
 
+  const [metricCounts, setMetricCounts] = useState({
+    ppsf: 0,
+    yield: 0,
+    growth: 0,
+    schools: 0,
+    green: 0,
+    noise: 0,
+    crime: 0,
+    lastUpdated: null as string | null,
+  });
+
+  // Fetch metric counts for status display
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const { data: metrics } = await supabase
+        .from('area_metrics')
+        .select('price_per_sqft_overall, yield_1bed, growth_12m_pct, schools_score, green_space_pct, noise_air_badge, crime_per_1000, last_updated')
+        .eq('area_type', 'MSOA');
+
+      if (metrics && metrics.length > 0) {
+        setMetricCounts({
+          ppsf: metrics.filter(m => m.price_per_sqft_overall !== null).length,
+          yield: metrics.filter(m => m.yield_1bed !== null).length,
+          growth: metrics.filter(m => m.growth_12m_pct !== null).length,
+          schools: metrics.filter(m => m.schools_score !== null).length,
+          green: metrics.filter(m => m.green_space_pct !== null).length,
+          noise: metrics.filter(m => m.noise_air_badge !== null).length,
+          crime: metrics.filter(m => m.crime_per_1000 !== null).length,
+          lastUpdated: metrics[0]?.last_updated || null,
+        });
+      }
+    };
+    fetchCounts();
+  }, [areaMetrics]);
+
+  const dataStatusPill = () => {
+    const metricsAvailable = {
+      ppsf: areaMetrics.some(m => m.price_per_sqft_overall !== null),
+      yield: areaMetrics.some(m => m.yield_1bed !== null),
+      growth: areaMetrics.some(m => m.growth_12m_pct !== null),
+      schools: areaMetrics.some(m => m.schools_score !== null),
+      green: areaMetrics.some(m => m.green_space_pct !== null),
+      noise: areaMetrics.some(m => m.noise_air_badge !== null),
+      crime: areaMetrics.some(m => m.crime_per_1000 !== null),
+    };
+
+    return `MSOA: ${areaPolygons.length} • Metrics: ${Object.entries(metricsAvailable).filter(([_, v]) => v).map(([k]) => k).join(' ✓ ')} • Updated: ${metricCounts.lastUpdated ? new Date(metricCounts.lastUpdated).toLocaleDateString() : 'Never'}`;
+  };
+
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {/* Header */}
       <header className="bg-background border-b border-border px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold">Live Analysis</h1>
-          <Badge variant="secondary" className="text-xs">
-            Data updated: 08 Oct 2025
-          </Badge>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <Info className="h-4 w-4" />
+              <Button variant="outline" size="sm" className="text-xs gap-2">
+                <Info className="h-3 w-3" />
+                Data Status
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-lg">
@@ -169,9 +216,10 @@ const Analysis = () => {
                     <li><strong>Noise/Air:</strong> DEFRA monitoring stations and traffic data</li>
                     <li><strong>Crime:</strong> Metropolitan Police recorded crime statistics</li>
                   </ul>
-                  <p className="text-xs text-muted-foreground">
-                    Data is updated nightly. All calculations use industry-standard methodologies.
-                  </p>
+                  <div className="pt-3 border-t space-y-2">
+                    <p className="text-xs font-medium">Current Status:</p>
+                    <p className="text-xs">{dataStatusPill()}</p>
+                  </div>
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
@@ -211,32 +259,6 @@ const Analysis = () => {
           {isLoading ? (
             <div className="w-full h-full flex items-center justify-center bg-muted">
               <p className="text-muted-foreground">Loading map data...</p>
-            </div>
-          ) : areaPolygons.length === 0 ? (
-            <div className="w-full h-full flex items-center justify-center bg-muted p-8">
-              <div className="max-w-md text-center space-y-4">
-                <div className="text-4xl mb-4">📍</div>
-                <h3 className="text-xl font-semibold">No Map Data Available</h3>
-                <p className="text-muted-foreground">
-                  To see the Live Analysis map, you need to fetch area boundaries and metrics first.
-                </p>
-                <div className="space-y-2 text-sm text-left bg-background/50 p-4 rounded-lg border">
-                  <p className="font-medium">Required steps:</p>
-                  <ol className="list-decimal list-inside space-y-1">
-                    <li>Go to <strong>Admin Analytics</strong> page</li>
-                    <li>Click <strong>"Fetch Boundaries"</strong> (required for map display)</li>
-                    <li>Click <strong>"Run Computation"</strong> to calculate price/sqft</li>
-                    <li>Optionally fetch other metrics (Yield, Growth, Crime, etc.)</li>
-                    <li>Return here to view the analysis</li>
-                  </ol>
-                </div>
-                <Button 
-                  onClick={() => window.location.href = '/admin/analytics'}
-                  className="mt-4"
-                >
-                  Go to Admin Analytics
-                </Button>
-              </div>
             </div>
           ) : (
             <LiveAnalysisMap

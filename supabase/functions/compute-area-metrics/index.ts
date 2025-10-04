@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 interface ComputeRequest {
-  area_codes?: string[]; // If empty, compute all
+  area_codes?: string[];
   force_refresh?: boolean;
 }
 
@@ -22,7 +22,21 @@ Deno.serve(async (req) => {
 
     const { area_codes, force_refresh } = await req.json() as ComputeRequest;
 
-    console.log('Computing area metrics...', { area_codes, force_refresh });
+    console.log('Computing area metrics for MSOAs...');
+
+    // Fetch all MSOA polygons
+    const { data: msoaPolygons, error: polygonError } = await supabase
+      .from('area_polygons')
+      .select('*')
+      .eq('area_type', 'MSOA');
+
+    if (polygonError) throw polygonError;
+
+    if (!msoaPolygons || msoaPolygons.length === 0) {
+      throw new Error('No MSOA polygons found. Please run "Fetch Boundaries" first.');
+    }
+
+    console.log(`Found ${msoaPolygons.length} MSOA polygons`);
 
     // Fetch all units
     const { data: units, error: unitsError } = await supabase
@@ -44,31 +58,55 @@ Deno.serve(async (req) => {
     // Create a map for quick development lookup
     const devMap = new Map(developments?.map(dev => [dev.id, dev]) || []);
 
-    // Group units by postcode sector (first 4-5 chars of postcode)
+    // Group units by MSOA using point-in-polygon check
     const areaGroups = new Map<string, any[]>();
 
     units?.forEach(unit => {
       const dev = devMap.get(unit.dev_id);
-      if (!dev || !dev.postcode) return;
+      if (!dev || !dev.lat || !dev.lng) return;
 
-      // Extract postcode sector (e.g., "SW1A 1" from "SW1A 1AA")
-      const postcodeParts = dev.postcode.trim().split(' ');
-      const sector = postcodeParts.length >= 2 
-        ? `${postcodeParts[0]} ${postcodeParts[1][0]}` 
-        : postcodeParts[0];
+      // Find which MSOA this development falls into
+      const msoa = msoaPolygons.find(polygon => 
+        isPointInPolygon([dev.lng, dev.lat], polygon.geometry)
+      );
 
-      if (!areaGroups.has(sector)) {
-        areaGroups.set(sector, []);
+      if (msoa) {
+        if (!areaGroups.has(msoa.area_code)) {
+          areaGroups.set(msoa.area_code, []);
+        }
+        areaGroups.get(msoa.area_code)!.push({ ...unit, development: dev });
       }
-      areaGroups.get(sector)!.push({ ...unit, development: dev });
     });
 
-    console.log(`Grouped into ${areaGroups.size} postcode sectors`);
+    console.log(`Grouped units into ${areaGroups.size} MSOAs`);
 
-    // Compute metrics for each area
+    // Compute metrics for each MSOA
     const metrics = [];
 
-    for (const [areaCode, areaUnits] of areaGroups) {
+    for (const polygon of msoaPolygons) {
+      const areaUnits = areaGroups.get(polygon.area_code) || [];
+      
+      if (areaUnits.length === 0) {
+        // Create entry with null values for MSOAs with no units
+        const bounds = calculateBounds(polygon.geometry);
+        metrics.push({
+          area_code: polygon.area_code,
+          area_name: polygon.area_name,
+          area_type: 'MSOA',
+          bounds: bounds,
+          center_lat: (bounds.north + bounds.south) / 2,
+          center_lng: (bounds.east + bounds.west) / 2,
+          price_per_sqft_1bed: null,
+          price_per_sqft_2bed: null,
+          price_per_sqft_3bed: null,
+          price_per_sqft_overall: null,
+          sample_size: 0,
+          last_updated: new Date().toISOString(),
+          data_sources: ['internal_units'],
+        });
+        continue;
+      }
+
       // Calculate price per sqft by bedroom count
       const unitsByBeds = new Map<number, number[]>();
       const allPricesPerSqft: number[] = [];
@@ -110,16 +148,12 @@ Deno.serve(async (req) => {
       const centerLat = (minLat + maxLat) / 2;
       const centerLng = (minLng + maxLng) / 2;
 
+      const bounds = calculateBounds(polygon.geometry);
       metrics.push({
-        area_code: areaCode,
-        area_name: areaCode,
-        area_type: 'postcode_sector',
-        bounds: {
-          north: maxLat,
-          south: minLat,
-          east: maxLng,
-          west: minLng,
-        },
+        area_code: polygon.area_code,
+        area_name: polygon.area_name,
+        area_type: 'MSOA',
+        bounds: bounds,
         center_lat: centerLat,
         center_lng: centerLng,
         price_per_sqft_1bed: price_1bed,
@@ -132,7 +166,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    console.log(`Computed metrics for ${metrics.length} areas`);
+    console.log(`Computed metrics for ${metrics.length} MSOAs`);
 
     // Upsert into database
     if (metrics.length > 0) {
@@ -150,7 +184,7 @@ Deno.serve(async (req) => {
       JSON.stringify({
         success: true,
         areas_computed: metrics.length,
-        message: `Computed metrics for ${metrics.length} areas`,
+        message: `Computed metrics for ${metrics.length} MSOAs`,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -168,3 +202,47 @@ Deno.serve(async (req) => {
     );
   }
 });
+
+// Helper functions
+function calculateBounds(geometry: any): { north: number; south: number; east: number; west: number } {
+  let minLat = Infinity, maxLat = -Infinity, minLng = Infinity, maxLng = -Infinity;
+  
+  const processCoords = (coords: any[]) => {
+    if (typeof coords[0] === 'number') {
+      minLng = Math.min(minLng, coords[0]);
+      maxLng = Math.max(maxLng, coords[0]);
+      minLat = Math.min(minLat, coords[1]);
+      maxLat = Math.max(maxLat, coords[1]);
+    } else {
+      coords.forEach(processCoords);
+    }
+  };
+  
+  processCoords(geometry.coordinates);
+  
+  return { north: maxLat, south: minLat, east: maxLng, west: minLng };
+}
+
+function isPointInPolygon(point: [number, number], geometry: any): boolean {
+  const [x, y] = point;
+  
+  const checkPolygon = (coords: number[][][]) => {
+    const ring = coords[0];
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const xi = ring[i][0], yi = ring[i][1];
+      const xj = ring[j][0], yj = ring[j][1];
+      const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  };
+
+  if (geometry.type === 'Polygon') {
+    return checkPolygon(geometry.coordinates);
+  } else if (geometry.type === 'MultiPolygon') {
+    return geometry.coordinates.some(checkPolygon);
+  }
+  
+  return false;
+}

@@ -95,7 +95,10 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   // Update area polygons when data changes
   useEffect(() => {
     if (!map.current || !isMapLoaded) return;
-    if (areaPolygons.length === 0 || brackets.length === 0) return;
+    if (areaPolygons.length === 0) return;
+    
+    // Show neutral color if no brackets (no data for this mode yet)
+    const hasData = brackets.length > 0;
 
     // Remove existing layers
     if (map.current.getLayer('area-polygons-fill')) {
@@ -117,7 +120,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
         value = metric?.price_per_sqft_overall ?? null;
       }
 
-      const color = getColorForValue(value);
+      const color = hasData ? getColorForValue(value) : '#cccccc'; // Neutral gray if no data
 
       return {
         type: 'Feature' as const,
