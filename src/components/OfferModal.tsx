@@ -63,12 +63,13 @@ const OfferModal: React.FC<OfferModalProps> = ({ offer, isOpen, onClose }) => {
 
         <div className="space-y-6 mt-0 px-4 sm:px-6 pb-4 sm:pb-6">
           {/* Hero Image */}
-          <div className="relative aspect-video rounded-lg overflow-hidden">
-            <img
-              src={offer.image}
-              alt={offer.development}
-              className="w-full h-full object-cover"
-            />
+          {offer.image && (
+            <div className="relative aspect-video rounded-lg overflow-hidden">
+              <img
+                src={offer.image}
+                alt={offer.development}
+                className="w-full h-full object-cover"
+              />
             <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 flex items-center gap-1 text-xs sm:text-sm text-white font-medium bg-black/70 px-2 sm:px-3 py-1 sm:py-1.5 rounded">
               <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Offer ends</span>
@@ -78,7 +79,8 @@ const OfferModal: React.FC<OfferModalProps> = ({ offer, isOpen, onClose }) => {
                 year: 'numeric'
               })}
             </div>
-          </div>
+            </div>
+          )}
 
           {/* Description */}
           <div>

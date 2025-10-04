@@ -78,17 +78,19 @@ export function EventPopup({ event, isOpen, onClose }: EventPopupProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl p-0 overflow-hidden">
         <DialogHeader className="p-0">
-          <div className="relative w-full h-40 sm:h-48 mb-4">
-            <img
-              src={event.image}
-              alt={event.development}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <Badge className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-primary text-primary-foreground">
-              {event.type}
-            </Badge>
-          </div>
+          {event.image && (
+            <div className="relative w-full h-40 sm:h-48 mb-4">
+              <img
+                src={event.image}
+                alt={event.development}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <Badge className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-primary text-primary-foreground">
+                {event.type}
+              </Badge>
+            </div>
+          )}
           <DialogTitle className="text-xl sm:text-2xl px-4 sm:px-6">{event.title}</DialogTitle>
         </DialogHeader>
 

@@ -29,6 +29,9 @@ interface BestDeal {
 export const BestDealsManager = () => {
   const [selectedDevId, setSelectedDevId] = useState<string>('');
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
+  const [dealDescription, setDealDescription] = useState('');
+  const [imageUrls, setImageUrls] = useState('');
+  const [floorplanUrl, setFloorplanUrl] = useState('');
   const queryClient = useQueryClient();
 
   // Fetch all developments
@@ -86,12 +89,16 @@ export const BestDealsManager = () => {
       }
 
       const { data: user } = await supabase.auth.getUser();
+      const images = imageUrls.split('\n').map(url => url.trim()).filter(url => url);
       
       const { error } = await supabase
         .from('best_deals')
         .insert({
           dev_id: selectedDevId,
           unit_id: selectedUnitId,
+          deal_description: dealDescription || null,
+          images: images.length > 0 ? images : null,
+          floorplan_url: floorplanUrl || null,
           published_by: user.user?.id,
           active: true,
           display_order: (bestDeals?.length || 0) + 1
@@ -104,6 +111,9 @@ export const BestDealsManager = () => {
       queryClient.invalidateQueries({ queryKey: ['best-deals-public'] });
       setSelectedDevId('');
       setSelectedUnitId('');
+      setDealDescription('');
+      setImageUrls('');
+      setFloorplanUrl('');
       toast.success('Best deal published successfully');
     },
     onError: (error: any) => {
@@ -185,6 +195,37 @@ export const BestDealsManager = () => {
               </Select>
             </div>
           )}
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Deal Description (Why it's great)</label>
+            <textarea
+              className="w-full min-h-[80px] px-3 py-2 text-sm rounded-md border border-input bg-background"
+              placeholder="Explain why this is such a great deal..."
+              value={dealDescription}
+              onChange={(e) => setDealDescription(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Image URLs (one per line)</label>
+            <textarea
+              className="w-full min-h-[80px] px-3 py-2 text-sm rounded-md border border-input bg-background font-mono text-xs"
+              placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+              value={imageUrls}
+              onChange={(e) => setImageUrls(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Floorplan URL</label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background"
+              placeholder="https://example.com/floorplan.jpg"
+              value={floorplanUrl}
+              onChange={(e) => setFloorplanUrl(e.target.value)}
+            />
+          </div>
 
           <Button
             onClick={() => publishMutation.mutate()}

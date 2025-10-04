@@ -14,6 +14,7 @@ interface Offer {
   savings_amount: string | null;
   expiry_date: string | null;
   terms: any;
+  image_url?: string | null;
   developments: {
     name: string;
     developer: string;
@@ -83,7 +84,7 @@ const ThisWeeksOffers = () => {
                 {/* Image */}
                 <div className="relative h-56 overflow-hidden">
                   <img
-                    src={offer.developments.images?.[0] || '/placeholder.svg'}
+                    src={offer.image_url || offer.developments.images?.[0] || '/placeholder.svg'}
                     alt={offer.developments.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
@@ -162,7 +163,7 @@ const ThisWeeksOffers = () => {
             developmentId: selectedOffer.dev_id,
             developer: selectedOffer.developments.developer,
             description: selectedOffer.offer_description || '',
-            image: selectedOffer.developments.images?.[0] || '/placeholder.svg',
+            image: selectedOffer.image_url || selectedOffer.developments.images?.[0] || '/placeholder.svg',
             savingsAmount: selectedOffer.savings_amount || '',
             expiryDate: selectedOffer.expiry_date || '',
             voucherCode: selectedOffer.voucher_code,

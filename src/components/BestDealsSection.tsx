@@ -44,6 +44,8 @@ const BestDealsSection: React.FC<BestDealsSectionProps> = ({ onBookViewing }) =>
         .from('best_deals')
         .select(`
           unit_id,
+          deal_description,
+          images,
           units (
             id,
             unit_number,
@@ -77,8 +79,8 @@ const BestDealsSection: React.FC<BestDealsSectionProps> = ({ onBookViewing }) =>
             dev_id: deal.developments.id,
             dev_name: deal.developments.name,
             developer: deal.developments.developer,
-            image: deal.developments.images?.[0] || '/placeholder.svg',
-            override_reason: 'Featured Deal'
+            image: deal.images?.[0] || deal.developments.images?.[0] || '/placeholder.svg',
+            override_reason: deal.deal_description || 'Featured Deal'
           }));
 
         setHottestDeals(formattedDeals);

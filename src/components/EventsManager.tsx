@@ -35,7 +35,8 @@ export const EventsManager = () => {
     event_date: '',
     event_time: '',
     location: '',
-    registration_required: true
+    registration_required: true,
+    image_url: ''
   });
   const queryClient = useQueryClient();
 
@@ -77,7 +78,7 @@ export const EventsManager = () => {
 
       const { data: user } = await supabase.auth.getUser();
 
-      const { error } = await supabase
+      const { error} = await supabase
         .from('events')
         .insert({
           dev_id: selectedDevId,
@@ -86,6 +87,7 @@ export const EventsManager = () => {
           event_date: newEvent.event_date,
           event_time: newEvent.event_time,
           location: newEvent.location || null,
+          image_url: newEvent.image_url || null,
           registration_required: newEvent.registration_required,
           active: true,
           created_by: user.user?.id
@@ -104,7 +106,8 @@ export const EventsManager = () => {
         event_date: '',
         event_time: '',
         location: '',
-        registration_required: true
+        registration_required: true,
+        image_url: ''
       });
       toast.success('Event created successfully');
     },
@@ -195,6 +198,15 @@ export const EventsManager = () => {
                 value={newEvent.description}
                 onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
                 rows={3}
+              />
+            </div>
+
+            <div>
+              <Label>Image URL</Label>
+              <Input
+                placeholder="https://example.com/event-image.jpg"
+                value={newEvent.image_url}
+                onChange={(e) => setNewEvent({ ...newEvent, image_url: e.target.value })}
               />
             </div>
 

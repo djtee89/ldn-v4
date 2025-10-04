@@ -14,6 +14,7 @@ interface Event {
   event_date: string;
   event_time: string;
   location: string | null;
+  image_url?: string | null;
   developments: {
     name: string;
     images: string[];
@@ -76,7 +77,7 @@ export function UpcomingEvents() {
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={event.developments.images?.[0] || '/placeholder.svg'}
+                    src={event.image_url || event.developments.images?.[0] || '/placeholder.svg'}
                     alt={event.developments.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
@@ -127,7 +128,7 @@ export function UpcomingEvents() {
             time: selectedEvent.event_time,
             description: selectedEvent.description || '',
             details: selectedEvent.description || '',
-            image: selectedEvent.developments.images?.[0] || '/placeholder.svg',
+            image: selectedEvent.image_url || selectedEvent.developments.images?.[0] || '/placeholder.svg',
             type: 'Event'
           }}
           isOpen={!!selectedEvent}

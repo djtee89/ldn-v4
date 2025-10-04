@@ -18,9 +18,12 @@ export type Database = {
         Row: {
           active: boolean | null
           created_at: string | null
+          deal_description: string | null
           dev_id: string
           display_order: number | null
+          floorplan_url: string | null
           id: string
+          images: string[] | null
           published_at: string | null
           published_by: string | null
           unit_id: string
@@ -29,9 +32,12 @@ export type Database = {
         Insert: {
           active?: boolean | null
           created_at?: string | null
+          deal_description?: string | null
           dev_id: string
           display_order?: number | null
+          floorplan_url?: string | null
           id?: string
+          images?: string[] | null
           published_at?: string | null
           published_by?: string | null
           unit_id: string
@@ -40,9 +46,12 @@ export type Database = {
         Update: {
           active?: boolean | null
           created_at?: string | null
+          deal_description?: string | null
           dev_id?: string
           display_order?: number | null
+          floorplan_url?: string | null
           id?: string
+          images?: string[] | null
           published_at?: string | null
           published_by?: string | null
           unit_id?: string
@@ -190,6 +199,7 @@ export type Database = {
           dev_id: string
           expiry_date: string | null
           id: string
+          image_url: string | null
           offer_description: string | null
           offer_title: string
           savings_amount: string | null
@@ -203,6 +213,7 @@ export type Database = {
           dev_id: string
           expiry_date?: string | null
           id?: string
+          image_url?: string | null
           offer_description?: string | null
           offer_title: string
           savings_amount?: string | null
@@ -216,6 +227,7 @@ export type Database = {
           dev_id?: string
           expiry_date?: string | null
           id?: string
+          image_url?: string | null
           offer_description?: string | null
           offer_title?: string
           savings_amount?: string | null
@@ -356,6 +368,7 @@ export type Database = {
           event_date: string
           event_time: string
           id: string
+          image_url: string | null
           location: string | null
           registration_required: boolean | null
           title: string
@@ -371,6 +384,7 @@ export type Database = {
           event_date: string
           event_time: string
           id?: string
+          image_url?: string | null
           location?: string | null
           registration_required?: boolean | null
           title: string
@@ -386,6 +400,7 @@ export type Database = {
           event_date?: string
           event_time?: string
           id?: string
+          image_url?: string | null
           location?: string | null
           registration_required?: boolean | null
           title?: string

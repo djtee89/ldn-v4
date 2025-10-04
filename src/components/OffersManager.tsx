@@ -35,7 +35,8 @@ export const OffersManager = () => {
     voucher_code: '',
     savings_amount: '',
     expiry_date: '',
-    terms: [] as string[]
+    terms: [] as string[],
+    image_url: ''
   });
   const queryClient = useQueryClient();
 
@@ -85,6 +86,7 @@ export const OffersManager = () => {
           savings_amount: newOffer.savings_amount || null,
           expiry_date: newOffer.expiry_date || null,
           terms: newOffer.terms.length > 0 ? newOffer.terms : [],
+          image_url: newOffer.image_url || null,
           active: true
         });
       
@@ -101,7 +103,8 @@ export const OffersManager = () => {
         voucher_code: '',
         savings_amount: '',
         expiry_date: '',
-        terms: []
+        terms: [],
+        image_url: ''
       });
       toast.success('Offer created successfully');
     },
@@ -213,6 +216,15 @@ export const OffersManager = () => {
                   onChange={(e) => setNewOffer({ ...newOffer, savings_amount: e.target.value })}
                 />
               </div>
+            </div>
+
+            <div>
+              <Label>Image URL</Label>
+              <Input
+                placeholder="https://example.com/image.jpg"
+                value={newOffer.image_url}
+                onChange={(e) => setNewOffer({ ...newOffer, image_url: e.target.value })}
+              />
             </div>
 
             <div>
