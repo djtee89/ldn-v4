@@ -456,6 +456,30 @@ export type Database = {
         }
         Relationships: []
       }
+      epc_borough_area: {
+        Row: {
+          area_code: string
+          created_at: string | null
+          median_floor_m2: number
+          sample_size: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          area_code: string
+          created_at?: string | null
+          median_floor_m2: number
+          sample_size?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          area_code?: string
+          created_at?: string | null
+          median_floor_m2?: number
+          sample_size?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       event_registrations: {
         Row: {
           created_at: string | null
@@ -649,6 +673,98 @@ export type Database = {
           name?: string
           overpass_query?: string | null
           radius_meters?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      neighbourhood_polygons: {
+        Row: {
+          area_type: string
+          created_at: string | null
+          id: string
+          neighbourhood_id: string
+          polygon_ids: Json
+          price_per_sqft: number | null
+          union_geometry: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          area_type?: string
+          created_at?: string | null
+          id?: string
+          neighbourhood_id: string
+          polygon_ids?: Json
+          price_per_sqft?: number | null
+          union_geometry?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          area_type?: string
+          created_at?: string | null
+          id?: string
+          neighbourhood_id?: string
+          polygon_ids?: Json
+          price_per_sqft?: number | null
+          union_geometry?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neighbourhood_polygons_neighbourhood_id_fkey"
+            columns: ["neighbourhood_id"]
+            isOneToOne: true
+            referencedRelation: "neighbourhoods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      neighbourhoods: {
+        Row: {
+          borough: string
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          borough: string
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          borough?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ons_borough_price: {
+        Row: {
+          area_code: string
+          created_at: string | null
+          data_year: number | null
+          median_price: number
+          updated_at: string | null
+        }
+        Insert: {
+          area_code: string
+          created_at?: string | null
+          data_year?: number | null
+          median_price: number
+          updated_at?: string | null
+        }
+        Update: {
+          area_code?: string
+          created_at?: string | null
+          data_year?: number | null
+          median_price?: number
           updated_at?: string | null
         }
         Relationships: []
