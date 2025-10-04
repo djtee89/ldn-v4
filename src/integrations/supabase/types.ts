@@ -345,6 +345,69 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          dev_id: string | null
+          display_order: number | null
+          event_date: string
+          event_time: string
+          id: string
+          location: string | null
+          registration_required: boolean | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          dev_id?: string | null
+          display_order?: number | null
+          event_date: string
+          event_time: string
+          id?: string
+          location?: string | null
+          registration_required?: boolean | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          dev_id?: string | null
+          display_order?: number | null
+          event_date?: string
+          event_time?: string
+          id?: string
+          location?: string | null
+          registration_required?: boolean | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_dev_id_fkey"
+            columns: ["dev_id"]
+            isOneToOne: false
+            referencedRelation: "developments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_dev_id_fkey"
+            columns: ["dev_id"]
+            isOneToOne: false
+            referencedRelation: "developments_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hottest_unit: {
         Row: {
           dev_id: string

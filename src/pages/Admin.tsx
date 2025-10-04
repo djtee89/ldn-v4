@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { DedupeDialog } from '@/components/DedupeDialog';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { BestDealsManager } from '@/components/BestDealsManager';
+import { OffersManager } from '@/components/OffersManager';
+import { EventsManager } from '@/components/EventsManager';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type Booking = {
@@ -342,6 +344,26 @@ export default function Admin() {
             className="mb-4"
           />
           <BestDealsManager />
+        </div>
+
+        {/* This Week's Offers Management */}
+        <div className="mb-6">
+          <SectionHeader 
+            title="This Week's Offers"
+            subtitle="Manage development offers and incentives"
+            className="mb-4"
+          />
+          <OffersManager />
+        </div>
+
+        {/* Upcoming Events Management */}
+        <div className="mb-6">
+          <SectionHeader 
+            title="Upcoming Events"
+            subtitle="Manage events across developments"
+            className="mb-4"
+          />
+          <EventsManager />
         </div>
 
         {/* Recent Activity Section */}

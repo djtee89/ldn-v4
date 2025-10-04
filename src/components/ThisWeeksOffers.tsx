@@ -1,13 +1,60 @@
-import React, { useState } from 'react';
-import { offers } from '@/data/offers';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Gift, Clock } from 'lucide-react';
 import OfferModal from './OfferModal';
 
+interface Offer {
+  id: string;
+  dev_id: string;
+  offer_title: string;
+  offer_description: string | null;
+  voucher_code: string;
+  savings_amount: string | null;
+  expiry_date: string | null;
+  terms: any;
+  developments: {
+    name: string;
+    developer: string;
+    images: string[];
+  };
+}
+
 const ThisWeeksOffers = () => {
-  const [selectedOffer, setSelectedOffer] = useState<typeof offers[0] | null>(null);
-  const featuredOffers = offers.filter(offer => offer.featured);
+  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadOffers();
+  }, []);
+
+  const loadOffers = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('development_offers')
+        .select(`
+          *,
+          developments (name, developer, images)
+        `)
+        .eq('active', true)
+        .order('created_at', { ascending: false })
+        .limit(8);
+
+      if (error) throw error;
+      setOffers(data as Offer[] || []);
+    } catch (error) {
+      console.error('Error loading offers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading || offers.length === 0) {
+    return null;
+  }
 
   return (
     <>
@@ -27,7 +74,7 @@ const ThisWeeksOffers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredOffers.map((offer) => (
+            {offers.map((offer) => (
               <Card
                 key={offer.id}
                 className="group cursor-pointer overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
@@ -36,43 +83,49 @@ const ThisWeeksOffers = () => {
                 {/* Image */}
                 <div className="relative h-56 overflow-hidden">
                   <img
-                    src={offer.image}
-                    alt={offer.development}
+                    src={offer.developments.images?.[0] || '/placeholder.svg'}
+                    alt={offer.developments.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   
                   {/* Savings Badge */}
-                  <div className="absolute top-3 right-3">
-                    <Badge className="bg-primary text-white font-bold text-sm px-3 py-1">
-                      Save {offer.savingsAmount}
-                    </Badge>
-                  </div>
+                  {offer.savings_amount && (
+                    <div className="absolute top-3 right-3">
+                      <Badge className="bg-primary text-white font-bold text-sm px-3 py-1">
+                        Save {offer.savings_amount}
+                      </Badge>
+                    </div>
+                  )}
 
                   {/* Expiry */}
-                  <div className="absolute bottom-3 left-3 flex items-center gap-1 text-xs text-white/90 font-medium bg-black/60 px-2 py-1 rounded">
-                    <Clock className="h-3 w-3" />
-                    Ends {new Date(offer.expiryDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                  </div>
+                  {offer.expiry_date && (
+                    <div className="absolute bottom-3 left-3 flex items-center gap-1 text-xs text-white/90 font-medium bg-black/60 px-2 py-1 rounded">
+                      <Clock className="h-3 w-3" />
+                      Ends {new Date(offer.expiry_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                    </div>
+                  )}
                 </div>
 
                 {/* Content */}
                 <div className="p-4">
                   <div className="text-xs text-muted-foreground font-medium mb-1">
-                    {offer.developer}
+                    {offer.developments.developer}
                   </div>
                   <h3 className="font-bold text-base mb-2 line-clamp-2">
-                    {offer.title}
+                    {offer.offer_title}
                   </h3>
                   
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                    {offer.description}
-                  </p>
+                  {offer.offer_description && (
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                      {offer.offer_description}
+                    </p>
+                  )}
 
-                  {offer.voucherCode && (
+                  {offer.voucher_code && (
                     <div className="mb-3 flex items-center gap-2 bg-primary/10 border border-primary/20 rounded px-2 py-1.5">
                       <span className="text-xs text-muted-foreground">Voucher:</span>
-                      <span className="font-mono font-bold text-sm text-primary">{offer.voucherCode}</span>
+                      <span className="font-mono font-bold text-sm text-primary">{offer.voucher_code}</span>
                     </div>
                   )}
 
@@ -102,7 +155,23 @@ const ThisWeeksOffers = () => {
       {/* Offer Modal */}
       {selectedOffer && (
         <OfferModal
-          offer={selectedOffer}
+          offer={{
+            id: selectedOffer.id,
+            title: selectedOffer.offer_title,
+            development: selectedOffer.developments.name,
+            developmentId: selectedOffer.dev_id,
+            developer: selectedOffer.developments.developer,
+            description: selectedOffer.offer_description || '',
+            image: selectedOffer.developments.images?.[0] || '/placeholder.svg',
+            savingsAmount: selectedOffer.savings_amount || '',
+            expiryDate: selectedOffer.expiry_date || '',
+            voucherCode: selectedOffer.voucher_code,
+            terms: Array.isArray(selectedOffer.terms) ? selectedOffer.terms : [],
+            eligibility: ['Contact sales team for full eligibility criteria'],
+            howToClaim: 'Book a viewing and mention this offer to our sales team',
+            category: 'other' as const,
+            featured: true
+          }}
           isOpen={!!selectedOffer}
           onClose={() => setSelectedOffer(null)}
         />
