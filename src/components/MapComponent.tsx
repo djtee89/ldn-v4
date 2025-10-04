@@ -42,7 +42,18 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const [directionsData, setDirectionsData] = useState<DirectionsData | null>(null);
   const [isLoadingDirections, setIsLoadingDirections] = useState(false);
   const [currentDevelopment, setCurrentDevelopment] = useState<Development | null>(null);
+  const [diagnostics, setDiagnostics] = useState({ devsFetched: 0, markersAdded: 0, styleLoaded: false, sanityPinAdded: false });
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
+
+  // Log initial data on mount
+  useEffect(() => {
+    console.log('[Map Diagnostics] === MOBILE PIN DEBUG START ===');
+    console.log('[Map Diagnostics] User agent:', navigator.userAgent);
+    console.log('[Map Diagnostics] Screen size:', window.innerWidth, 'x', window.innerHeight);
+    console.log('[Map Diagnostics] Pixel ratio:', window.devicePixelRatio);
+    console.log('[Map Diagnostics] Developments prop received:', developments.length);
+    setDiagnostics(prev => ({ ...prev, devsFetched: developments.length }));
+  }, [developments]);
 
   // Force map resize on visibility change and orientation change
   useEffect(() => {
@@ -50,7 +61,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       if (!document.hidden && map.current) {
         setTimeout(() => {
           map.current?.resize();
-          console.log('[Map] Resized after visibility change');
+          console.log('[Map Diagnostics] Resized after visibility change');
         }, 100);
       }
     };
@@ -59,7 +70,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       if (map.current) {
         setTimeout(() => {
           map.current?.resize();
-          console.log('[Map] Resized after orientation change');
+          console.log('[Map Diagnostics] Resized after orientation change');
         }, 200);
       }
     };
@@ -77,6 +88,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
     mapboxgl.accessToken = mapboxToken;
+    
+    console.log('[Map Diagnostics] Initializing map with token:', mapboxToken.substring(0, 20) + '...');
+    
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v12',
@@ -87,11 +101,57 @@ const MapComponent: React.FC<MapComponentProps> = ({
       pitch: 0,
       bearing: 0
     });
+    
+    // Log style load
+    map.current.on('style.load', () => {
+      console.log('[Map Diagnostics] ✅ Style loaded successfully');
+      setDiagnostics(prev => ({ ...prev, styleLoaded: true }));
+    });
+    
+    // Log errors
+    map.current.on('error', (e) => {
+      console.error('[Map Diagnostics] ❌ Map error:', e.error);
+    });
+    
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
     // Wait for map to fully load
     map.current.on('load', async () => {
-      console.log('[Map] Map loaded successfully');
+      console.log('[Map Diagnostics] ✅ Map fully loaded, adding layers...');
+      
+      // Add SANITY TEST MARKER at Trafalgar Square (A-2)
+      map.current!.addSource('sanity-test', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [{
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [-0.1278, 51.5081] // Trafalgar Square
+            },
+            properties: {
+              name: 'SANITY TEST MARKER'
+            }
+          }]
+        }
+      });
+      
+      // Bright red circle for sanity test
+      map.current!.addLayer({
+        id: 'sanity-test-marker',
+        type: 'circle',
+        source: 'sanity-test',
+        paint: {
+          'circle-radius': 20,
+          'circle-color': '#ff0000',
+          'circle-stroke-width': 4,
+          'circle-stroke-color': '#ffffff'
+        }
+      });
+      
+      console.log('[Map Diagnostics] ✅ SANITY TEST MARKER added at Trafalgar Square (red, 20px)');
+      setDiagnostics(prev => ({ ...prev, sanityPinAdded: true }));
       
       // Add source for development pins
       map.current!.addSource('developments', {
@@ -101,7 +161,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           features: []
         }
       });
-      console.log('[Map] Development source added');
+      console.log('[Map Diagnostics] ✅ Development source added');
 
       // Add source for amenity pins
       map.current!.addSource('amenities', {
@@ -112,20 +172,20 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
-      // Add amenity pins layer (BELOW property pins)
+      // Add amenity pins layer (BELOW property pins) - using CIRCLES not icons
       map.current!.addLayer({
         id: 'amenity-pins',
         type: 'circle',
         source: 'amenities',
         paint: {
-          'circle-radius': 6,
+          'circle-radius': 8,
           'circle-color': ['get', 'color'],
           'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff',
           'circle-opacity': 0.85
         }
       });
-      console.log('[Map] Amenity pins layer added');
+      console.log('[Map Diagnostics] ✅ Amenity circle layer added (NO ICONS)');
 
       // Add amenity labels
       map.current!.addLayer({
@@ -145,34 +205,34 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
-      // Add layer for normal property pins (ABOVE amenity pins) - simple blue circles
+      // Add layer for normal property pins (ABOVE amenity pins) - CIRCLES (B-3)
       map.current!.addLayer({
         id: 'development-pins',
         type: 'circle',
         source: 'developments',
         filter: ['!=', ['get', 'highlighted'], true],
         paint: {
-          'circle-radius': 10,
+          'circle-radius': 12,
           'circle-color': '#3b82f6',
-          'circle-stroke-width': 2.5,
+          'circle-stroke-width': 3,
           'circle-stroke-color': '#ffffff'
         }
       });
 
-      // Add layer for highlighted property pins - larger blue circles with glow
+      // Add layer for highlighted property pins - CIRCLES (B-3)
       map.current!.addLayer({
         id: 'development-pins-highlighted',
         type: 'circle',
         source: 'developments',
         filter: ['==', ['get', 'highlighted'], true],
         paint: {
-          'circle-radius': 12,
+          'circle-radius': 14,
           'circle-color': '#3b82f6',
-          'circle-stroke-width': 3,
+          'circle-stroke-width': 4,
           'circle-stroke-color': '#fbbf24'
         }
       });
-      console.log('[Map] All development pin layers added');
+      console.log('[Map Diagnostics] ✅ Development circle layers added (12px/14px, NO ICONS)');
 
       // Add price labels (ABOVE all pins)
       map.current!.addLayer({
@@ -466,45 +526,72 @@ const MapComponent: React.FC<MapComponentProps> = ({
     };
   }, [mapboxToken]);
 
-  // Update map data when developments or highlighting changes
+  // Update map data when developments or highlighting changes (A)
   useEffect(() => {
     if (!map.current || !isMapLoaded) return;
     const source = map.current.getSource('developments') as mapboxgl.GeoJSONSource;
-    if (!source) return;
+    if (!source) {
+      console.error('[Map Diagnostics] ❌ Development source not found!');
+      return;
+    }
 
-    console.log(`[Map] Updating ${developments.length} developments on map`);
+    console.log(`[Map Diagnostics] === UPDATING MARKERS ===`);
+    console.log(`[Map Diagnostics] Developments received:`, developments.length);
+    
+    if (developments.length === 0) {
+      console.warn('[Map Diagnostics] ⚠️ ZERO developments received - check data fetch/RLS (A)');
+    }
 
     // Create GeoJSON features from developments
-    const features = developments.map(dev => ({
-      type: 'Feature' as const,
-      geometry: {
-        type: 'Point' as const,
-        coordinates: [dev.coordinates.lng, dev.coordinates.lat]
-      },
-      properties: {
-        id: dev.id,
-        name: dev.name,
-        developer: dev.developer,
-        price: (() => {
-          const priceData = extractAllPrices(dev.prices);
-          const firstPrice = priceData.studio || priceData.oneBed || priceData.twoBed || priceData.threeBed || priceData.fourBed;
-          return firstPrice ? `From ${firstPrice}` : (priceData.range || 'POA');
-        })(),
-        highlighted: highlightedDeveloper ? dev.developer === highlightedDeveloper : false
+    const features = developments.map((dev, idx) => {
+      if (idx < 3) {
+        console.log(`[Map Diagnostics] Sample dev ${idx}:`, {
+          id: dev.id,
+          name: dev.name,
+          lat: dev.coordinates.lat,
+          lng: dev.coordinates.lng
+        });
       }
-    }));
+      return {
+        type: 'Feature' as const,
+        geometry: {
+          type: 'Point' as const,
+          coordinates: [dev.coordinates.lng, dev.coordinates.lat]
+        },
+        properties: {
+          id: dev.id,
+          name: dev.name,
+          developer: dev.developer,
+          price: (() => {
+            const priceData = extractAllPrices(dev.prices);
+            const firstPrice = priceData.studio || priceData.oneBed || priceData.twoBed || priceData.threeBed || priceData.fourBed;
+            return firstPrice ? `From ${firstPrice}` : (priceData.range || 'POA');
+          })(),
+          highlighted: highlightedDeveloper ? dev.developer === highlightedDeveloper : false
+        }
+      };
+    });
     
     source.setData({
       type: 'FeatureCollection',
       features
     });
     
-    console.log(`[Map] Added ${features.length} markers to map`);
+    console.log(`[Map Diagnostics] ✅ Markers added to map:`, features.length);
+    setDiagnostics(prev => ({ ...prev, markersAdded: features.length }));
     
-    // Show toast if no markers after filtering
-    if (features.length === 0 && developments.length === 0) {
-      console.warn('[Map] No developments to display - check filters or data fetch');
+    if (features.length === 0) {
+      console.error('[Map Diagnostics] ❌ ZERO markers added - this is why pins dont show!');
     }
+    
+    // Log rendered features after a delay
+    setTimeout(() => {
+      const renderedFeatures = map.current?.queryRenderedFeatures({ layers: ['development-pins', 'development-pins-highlighted'] });
+      console.log('[Map Diagnostics] Rendered development pins on canvas:', renderedFeatures?.length || 0);
+      if (renderedFeatures && renderedFeatures.length === 0 && features.length > 0) {
+        console.error('[Map Diagnostics] ❌ Features in source but NOT RENDERING - check layer paint/filter (D)');
+      }
+    }, 1000);
   }, [developments, highlightedDeveloper, isMapLoaded]);
 
   // Update amenity layers when lifestyle filters change
@@ -632,6 +719,16 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
   return <div className={`relative ${className}`} style={{ height: '100%', minHeight: '500px' }}>
       <div ref={mapContainer} className="absolute inset-0 rounded-lg ring-1 ring-black/5" />
+      
+      {/* Mobile Diagnostics Overlay (G) */}
+      <div className="absolute top-2 left-2 bg-black/80 text-white text-xs p-2 rounded z-50 max-w-xs">
+        <div className="font-bold mb-1">🔍 Mobile Pin Diagnostics</div>
+        <div>Devs fetched: <span className={diagnostics.devsFetched === 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold'}>{diagnostics.devsFetched}</span></div>
+        <div>Markers added: <span className={diagnostics.markersAdded === 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold'}>{diagnostics.markersAdded}</span></div>
+        <div>Style loaded: {diagnostics.styleLoaded ? '✅' : '❌'}</div>
+        <div>Sanity pin: {diagnostics.sanityPinAdded ? '✅' : '❌'}</div>
+        <div className="text-yellow-300 mt-1">Look for red pin at Trafalgar Sq</div>
+      </div>
       
       {/* Amenity Legend */}
       <AmenityLegend activeTypes={lifestyleFilters} />
