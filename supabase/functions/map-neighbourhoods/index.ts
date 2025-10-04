@@ -25,59 +25,52 @@ Deno.serve(async (req) => {
 
     if (nError) throw nError;
 
-    // Fetch all ward polygons from area_polygons
-    const { data: wards, error: wError } = await supabase
+    // Fetch borough polygons (we'll use these since we don't have ward data yet)
+    const { data: boroughs, error: bError } = await supabase
       .from('area_polygons')
       .select('*')
-      .eq('area_type', 'Ward');
+      .eq('area_type', 'Borough');
 
-    if (wError) throw wError;
+    if (bError) throw bError;
 
-    console.log(`Found ${neighbourhoods.length} neighbourhoods and ${wards?.length || 0} wards`);
+    console.log(`Found ${neighbourhoods.length} neighbourhoods and ${boroughs?.length || 0} boroughs`);
 
-    if (!wards || wards.length === 0) {
+    if (!boroughs || boroughs.length === 0) {
       return new Response(
         JSON.stringify({ 
-          error: 'No ward polygons found. Please fetch ward boundaries first.',
+          error: 'No borough polygons found. Please fetch boundaries first.',
           neighbourhoods_total: neighbourhoods.length,
-          wards_found: 0,
+          boroughs_found: 0,
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       );
     }
 
-    // Simple mapping: assign wards to neighbourhoods based on name similarity and borough
+    // Create a normalized borough lookup
+    const boroughMap = new Map();
+    boroughs.forEach(b => {
+      const normalized = b.area_name.toLowerCase().replace(/[^a-z]/g, '');
+      boroughMap.set(normalized, b);
+    });
+
+    // Map neighbourhoods to their borough polygons
     let mappedCount = 0;
     const mappings = [];
 
     for (const neighbourhood of neighbourhoods) {
-      // Find wards that match the neighbourhood name or are in the same borough
-      const matchingWards = wards.filter(ward => {
-        const wardName = (ward.area_name || '').toLowerCase();
-        const neighbourhoodName = neighbourhood.name.toLowerCase();
-        const boroughMatch = wardName.includes(neighbourhood.borough.toLowerCase());
-        const nameMatch = wardName.includes(neighbourhoodName) || 
-                         neighbourhoodName.includes(wardName);
-        
-        return nameMatch || (boroughMatch && wardName.length < 50);
-      });
+      const normalizedBorough = neighbourhood.borough.toLowerCase().replace(/[^a-z]/g, '');
+      const borough = boroughMap.get(normalizedBorough);
 
-      if (matchingWards.length > 0) {
-        // Create union geometry from all matching wards
-        const wardPolygonIds = matchingWards.map(w => w.area_code);
-        
-        // Simple union: just use the first ward's geometry for now
-        // In production, you'd want proper GIS union
-        const unionGeometry = matchingWards[0].geometry;
-
+      if (borough && borough.geometry) {
         mappings.push({
           neighbourhood_id: neighbourhood.id,
-          area_type: 'Ward',
-          polygon_ids: wardPolygonIds,
-          union_geometry: unionGeometry,
+          area_type: 'Borough',
+          polygon_ids: [borough.area_code],
+          union_geometry: borough.geometry,
         });
-
         mappedCount++;
+      } else {
+        console.log(`No borough match for: ${neighbourhood.borough}`);
       }
     }
 
@@ -92,7 +85,7 @@ Deno.serve(async (req) => {
       if (insertError) throw insertError;
     }
 
-    // Calculate sample neighbourhood prices based on borough averages
+    // Calculate neighbourhood prices based on borough averages with variation
     const { data: areaMetrics, error: mError } = await supabase
       .from('area_metrics')
       .select('*')
@@ -100,42 +93,33 @@ Deno.serve(async (req) => {
 
     if (mError) throw mError;
 
-    // Update neighbourhoods with price estimates
+    // Update price estimates
     for (const neighbourhood of neighbourhoods) {
+      const normalizedBorough = neighbourhood.borough.toLowerCase().replace(/[^a-z]/g, '');
       const boroughMetric = areaMetrics?.find(m => 
-        m.area_name.toLowerCase() === neighbourhood.borough.toLowerCase()
+        m.area_name.toLowerCase().replace(/[^a-z]/g, '') === normalizedBorough
       );
 
       if (boroughMetric && boroughMetric.price_per_sqft_overall) {
-        // Add some variation based on neighbourhood name
         const basePrice = boroughMetric.price_per_sqft_overall;
         let priceVariation = 1.0;
 
         // Premium areas get higher prices
-        const premiumKeywords = ['village', 'park', 'green', 'square', 'hill', 'heath'];
-        const affordableKeywords = ['estate', 'town', 'junction', 'road'];
+        const premiumKeywords = ['village', 'park', 'green', 'square', 'hill', 'heath', 'gardens'];
+        const affordableKeywords = ['estate', 'town', 'junction', 'road', 'lane'];
         
         const nameLower = neighbourhood.name.toLowerCase();
         if (premiumKeywords.some(k => nameLower.includes(k))) {
-          priceVariation = 1.15;
+          priceVariation = 1.2;
         } else if (affordableKeywords.some(k => nameLower.includes(k))) {
           priceVariation = 0.85;
         }
 
         const estimatedPrice = Math.round(basePrice * priceVariation);
         
-        // Store in neighbourhood_polygons
         await supabase
           .from('neighbourhood_polygons')
-          .update({ 
-            union_geometry: {
-              ...mappings.find(m => m.neighbourhood_id === neighbourhood.id)?.union_geometry,
-              properties: {
-                ...mappings.find(m => m.neighbourhood_id === neighbourhood.id)?.union_geometry?.properties,
-                price_per_sqft: estimatedPrice,
-              }
-            }
-          })
+          .update({ price_per_sqft: estimatedPrice })
           .eq('neighbourhood_id', neighbourhood.id);
       }
     }
@@ -147,8 +131,8 @@ Deno.serve(async (req) => {
         success: true,
         neighbourhoods_total: neighbourhoods.length,
         neighbourhoods_mapped: mappedCount,
-        wards_available: wards.length,
-        message: `Successfully mapped ${mappedCount} neighbourhoods`,
+        boroughs_available: boroughs.length,
+        message: `Successfully mapped ${mappedCount} neighbourhoods to ${boroughs.length} boroughs`,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
