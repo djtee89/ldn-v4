@@ -17,15 +17,16 @@ Deno.serve(async (req) => {
 
     console.log('Fetching London ward boundaries...');
 
-    // Fetch ward boundaries from ONS API using a simpler query format
+    // Fetch ward boundaries from ONS API with correct parameter format
+    const params = new URLSearchParams({
+      where: "1=1",  // Get all records
+      outFields: "WD23CD,WD23NM,LAD23CD,LAD23NM",
+      outSR: "4326",
+      f: "geoJSON"
+    });
+
     const wardResponse = await fetch(
-      'https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/WD_DEC_2023_GB_BFE/FeatureServer/0/query?' + 
-      new URLSearchParams({
-        where: "WD23CD LIKE 'E%'",
-        outFields: 'WD23CD,WD23NM,LAD23CD,LAD23NM',
-        outSR: '4326',
-        f: 'geojson'
-      }),
+      `https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/WD_DEC_2023_GB_BFE/FeatureServer/0/query?${params}`,
       {
         headers: {
           'Accept': 'application/json',
@@ -34,7 +35,9 @@ Deno.serve(async (req) => {
     );
 
     if (!wardResponse.ok) {
-      throw new Error(`ONS API returned ${wardResponse.status}`);
+      const errorText = await wardResponse.text();
+      console.error('ONS API error response:', errorText);
+      throw new Error(`ONS API returned ${wardResponse.status}: ${errorText}`);
     }
 
     const wardData = await wardResponse.json();
