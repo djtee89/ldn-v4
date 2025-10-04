@@ -15,6 +15,7 @@ const AdminAnalytics = () => {
   const [isFetchingSchools, setIsFetchingSchools] = useState(false);
   const [isFetchingYield, setIsFetchingYield] = useState(false);
   const [isFetchingGreenSpace, setIsFetchingGreenSpace] = useState(false);
+  const [isFetchingBoundaries, setIsFetchingBoundaries] = useState(false);
 
   const handleComputeMetrics = async () => {
     setIsComputing(true);
@@ -160,12 +161,12 @@ const AdminAnalytics = () => {
     setIsFetchingGreenSpace(true);
     try {
       const { data, error } = await supabase.functions.invoke('fetch-greenspace-data');
-
+      
       if (error) throw error;
-
+      
       toast({
         title: "Success!",
-        description: `Updated green space data for ${data.areas_updated} areas`,
+        description: data.message || `Updated green space data for ${data.areas_updated} areas`,
       });
     } catch (error) {
       console.error('Error fetching green space data:', error);
@@ -176,6 +177,29 @@ const AdminAnalytics = () => {
       });
     } finally {
       setIsFetchingGreenSpace(false);
+    }
+  };
+
+  const handleFetchBoundaries = async () => {
+    setIsFetchingBoundaries(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('fetch-area-boundaries');
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Success!",
+        description: data.message || `Fetched boundaries for ${data.areas_processed} areas`,
+      });
+    } catch (error) {
+      console.error('Error fetching area boundaries:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : 'Failed to fetch area boundaries',
+        variant: "destructive",
+      });
+    } finally {
+      setIsFetchingBoundaries(false);
     }
   };
 
@@ -489,6 +513,51 @@ const AdminAnalytics = () => {
             </Button>
           </CardContent>
         </Card>
+
+        {/* Area Boundaries Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Map className="h-5 w-5" />
+              Area Boundaries
+              <Badge variant="secondary">Required</Badge>
+            </CardTitle>
+            <CardDescription>
+              Fetch polygon boundaries for map visualization
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Fetches area polygons:
+              </p>
+              <ul className="text-sm list-disc list-inside space-y-1 text-muted-foreground">
+                <li>Postcode sector boundaries</li>
+                <li>GeoJSON polygon data</li>
+                <li>Required for map display</li>
+              </ul>
+            </div>
+            
+            <Button
+              onClick={handleFetchBoundaries}
+              disabled={isFetchingBoundaries}
+              className="w-full"
+              variant="default"
+            >
+              {isFetchingBoundaries ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Fetching...
+                </>
+              ) : (
+                <>
+                  <Play className="mr-2 h-4 w-4" />
+                  Fetch Boundaries
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Instructions */}
@@ -503,7 +572,12 @@ const AdminAnalytics = () => {
           </div>
           
           <div>
-            <p className="font-medium text-foreground mb-1">Step 2: Fetch All External Data</p>
+            <p className="font-medium text-foreground mb-1">Step 2: Fetch Area Boundaries (REQUIRED)</p>
+            <p>⚠️ <strong>Click "Fetch Boundaries" first!</strong> This fetches the polygon shapes needed to display areas on the map. Without this, the map will be empty.</p>
+          </div>
+
+          <div>
+            <p className="font-medium text-foreground mb-1">Step 3: Fetch All External Data</p>
             <p>Click each button to populate all 7 metrics with real and estimated data:</p>
             <ul className="list-disc list-inside ml-4 mt-1">
               <li><strong>Crime:</strong> Police.uk API - real-time crime statistics</li>
@@ -516,7 +590,7 @@ const AdminAnalytics = () => {
           </div>
 
           <div>
-            <p className="font-medium text-foreground mb-1">Step 3: View Live Analysis</p>
+            <p className="font-medium text-foreground mb-1">Step 4: View Live Analysis</p>
             <p>Once data is populated, navigate to the Live Analysis page to explore interactive heatmaps across all 7 metrics. Switch between Price/Sqft, Yield, Growth, Schools, Green, Air, and Crime views.</p>
           </div>
 
