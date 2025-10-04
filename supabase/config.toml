@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.enrich-development]
 verify_jwt = false
+
+[functions.compute-area-metrics]
+verify_jwt = false
