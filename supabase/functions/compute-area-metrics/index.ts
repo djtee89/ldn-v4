@@ -20,7 +20,18 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { area_codes, force_refresh } = await req.json() as ComputeRequest;
+    // Parse request body safely, defaulting to empty object
+    let requestData: ComputeRequest = {};
+    try {
+      const text = await req.text();
+      if (text) {
+        requestData = JSON.parse(text);
+      }
+    } catch (e) {
+      console.log('No JSON body provided, using defaults');
+    }
+    
+    const { area_codes, force_refresh } = requestData;
 
     console.log('Computing area metrics for MSOAs...');
 
