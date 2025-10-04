@@ -57,6 +57,9 @@ verify_jwt = false
 [functions.fetch-area-boundaries]
 verify_jwt = false
 
+[functions.fetch-ward-boundaries]
+verify_jwt = false
+
 [functions.compute-pragmatic-price]
 verify_jwt = false
 

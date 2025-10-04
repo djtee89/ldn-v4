@@ -9,12 +9,14 @@ import { Link } from 'react-router-dom';
 
 export default function AdminAnalytics() {
   const [isFetchingBoundaries, setIsFetchingBoundaries] = useState(false);
+  const [isFetchingWards, setIsFetchingWards] = useState(false);
   const [isComputingPragmatic, setIsComputingPragmatic] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
   const [isMappingNeighbourhoods, setIsMappingNeighbourhoods] = useState(false);
   
   const [status, setStatus] = useState({
     polygonCount: 0,
+    wardCount: 0,
     priceMetricCount: 0,
     lastUpdated: null as string | null,
     missingAreaCodes: [] as string[],
@@ -28,6 +30,11 @@ export default function AdminAnalytics() {
         .from('area_polygons')
         .select('*', { count: 'exact', head: true })
         .eq('area_type', 'Borough');
+
+      const { count: wardCount } = await supabase
+        .from('area_polygons')
+        .select('*', { count: 'exact', head: true })
+        .eq('area_type', 'Ward');
 
       const { count: metricCount } = await supabase
         .from('area_metrics')
@@ -69,6 +76,7 @@ export default function AdminAnalytics() {
 
       setStatus({
         polygonCount: polyCount || 0,
+        wardCount: wardCount || 0,
         priceMetricCount: metricCount || 0,
         lastUpdated: latestMetric?.last_updated || null,
         missingAreaCodes: missingCodes.slice(0, 5),
@@ -126,14 +134,38 @@ export default function AdminAnalytics() {
     }
   };
 
+  const handleFetchWards = async () => {
+    setIsFetchingWards(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('fetch-ward-boundaries');
+      if (error) throw error;
+      toast.success(`Fetched ${data.wards_fetched} ward boundaries`);
+      await fetchStatus();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsFetchingWards(false);
+    }
+  };
+
   const handleInitializeAll = async () => {
     setIsInitializing(true);
     try {
+      toast.info('Step 1/4: Fetching boroughs...');
       await handleFetchBoundaries();
       await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast.info('Step 2/4: Fetching wards...');
+      await handleFetchWards();
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast.info('Step 3/4: Computing prices...');
       await handleComputePragmatic();
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast.info('Step 4/4: Mapping neighbourhoods...');
       await handleMapNeighbourhoods();
+      
       toast.success('All initialized!');
     } catch (error: any) {
       toast.error(error.message);
@@ -165,10 +197,14 @@ export default function AdminAnalytics() {
           <CardTitle>Status</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Borough Polygons</p>
               <p className="text-2xl font-bold">{status.polygonCount}/33</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Ward Polygons</p>
+              <p className="text-2xl font-bold">{status.wardCount}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">£/ft² Metrics</p>
@@ -193,15 +229,27 @@ export default function AdminAnalytics() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>Fetch Boundaries</CardTitle>
+            <CardTitle>Fetch Boroughs</CardTitle>
           </CardHeader>
           <CardContent>
             <Button onClick={handleFetchBoundaries} disabled={isFetchingBoundaries} className="w-full">
               {isFetchingBoundaries && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Fetch
+              Fetch (33)
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Fetch Wards</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={handleFetchWards} disabled={isFetchingWards} className="w-full">
+              {isFetchingWards && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Fetch (~600)
             </Button>
           </CardContent>
         </Card>
