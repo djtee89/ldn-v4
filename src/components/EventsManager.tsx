@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Trash2, Eye, EyeOff, Plus, Calendar } from 'lucide-react';
+import { Trash2, Eye, EyeOff, Plus, Calendar, Pencil } from 'lucide-react';
 
 interface Event {
   id: string;
@@ -20,6 +20,7 @@ interface Event {
   location: string | null;
   registration_required: boolean;
   active: boolean;
+  image_url: string | null;
   developments: {
     name: string;
     location: string;
@@ -28,6 +29,7 @@ interface Event {
 
 export const EventsManager = () => {
   const [showNewEvent, setShowNewEvent] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [selectedDevId, setSelectedDevId] = useState<string>('');
   const [newEvent, setNewEvent] = useState({
     title: '',
@@ -69,36 +71,47 @@ export const EventsManager = () => {
     }
   });
 
-  // Create new event
-  const createMutation = useMutation({
+  // Create or update event
+  const saveMutation = useMutation({
     mutationFn: async () => {
       if (!selectedDevId || !newEvent.title || !newEvent.event_date || !newEvent.event_time) {
         throw new Error('Please fill in all required fields');
       }
 
-      const { data: user } = await supabase.auth.getUser();
+      const eventData = {
+        dev_id: selectedDevId,
+        title: newEvent.title,
+        description: newEvent.description || null,
+        event_date: newEvent.event_date,
+        event_time: newEvent.event_time,
+        location: newEvent.location || null,
+        image_url: newEvent.image_url || null,
+        registration_required: newEvent.registration_required,
+      };
 
-      const { error} = await supabase
-        .from('events')
-        .insert({
-          dev_id: selectedDevId,
-          title: newEvent.title,
-          description: newEvent.description || null,
-          event_date: newEvent.event_date,
-          event_time: newEvent.event_time,
-          location: newEvent.location || null,
-          image_url: newEvent.image_url || null,
-          registration_required: newEvent.registration_required,
-          active: true,
-          created_by: user.user?.id
-        });
-      
-      if (error) throw error;
+      if (editingId) {
+        const { error } = await supabase
+          .from('events')
+          .update(eventData)
+          .eq('id', editingId);
+        if (error) throw error;
+      } else {
+        const { data: user } = await supabase.auth.getUser();
+        const { error } = await supabase
+          .from('events')
+          .insert({
+            ...eventData,
+            active: true,
+            created_by: user.user?.id
+          });
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events-admin'] });
       queryClient.invalidateQueries({ queryKey: ['events-public'] });
       setShowNewEvent(false);
+      setEditingId(null);
       setSelectedDevId('');
       setNewEvent({
         title: '',
@@ -109,10 +122,10 @@ export const EventsManager = () => {
         registration_required: true,
         image_url: ''
       });
-      toast.success('Event created successfully');
+      toast.success(editingId ? 'Event updated successfully' : 'Event created successfully');
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to create event');
+      toast.error(error.message || 'Failed to save event');
     }
   });
 
@@ -150,13 +163,28 @@ export const EventsManager = () => {
 
   return (
     <div className="space-y-6">
-      {/* Add New Event Form */}
+      {/* Add/Edit Event Form */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Create New Event</h3>
+          <h3 className="text-lg font-semibold">{editingId ? 'Edit Event' : 'Create New Event'}</h3>
           <Button
             variant={showNewEvent ? "outline" : "default"}
-            onClick={() => setShowNewEvent(!showNewEvent)}
+            onClick={() => {
+              setShowNewEvent(!showNewEvent);
+              if (showNewEvent) {
+                setEditingId(null);
+                setSelectedDevId('');
+                setNewEvent({
+                  title: '',
+                  description: '',
+                  event_date: '',
+                  event_time: '',
+                  location: '',
+                  registration_required: true,
+                  image_url: ''
+                });
+              }
+            }}
             className="gap-2"
           >
             <Plus className="h-4 w-4" />
@@ -267,11 +295,11 @@ export const EventsManager = () => {
             </div>
 
             <Button
-              onClick={() => createMutation.mutate()}
-              disabled={createMutation.isPending}
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending}
               className="w-full"
             >
-              {createMutation.isPending ? 'Creating...' : 'Create Event'}
+              {saveMutation.isPending ? 'Saving...' : (editingId ? 'Update Event' : 'Create Event')}
             </Button>
           </div>
         )}
@@ -314,6 +342,26 @@ export const EventsManager = () => {
               </div>
 
               <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setEditingId(event.id);
+                    setSelectedDevId(event.dev_id);
+                    setNewEvent({
+                      title: event.title,
+                      description: event.description || '',
+                      event_date: event.event_date,
+                      event_time: event.event_time,
+                      location: event.location || '',
+                      registration_required: event.registration_required,
+                      image_url: event.image_url || ''
+                    });
+                    setShowNewEvent(true);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"

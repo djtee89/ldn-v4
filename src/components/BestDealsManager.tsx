@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Trash2, Eye, EyeOff } from 'lucide-react';
+import { Trash2, Eye, EyeOff, Pencil, Plus } from 'lucide-react';
 
 interface BestDeal {
   id: string;
@@ -14,6 +14,9 @@ interface BestDeal {
   display_order: number;
   active: boolean;
   published_at: string;
+  deal_description: string | null;
+  images: string[] | null;
+  floorplan_url: string | null;
   developments: {
     name: string;
     location: string;
@@ -27,6 +30,8 @@ interface BestDeal {
 }
 
 export const BestDealsManager = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [selectedDevId, setSelectedDevId] = useState<string>('');
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [dealDescription, setDealDescription] = useState('');
@@ -81,42 +86,54 @@ export const BestDealsManager = () => {
     }
   });
 
-  // Publish a new best deal
-  const publishMutation = useMutation({
+  // Create or update best deal
+  const saveMutation = useMutation({
     mutationFn: async () => {
       if (!selectedDevId || !selectedUnitId) {
         throw new Error('Please select both development and unit');
       }
 
-      const { data: user } = await supabase.auth.getUser();
-      
-      const { error } = await supabase
-        .from('best_deals')
-        .insert({
-          dev_id: selectedDevId,
-          unit_id: selectedUnitId,
-          deal_description: dealDescription || null,
-          images: uploadedImages.length > 0 ? uploadedImages : null,
-          floorplan_url: floorplanUrl || null,
-          published_by: user.user?.id,
-          active: true,
-          display_order: (bestDeals?.length || 0) + 1
-        });
-      
-      if (error) throw error;
+      const dealData = {
+        dev_id: selectedDevId,
+        unit_id: selectedUnitId,
+        deal_description: dealDescription || null,
+        images: uploadedImages.length > 0 ? uploadedImages : null,
+        floorplan_url: floorplanUrl || null,
+      };
+
+      if (editingId) {
+        const { error } = await supabase
+          .from('best_deals')
+          .update(dealData)
+          .eq('id', editingId);
+        if (error) throw error;
+      } else {
+        const { data: user } = await supabase.auth.getUser();
+        const { error } = await supabase
+          .from('best_deals')
+          .insert({
+            ...dealData,
+            published_by: user.user?.id,
+            active: true,
+            display_order: (bestDeals?.length || 0) + 1
+          });
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['best-deals-admin'] });
       queryClient.invalidateQueries({ queryKey: ['best-deals-public'] });
+      setShowForm(false);
+      setEditingId(null);
       setSelectedDevId('');
       setSelectedUnitId('');
       setDealDescription('');
       setUploadedImages([]);
       setFloorplanUrl('');
-      toast.success('Best deal published successfully');
+      toast.success(editingId ? 'Best deal updated successfully' : 'Best deal published successfully');
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to publish best deal');
+      toast.error(error.message || 'Failed to save best deal');
     }
   });
 
@@ -155,8 +172,29 @@ export const BestDealsManager = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Publish New Best Deal</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold">{editingId ? 'Edit Best Deal' : 'Publish New Best Deal'}</h3>
+          <Button
+            variant={showForm ? "outline" : "default"}
+            onClick={() => {
+              setShowForm(!showForm);
+              if (showForm) {
+                setEditingId(null);
+                setSelectedDevId('');
+                setSelectedUnitId('');
+                setDealDescription('');
+                setUploadedImages([]);
+                setFloorplanUrl('');
+              }
+            }}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            {showForm ? 'Cancel' : 'Add Best Deal'}
+          </Button>
+        </div>
         
+        {showForm && (
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Select Development</label>
@@ -289,13 +327,14 @@ export const BestDealsManager = () => {
           </div>
 
           <Button
-            onClick={() => publishMutation.mutate()}
-            disabled={!selectedDevId || !selectedUnitId || publishMutation.isPending}
+            onClick={() => saveMutation.mutate()}
+            disabled={!selectedDevId || !selectedUnitId || saveMutation.isPending}
             className="w-full"
           >
-            {publishMutation.isPending ? 'Publishing...' : 'Publish Best Deal'}
+            {saveMutation.isPending ? 'Saving...' : (editingId ? 'Update Best Deal' : 'Publish Best Deal')}
           </Button>
         </div>
+        )}
       </Card>
 
       <Card className="p-6">
@@ -318,6 +357,21 @@ export const BestDealsManager = () => {
               </div>
 
               <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setEditingId(deal.id);
+                    setSelectedDevId(deal.dev_id);
+                    setSelectedUnitId(deal.unit_id);
+                    setDealDescription(deal.deal_description || '');
+                    setUploadedImages(deal.images || []);
+                    setFloorplanUrl(deal.floorplan_url || '');
+                    setShowForm(true);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"

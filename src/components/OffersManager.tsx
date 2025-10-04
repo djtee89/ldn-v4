@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Trash2, Eye, EyeOff, Plus, Tag } from 'lucide-react';
+import { Trash2, Eye, EyeOff, Plus, Tag, Pencil } from 'lucide-react';
 
 interface Offer {
   id: string;
@@ -20,6 +20,7 @@ interface Offer {
   terms: any;
   active: boolean;
   expiry_date: string | null;
+  image_url: string | null;
   developments: {
     name: string;
     location: string;
@@ -28,6 +29,7 @@ interface Offer {
 
 export const OffersManager = () => {
   const [showNewOffer, setShowNewOffer] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [selectedDevId, setSelectedDevId] = useState<string>('');
   const [newOffer, setNewOffer] = useState({
     title: '',
@@ -69,33 +71,42 @@ export const OffersManager = () => {
     }
   });
 
-  // Create new offer
-  const createMutation = useMutation({
+  // Create or update offer
+  const saveMutation = useMutation({
     mutationFn: async () => {
       if (!selectedDevId || !newOffer.title || !newOffer.voucher_code) {
         throw new Error('Please fill in all required fields');
       }
 
-      const { error } = await supabase
-        .from('development_offers')
-        .insert({
-          dev_id: selectedDevId,
-          offer_title: newOffer.title,
-          offer_description: newOffer.description || null,
-          voucher_code: newOffer.voucher_code,
-          savings_amount: newOffer.savings_amount || null,
-          expiry_date: newOffer.expiry_date || null,
-          terms: newOffer.terms.length > 0 ? newOffer.terms : [],
-          image_url: newOffer.image_url || null,
-          active: true
-        });
-      
-      if (error) throw error;
+      const offerData = {
+        dev_id: selectedDevId,
+        offer_title: newOffer.title,
+        offer_description: newOffer.description || null,
+        voucher_code: newOffer.voucher_code,
+        savings_amount: newOffer.savings_amount || null,
+        expiry_date: newOffer.expiry_date || null,
+        terms: newOffer.terms.length > 0 ? newOffer.terms : [],
+        image_url: newOffer.image_url || null,
+      };
+
+      if (editingId) {
+        const { error } = await supabase
+          .from('development_offers')
+          .update(offerData)
+          .eq('id', editingId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('development_offers')
+          .insert({ ...offerData, active: true });
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['offers-admin'] });
       queryClient.invalidateQueries({ queryKey: ['offers-public'] });
       setShowNewOffer(false);
+      setEditingId(null);
       setSelectedDevId('');
       setNewOffer({
         title: '',
@@ -106,10 +117,10 @@ export const OffersManager = () => {
         terms: [],
         image_url: ''
       });
-      toast.success('Offer created successfully');
+      toast.success(editingId ? 'Offer updated successfully' : 'Offer created successfully');
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to create offer');
+      toast.error(error.message || 'Failed to save offer');
     }
   });
 
@@ -147,13 +158,28 @@ export const OffersManager = () => {
 
   return (
     <div className="space-y-6">
-      {/* Add New Offer Form */}
+      {/* Add/Edit Offer Form */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Create New Offer</h3>
+          <h3 className="text-lg font-semibold">{editingId ? 'Edit Offer' : 'Create New Offer'}</h3>
           <Button
             variant={showNewOffer ? "outline" : "default"}
-            onClick={() => setShowNewOffer(!showNewOffer)}
+            onClick={() => {
+              setShowNewOffer(!showNewOffer);
+              if (showNewOffer) {
+                setEditingId(null);
+                setSelectedDevId('');
+                setNewOffer({
+                  title: '',
+                  description: '',
+                  voucher_code: '',
+                  savings_amount: '',
+                  expiry_date: '',
+                  terms: [],
+                  image_url: ''
+                });
+              }
+            }}
             className="gap-2"
           >
             <Plus className="h-4 w-4" />
@@ -277,11 +303,11 @@ export const OffersManager = () => {
             </div>
 
             <Button
-              onClick={() => createMutation.mutate()}
-              disabled={createMutation.isPending}
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending}
               className="w-full"
             >
-              {createMutation.isPending ? 'Creating...' : 'Create Offer'}
+              {saveMutation.isPending ? 'Saving...' : (editingId ? 'Update Offer' : 'Create Offer')}
             </Button>
           </div>
         )}
@@ -326,6 +352,26 @@ export const OffersManager = () => {
               </div>
 
               <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setEditingId(offer.id);
+                    setSelectedDevId(offer.dev_id);
+                    setNewOffer({
+                      title: offer.offer_title,
+                      description: offer.offer_description || '',
+                      voucher_code: offer.voucher_code,
+                      savings_amount: offer.savings_amount || '',
+                      expiry_date: offer.expiry_date ? new Date(offer.expiry_date).toISOString().split('T')[0] : '',
+                      terms: Array.isArray(offer.terms) ? offer.terms : [],
+                      image_url: offer.image_url || ''
+                    });
+                    setShowNewOffer(true);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"
