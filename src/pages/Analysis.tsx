@@ -212,6 +212,32 @@ const Analysis = () => {
             <div className="w-full h-full flex items-center justify-center bg-muted">
               <p className="text-muted-foreground">Loading map data...</p>
             </div>
+          ) : areaPolygons.length === 0 ? (
+            <div className="w-full h-full flex items-center justify-center bg-muted p-8">
+              <div className="max-w-md text-center space-y-4">
+                <div className="text-4xl mb-4">📍</div>
+                <h3 className="text-xl font-semibold">No Map Data Available</h3>
+                <p className="text-muted-foreground">
+                  To see the Live Analysis map, you need to fetch area boundaries and metrics first.
+                </p>
+                <div className="space-y-2 text-sm text-left bg-background/50 p-4 rounded-lg border">
+                  <p className="font-medium">Required steps:</p>
+                  <ol className="list-decimal list-inside space-y-1">
+                    <li>Go to <strong>Admin Analytics</strong> page</li>
+                    <li>Click <strong>"Fetch Boundaries"</strong> (required for map display)</li>
+                    <li>Click <strong>"Run Computation"</strong> to calculate price/sqft</li>
+                    <li>Optionally fetch other metrics (Yield, Growth, Crime, etc.)</li>
+                    <li>Return here to view the analysis</li>
+                  </ol>
+                </div>
+                <Button 
+                  onClick={() => window.location.href = '/admin/analytics'}
+                  className="mt-4"
+                >
+                  Go to Admin Analytics
+                </Button>
+              </div>
+            </div>
           ) : (
             <LiveAnalysisMap
               units={enrichedUnits}
