@@ -5,14 +5,16 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Generate complete London MSOA range (E02000001 to E02000983)
-function generateLondonMSOAs(): string[] {
-  const codes = [];
-  for (let i = 1; i <= 983; i++) {
-    codes.push(`E02000${i.toString().padStart(3, '0')}`);
-  }
-  return codes;
-}
+// London Borough codes (33 boroughs)
+const LONDON_BOROUGHS = [
+  'E09000001', 'E09000002', 'E09000003', 'E09000004', 'E09000005',
+  'E09000006', 'E09000007', 'E09000008', 'E09000009', 'E09000010',
+  'E09000011', 'E09000012', 'E09000013', 'E09000014', 'E09000015',
+  'E09000016', 'E09000017', 'E09000018', 'E09000019', 'E09000020',
+  'E09000021', 'E09000022', 'E09000023', 'E09000024', 'E09000025',
+  'E09000026', 'E09000027', 'E09000028', 'E09000029', 'E09000030',
+  'E09000031', 'E09000032', 'E09000033'
+];
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -24,18 +26,17 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const msoaCodes = generateLondonMSOAs();
-    console.log(`Fetching boundaries for ${msoaCodes.length} London MSOAs`);
+    console.log(`Fetching boundaries for ${LONDON_BOROUGHS.length} London Boroughs`);
 
     const results = [];
     const errors = [];
 
-    // Fetch MSOA boundaries from ONS API
-    for (const code of msoaCodes) {
+    // Fetch Borough boundaries from ONS API
+    for (const code of LONDON_BOROUGHS) {
       try {
-        // Use ONS Geography API to get MSOA boundary
+        // Use ONS Geography API to get Borough boundary
         const response = await fetch(
-          `https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/MSOA_Dec_2021_Boundaries_Generalised_Clipped_EW_BGC_2022/FeatureServer/0/query?where=MSOA21CD='${code}'&outFields=*&outSR=4326&f=geojson`
+          `https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LAD_DEC_2023_UK_BGC/FeatureServer/0/query?where=LAD23CD='${code}'&outFields=*&outSR=4326&f=geojson`
         );
 
         if (!response.ok) {
@@ -52,20 +53,20 @@ Deno.serve(async (req) => {
           
           results.push({
             area_code: code,
-            area_name: props.MSOA21NM || code,
-            area_type: 'MSOA',
+            area_name: props.LAD23NM || code,
+            area_type: 'Borough',
             geometry: geometry
           });
           
-          console.log(`Fetched MSOA ${code}`);
+          console.log(`Fetched Borough ${code}: ${props.LAD23NM}`);
         } else {
           // Create fallback if no data found
           const centerLat = 51.5074 + (Math.random() - 0.5) * 0.2;
           const centerLng = -0.1276 + (Math.random() - 0.5) * 0.2;
           results.push({
             area_code: code,
-            area_name: `MSOA ${code}`,
-            area_type: 'MSOA',
+            area_name: `Borough ${code}`,
+            area_type: 'Borough',
             geometry: createFallbackPolygon(centerLat, centerLng)
           });
         }
@@ -79,11 +80,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Delete existing MSOA polygons
+    // Delete existing Borough polygons
     const { error: deleteError } = await supabase
       .from('area_polygons')
       .delete()
-      .eq('area_type', 'MSOA');
+      .eq('area_type', 'Borough');
 
     if (deleteError) throw deleteError;
 
@@ -104,7 +105,7 @@ Deno.serve(async (req) => {
         success: true,
         areas_fetched: results.length,
         errors: errors.length,
-        message: `Fetched ${results.length} MSOA boundaries (${errors.length} errors)`,
+        message: `Fetched ${results.length} Borough boundaries (${errors.length} errors)`,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
