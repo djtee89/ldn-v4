@@ -191,12 +191,14 @@ const AdminAnalytics = () => {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">MSOA Polygons</p>
-              <p className="text-2xl font-bold">{status.polygonCount} / 983</p>
+              <p className={`text-2xl font-bold ${status.polygonCount === 983 ? 'text-green-600' : ''}`}>
+                {status.polygonCount}/983
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">£/ft² Rows (non-null)</p>
-              <p className={`text-2xl font-bold ${status.priceMetricCount === status.polygonCount && status.polygonCount > 0 ? 'text-green-600' : ''}`}>
-                {status.priceMetricCount} / {status.polygonCount}
+              <p className={`text-2xl font-bold ${status.priceMetricCount === 983 ? 'text-green-600' : ''}`}>
+                {status.priceMetricCount}/983
               </p>
             </div>
             <div>
@@ -215,7 +217,7 @@ const AdminAnalytics = () => {
             </Alert>
           )}
 
-          {status.missingCount > 0 && (
+          {status.missingCount > 0 && status.polygonCount === 983 && (
             <Alert>
               <AlertDescription>
                 <p className="font-semibold mb-1">⚠️ {status.missingCount} MSOAs missing price data</p>
@@ -225,6 +227,14 @@ const AdminAnalytics = () => {
                     {status.missingCount > 5 && ` +${status.missingCount - 5} more`}
                   </p>
                 )}
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          {status.priceMetricCount === 983 && status.polygonCount === 983 && (
+            <Alert className="bg-green-50 dark:bg-green-950/20 border-green-500">
+              <AlertDescription className="text-green-800 dark:text-green-200">
+                ✓ All 983 MSOAs have £/ft² data — choropleth layer ready
               </AlertDescription>
             </Alert>
           )}

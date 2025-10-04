@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    console.log('Starting pragmatic £/ft² computation...');
+    console.log('Starting pragmatic £/ft² computation for all MSOAs...');
     console.log('NOTE: This is currently using MOCK data. For production, integrate:');
     console.log('  1. ONS/Land Registry median price per MSOA');
     console.log('  2. EPC (Energy Performance Certificate) median floor area per MSOA');
@@ -26,29 +26,36 @@ Deno.serve(async (req) => {
     if (polyError) throw polyError;
     console.log(`Fetched ${polygons.length} MSOA polygons`);
 
-    // MOCK COMPUTATION - Replace with real ONS/LR + EPC API calls
-    // Real implementation needs:
-    // - ONS/Land Registry API for median house prices by MSOA
-    // - EPC API for median floor area by MSOA
-    // - Convert m² to ft² (multiply by 10.7639)
+    // MOCK COMPUTATION - Compute for ALL MSOAs (target: 983)
+    // Real implementation: aggregate ONS/LR price + EPC floor area by MSOA code
+    // If missing data for an MSOA, fall back to Borough median
     const updates = [];
     
     for (const poly of polygons) {
-      // Generate realistic mock estimate based on area_code pattern
-      // Inner London (E09000001-E09000014) = £1100-£1600/ft²
-      // Outer London (E09000015-E09000033) = £800-£1200/ft²
-      const areaCode = poly.area_code;
-      const isInnerLondon = areaCode.includes('E09000001') || 
-                           areaCode.includes('E09000007') || 
-                           areaCode.includes('E09000033');
+      // Generate realistic mock based on central London distance
+      // Extract coordinates for distance-based pricing
+      const center = poly.geometry.type === 'Polygon'
+        ? calculateCenter(poly.geometry)
+        : calculateMultiPolygonCenter(poly.geometry);
       
-      // Base price distribution
-      const basePrice = isInnerLondon 
-        ? 1100 + (Math.random() * 500)  // Inner: £1100-£1600
-        : 800 + (Math.random() * 400);  // Outer: £800-£1200
-      const price_per_sqft_overall = Math.round(basePrice);
+      // Central London approximate coordinates
+      const centralLat = 51.5074;
+      const centralLng = -0.1278;
       
-      // Mock sample sizes (realistic ranges)
+      // Calculate rough distance from center (simple Euclidean)
+      const distFromCenter = Math.sqrt(
+        Math.pow((center.lat - centralLat) * 111, 2) + 
+        Math.pow((center.lng - centralLng) * 69, 2)
+      );
+      
+      // Price gradient: £1400/ft² at center, declining to £700/ft² at 20km
+      const basePrice = Math.max(700, 1400 - (distFromCenter * 35));
+      
+      // Add realistic variation (±10%)
+      const variation = basePrice * 0.1 * (Math.random() - 0.5) * 2;
+      const price_per_sqft_overall = Math.round(basePrice + variation);
+      
+      // Mock sample sizes
       const sample_size_price = Math.floor(50 + Math.random() * 200);
       const sample_size_epc = Math.floor(30 + Math.random() * 150);
 
@@ -60,20 +67,22 @@ Deno.serve(async (req) => {
         bounds: poly.geometry.type === 'Polygon' 
           ? calculateBounds(poly.geometry)
           : calculateMultiPolygonBounds(poly.geometry),
-        center_lat: poly.geometry.type === 'Polygon'
-          ? calculateCenter(poly.geometry).lat
-          : calculateMultiPolygonCenter(poly.geometry).lat,
-        center_lng: poly.geometry.type === 'Polygon'
-          ? calculateCenter(poly.geometry).lng
-          : calculateMultiPolygonCenter(poly.geometry).lng,
+        center_lat: center.lat,
+        center_lng: center.lng,
         sample_size: sample_size_price,
         data_sources: [
-          { source: 'ONS/LR', sample_size: sample_size_price },
-          { source: 'EPC', sample_size: sample_size_epc }
+          { 
+            source: 'ONS/LR (mock)', 
+            sample_size: sample_size_price,
+            method: 'Estimated £/ft² from ONS price ÷ EPC m² (MSOA)'
+          },
+          { source: 'EPC (mock)', sample_size: sample_size_epc }
         ],
         last_updated: new Date().toISOString()
       });
     }
+
+    console.log(`Computed £/ft² for all ${updates.length} MSOAs`);
 
     console.log(`Upserting ${updates.length} area metrics...`);
 

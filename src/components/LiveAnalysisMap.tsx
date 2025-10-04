@@ -77,23 +77,48 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   }, []);
 
 
-  // Add area polygons layer
+  // Add area polygons layer with 7-class quantile choropleth
   useEffect(() => {
     if (!map.current || !isMapLoaded || areaPolygons.length === 0) return;
 
-    // Create GeoJSON for polygons
+    // Calculate quantile breaks (7 classes) from non-null metrics
+    const validPpsf = areaMetrics
+      .filter(m => m.price_per_sqft_overall && m.price_per_sqft_overall > 0)
+      .map(m => m.price_per_sqft_overall!)
+      .sort((a, b) => a - b);
+
+    const getQuantileColor = (ppsf: number): string => {
+      if (!ppsf || validPpsf.length === 0) return '#e5e7eb';
+      
+      const q1 = validPpsf[Math.floor(validPpsf.length * 1/7)];
+      const q2 = validPpsf[Math.floor(validPpsf.length * 2/7)];
+      const q3 = validPpsf[Math.floor(validPpsf.length * 3/7)];
+      const q4 = validPpsf[Math.floor(validPpsf.length * 4/7)];
+      const q5 = validPpsf[Math.floor(validPpsf.length * 5/7)];
+      const q6 = validPpsf[Math.floor(validPpsf.length * 6/7)];
+      
+      if (ppsf <= q1) return '#22c55e'; // Green
+      if (ppsf <= q2) return '#65a30d'; // Green-yellow
+      if (ppsf <= q3) return '#84cc16'; // Yellow-green
+      if (ppsf <= q4) return '#eab308'; // Yellow
+      if (ppsf <= q5) return '#f59e0b'; // Orange-yellow
+      if (ppsf <= q6) return '#f97316'; // Orange
+      return '#ef4444'; // Red
+    };
+
+    // Create GeoJSON for polygons - join with metrics by area_code
     const features = areaPolygons.map(poly => {
       const metric = areaMetrics.find(m => m.area_code === poly.area_code);
+      const ppsf = metric?.price_per_sqft_overall || null;
+      
       return {
         type: 'Feature' as const,
         geometry: poly.geometry,
         properties: {
           area_code: poly.area_code,
           area_name: poly.area_name,
-          area_ppsf: metric?.price_per_sqft_overall || null,
-          color: metric?.price_per_sqft_overall 
-            ? getPriceColor(metric.price_per_sqft_overall)
-            : '#e5e7eb'
+          area_ppsf: ppsf,
+          color: ppsf ? getQuantileColor(ppsf) : '#e5e7eb'
         }
       };
     });
@@ -114,7 +139,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       data: geojson
     });
 
-    // Fill layer - choropleth with dynamic opacity
+    // Fill layer - smooth choropleth with 7 quantile classes
     map.current!.addLayer({
       id: 'area-fills',
       type: 'fill',
@@ -125,12 +150,12 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
           'case',
           ['==', ['get', 'area_ppsf'], null],
           0, // Fully transparent if no data
-          0.28 // 0.25-0.35 range, using middle value
+          0.30 // 0.25-0.35 range
         ]
       }
     });
 
-    // Subtle border layer (optional hairline)
+    // No border or very subtle hairline
     map.current!.addLayer({
       id: 'area-borders',
       type: 'line',
