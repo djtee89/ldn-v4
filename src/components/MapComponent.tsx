@@ -42,7 +42,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const [directionsData, setDirectionsData] = useState<DirectionsData | null>(null);
   const [isLoadingDirections, setIsLoadingDirections] = useState(false);
   const [currentDevelopment, setCurrentDevelopment] = useState<Development | null>(null);
-  const [diagnostics, setDiagnostics] = useState({ devsFetched: 0, markersAdded: 0, styleLoaded: false, sanityPinAdded: false });
+  const [diagnostics, setDiagnostics] = useState({ devsFetched: 0, markersAdded: 0, styleLoaded: false });
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
   // Log initial data on mount
@@ -118,40 +118,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
     // Wait for map to fully load
     map.current.on('load', async () => {
       console.log('[Map Diagnostics] ✅ Map fully loaded, adding layers...');
-      
-      // Add SANITY TEST MARKER at Trafalgar Square (A-2)
-      map.current!.addSource('sanity-test', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: [{
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [-0.1278, 51.5081] // Trafalgar Square
-            },
-            properties: {
-              name: 'SANITY TEST MARKER'
-            }
-          }]
-        }
-      });
-      
-      // Bright red circle for sanity test
-      map.current!.addLayer({
-        id: 'sanity-test-marker',
-        type: 'circle',
-        source: 'sanity-test',
-        paint: {
-          'circle-radius': 20,
-          'circle-color': '#ff0000',
-          'circle-stroke-width': 4,
-          'circle-stroke-color': '#ffffff'
-        }
-      });
-      
-      console.log('[Map Diagnostics] ✅ SANITY TEST MARKER added at Trafalgar Square (red, 20px)');
-      setDiagnostics(prev => ({ ...prev, sanityPinAdded: true }));
       
       // Add source for development pins
       map.current!.addSource('developments', {
@@ -726,8 +692,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
         <div>Devs fetched: <span className={diagnostics.devsFetched === 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold'}>{diagnostics.devsFetched}</span></div>
         <div>Markers added: <span className={diagnostics.markersAdded === 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold'}>{diagnostics.markersAdded}</span></div>
         <div>Style loaded: {diagnostics.styleLoaded ? '✅' : '❌'}</div>
-        <div>Sanity pin: {diagnostics.sanityPinAdded ? '✅' : '❌'}</div>
-        <div className="text-yellow-300 mt-1">Look for red pin at Trafalgar Sq</div>
       </div>
       
       {/* Amenity Legend */}
