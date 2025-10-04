@@ -83,16 +83,23 @@ const MapComponent: React.FC<MapComponentProps> = ({
       });
 
       // Add amenity pins layer (BELOW property pins)
+      // Larger on mobile for better visibility
       map.current!.addLayer({
         id: 'amenity-pins',
         type: 'circle',
         source: 'amenities',
         paint: {
-          'circle-radius': 5,
+          'circle-radius': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            8, 8,   // At zoom 8, radius is 8px
+            15, 10  // At zoom 15, radius is 10px
+          ],
           'circle-color': ['get', 'color'],
-          'circle-stroke-width': 1.5,
+          'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff',
-          'circle-opacity': 0.8
+          'circle-opacity': 0.85
         }
       });
 
@@ -115,15 +122,28 @@ const MapComponent: React.FC<MapComponentProps> = ({
       });
 
       // Add layer for normal property pins (ABOVE amenity pins) - simple blue circles
+      // Larger on mobile for better visibility
       map.current!.addLayer({
         id: 'development-pins',
         type: 'circle',
         source: 'developments',
         filter: ['!=', ['get', 'highlighted'], true],
         paint: {
-          'circle-radius': 8,
+          'circle-radius': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            8, 12,  // At zoom 8, radius is 12px
+            15, 16  // At zoom 15, radius is 16px
+          ],
           'circle-color': '#3b82f6',
-          'circle-stroke-width': 2,
+          'circle-stroke-width': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            8, 3,   // At zoom 8, stroke is 3px
+            15, 4   // At zoom 15, stroke is 4px
+          ],
           'circle-stroke-color': '#ffffff'
         }
       });
@@ -135,28 +155,47 @@ const MapComponent: React.FC<MapComponentProps> = ({
         source: 'developments',
         filter: ['==', ['get', 'highlighted'], true],
         paint: {
-          'circle-radius': 10,
+          'circle-radius': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            8, 16,  // At zoom 8, radius is 16px
+            15, 20  // At zoom 15, radius is 20px
+          ],
           'circle-color': '#3b82f6',
-          'circle-stroke-width': 3,
+          'circle-stroke-width': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            8, 4,   // At zoom 8, stroke is 4px
+            15, 5   // At zoom 15, stroke is 5px
+          ],
           'circle-stroke-color': '#fbbf24'
         }
       });
 
       // Add price labels (ABOVE all pins)
+      // Larger text on mobile for better readability
       map.current!.addLayer({
         id: 'development-labels',
         type: 'symbol',
         source: 'developments',
         layout: {
           'text-field': ['get', 'price'],
-          'text-size': 11,
-          'text-offset': [0, -1.3],
+          'text-size': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            8, 12,  // At zoom 8, text size is 12
+            15, 14  // At zoom 15, text size is 14
+          ],
+          'text-offset': [0, -1.5],
           'text-anchor': 'top'
         },
         paint: {
           'text-color': '#1a1a1a',
           'text-halo-color': '#ffffff',
-          'text-halo-width': 1.5
+          'text-halo-width': 2
         }
       });
 
