@@ -50,7 +50,7 @@ export const useAreaMetrics = () => {
       const { data, error } = await supabase
         .from('area_metrics')
         .select('*')
-        .eq('area_type', 'Borough')
+        .ilike('area_type', 'Borough')
         .order('area_code');
       
       if (error) throw error;
@@ -67,7 +67,7 @@ export const useAreaPolygons = () => {
       const { data, error } = await supabase
         .from('area_polygons')
         .select('*')
-        .eq('area_type', 'Borough')
+        .ilike('area_type', 'Borough')
         .order('area_code');
       
       if (error) throw error;
