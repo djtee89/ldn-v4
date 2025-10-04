@@ -163,6 +163,39 @@ const Map = () => {
       {/* Filter Bar */}
       <div className="bg-white border-b border-border p-4 z-40">
         <div className="max-w-7xl mx-auto space-y-4">
+          {/* Pins Loaded Indicator */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-foreground">
+                Pins loaded: <span className="text-primary font-bold">{filteredDevelopments.length}</span>
+              </span>
+              {filteredDevelopments.length === 0 && (
+                <button
+                  onClick={() => {
+                    setFilters({
+                      priceFrom: '',
+                      priceTo: '',
+                      tenure: 'any',
+                      bedroomsMin: '',
+                      bedroomsMax: '',
+                      zones: [],
+                      walkToStation: 'any',
+                      amenities: [],
+                      completedNow: false,
+                      completionYear: 'any',
+                      keyword: ''
+                    });
+                    setLifestyleFilters([]);
+                    setSearchParams(new URLSearchParams());
+                  }}
+                  className="px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  Reset filters
+                </button>
+              )}
+            </div>
+          </div>
+          
           <FilterBar
             filters={filters}
             onFiltersChange={(newFilters) => {
@@ -186,7 +219,7 @@ const Map = () => {
       </div>
 
       {/* Map */}
-      <div className="flex-1 relative overflow-hidden h-full w-full">
+      <div className="flex-1 relative overflow-hidden w-full" style={{ minHeight: 'calc(100vh - 200px)' }}>
         <MapComponent
           developments={filteredDevelopments}
           onDevelopmentClick={setSelectedDevelopment}

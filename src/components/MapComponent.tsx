@@ -44,6 +44,35 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const [currentDevelopment, setCurrentDevelopment] = useState<Development | null>(null);
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
+  // Force map resize on visibility change and orientation change
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && map.current) {
+        setTimeout(() => {
+          map.current?.resize();
+          console.log('[Map] Resized after visibility change');
+        }, 100);
+      }
+    };
+
+    const handleOrientationChange = () => {
+      if (map.current) {
+        setTimeout(() => {
+          map.current?.resize();
+          console.log('[Map] Resized after orientation change');
+        }, 200);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('orientationchange', handleOrientationChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, []);
+
   // Initialize map once
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
@@ -62,7 +91,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     // Wait for map to fully load
     map.current.on('load', async () => {
-      // Icons are no longer needed - using simple circles
+      console.log('[Map] Map loaded successfully');
       
       // Add source for development pins
       map.current!.addSource('developments', {
@@ -72,6 +101,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           features: []
         }
       });
+      console.log('[Map] Development source added');
 
       // Add source for amenity pins
       map.current!.addSource('amenities', {
@@ -95,6 +125,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           'circle-opacity': 0.85
         }
       });
+      console.log('[Map] Amenity pins layer added');
 
       // Add amenity labels
       map.current!.addLayer({
@@ -141,6 +172,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           'circle-stroke-color': '#fbbf24'
         }
       });
+      console.log('[Map] All development pin layers added');
 
       // Add price labels (ABOVE all pins)
       map.current!.addLayer({
@@ -413,11 +445,17 @@ const MapComponent: React.FC<MapComponentProps> = ({
       });
 
       setIsMapLoaded(true);
+      console.log('[Map] Map fully initialized and ready');
     });
 
-    // Handle map resize
+    // Handle map resize with debounce
+    let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
-      map.current?.resize();
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        map.current?.resize();
+        console.log('[Map] Resized after window resize');
+      }, 100);
     };
     window.addEventListener('resize', handleResize);
     return () => {
@@ -433,6 +471,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
     if (!map.current || !isMapLoaded) return;
     const source = map.current.getSource('developments') as mapboxgl.GeoJSONSource;
     if (!source) return;
+
+    console.log(`[Map] Updating ${developments.length} developments on map`);
 
     // Create GeoJSON features from developments
     const features = developments.map(dev => ({
@@ -453,10 +493,18 @@ const MapComponent: React.FC<MapComponentProps> = ({
         highlighted: highlightedDeveloper ? dev.developer === highlightedDeveloper : false
       }
     }));
+    
     source.setData({
       type: 'FeatureCollection',
       features
     });
+    
+    console.log(`[Map] Added ${features.length} markers to map`);
+    
+    // Show toast if no markers after filtering
+    if (features.length === 0 && developments.length === 0) {
+      console.warn('[Map] No developments to display - check filters or data fetch');
+    }
   }, [developments, highlightedDeveloper, isMapLoaded]);
 
   // Update amenity layers when lifestyle filters change
@@ -471,11 +519,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
         type: 'FeatureCollection',
         features: []
       });
+      console.log('[Map] Cleared amenity filters');
       return;
     }
 
     // Get all amenities across London for selected types
     const allAmenities = getAmenitiesByTypes(lifestyleFilters);
+    console.log(`[Map] Loading ${allAmenities.length} amenities for filters:`, lifestyleFilters);
 
     // Create GeoJSON features
     const features = allAmenities.map(amenity => ({
@@ -497,6 +547,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       type: 'FeatureCollection',
       features
     });
+    console.log(`[Map] Added ${features.length} amenity markers`);
   }, [lifestyleFilters, isMapLoaded]);
 
   // This effect is no longer needed as we handle clicks directly in the map event handlers
@@ -579,8 +630,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
       });
   }, [activeDirections, developments, isMapLoaded]);
 
-  return <div className={`relative h-full ${className}`}>
-      <div ref={mapContainer} className="w-full h-full rounded-lg ring-1 ring-black/5" />
+  return <div className={`relative ${className}`} style={{ height: '100%', minHeight: '500px' }}>
+      <div ref={mapContainer} className="absolute inset-0 rounded-lg ring-1 ring-black/5" />
       
       {/* Amenity Legend */}
       <AmenityLegend activeTypes={lifestyleFilters} />
