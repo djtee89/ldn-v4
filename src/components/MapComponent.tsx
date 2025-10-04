@@ -686,14 +686,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
   return <div className={`relative ${className}`} style={{ height: '100%', minHeight: '500px' }}>
       <div ref={mapContainer} className="absolute inset-0 rounded-lg ring-1 ring-black/5" />
       
-      {/* Mobile Diagnostics Overlay (G) */}
-      <div className="absolute top-2 left-2 bg-black/80 text-white text-xs p-2 rounded z-50 max-w-xs">
-        <div className="font-bold mb-1">🔍 Mobile Pin Diagnostics</div>
-        <div>Devs fetched: <span className={diagnostics.devsFetched === 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold'}>{diagnostics.devsFetched}</span></div>
-        <div>Markers added: <span className={diagnostics.markersAdded === 0 ? 'text-red-400 font-bold' : 'text-green-400 font-bold'}>{diagnostics.markersAdded}</span></div>
-        <div>Style loaded: {diagnostics.styleLoaded ? '✅' : '❌'}</div>
-      </div>
-      
       {/* Amenity Legend */}
       <AmenityLegend activeTypes={lifestyleFilters} />
       
