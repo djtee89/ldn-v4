@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 const AdminAnalytics = () => {
   const [isComputingMetrics, setIsComputingMetrics] = useState(false);
   const [isFetchingBoundaries, setIsFetchingBoundaries] = useState(false);
+  const [isComputingPragmatic, setIsComputingPragmatic] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
   
   // Status state
@@ -79,18 +80,36 @@ const AdminAnalytics = () => {
     }
   };
 
+  const handleComputePragmatic = async () => {
+    setIsComputingPragmatic(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('compute-pragmatic-price');
+      if (error) throw error;
+      toast.success(`Computed pragmatic £/ft² for ${data.areas_computed} areas`);
+      await fetchStatus();
+    } catch (error: any) {
+      toast.error(`Failed to compute pragmatic £/ft²: ${error.message}`);
+    } finally {
+      setIsComputingPragmatic(false);
+    }
+  };
+
 
   const handleInitializeAll = async () => {
     setIsInitializing(true);
     try {
       toast.info('Starting initialization...');
       
-      toast.info('Step 1/2: Fetching MSOA boundaries...');
+      toast.info('Step 1/3: Fetching MSOA boundaries...');
       await handleFetchBoundaries();
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      toast.info('Step 2/2: Computing price per sqft...');
+      toast.info('Step 2/3: Computing price per sqft...');
       await handleComputeMetrics();
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast.info('Step 3/3: Computing pragmatic £/ft²...');
+      await handleComputePragmatic();
       
       toast.success('Price analysis data initialized successfully!');
     } catch (error: any) {
@@ -166,13 +185,14 @@ const AdminAnalytics = () => {
         <CardContent className="space-y-2 text-sm">
           <p>1. <strong>Fetch Boundaries:</strong> Load ~983 London MSOA (Middle Layer Super Output Area) polygons from the ONS API</p>
           <p>2. <strong>Compute Metrics:</strong> Calculate median price per square foot for each MSOA based on available units in your developments database</p>
-          <p>3. View the results on the <strong>Live Analysis</strong> page with color-coded map pins</p>
-          <p className="text-muted-foreground pt-2">Click "Initialize Data" above to run both steps automatically.</p>
+          <p>3. <strong>Compute Pragmatic £/ft²:</strong> Generate London-wide £/ft² estimates from ONS/LR median price ÷ EPC median floor area</p>
+          <p>4. View the results on the <strong>Live Analysis</strong> page with color-coded heat layer and discount percentages</p>
+          <p className="text-muted-foreground pt-2">Click "Initialize Data" above to run all steps automatically.</p>
         </CardContent>
       </Card>
 
       {/* Action Cards */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle>1. Fetch Boundaries</CardTitle>
@@ -203,6 +223,23 @@ const AdminAnalytics = () => {
             >
               {isComputingMetrics && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Run Computation
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>3. Pragmatic £/ft²</CardTitle>
+            <CardDescription>ONS/LR price ÷ EPC floor area</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              onClick={handleComputePragmatic}
+              disabled={isComputingPragmatic}
+              className="w-full"
+            >
+              {isComputingPragmatic && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Compute Pragmatic
             </Button>
           </CardContent>
         </Card>

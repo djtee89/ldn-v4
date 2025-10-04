@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Development } from '@/data/newDevelopments';
+import { AreaMetric, AreaPolygon } from '@/hooks/use-area-metrics';
 
 interface Unit {
   id: string;
@@ -17,12 +18,16 @@ interface Unit {
 interface LiveAnalysisMapProps {
   units: Unit[];
   developments: Development[];
+  areaMetrics: AreaMetric[];
+  areaPolygons: AreaPolygon[];
   onDevelopmentClick: (dev: Development) => void;
 }
 
 const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({ 
   units, 
-  developments, 
+  developments,
+  areaMetrics,
+  areaPolygons,
   onDevelopmentClick
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -32,14 +37,20 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   // Use same Mapbox token as main map
   const mapboxToken = 'pk.eyJ1IjoiZGp0ZWU4OSIsImEiOiJjbWY1dmNhaGYwOXFnMmlzaTNyejZoeGY5In0.SUBlhQBZCQbBTWO1ly06Og';
 
-  // Calculate color based on price per sqft (green = cheap, red = expensive)
+  // Calculate color based on price per sqft
   const getPriceColor = (pricePerSqft: number): string => {
-    // Typical London new-build range: £800-£2000 per sqft
-    if (pricePerSqft < 900) return '#22c55e'; // Green - great value
-    if (pricePerSqft < 1100) return '#84cc16'; // Light green
-    if (pricePerSqft < 1300) return '#eab308'; // Yellow - average
-    if (pricePerSqft < 1500) return '#f97316'; // Orange
-    return '#ef4444'; // Red - expensive
+    if (pricePerSqft < 900) return '#22c55e';
+    if (pricePerSqft < 1100) return '#84cc16';
+    if (pricePerSqft < 1300) return '#eab308';
+    if (pricePerSqft < 1500) return '#f97316';
+    return '#ef4444';
+  };
+
+  const getHaloColor = (discount: number): string => {
+    if (discount <= -10) return '#22c55e'; // Green - great discount
+    if (discount <= -5) return '#84cc16'; // Light green
+    if (discount < 0) return '#eab308'; // Yellow
+    return '#9ca3af'; // Gray - no discount
   };
 
   // Initialize map
@@ -66,7 +77,69 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
   }, []);
 
 
-  // Update markers when units change
+  // Add area polygons layer
+  useEffect(() => {
+    if (!map.current || !isMapLoaded || areaPolygons.length === 0) return;
+
+    // Create GeoJSON for polygons
+    const features = areaPolygons.map(poly => {
+      const metric = areaMetrics.find(m => m.area_code === poly.area_code);
+      return {
+        type: 'Feature' as const,
+        geometry: poly.geometry,
+        properties: {
+          area_code: poly.area_code,
+          area_name: poly.area_name,
+          area_ppsf: metric?.price_per_sqft_overall || null,
+          color: metric?.price_per_sqft_overall 
+            ? getPriceColor(metric.price_per_sqft_overall)
+            : '#e5e7eb'
+        }
+      };
+    });
+
+    const geojson: GeoJSON.FeatureCollection = {
+      type: 'FeatureCollection',
+      features
+    };
+
+    // Remove existing layers
+    if (map.current!.getLayer('area-fills')) map.current!.removeLayer('area-fills');
+    if (map.current!.getLayer('area-borders')) map.current!.removeLayer('area-borders');
+    if (map.current!.getSource('area-polygons')) map.current!.removeSource('area-polygons');
+
+    // Add source and layers
+    map.current!.addSource('area-polygons', {
+      type: 'geojson',
+      data: geojson
+    });
+
+    // Fill layer
+    map.current!.addLayer({
+      id: 'area-fills',
+      type: 'fill',
+      source: 'area-polygons',
+      paint: {
+        'fill-color': ['get', 'color'],
+        'fill-opacity': 0.3
+      }
+    });
+
+    // Border layer
+    map.current!.addLayer({
+      id: 'area-borders',
+      type: 'line',
+      source: 'area-polygons',
+      paint: {
+        'line-color': '#94a3b8',
+        'line-width': 1,
+        'line-opacity': 0.5
+      }
+    });
+
+  }, [isMapLoaded, areaPolygons, areaMetrics]);
+
+  // Update dev markers when units change
   useEffect(() => {
     if (!map.current || !isMapLoaded) return;
 
@@ -88,14 +161,27 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       devStats[devId].count += 1;
     });
 
-    // Calculate averages
+    // Calculate averages and find area metrics for comparison
     Object.keys(devStats).forEach(devId => {
       devStats[devId].avgPricePerSqft = devStats[devId].total / devStats[devId].count;
     });
 
-    // Create GeoJSON
+    // Create GeoJSON with discount calculation
     const features = Object.entries(devStats).map(([devId, stats]) => {
       const dev = stats.development;
+      const devPpsf = stats.avgPricePerSqft;
+      
+      // Find the area metric for this development's location
+      const areaMetric = areaMetrics.find(metric => {
+        if (!metric.bounds) return false;
+        const { lat, lng } = dev.coordinates;
+        return lat >= metric.bounds.south && lat <= metric.bounds.north &&
+               lng >= metric.bounds.west && lng <= metric.bounds.east;
+      });
+      
+      const areaPpsf = areaMetric?.price_per_sqft_overall || null;
+      const discount = areaPpsf ? ((devPpsf - areaPpsf) / areaPpsf * 100) : null;
+      
       return {
         type: 'Feature' as const,
         geometry: {
@@ -105,9 +191,12 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
         properties: {
           devId,
           name: dev.name,
-          avgPricePerSqft: Math.round(stats.avgPricePerSqft),
+          avgPricePerSqft: Math.round(devPpsf),
+          areaPricePerSqft: areaPpsf ? Math.round(areaPpsf) : null,
+          discount: discount ? Math.round(discount) : null,
           unitCount: stats.count,
-          color: getPriceColor(stats.avgPricePerSqft),
+          color: getPriceColor(devPpsf),
+          haloColor: discount !== null ? getHaloColor(discount) : '#9ca3af',
         },
       };
     });
@@ -134,6 +223,18 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       data: geojson,
     });
 
+    // Halo layer (outer circle for discount indication)
+    map.current!.addLayer({
+      id: 'price-analysis-halos',
+      type: 'circle',
+      source: 'price-analysis',
+      paint: {
+        'circle-radius': 16,
+        'circle-color': ['get', 'haloColor'],
+        'circle-opacity': 0.3,
+      },
+    });
+
     // Circle layer
     map.current!.addLayer({
       id: 'price-analysis-circles',
@@ -142,7 +243,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       paint: {
         'circle-radius': 12,
         'circle-color': ['get', 'color'],
-        'circle-opacity': 0.8,
+        'circle-opacity': 0.9,
         'circle-stroke-width': 2,
         'circle-stroke-color': '#ffffff',
       },
@@ -179,13 +280,25 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       const feature = e.features[0];
       const props = feature.properties;
       
+      const discountText = props.discount !== null 
+        ? `<p class="text-xs ${props.discount < 0 ? 'text-green-600 font-semibold' : 'text-gray-500'}">
+             ${props.discount < 0 ? '' : '+'}${props.discount}% vs area
+           </p>`
+        : '';
+      
+      const areaText = props.areaPricePerSqft !== null
+        ? `<p class="text-xs"><strong>Area £/ft²:</strong> £${props.areaPricePerSqft.toLocaleString()}</p>`
+        : '';
+      
       popup
         .setLngLat(e.lngLat)
         .setHTML(`
           <div class="p-2">
             <h3 class="font-bold text-sm mb-1">${props.name}</h3>
-            <p class="text-xs"><strong>Avg Price/sqft:</strong> £${props.avgPricePerSqft.toLocaleString()}</p>
-            <p class="text-xs"><strong>Available Units:</strong> ${props.unitCount}</p>
+            <p class="text-xs"><strong>Dev £/ft²:</strong> £${props.avgPricePerSqft.toLocaleString()}</p>
+            ${areaText}
+            ${discountText}
+            <p class="text-xs text-muted-foreground mt-1"><strong>Units:</strong> ${props.unitCount}</p>
           </div>
         `)
         .addTo(map.current!);
@@ -206,7 +319,7 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({
       }
     });
 
-  }, [units, isMapLoaded, developments, onDevelopmentClick]);
+  }, [units, isMapLoaded, developments, onDevelopmentClick, areaMetrics]);
 
   return <div ref={mapContainer} className="w-full h-full" />;
 };
