@@ -17,9 +17,15 @@ Deno.serve(async (req) => {
 
     console.log('Fetching London ward boundaries...');
 
-    // Fetch ward boundaries from ONS API
+    // Fetch ward boundaries from ONS API using a simpler query format
     const wardResponse = await fetch(
-      'https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/WD_DEC_2023_GB_BFE/FeatureServer/0/query?where=WD23CD+LIKE+%27E%25%27&outFields=WD23CD,WD23NM,LAD23CD,LAD23NM&outSR=4326&f=geojson',
+      'https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/WD_DEC_2023_GB_BFE/FeatureServer/0/query?' + 
+      new URLSearchParams({
+        where: "WD23CD LIKE 'E%'",
+        outFields: 'WD23CD,WD23NM,LAD23CD,LAD23NM',
+        outSR: '4326',
+        f: 'geojson'
+      }),
       {
         headers: {
           'Accept': 'application/json',
