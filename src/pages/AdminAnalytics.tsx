@@ -148,25 +148,21 @@ export default function AdminAnalytics() {
     }
   };
 
-  const handleInitializeAll = async () => {
+    const handleInitializeAll = async () => {
     setIsInitializing(true);
     try {
-      toast.info('Step 1/4: Fetching boroughs...');
+      toast.info('Step 1/3: Fetching boroughs...');
       await handleFetchBoundaries();
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      toast.info('Step 2/4: Fetching wards...');
-      await handleFetchWards();
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast.info('Step 3/4: Computing prices...');
+      toast.info('Step 2/3: Computing prices...');
       await handleComputePragmatic();
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      toast.info('Step 4/4: Mapping neighbourhoods...');
+      toast.info('Step 3/3: Mapping neighbourhoods...');
       await handleMapNeighbourhoods();
       
-      toast.success('All initialized!');
+      toast.success('Initialized with local data!');
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -176,10 +172,17 @@ export default function AdminAnalytics() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <Alert className="border-blue-500 bg-blue-50 dark:bg-blue-950">
+        <AlertCircle className="h-4 w-4 text-blue-600" />
+        <AlertDescription className="text-sm">
+          Using local boundaries; cloud fetch disabled to save tokens. Ward data will be loaded from local files.
+        </AlertDescription>
+      </Alert>
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold mb-2">Admin Analytics</h1>
-          <p className="text-muted-foreground">Borough & Neighbourhood data</p>
+          <p className="text-muted-foreground">Borough & Neighbourhood data (Local Mode)</p>
         </div>
         <div className="flex gap-2">
           <Link to="/admin/neighbourhoods">
@@ -187,7 +190,7 @@ export default function AdminAnalytics() {
           </Link>
           <Button onClick={handleInitializeAll} disabled={isInitializing}>
             {isInitializing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
-            Initialize
+            Initialize (Local)
           </Button>
         </div>
       </div>
@@ -233,30 +236,33 @@ export default function AdminAnalytics() {
         <Card>
           <CardHeader>
             <CardTitle>Fetch Boroughs</CardTitle>
+            <CardDescription>Load from local file</CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={handleFetchBoundaries} disabled={isFetchingBoundaries} className="w-full">
               {isFetchingBoundaries && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Fetch (33)
+              Load Local (33)
             </Button>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Fetch Wards</CardTitle>
+            <CardTitle>Load Wards</CardTitle>
+            <CardDescription>From local GeoJSON</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={handleFetchWards} disabled={isFetchingWards} className="w-full">
-              {isFetchingWards && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Fetch (~600)
+            <Button onClick={handleFetchWards} disabled={true} className="w-full" title="Disabled - awaiting local ward file">
+              Load Local (~600)
             </Button>
+            <p className="text-xs text-muted-foreground mt-2">Local file pending</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
             <CardTitle>Compute £/ft²</CardTitle>
+            <CardDescription>From development data</CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={handleComputePragmatic} disabled={isComputingPragmatic} className="w-full">

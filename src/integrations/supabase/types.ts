@@ -660,6 +660,7 @@ export type Database = {
           id: string
           neighbourhood_id: string
           polygon_ids: Json
+          price_per_sqft: number | null
           union_geometry: Json | null
           updated_at: string | null
         }
@@ -669,6 +670,7 @@ export type Database = {
           id?: string
           neighbourhood_id: string
           polygon_ids?: Json
+          price_per_sqft?: number | null
           union_geometry?: Json | null
           updated_at?: string | null
         }
@@ -678,6 +680,7 @@ export type Database = {
           id?: string
           neighbourhood_id?: string
           polygon_ids?: Json
+          price_per_sqft?: number | null
           union_geometry?: Json | null
           updated_at?: string | null
         }

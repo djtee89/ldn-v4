@@ -68,3 +68,6 @@ verify_jwt = false
 
 [functions.fetch-nearby]
 verify_jwt = false
+
+[functions.load-local-wards]
+verify_jwt = false
