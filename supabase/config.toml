@@ -35,3 +35,12 @@ verify_jwt = false
 
 [functions.compute-area-metrics]
 verify_jwt = false
+
+[functions.fetch-crime-data]
+verify_jwt = false
+
+[functions.fetch-growth-data]
+verify_jwt = false
+
+[functions.fetch-air-quality-data]
+verify_jwt = false
