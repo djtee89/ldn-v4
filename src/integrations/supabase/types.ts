@@ -14,6 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
+      area_metrics: {
+        Row: {
+          area_code: string
+          area_name: string
+          area_type: string
+          bounds: Json
+          center_lat: number
+          center_lng: number
+          created_at: string | null
+          crime_category: string | null
+          crime_per_1000: number | null
+          data_sources: Json | null
+          green_space_pct: number | null
+          growth_12m_pct: number | null
+          growth_rank: string | null
+          id: string
+          last_updated: string | null
+          noise_air_badge: string | null
+          parks_count: number | null
+          price_per_sqft_1bed: number | null
+          price_per_sqft_2bed: number | null
+          price_per_sqft_3bed: number | null
+          price_per_sqft_overall: number | null
+          sample_size: number | null
+          schools_outstanding_primary: number | null
+          schools_outstanding_secondary: number | null
+          schools_score: number | null
+          updated_at: string | null
+          yield_1bed: number | null
+          yield_2bed: number | null
+          yield_3bed: number | null
+        }
+        Insert: {
+          area_code: string
+          area_name: string
+          area_type: string
+          bounds: Json
+          center_lat: number
+          center_lng: number
+          created_at?: string | null
+          crime_category?: string | null
+          crime_per_1000?: number | null
+          data_sources?: Json | null
+          green_space_pct?: number | null
+          growth_12m_pct?: number | null
+          growth_rank?: string | null
+          id?: string
+          last_updated?: string | null
+          noise_air_badge?: string | null
+          parks_count?: number | null
+          price_per_sqft_1bed?: number | null
+          price_per_sqft_2bed?: number | null
+          price_per_sqft_3bed?: number | null
+          price_per_sqft_overall?: number | null
+          sample_size?: number | null
+          schools_outstanding_primary?: number | null
+          schools_outstanding_secondary?: number | null
+          schools_score?: number | null
+          updated_at?: string | null
+          yield_1bed?: number | null
+          yield_2bed?: number | null
+          yield_3bed?: number | null
+        }
+        Update: {
+          area_code?: string
+          area_name?: string
+          area_type?: string
+          bounds?: Json
+          center_lat?: number
+          center_lng?: number
+          created_at?: string | null
+          crime_category?: string | null
+          crime_per_1000?: number | null
+          data_sources?: Json | null
+          green_space_pct?: number | null
+          growth_12m_pct?: number | null
+          growth_rank?: string | null
+          id?: string
+          last_updated?: string | null
+          noise_air_badge?: string | null
+          parks_count?: number | null
+          price_per_sqft_1bed?: number | null
+          price_per_sqft_2bed?: number | null
+          price_per_sqft_3bed?: number | null
+          price_per_sqft_overall?: number | null
+          sample_size?: number | null
+          schools_outstanding_primary?: number | null
+          schools_outstanding_secondary?: number | null
+          schools_score?: number | null
+          updated_at?: string | null
+          yield_1bed?: number | null
+          yield_2bed?: number | null
+          yield_3bed?: number | null
+        }
+        Relationships: []
+      }
+      area_polygons: {
+        Row: {
+          area_code: string
+          area_name: string
+          area_type: string
+          created_at: string | null
+          geometry: Json
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          area_code: string
+          area_name: string
+          area_type: string
+          created_at?: string | null
+          geometry: Json
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          area_code?: string
+          area_name?: string
+          area_type?: string
+          created_at?: string | null
+          geometry?: Json
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       best_deals: {
         Row: {
           active: boolean | null

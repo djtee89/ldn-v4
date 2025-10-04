@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Development } from '@/data/newDevelopments';
+import { AreaMetric, AreaPolygon } from '@/hooks/use-area-metrics';
+import { AnalysisMode } from '@/pages/Analysis';
+import { BracketFilter } from './AnalysisLegend';
 
 interface Unit {
   id: string;
@@ -17,9 +20,22 @@ interface Unit {
 interface LiveAnalysisMapProps {
   units: Unit[];
   developments: Development[];
+  areaMetrics: AreaMetric[];
+  areaPolygons: AreaPolygon[];
+  mode: AnalysisMode;
+  brackets: BracketFilter[];
+  selectedBrackets: number[];
 }
 
-const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({ units, developments }) => {
+const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({ 
+  units, 
+  developments, 
+  areaMetrics, 
+  areaPolygons,
+  mode,
+  brackets,
+  selectedBrackets 
+}) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -59,6 +75,93 @@ const LiveAnalysisMap: React.FC<LiveAnalysisMapProps> = ({ units, developments }
       map.current?.remove();
     };
   }, []);
+
+  // Helper to get color for a metric value
+  const getColorForValue = (value: number | null): string => {
+    if (value === null) return '#999999';
+    
+    for (const bracket of brackets) {
+      if (value >= bracket.min && value < bracket.max) {
+        return bracket.color;
+      }
+    }
+    return brackets[brackets.length - 1]?.color || '#999999';
+  };
+
+  // Update area polygons when data changes
+  useEffect(() => {
+    if (!map.current || !isMapLoaded) return;
+    if (areaPolygons.length === 0 || brackets.length === 0) return;
+
+    // Remove existing layers
+    if (map.current.getLayer('area-polygons-fill')) {
+      map.current.removeLayer('area-polygons-fill');
+    }
+    if (map.current.getLayer('area-polygons-outline')) {
+      map.current.removeLayer('area-polygons-outline');
+    }
+    if (map.current.getSource('area-polygons')) {
+      map.current.removeSource('area-polygons');
+    }
+
+    // Create features with colors based on metrics
+    const features = areaPolygons.map(polygon => {
+      const metric = areaMetrics.find(m => m.area_code === polygon.area_code);
+      let value: number | null = null;
+
+      if (mode === 'price-per-sqft') {
+        value = metric?.price_per_sqft_overall ?? null;
+      }
+
+      const color = getColorForValue(value);
+
+      return {
+        type: 'Feature' as const,
+        geometry: polygon.geometry,
+        properties: {
+          area_code: polygon.area_code,
+          area_name: polygon.area_name,
+          value,
+          color,
+        },
+      };
+    });
+
+    const geojson: GeoJSON.FeatureCollection = {
+      type: 'FeatureCollection',
+      features,
+    };
+
+    // Add source
+    map.current.addSource('area-polygons', {
+      type: 'geojson',
+      data: geojson,
+    });
+
+    // Add fill layer
+    map.current.addLayer({
+      id: 'area-polygons-fill',
+      type: 'fill',
+      source: 'area-polygons',
+      paint: {
+        'fill-color': ['get', 'color'],
+        'fill-opacity': 0.3,
+      },
+    }, 'price-analysis-circles'); // Add below pins
+
+    // Add outline layer
+    map.current.addLayer({
+      id: 'area-polygons-outline',
+      type: 'line',
+      source: 'area-polygons',
+      paint: {
+        'line-color': ['get', 'color'],
+        'line-width': 1,
+        'line-opacity': 0.6,
+      },
+    }, 'price-analysis-circles');
+
+  }, [areaMetrics, areaPolygons, mode, brackets, isMapLoaded]);
 
   // Update markers when units change
   useEffect(() => {
